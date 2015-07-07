@@ -1,0 +1,12 @@
+<div class="layout-absolute">
+    <div class="control-scrollpad" data-control="scrollpad">
+        <div class="scroll-wrapper">
+            <div class="control-filelist hero snippet-list" 
+                data-control="filelist"
+                id="<?= $this->getId('plugin-list') ?>"
+            >
+                <?= $this->makePartial('items', ['items'=>$data]) ?>
+            </div>
+        </div>
+    </div>
+</div>

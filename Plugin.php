@@ -32,7 +32,73 @@ class Plugin extends PluginBase
                 'url'         => Backend::url('rainlab/builder'),
                 'icon'        => 'icon-wrench',
                 'permissions' => ['rainlab.builder.*'],
-                'order'       => 40
+                'order'       => 40, 
+
+                'sideMenu' => [
+                    'database' => [
+                        'label'       => 'rainlab.builder::lang.database.menu_label',
+                        'icon'        => 'icon-hdd-o',
+                        'url'         => 'javascript:;',
+                        'attributes'  => ['data-menu-item'=>'database'],
+                        'permissions' => ['rainlab.builder.*']
+                    ],
+                    'models' => [
+                        'label'       => 'rainlab.builder::lang.model.menu_label',
+                        'icon'        => 'icon-random',
+                        'url'         => 'javascript:;',
+                        'attributes'  => ['data-menu-item'=>'models'],
+                        'permissions' => ['rainlab.builder.*']
+                    ],
+                    'controllers' => [
+                        'label'       => 'rainlab.builder::lang.controller.menu_label',
+                        'icon'        => 'icon-asterisk',
+                        'url'         => 'javascript:;',
+                        'attributes'  => ['data-menu-item'=>'controller'],
+                        'permissions' => ['rainlab.builder.*']
+                    ],
+                    'menus' => [
+                        'label'       => 'rainlab.builder::lang.menu.menu_label',
+                        'icon'        => 'icon-location-arrow',
+                        'url'         => 'javascript:;',
+                        'attributes'  => ['data-menu-item'=>'menu'],
+                        'permissions' => ['rainlab.builder.*']
+                    ],
+                    'versions' => [
+                        'label'       => 'rainlab.builder::lang.version.menu_label',
+                        'icon'        => 'icon-code-fork',
+                        'url'         => 'javascript:;',
+                        'attributes'  => ['data-menu-item'=>'version'],
+                        'permissions' => ['rainlab.builder.*']
+                    ],
+                    'localization' => [
+                        'label'       => 'rainlab.builder::lang.localization.menu_label',
+                        'icon'        => 'icon-globe',
+                        'url'         => 'javascript:;',
+                        'attributes'  => ['data-menu-item'=>'localization'],
+                        'permissions' => ['rainlab.builder.*']
+                    ],
+                    'permissions' => [
+                        'label'       => 'rainlab.builder::lang.permission.menu_label',
+                        'icon'        => 'icon-unlock-alt',
+                        'url'         => 'javascript:;',
+                        'attributes'  => ['data-menu-item'=>'permission'],
+                        'permissions' => ['rainlab.builder.*']
+                    ]
+                ]
+
+            ]
+        ];
+    }
+
+    public function registerSettings()
+    {
+        return [
+            'config' => [
+                'label'       => 'Builder',
+                'icon'        => 'icon-wrench',
+                'description' => 'Set your plugins namespace and author name.',
+                'class'       => 'RainLab\Builder\Models\Settings',
+                'order'       => 60
             ]
         ];
     }

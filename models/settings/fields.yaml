@@ -1,0 +1,10 @@
+fields:
+    author_name:
+        span: left
+        label: rainlab.builder::lang.author_name.title
+        commentAbove: rainlab.builder::lang.author_name.description
+
+    namespace:
+        span: right
+        label: rainlab.builder::lang.namespace.title
+        commentAbove: rainlab.builder::lang.namespace.description
