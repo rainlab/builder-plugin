@@ -1,0 +1,36 @@
+fields:
+    name:
+        span: left
+        label: rainlab.builder::lang.plugin.field_name
+
+    author:
+        span: right
+        label: rainlab.builder::lang.plugin.field_author
+
+    namespace:
+        context: [create]
+        span: left
+        label: rainlab.builder::lang.plugin.field_plugin_namespace
+        comment: rainlab.builder::lang.plugin.field_namespace_description
+        preset:
+            field: name
+            type: namespace
+
+    author_namespace:
+        context: [create]
+        span: right
+        label: rainlab.builder::lang.plugin.field_author_namespace
+        comment: rainlab.builder::lang.plugin.field_author_namespace_description
+        preset:
+            field: author
+            type: namespace
+
+    description:
+        label: rainlab.builder::lang.plugin.field_description
+        type: textarea
+        size: tiny
+
+    icon:
+        type: dropdown
+        label: rainlab.builder::lang.plugin.field_icon
+        comment: rainlab.builder::lang.common.field_icon_description

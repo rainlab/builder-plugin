@@ -6,13 +6,22 @@
             <li class="item" 
                 data-id="<?= e($dataId) ?>" 
             >
-                <a href="#">
+                <a href="#" data-builder-command="plugin:cmdMakePluginActive" data-id="<?= e($dataId) ?>">
                     <i class="list-icon <?= e($plugin['icon'] )?>"></i>
 
                     <span class="title"><?= e(trans($plugin['name'])) ?></span>
                     <span class="description"><?= e(trans($plugin['description'])) ?></span>
+
                     <span class="borders"></span>
                 </a>
+
+                <div class="controls">
+                    <a
+                        href="javascript:;"
+                        class="control icon btn-primary oc-icon-cog" 
+                        title="<?= e(trans('rainlab.builder::lang.plugin.settings')) ?>"
+                    ><?= e(trans('rainlab.builder::lang.plugin.settings')) ?></a>
+                </div>
             </li>
         <?php endforeach ?>
     </ul>

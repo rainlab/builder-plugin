@@ -5,7 +5,7 @@ use October\Rain\Database\Model;
 /**
  * Builder settings model
  *
- * @package system
+ * @package rainlab\builder
  * @author Alexey Bobkov, Samuel Georges
  *
  */
@@ -24,6 +24,6 @@ class Settings extends Model
      */
     public $rules = [
         'author_name' => 'required',
-        'namespace' => 'required'
+        'author_namespace' => ['required', 'regex:/^[a-z]+[a-z0-9]+$/i']
     ];
 }

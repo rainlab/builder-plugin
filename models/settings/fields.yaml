@@ -4,7 +4,10 @@ fields:
         label: rainlab.builder::lang.author_name.title
         commentAbove: rainlab.builder::lang.author_name.description
 
-    namespace:
+    author_namespace:
         span: right
-        label: rainlab.builder::lang.namespace.title
-        commentAbove: rainlab.builder::lang.namespace.description
+        label: rainlab.builder::lang.author_namespace.title
+        commentAbove: rainlab.builder::lang.author_namespace.description
+        preset:
+            field: author_name
+            type: namespace

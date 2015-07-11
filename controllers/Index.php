@@ -3,6 +3,7 @@
 use Backend\Classes\Controller;
 use Backend\Traits\InspectableContainer;
 use RainLab\Builder\Widgets\PluginList;
+use RainLab\Builder\Traits\IndexPluginOperations;
 use ApplicationException;
 use Exception;
 use BackendMenu;
@@ -16,6 +17,10 @@ use BackendMenu;
 class Index extends Controller
 {
     use InspectableContainer;
+ 
+     public $implement = [
+        'RainLab.Builder.Behaviors.IndexPluginOperations'
+    ];
 
     public $requiredPermissions = ['rainlab.buileder.*'];
 
@@ -36,5 +41,9 @@ class Index extends Controller
 
     public function index()
     {
+        // TODO: combine the scripts
+        $this->addJs('/plugins/rainlab/builder/assets/js/builder.index.entity.base.js', 'RainLab.Builder');
+        $this->addJs('/plugins/rainlab/builder/assets/js/builder.index.entity.plugin.js', 'RainLab.Builder');
+        $this->addJs('/plugins/rainlab/builder/assets/js/builder.index.js', 'RainLab.Builder');
     }
 }
