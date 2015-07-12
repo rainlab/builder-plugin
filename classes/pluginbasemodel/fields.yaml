@@ -1,36 +1,47 @@
-fields:
-    name:
-        span: left
-        label: rainlab.builder::lang.plugin.field_name
+tabs:
+    fields:
+        name:
+            span: left
+            label: rainlab.builder::lang.plugin.field_name
+            tab: rainlab.builder::lang.plugin.tab_general
 
-    author:
-        span: right
-        label: rainlab.builder::lang.plugin.field_author
+        author:
+            span: right
+            label: rainlab.builder::lang.plugin.field_author
+            tab: rainlab.builder::lang.plugin.tab_general
 
-    namespace:
-        context: [create]
-        span: left
-        label: rainlab.builder::lang.plugin.field_plugin_namespace
-        comment: rainlab.builder::lang.plugin.field_namespace_description
-        preset:
-            field: name
-            type: namespace
+        namespace:
+            context: [create]
+            span: left
+            label: rainlab.builder::lang.plugin.field_plugin_namespace
+            commentAbove: rainlab.builder::lang.plugin.field_namespace_description
+            tab: rainlab.builder::lang.plugin.tab_general
+            preset:
+                field: name
+                type: namespace
 
-    author_namespace:
-        context: [create]
-        span: right
-        label: rainlab.builder::lang.plugin.field_author_namespace
-        comment: rainlab.builder::lang.plugin.field_author_namespace_description
-        preset:
-            field: author
-            type: namespace
+        author_namespace:
+            context: [create]
+            span: right
+            label: rainlab.builder::lang.plugin.field_author_namespace
+            commentAbove: rainlab.builder::lang.plugin.field_author_namespace_description
+            tab: rainlab.builder::lang.plugin.tab_general
+            preset:
+                field: author
+                type: namespace
 
-    description:
-        label: rainlab.builder::lang.plugin.field_description
-        type: textarea
-        size: tiny
+        icon:
+            type: dropdown
+            label: rainlab.builder::lang.plugin.field_icon
+            commentAbove: rainlab.builder::lang.common.field_icon_description
+            tab: rainlab.builder::lang.plugin.tab_general
 
-    icon:
-        type: dropdown
-        label: rainlab.builder::lang.plugin.field_icon
-        comment: rainlab.builder::lang.common.field_icon_description
+        description:
+            label: rainlab.builder::lang.plugin.field_description
+            type: textarea
+            size: tiny
+            tab: rainlab.builder::lang.plugin.tab_description
+
+        homepage:
+            label: rainlab.builder::lang.plugin.field_homepage
+            tab: rainlab.builder::lang.plugin.tab_description

@@ -20,6 +20,9 @@ return [
         'field_author_namespace' => 'Author namespace',
         'field_namespace_description' => 'Namespace can contain only Latin letters and digits and should start with a Latin letter.',
         'field_author_namespace_description' => 'You cannot change the namespaces with Builder after you create the plugin.',
+        'tab_general' => 'General parameters',
+        'tab_description' => 'Description',
+        'field_homepage' => 'Plugin homepage URL'
     ],
     'author_name' => [
         'title' => 'Author name',

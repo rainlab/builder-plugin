@@ -1,7 +1,10 @@
 <?php namespace RainLab\Builder\Classes;
 
 use RainLab\Builder\Models\Settings as PluginSettings;
+use System\Classes\UpdateManager;
+use System\Classes\PluginManager;
 use ApplicationException;
+use SystemException;
 use Exception;
 use File;
 
@@ -25,6 +28,8 @@ class PluginBaseModel extends YamlModel
 
     public $author_namespace;
 
+    public $homepage;
+
     protected $yamlSection = "plugin";
 
     protected static $fillable = [
@@ -33,14 +38,16 @@ class PluginBaseModel extends YamlModel
         'namespace',
         'author_namespace',
         'description',
-        'icon'
+        'icon',
+        'homepage'
     ];
 
     protected $validationRules = [
         'name' => 'required',
         'author'   => ['required'],
         'namespace'   => ['required', 'regex:/^[a-z]+[a-z0-9]+$/i'],
-        'author_namespace' => ['required', 'regex:/^[a-z]+[a-z0-9]+$/i']
+        'author_namespace' => ['required', 'regex:/^[a-z]+[a-z0-9]+$/i'],
+        'homepage' => 'url'
     ];
 
     public function getIconOptions($keyValue = null)
@@ -65,7 +72,8 @@ class PluginBaseModel extends YamlModel
             'name' => $this->name,
             'description' => $this->description,
             'author' => $this->author,
-            'icon' => $this->icon
+            'icon' => $this->icon,
+            'homepage' => $this->homepage
         ];
     }
 
@@ -81,6 +89,7 @@ class PluginBaseModel extends YamlModel
     {
         try {
             $this->initPluginStructure();
+            $this->forcePluginRegistration();
         }
         catch (Exception $ex) {
             $this->rollbackPluginCreation();
@@ -108,9 +117,20 @@ class PluginBaseModel extends YamlModel
         $generator->generate();
     }
 
+    protected function forcePluginRegistration()
+    {
+        PluginManager::instance()->loadPlugins();
+        UpdateManager::instance()->update();
+    }
+
     protected function rollbackPluginCreation()
     {
+        $basePath = '$/'.$this->getPluginPath();
+        $basePath = File::symbolizePath($basePath);
 
+        if (basename($basePath) == strtolower($this->namespace)) {
+            File::deleteDirectory($basePath);
+        }
     }
 
     /**
@@ -124,6 +144,16 @@ class PluginBaseModel extends YamlModel
 
     protected function getPluginPath()
     {
+        if (!$this->validateNamespacePath($this->author_namespace) || !$this->validateNamespacePath($this->namespace)) {
+            throw new SystemException('Invalid plugin or author namespace');
+        }
+
         return strtolower($this->author_namespace.'/'.$this->namespace);
+    }
+
+    protected function validateNamespacePath($namespace)
+    {
+        $namespace = trim($namespace);
+        return strlen($namespace) && preg_match('/^[a-z]+[a-z0-9]+$/i', $namespace);
     }
 }
