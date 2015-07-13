@@ -28,7 +28,7 @@
             <?= e(trans('backend::lang.form.cancel')) ?>
         </button>
     </div>
-    <?php if (strlen($pluginCode)): ?>
+    <?php if (isset($pluginCode)): ?>
         <input type="hidden" name="pluginCode" value="<?= e($pluginCode) ?>">
     <?php endif ?>
 <?= Form::close() ?>
