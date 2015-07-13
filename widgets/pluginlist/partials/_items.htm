@@ -1,16 +1,23 @@
 <?php if ($items): ?>
+    <?php $activePluginCode = $this->getActivePlugin(); ?>
     <ul>
         <?php foreach ($items as $code=>$plugin):
             $dataId = 'plugin-'.$code;
         ?>
-            <li class="item" 
+            <li class="item <?= strcasecmp($activePluginCode, $code) === 0 ? 'active' : null ?>" 
                 data-id="<?= e($dataId) ?>" 
             >
                 <a href="#" data-builder-command="plugin:cmdMakePluginActive" data-id="<?= e($dataId) ?>">
                     <i class="list-icon <?= e($plugin['icon'] )?>"></i>
 
                     <span class="title"><?= e(trans($plugin['name'])) ?></span>
-                    <span class="description"><?= e(trans($plugin['description'])) ?></span>
+                    <span class="description">
+                        <?php if (strlen($plugin['description'])): ?>
+                            <?= e(trans($plugin['description'])) ?>
+                        <?php else: ?>
+                            <?= e(trans('rainlab.builder::lang.plugin.no_description')) ?>
+                        <?php endif ?>
+                    </span>
 
                     <span class="borders"></span>
                 </a>
@@ -20,6 +27,8 @@
                         href="javascript:;"
                         class="control icon btn-primary oc-icon-cog" 
                         title="<?= e(trans('rainlab.builder::lang.plugin.settings')) ?>"
+                        data-builder-command="plugin:cmdEditPluginSettings"
+                        data-plugin-code="<?= e($code) ?>"
                     ><?= e(trans('rainlab.builder::lang.plugin.settings')) ?></a>
                 </div>
             </li>

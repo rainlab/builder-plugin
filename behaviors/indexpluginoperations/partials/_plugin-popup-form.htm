@@ -7,14 +7,20 @@
         <h4 class="modal-title"><?= e(trans('rainlab.builder::lang.plugin.entity_name')) ?></h4>
     </div>
     <div class="modal-body">
-        <?= $form->render() ?>
+        <?php if (!isset($errorMessage)): ?>
+            <?= $form->render() ?>
+        <?php else: ?>
+            <p><?= e($errorMessage) ?></p>
+        <?php endif ?>
     </div>
     <div class="modal-footer">
-        <button
-            type="submit"
-            class="btn btn-primary">
-            <?= e(trans('backend::lang.form.ok')) ?>
-        </button>
+        <?php if (!isset($errorMessage)): ?>
+            <button
+                type="submit"
+                class="btn btn-primary">
+                <?= e(trans('backend::lang.form.ok')) ?>
+            </button>
+        <?php endif ?>
         <button
             type="button"
             class="btn btn-default"
@@ -22,4 +28,7 @@
             <?= e(trans('backend::lang.form.cancel')) ?>
         </button>
     </div>
+    <?php if (strlen($pluginCode)): ?>
+        <input type="hidden" name="pluginCode" value="<?= e($pluginCode) ?>">
+    <?php endif ?>
 <?= Form::close() ?>

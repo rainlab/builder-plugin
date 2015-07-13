@@ -46,4 +46,23 @@ class Index extends Controller
         $this->addJs('/plugins/rainlab/builder/assets/js/builder.index.entity.plugin.js', 'RainLab.Builder');
         $this->addJs('/plugins/rainlab/builder/assets/js/builder.index.js', 'RainLab.Builder');
     }
+
+    public function setBuilderActivePlugin($pluginCpde, $refreshPluginList = false)
+    {
+        $this->widget->pluginList->setActivePlugin($pluginCpde);
+
+        $result = [];
+        if ($refreshPluginList) {
+            $result = $this->widget->pluginList->updateList();
+        }
+
+        // The method should update all sidebar widgets and merge their responses 
+        // with $result.
+        return $result;
+    }
+
+    public function updatePluginList()
+    {
+        return $this->widget->pluginList->updateList();
+    }
 }

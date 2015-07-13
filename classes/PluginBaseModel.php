@@ -6,6 +6,7 @@ use System\Classes\PluginManager;
 use ApplicationException;
 use SystemException;
 use Exception;
+use Lang;
 use File;
 
 /**
@@ -62,6 +63,35 @@ class PluginBaseModel extends YamlModel
         $this->author_namespace = $settings->author_namespace;
     }
 
+    public function getPluginCode()
+    {
+        return $this->author_namespace.'.'.$this->namespace;
+    }
+
+    public function loadPlugin($pluginCode)
+    {
+        $filePath = self::pluginSettingsFileExists($pluginCode);
+        if ($filePath === false) {
+            throw new ApplicationException(Lang::get('rainlab.builder::lang.plugin.error_settings_not_editable'));
+        }
+
+        list($authorNamespace, $namespace) = $this->codeToNamespaces($pluginCode);
+        $this->author_namespace = $authorNamespace;
+        $this->namespace = $namespace;
+
+        return parent::load($filePath);
+    }
+
+    public static function pluginSettingsFileExists($pluginCode)
+    {
+        $filePath = File::symbolizePath(self::codeToFilePath($pluginCode));
+        if (File::isFile($filePath)) {
+            return $filePath;
+        }
+
+        return false;
+    }
+
     /**
      * Converts the model's data to an array before it's saved to a YAML file.
      * @return array
@@ -83,6 +113,11 @@ class PluginBaseModel extends YamlModel
      */
     protected function yamlArrayToModel($array)
     {
+        $this->name = $this->getArrayKeySafe($array, 'name');
+        $this->description = $this->getArrayKeySafe($array, 'description');
+        $this->author = $this->getArrayKeySafe($array, 'author');
+        $this->icon = $this->getArrayKeySafe($array, 'icon');
+        $this->homepage = $this->getArrayKeySafe($array, 'homepage');
     }
 
     protected function afterCreate()
@@ -142,18 +177,48 @@ class PluginBaseModel extends YamlModel
         return '$/'.$this->getPluginPath().'/plugin.yaml';
     }
 
+    protected static function validateNamespacePath($namespace)
+    {
+        $namespace = trim($namespace);
+        return strlen($namespace) && preg_match('/^[a-z]+[a-z0-9]+$/i', $namespace);
+    }
+
     protected function getPluginPath()
     {
-        if (!$this->validateNamespacePath($this->author_namespace) || !$this->validateNamespacePath($this->namespace)) {
+        if (!self::validateNamespacePath($this->author_namespace) || !self::validateNamespacePath($this->namespace)) {
             throw new SystemException('Invalid plugin or author namespace');
         }
 
         return strtolower($this->author_namespace.'/'.$this->namespace);
     }
 
-    protected function validateNamespacePath($namespace)
+    protected static function codeToFilePath($pluginCode)
     {
-        $namespace = trim($namespace);
-        return strlen($namespace) && preg_match('/^[a-z]+[a-z0-9]+$/i', $namespace);
+        list($authorNamespace, $namespace) = self::codeToNamespaces($pluginCode);
+       
+        $obj = new self();
+        $obj->author_namespace = $authorNamespace;
+        $obj->namespace = $namespace;
+
+        return $obj->getFilePath();
+    }
+
+    protected static function codeToNamespaces($pluginCode)
+    {
+        $pluginCodeParts = explode('.', $pluginCode);
+        if (count($pluginCodeParts) !== 2) {
+            throw new ApplicationException('Invalid plugin code.');
+        }
+
+        list($authorNamespace, $namespace) = $pluginCodeParts;
+
+        if (!self::validateNamespacePath($authorNamespace) || !self::validateNamespacePath($namespace)) {
+            throw new SystemException('Invalid plugin code.');
+        }
+
+        return [
+            $authorNamespace,
+            $namespace
+        ];
     }
 }

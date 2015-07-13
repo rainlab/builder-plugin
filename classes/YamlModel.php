@@ -85,6 +85,8 @@ abstract class YamlModel
 
     public function load($filePath)
     {
+        $filePath = File::symbolizePath($filePath);
+
         $data = Yaml::parse(File::get($filePath));
         $this->originalFilePath = $filePath;
 
@@ -95,7 +97,7 @@ abstract class YamlModel
             }
 
             if (array_key_exists($this->yamlSection, $data)) {
-                $data = $this->yamlSection[$this->yamlSection];
+                $data = $data[$this->yamlSection];
             }
             else {
                 $data = [];
@@ -137,8 +139,13 @@ abstract class YamlModel
 
     protected function validate()
     {
+        $existingData = [];
+        foreach (static::$fillable as $field) {
+            $existingData[$field] = $this->$field;
+        }
+
         $validation = Validator::make(
-            $this->updatedData,
+            array_merge($existingData, $this->updatedData),
             $this->validationRules,
             $this->validationMessages
         );
@@ -158,6 +165,11 @@ abstract class YamlModel
 
     protected function afterCreate()
     {
+    }
+
+    protected function getArrayKeySafe($array, $key, $default = null)
+    {
+        return array_key_exists($key, $array) ? $array[$key] : $default;
     }
 
     /**

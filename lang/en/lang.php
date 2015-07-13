@@ -22,7 +22,9 @@ return [
         'field_author_namespace_description' => 'You cannot change the namespaces with Builder after you create the plugin.',
         'tab_general' => 'General parameters',
         'tab_description' => 'Description',
-        'field_homepage' => 'Plugin homepage URL'
+        'field_homepage' => 'Plugin homepage URL',
+        'no_description' => 'No description provided for this plugin',
+        'error_settings_not_editable' => 'Settings of this plugin cannot be edited with Builder.'
     ],
     'author_name' => [
         'title' => 'Author name',

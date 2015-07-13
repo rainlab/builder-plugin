@@ -14,6 +14,8 @@
 
     var Plugin = function() {
         Base.call(this)
+
+        this.popupZIndex = 5050 // This popup should be above the flyout overlay, which z-index is 5000
     }
 
     Plugin.prototype = Object.create(BaseProto)
@@ -33,7 +35,21 @@
 
         $target.popup({
             handler: 'onPluginLoadPopup',
-            zIndex: 5050 // This popup should be above the flyout overlay, which z-index is 5000
+            zIndex: this.popupZIndex
+        })
+    }
+
+    Plugin.prototype.cmdEditPluginSettings = function(ev) {
+        var $target = $(ev.target)
+
+        $target.one('shown.oc.popup', this.proxy(this.onPluginPopupShown))
+
+        $target.popup({
+            handler: 'onPluginLoadPopup',
+            zIndex: this.popupZIndex,
+            extraData: {
+                pluginCode: $target.data('pluginCode')
+            }
         })
     }
 

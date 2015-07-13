@@ -47,6 +47,21 @@ class PluginList extends WidgetBase
      */
     public function widgetDetails() {}
 
+    public function setActivePlugin($pluginCode)
+    {
+        $this->putSession('activePlugin', $pluginCode);
+    }
+
+    public function getActivePlugin()
+    {
+        return $this->getSession('activePlugin');
+    }
+
+    public function updateList()
+    {
+        return ['#'.$this->getId('plugin-list') => $this->makePartial('items', ['items'=>$this->getData()])];
+    }
+
     /*
      * Event handlers
      */
@@ -101,7 +116,7 @@ class PluginList extends WidgetBase
         //
         $mode = $this->getFilterMode();
         if ($mode == 'my') {
-            $namespace = PluginSettings::instance()->namespace;
+            $namespace = PluginSettings::instance()->author_namespace;
 
             $result = [];
             foreach ($plugins as $code=>$plugin) {
@@ -142,11 +157,6 @@ class PluginList extends WidgetBase
         });
 
         return $result;
-    }
-
-    protected function updateList()
-    {
-        return ['#'.$this->getId('plugin-list') => $this->makePartial('items', ['items'=>$this->getData()])];
     }
 
     protected function setFilterMode($mode)

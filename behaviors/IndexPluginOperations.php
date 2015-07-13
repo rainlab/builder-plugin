@@ -3,6 +3,9 @@
 use Backend\Classes\ControllerBehavior;
 use RainLab\Builder\Classes\PluginBaseModel;
 use Backend\Behaviors\FormController;
+use ApplicationException;
+use Exception;
+use Input;
 
 /**
  * Plugin management functionality for the Builder index controller
@@ -14,16 +17,32 @@ class IndexPluginOperations extends ControllerBehavior
 {
     public function onPluginLoadPopup()
     {
-        $this->vars['form'] = $this->makePluginBaseFormWidget(null);
+        $pluginCode = Input::get('pluginCode');
+
+        try {
+            $this->vars['form'] = $this->makePluginBaseFormWidget($pluginCode);
+            $this->vars['pluginCode'] = $pluginCode;
+        }
+        catch (ApplicationException $ex) {
+            $this->vars['errorMessage'] = $ex->getMessage();
+        }
 
         return $this->makePartial('plugin-popup-form');
     }
 
     public function onPluginSave()
     {
-        $model = $this->loadOrCreatePluginModel(null);
+        $pluginCode = Input::get('pluginCode');
+
+        $model = $this->loadOrCreatePluginModel($pluginCode);
         $model->fill($_POST);
         $model->save();
+
+        if (!$pluginCode) {
+            return $this->controller->setBuilderActivePlugin($model->getPluginCode(), true);
+        } else {
+            return $this->controller->updatePluginList();
+        }
     }
 
     protected function makePluginBaseFormWidget($pluginCode)
@@ -49,7 +68,8 @@ class IndexPluginOperations extends ControllerBehavior
             return $pluginModel;
         }
 
-        // TODO - load the plugin here
+        $pluginModel->loadPlugin($pluginCode);
+        return $pluginModel;
     }
 
 }
