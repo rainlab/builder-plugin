@@ -1,13 +1,9 @@
 <?php if ($items): ?>
-    <?php $activePluginCode = $this->getActivePlugin(); ?>
+    <?php $activePluginCode = $this->getActivePluginCode(); ?>
     <ul>
-        <?php foreach ($items as $code=>$plugin):
-            $dataId = 'plugin-'.$code;
-        ?>
-            <li class="item <?= strcasecmp($activePluginCode, $code) === 0 ? 'active' : null ?>" 
-                data-id="<?= e($dataId) ?>" 
-            >
-                <a href="#" data-builder-command="plugin:cmdMakePluginActive" data-id="<?= e($dataId) ?>">
+        <?php foreach ($items as $code=>$plugin): ?>
+            <li class="item <?= strcasecmp($activePluginCode, $code) === 0 ? 'active' : null ?>" data-id="<?= e($code) ?>">
+                <a href="#" data-builder-command="plugin:cmdMakePluginActive" data-plugin-code="<?= e($code) ?>">
                     <i class="list-icon <?= e($plugin['icon'] )?>"></i>
 
                     <span class="title"><?= e(trans($plugin['name'])) ?></span>

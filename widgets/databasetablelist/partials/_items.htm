@@ -1,0 +1,30 @@
+<?php if ($items): ?>
+    <ul>
+        <?php foreach ($items as $table):
+            $dataId = 'table-'.$table;
+        ?>
+            <li class="item" 
+                data-id="<?= e($dataId) ?>" 
+            >
+                <a href="#" data-builder-command="database:cmdOpenTableActive" data-id="<?= e($dataId) ?>">
+                    <span class="title"><?= e($table) ?></span>
+                    <span class="borders"></span>
+                </a>
+
+                <div class="checkbox custom-checkbox nolabel">
+                    <?php $cbId = 'cb'.md5($table) ?>
+                    <input
+                        id="<?= $cbId ?>" 
+                        type="checkbox"
+                        name="databaseTable[<?= e($table) ?>]"
+                        <?= $this->isItemSelected($table) ? 'checked' : null ?>
+                        data-request="<?= $this->getEventHandler('onSelect') ?>"
+                        value="1">
+                    <label for="<?= $cbId ?>">Select</label>
+                </div>
+            </li>
+        <?php endforeach ?>
+    </ul>
+<?php else: ?>
+    <p class="no-data"><?= e(trans($this->noRecordsMessage)) ?></p>
+<?php endif ?>

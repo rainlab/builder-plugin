@@ -3,6 +3,7 @@
 use Backend\Classes\Controller;
 use Backend\Traits\InspectableContainer;
 use RainLab\Builder\Widgets\PluginList;
+use RainLab\Builder\Widgets\DatabaseTableList;
 use RainLab\Builder\Traits\IndexPluginOperations;
 use ApplicationException;
 use Exception;
@@ -19,7 +20,8 @@ class Index extends Controller
     use InspectableContainer;
  
      public $implement = [
-        'RainLab.Builder.Behaviors.IndexPluginOperations'
+        'RainLab.Builder.Behaviors.IndexPluginOperations',
+        'RainLab.Builder.Behaviors.IndexDatabaseTableOperations'
     ];
 
     public $requiredPermissions = ['rainlab.buileder.*'];
@@ -31,12 +33,13 @@ class Index extends Controller
     {
         parent::__construct();
 
-        BackendMenu::setContext('RainLab.Builder', 'builder');
+        BackendMenu::setContext('RainLab.Builder', 'builder', 'database');
 
         $this->bodyClass = 'compact-container side-panel-not-fixed';
         $this->pageTitle = 'rainlab.builder::lang.plugin.name';
 
         new PluginList($this, 'pluginList');
+        new DatabaseTableList($this, 'databaseTabelList');
     }
 
     public function index()
@@ -44,6 +47,7 @@ class Index extends Controller
         // TODO: combine the scripts
         $this->addJs('/plugins/rainlab/builder/assets/js/builder.index.entity.base.js', 'RainLab.Builder');
         $this->addJs('/plugins/rainlab/builder/assets/js/builder.index.entity.plugin.js', 'RainLab.Builder');
+        $this->addJs('/plugins/rainlab/builder/assets/js/builder.index.entity.databasetable.js', 'RainLab.Builder');
         $this->addJs('/plugins/rainlab/builder/assets/js/builder.index.js', 'RainLab.Builder');
     }
 
@@ -56,9 +60,17 @@ class Index extends Controller
             $result = $this->widget->pluginList->updateList();
         }
 
-        // The method should update all sidebar widgets and merge their responses 
-        // with $result.
+        $result = array_merge(
+            $result,
+            $this->widget->databaseTabelList->refreshActivePlugin()
+        );
+
         return $result;
+    }
+
+    public function getBuilderActivePluginVector()
+    {
+        return $this->widget->pluginList->getActivePluginVector();
     }
 
     public function updatePluginList()

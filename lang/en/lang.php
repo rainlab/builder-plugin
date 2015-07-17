@@ -35,7 +35,24 @@ return [
         'description' => 'If you develop for the Marketplace, the namespace should match the author code and cannot be changed. Refer to the documentation for details.'
     ],
     'database' => [
-        'menu_label' => 'Database'
+        'menu_label' => 'Database',
+        'no_records' => 'No tables found',
+        'search' => 'Search...',
+        'confirmation_delete_multiple' => 'Do you really want to delete the selected tables?',
+        'field_name' => 'Table name',
+        'tab_columns' => 'Columns',
+        'column_name_title' => 'Title',
+        'column_name_required' => 'Please provide the column name',
+        'column_name_type' => 'Type',
+        'column_type_required' => 'Please select the column type',
+        'column_name_length' => 'Length',
+        'column_validation_length' => 'The Length value should be integer',
+        'column_name_unsigned' => 'Unsigned',
+        'column_name_nullable' => 'Nullable',
+        'column_auto_increment' => 'Auto increment',
+        'column_default' => 'Default',
+        'column_auto_primary_key' => 'PK',
+        'tab_new_table' => 'New table'
     ],
     'model' => [
         'menu_label' => 'Models'
@@ -66,6 +83,9 @@ return [
         'error_dir_exists' => "Directory already exists: ':path'.",
         'template_not_found' => "Template file is not found: ':name'.",
         'error_generating_file' => "Error generating file: ':path'.",
-        'error_loading_template' => "Error loading template file: ':name'."
+        'error_loading_template' => "Error loading template file: ':name'.",
+        'select_plugin_first' => 'Please select a plugin first. To see the plugin list click the > icon on the left sidebar.',
+        'plugin_not_selected' => 'Plugin is not selected',
+        'add' => 'Add'
     ]
 ];

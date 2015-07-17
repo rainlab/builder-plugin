@@ -45,8 +45,19 @@ class IndexPluginOperations extends ControllerBehavior
         }
     }
 
+    public function onPluginSetActive()
+    {
+        $pluginCode = Input::get('pluginCode');
+        $result = $this->controller->setBuilderActivePlugin($pluginCode, false);
+
+        $result['responseData'] = ['pluginCode'=>$pluginCode];
+
+        return $result;
+    }
+
     protected function makePluginBaseFormWidget($pluginCode)
     {
+// TODO: it looks like this method can be abstracted. See also Database Table Operations behavior
         $formConfig = '~/plugins/rainlab/builder/classes/pluginbasemodel/fields.yaml';
         $widgetConfig = $this->makeConfig($formConfig);
 
@@ -61,15 +72,16 @@ class IndexPluginOperations extends ControllerBehavior
 
     protected function loadOrCreatePluginModel($pluginCode)
     {
-        $pluginModel = new PluginBaseModel();
+// TODO: this method could be abstract, referred in the parent's makeTableFormWidget().
+// and implemented in each behavior.
+        $model = new PluginBaseModel();
 
         if (!$pluginCode) {
-            $pluginModel->initDefaults();
-            return $pluginModel;
+            $model->initDefaults();
+            return $model;
         }
 
-        $pluginModel->loadPlugin($pluginCode);
-        return $pluginModel;
+        $model->loadPlugin($pluginCode);
+        return $model;
     }
-
 }

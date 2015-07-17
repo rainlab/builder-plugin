@@ -2,7 +2,7 @@
 
 <?= Block::put('sidepanel') ?>
     <?php if (!$this->fatalError): ?>
-        <?= ''/* $this->makePartial('sidepanel') */ ?>
+        <?= $this->makePartial('sidepanel') ?>
     <?php endif ?>
 <?= Block::endPut() ?>
 
@@ -20,7 +20,7 @@
             data-max-title-symbols="15"
             data-title-as-file-names="false"
             class="layout control-tabs master fancy-layout oc-bg-logo"
-            id="pages-master-tabs">
+            id="builder-master-tabs">
 
             <div class="layout-row min-size">
                 <div class="tabs-container">

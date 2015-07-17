@@ -2,8 +2,12 @@
 
 use Backend\Classes\WidgetBase;
 use System\Classes\PluginManager;
+use RainLab\Builder\Classes\PluginCode;
 use RainLab\Builder\Models\Settings as PluginSettings;
+use RainLab\Builder\Classes\PluginVector;
 use Input;
+use File;
+use Exception;
 use Response;
 use Request;
 use Str;
@@ -37,9 +41,7 @@ class PluginList extends WidgetBase
      */
     public function render()
     {
-        return $this->makePartial('body', [
-            'data'=>$this->getData()
-        ]);
+        return $this->makePartial('body', $this->getRenderData());
     }
 
     /**
@@ -49,17 +51,41 @@ class PluginList extends WidgetBase
 
     public function setActivePlugin($pluginCode)
     {
-        $this->putSession('activePlugin', $pluginCode);
+        $pluginCodeObj = new PluginCode($pluginCode);
+
+        $this->putSession('activePlugin', $pluginCodeObj->toCode());
     }
 
-    public function getActivePlugin()
+    public function getActivePluginVector()
     {
-        return $this->getSession('activePlugin');
+        $pluginCode = $this->getActivePluginCode();
+
+        try {
+            if (strlen($pluginCode)) {
+                $pluginCodeObj = new PluginCode($pluginCode);
+                $path = $pluginCodeObj->toPluginFilePath();
+                if (!File::isFile(File::symbolizePath($path))) {
+                    return null;
+                }
+
+                $plugins = PluginManager::instance()->getPlugins();
+                foreach ($plugins as $code=>$plugin) {
+                    if ($code == $pluginCode) {
+                        return new PluginVector($plugin, $pluginCodeObj);
+                    }
+                }
+            }
+        }
+        catch (Exception $ex) {
+            return null;
+        }
+
+        return null;
     }
 
     public function updateList()
     {
-        return ['#'.$this->getId('plugin-list') => $this->makePartial('items', ['items'=>$this->getData()])];
+        return ['#'.$this->getId('plugin-list') => $this->makePartial('items', $this->getRenderData())];
     }
 
     /*
@@ -167,5 +193,17 @@ class PluginList extends WidgetBase
     protected function getFilterMode()
     {
         return $this->getSession('filter', 'my');
+    }
+
+    protected function getActivePluginCode()
+    {
+        return $this->getSession('activePlugin');
+    }
+
+    protected function getRenderData()
+    {
+        return [
+            'items'=>$this->getData()
+        ];
     }
 }

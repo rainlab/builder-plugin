@@ -1,0 +1,15 @@
+<div class="layout control-scrollpanel" id="builder-side-panel">
+    <div class="layout-cell">
+        <div class="layout-relative fix-button-container fix-button-content-header">
+            <!-- Tables -->
+            <form
+                class="layout"
+                data-content-id="database"
+                data-template-type="database"
+                data-type-icon="oc-icon-table"
+                onsubmit="return false">
+                <?= $this->widget->databaseTabelList->render() ?>
+            </form>
+        </div>
+    </div>
+</div>

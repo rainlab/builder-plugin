@@ -70,21 +70,22 @@ class PluginBaseModel extends YamlModel
 
     public function loadPlugin($pluginCode)
     {
-        $filePath = self::pluginSettingsFileExists($pluginCode);
+        $pluginCodeObj = new PluginCode($pluginCode);
+
+        $filePath = self::pluginSettingsFileExists($pluginCodeObj);
         if ($filePath === false) {
             throw new ApplicationException(Lang::get('rainlab.builder::lang.plugin.error_settings_not_editable'));
         }
 
-        list($authorNamespace, $namespace) = $this->codeToNamespaces($pluginCode);
-        $this->author_namespace = $authorNamespace;
-        $this->namespace = $namespace;
+        $this->author_namespace = $pluginCodeObj->getAuthorCode();
+        $this->namespace = $pluginCodeObj->getPluginCode();
 
         return parent::load($filePath);
     }
 
-    public static function pluginSettingsFileExists($pluginCode)
+    public static function pluginSettingsFileExists($pluginCodeObj)
     {
-        $filePath = File::symbolizePath(self::codeToFilePath($pluginCode));
+        $filePath = File::symbolizePath($pluginCodeObj->toPluginFilePath());
         if (File::isFile($filePath)) {
             return $filePath;
         }
@@ -174,51 +175,16 @@ class PluginBaseModel extends YamlModel
      */
     protected function getFilePath()
     {
-        return '$/'.$this->getPluginPath().'/plugin.yaml';
-    }
-
-    protected static function validateNamespacePath($namespace)
-    {
-        $namespace = trim($namespace);
-        return strlen($namespace) && preg_match('/^[a-z]+[a-z0-9]+$/i', $namespace);
+        return $this->getPluginPathObj()->toPluginFilePath();
     }
 
     protected function getPluginPath()
     {
-        if (!self::validateNamespacePath($this->author_namespace) || !self::validateNamespacePath($this->namespace)) {
-            throw new SystemException('Invalid plugin or author namespace');
-        }
-
-        return strtolower($this->author_namespace.'/'.$this->namespace);
+        return $this->getPluginPathObj()->toFilesystemPath();
     }
 
-    protected static function codeToFilePath($pluginCode)
+    protected function getPluginPathObj()
     {
-        list($authorNamespace, $namespace) = self::codeToNamespaces($pluginCode);
-       
-        $obj = new self();
-        $obj->author_namespace = $authorNamespace;
-        $obj->namespace = $namespace;
-
-        return $obj->getFilePath();
-    }
-
-    protected static function codeToNamespaces($pluginCode)
-    {
-        $pluginCodeParts = explode('.', $pluginCode);
-        if (count($pluginCodeParts) !== 2) {
-            throw new ApplicationException('Invalid plugin code.');
-        }
-
-        list($authorNamespace, $namespace) = $pluginCodeParts;
-
-        if (!self::validateNamespacePath($authorNamespace) || !self::validateNamespacePath($namespace)) {
-            throw new SystemException('Invalid plugin code.');
-        }
-
-        return [
-            $authorNamespace,
-            $namespace
-        ];
+        return new PluginCode($this->getPluginCode());
     }
 }

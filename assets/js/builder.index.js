@@ -12,6 +12,10 @@
     var Builder = function() {
         Base.call(this)
 
+        this.$masterTabs = null
+        this.masterTabsObj = null
+        this.hideStripeIndicatorProxy = null
+
         this.init()
     }
 
@@ -28,17 +32,47 @@
     // PUBLIC METHODS
     // ============================
 
+    Builder.prototype.openOrLoadMasterTab = function($form, serverHandlerName, tabId, data) {
+        if (this.masterTabsObj.goTo(tabId))
+            return false
+
+        var requestData = data === undefined ? {} : data
+
+        $.oc.stripeLoadIndicator.show()
+        $form.request(
+            serverHandlerName, 
+            { data: requestData }
+        ).done(
+            this.proxy(this.addMasterTab)
+        ).always(
+            this.hideStripeIndicatorProxy
+        )
+    }
+
     // INTERNAL METHODS
     // ============================
 
     Builder.prototype.init = function() {
         this.registerHandlers()
 
-
+        this.$masterTabs = $('#builder-master-tabs')
+        this.masterTabsObj = this.$masterTabs.data('oc.tab')
+        this.hideStripeIndicatorProxy = this.proxy(this.hideStripeIndicator)
     }
 
     Builder.prototype.registerHandlers = function() {
         $(document).on('click', '[data-builder-command]', this.proxy(this.onCommand))
+    }
+
+    Builder.prototype.hideStripeIndicator = function() {
+        $.oc.stripeLoadIndicator.hide()
+    }
+
+    Builder.prototype.addMasterTab = function(data) {
+var tabId = null,
+    icon = ''
+
+        this.masterTabsObj.addTab(data.tabTitle, data.tab, tabId, icon)
     }
 
     // EVENT HANDLERS
@@ -67,7 +101,7 @@
     // ============================
 
     $(document).ready(function(){
-        new Builder()
+        $.oc.builder.indexController = new Builder()
     })
 
 }(window.jQuery);

@@ -12,7 +12,15 @@
     var Base = $.oc.foundation.base,
         BaseProto = Base.prototype
 
-    var EntityBase = function() {
+    var EntityBase = function(typeName) {
+        if (typeName === undefined) {
+            throw new Error('The Builder entity type name should be set in the base constructor call.')
+        }
+
+        // The type name is used mostly for referring to 
+        // DOM objects.
+        this.typeName = typeName
+
         Base.call(this)
     }
 
@@ -31,6 +39,10 @@
         else {
             throw new Error('Invalid command: '+command)
         }
+    }
+
+    EntityBase.prototype.newTabId = function() {
+        return this.typeName + Math.random()
     }
 
     $.oc.builder.entityControllers.base = EntityBase;

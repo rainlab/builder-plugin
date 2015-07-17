@@ -13,7 +13,7 @@
         BaseProto = Base.prototype
 
     var Plugin = function() {
-        Base.call(this)
+        Base.call(this, 'plugin')
 
         this.popupZIndex = 5050 // This popup should be above the flyout overlay, which z-index is 5000
     }
@@ -25,11 +25,23 @@
     // ============================
 
     Plugin.prototype.cmdMakePluginActive = function(ev) {
-        console.log('make active')
+        var $target = $(ev.currentTarget),
+            selectedPluginCode = $target.data('pluginCode')
+
+        $.oc.stripeLoadIndicator.show()
+        $target.request('onPluginSetActive', {
+            data: {
+                pluginCode: selectedPluginCode
+            }
+        }).always(
+            $.oc.builder.indexController.hideStripeIndicatorProxy
+        ).done(
+            this.proxy(this.makePluginActiveDone)
+        )
     }
 
     Plugin.prototype.cmdCreatePlugin = function(ev) {
-        var $target = $(ev.target)
+        var $target = $(ev.currentTarget)
 
         $target.one('shown.oc.popup', this.proxy(this.onPluginPopupShown))
 
@@ -40,7 +52,7 @@
     }
 
     Plugin.prototype.cmdEditPluginSettings = function(ev) {
-        var $target = $(ev.target)
+        var $target = $(ev.currentTarget)
 
         $target.one('shown.oc.popup', this.proxy(this.onPluginPopupShown))
 
@@ -58,6 +70,15 @@
 
     Plugin.prototype.onPluginPopupShown = function(ev, button, popup) {
         $(popup).find('input[name=name]').focus()
+    }
+
+    // INTERNAL METHODS
+    // ============================
+
+    Plugin.prototype.makePluginActiveDone = function(data) {
+        var pluginCode = data.responseData.pluginCode
+
+        $('#builder-plugin-selector-panel [data-control=filelist]').fileList('markActive', pluginCode)
     }
 
     // REGISTRATION

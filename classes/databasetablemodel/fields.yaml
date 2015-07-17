@@ -1,0 +1,53 @@
+# ===================================
+#  Form Field Definitions
+# ===================================
+
+fields:
+    name:
+        label: rainlab.builder::lang.database.field_name
+        attributes:
+            default-focus: 1
+
+    toolbar:
+        type: partial
+        path: database_table_toolbar
+        cssClass: collapse-visible
+
+tabs:
+    stretch: true
+    fields:
+        columns:
+            stretch: true
+            tab: rainlab.builder::lang.database.tab_columns
+            type: datatable
+            columns:
+                name:
+                    title: rainlab.builder::lang.database.column_name_title
+                    validation: 
+                        required: 
+                            message: rainlab.builder::lang.database.column_name_required
+                type:
+                    title: rainlab.builder::lang.database.column_name_type
+                    validation: 
+                        required: 
+                            message: rainlab.builder::lang.database.column_type_required
+                length:
+                    title: rainlab.builder::lang.database.column_name_length
+                    validation:
+                        regex:
+                            pattern: ^[0-9]+$
+                            message: rainlab.builder::lang.database.column_validation_length
+                unsigned:
+                    title: rainlab.builder::lang.database.column_name_unsigned
+                    type: checkbox
+                allow_null:
+                    title: rainlab.builder::lang.database.column_name_nullable
+                    type: checkbox
+                auto_increment:
+                    title: rainlab.builder::lang.database.column_auto_increment
+                    type: checkbox
+                primary_key:
+                    title: rainlab.builder::lang.database.column_auto_primary_key
+                    type: checkbox
+                default:
+                    title: rainlab.builder::lang.database.column_default
