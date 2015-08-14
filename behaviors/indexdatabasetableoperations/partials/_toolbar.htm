@@ -1,0 +1,20 @@
+<div class="form-buttons loading-indicator-container">
+    <a
+        href="javascript:;" 
+        class="btn btn-primary oc-icon-check save"
+        data-builder-command="databaseTable:cmdSaveTable"
+        data-load-indicator="<?= e(trans('backend::lang.form.saving')) ?>"
+        data-hotkey="ctrl+s, cmd+s">
+        <?= e(trans('backend::lang.form.save')) ?>
+    </a>
+
+    <?php /*
+    <button
+        type="button"
+        class="btn btn-default empty oc-icon-trash-o"
+        data-request="onDelete"
+        data-request-confirm="<?= e(trans('rainlab.pages::lang.page.delete_confirm_single')) ?>"
+        data-request-success="$.oc.pagesPage.closeTabs(data, 'page'); $.oc.pagesPage.updateObjectList('page'); $(this).trigger('close.oc.tab', [{force: true}])"
+        data-control="delete-button"></button>
+    */ ?>
+</div>

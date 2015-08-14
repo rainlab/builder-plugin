@@ -1,6 +1,6 @@
 <?php namespace RainLab\Builder\Behaviors;
 
-use Backend\Classes\ControllerBehavior;
+use RainLab\Builder\Classes\IndexOperationsBehaviorBase;
 use RainLab\Builder\Classes\PluginBaseModel;
 use Backend\Behaviors\FormController;
 use ApplicationException;
@@ -13,14 +13,16 @@ use Input;
  * @package rainlab\builder
  * @author Alexey Bobkov, Samuel Georges
  */
-class IndexPluginOperations extends ControllerBehavior
+class IndexPluginOperations extends IndexOperationsBehaviorBase
 {
+    protected $baseFormConfigFile = '~/plugins/rainlab/builder/classes/pluginbasemodel/fields.yaml';
+
     public function onPluginLoadPopup()
     {
         $pluginCode = Input::get('pluginCode');
 
         try {
-            $this->vars['form'] = $this->makePluginBaseFormWidget($pluginCode);
+            $this->vars['form'] = $this->makeBaseFormWidget($pluginCode);
             $this->vars['pluginCode'] = $pluginCode;
         }
         catch (ApplicationException $ex) {
@@ -34,7 +36,7 @@ class IndexPluginOperations extends ControllerBehavior
     {
         $pluginCode = Input::get('pluginCode');
 
-        $model = $this->loadOrCreatePluginModel($pluginCode);
+        $model = $this->loadOrCreateBaseModel($pluginCode);
         $model->fill($_POST);
         $model->save();
 
@@ -55,25 +57,8 @@ class IndexPluginOperations extends ControllerBehavior
         return $result;
     }
 
-    protected function makePluginBaseFormWidget($pluginCode)
+    protected function loadOrCreateBaseModel($pluginCode)
     {
-// TODO: it looks like this method can be abstracted. See also Database Table Operations behavior
-        $formConfig = '~/plugins/rainlab/builder/classes/pluginbasemodel/fields.yaml';
-        $widgetConfig = $this->makeConfig($formConfig);
-
-        $widgetConfig->model = $this->loadOrCreatePluginModel($pluginCode);
-        $widgetConfig->alias = 'form_plugin_'.uniqid();
-
-        $form = $this->makeWidget('Backend\Widgets\Form', $widgetConfig);
-        $form->context = $pluginCode ? FormController::CONTEXT_UPDATE : FormController::CONTEXT_CREATE;
-
-        return $form;
-    }
-
-    protected function loadOrCreatePluginModel($pluginCode)
-    {
-// TODO: this method could be abstract, referred in the parent's makeTableFormWidget().
-// and implemented in each behavior.
         $model = new PluginBaseModel();
 
         if (!$pluginCode) {

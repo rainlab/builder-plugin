@@ -53,15 +53,19 @@
     // ============================
 
     Builder.prototype.init = function() {
-        this.registerHandlers()
-
         this.$masterTabs = $('#builder-master-tabs')
         this.masterTabsObj = this.$masterTabs.data('oc.tab')
         this.hideStripeIndicatorProxy = this.proxy(this.hideStripeIndicator)
+        new $.oc.tabFormExpandControls(this.$masterTabs)
+
+        this.registerHandlers()
     }
 
     Builder.prototype.registerHandlers = function() {
         $(document).on('click', '[data-builder-command]', this.proxy(this.onCommand))
+
+        this.$masterTabs.on('changed.oc.changeMonitor', this.proxy(this.formChanged))
+        this.$masterTabs.on('unchanged.oc.changeMonitor', this.proxy(this.formUnchanged))
     }
 
     Builder.prototype.hideStripeIndicator = function() {
@@ -71,8 +75,21 @@
     Builder.prototype.addMasterTab = function(data) {
 var tabId = null,
     icon = ''
-
         this.masterTabsObj.addTab(data.tabTitle, data.tab, tabId, icon)
+    }
+
+    Builder.prototype.formChanged = function(ev) {
+        $('.form-tabless-fields', ev.target).trigger('modified.oc.tab')
+        this.updateModifiedCounter()
+    }
+
+    Builder.prototype.formUnchanged = function(ev) {
+        $('.form-tabless-fields', ev.target).trigger('unmodified.oc.tab')
+        this.updateModifiedCounter()
+    }
+
+    Builder.prototype.updateModifiedCounter = function() {
+        throw new Error('Not implemented yet')
     }
 
     // EVENT HANDLERS

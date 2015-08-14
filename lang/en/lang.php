@@ -41,7 +41,7 @@ return [
         'confirmation_delete_multiple' => 'Do you really want to delete the selected tables?',
         'field_name' => 'Table name',
         'tab_columns' => 'Columns',
-        'column_name_title' => 'Title',
+        'column_name_name' => 'Column',
         'column_name_required' => 'Please provide the column name',
         'column_name_type' => 'Type',
         'column_type_required' => 'Please select the column type',
@@ -49,10 +49,12 @@ return [
         'column_validation_length' => 'The Length value should be integer',
         'column_name_unsigned' => 'Unsigned',
         'column_name_nullable' => 'Nullable',
-        'column_auto_increment' => 'Auto increment',
+        'column_auto_increment' => 'AUTOINCR',
         'column_default' => 'Default',
         'column_auto_primary_key' => 'PK',
-        'tab_new_table' => 'New table'
+        'tab_new_table' => 'New table',
+        'btn_add_column' => 'Add column',
+        'btn_delete_column' => 'Delete column',
     ],
     'model' => [
         'menu_label' => 'Models'

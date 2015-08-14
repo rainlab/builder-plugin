@@ -1,6 +1,6 @@
 <?php namespace RainLab\Builder\Behaviors;
 
-use Backend\Classes\ControllerBehavior;
+use RainLab\Builder\Classes\IndexOperationsBehaviorBase;
 use RainLab\Builder\Classes\DatabaseTableModel;
 use Backend\Behaviors\FormController;
 use ApplicationException;
@@ -14,13 +14,15 @@ use Lang;
  * @package rainlab\builder
  * @author Alexey Bobkov, Samuel Georges
  */
-class IndexDatabaseTableOperations extends ControllerBehavior
+class IndexDatabaseTableOperations extends IndexOperationsBehaviorBase
 {
+    protected $baseFormConfigFile = '~/plugins/rainlab/builder/classes/databasetablemodel/fields.yaml';
+
     public function onDatabaseTableCreate()
     {
         $tableName = null;
 
-        $widget = $this->makeTableFormWidget($tableName);
+        $widget = $this->makeBaseFormWidget($tableName);
 
         $result = [
             'tabTitle' => $this->getTabTitle($tableName),
@@ -41,25 +43,8 @@ class IndexDatabaseTableOperations extends ControllerBehavior
         return $tableName;
     }
 
-    protected function makeTableFormWidget($tableName)
+    protected function loadOrCreateBaseModel($tableName)
     {
-// TODO: it looks like this method can be abstracted. See also Plugin Operations behavior
-        $formConfig = '~/plugins/rainlab/builder/classes/databasetablemodel/fields.yaml';
-        $widgetConfig = $this->makeConfig($formConfig);
-
-        $widgetConfig->model = $this->loadOrCreateTableModel($tableName);
-        $widgetConfig->alias = 'form_plugin_'.uniqid();
-
-        $form = $this->makeWidget('Backend\Widgets\Form', $widgetConfig);
-        $form->context = $tableName ? FormController::CONTEXT_UPDATE : FormController::CONTEXT_CREATE;
-
-        return $form;
-    }
-
-    protected function loadOrCreateTableModel($tableName)
-    {
-// TODO: this method could be abstract, referred in the parent's makeTableFormWidget().
-// and implemented in each behavior.
         $model = new DatabaseTableModel();
 
         if (!$tableName) {

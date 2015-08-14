@@ -10,7 +10,7 @@ fields:
 
     toolbar:
         type: partial
-        path: database_table_toolbar
+        path: $/rainlab/builder/behaviors/indexdatabasetableoperations/partials/_toolbar.htm
         cssClass: collapse-visible
 
 tabs:
@@ -18,11 +18,14 @@ tabs:
     fields:
         columns:
             stretch: true
+            cssClass: frameless
             tab: rainlab.builder::lang.database.tab_columns
             type: datatable
+            btnAddRowLabel: rainlab.builder::lang.database.btn_add_column
+            btnDeleteRowLabel: rainlab.builder::lang.database.btn_delete_column
             columns:
                 name:
-                    title: rainlab.builder::lang.database.column_name_title
+                    title: rainlab.builder::lang.database.column_name_name
                     validation: 
                         required: 
                             message: rainlab.builder::lang.database.column_name_required

@@ -26,6 +26,10 @@
         $.oc.builder.indexController.openOrLoadMasterTab($(ev.target), 'onDatabaseTableCreate', this.newTabId())
     }
 
+    DatabaseTable.prototype.cmdSaveTable = function(ev) {
+        console.log('save table')
+    }
+
     // EVENT HANDLERS
     // ============================
 
