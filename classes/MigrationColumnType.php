@@ -89,7 +89,7 @@ class MigrationColumnType extends BaseModel
             self::TYPE_FLOAT => DoctrineType::FLOAT
         ];
 
-        if (!in_array($type, $typeMap)) {
+        if (!array_key_exists($type, $typeMap)) {
             throw new SystemException(sprintf('Unknown column type: %s', $type));
         }
 

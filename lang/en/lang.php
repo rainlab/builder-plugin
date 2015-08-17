@@ -46,7 +46,7 @@ return [
         'column_name_type' => 'Type',
         'column_type_required' => 'Please select the column type',
         'column_name_length' => 'Length',
-        'column_validation_length' => 'The Length value should be integer',
+        'column_validation_length' => "The Length value should be integer or specified as precision and scale (10,2) for decimal columns. Spaces are not allowed in the length column.",
         'column_validation_title' => 'Only digits, lower-case Latin letters and underscores are allowed in column names',
         'column_name_unsigned' => 'Unsigned',
         'column_name_nullable' => 'Nullable',
