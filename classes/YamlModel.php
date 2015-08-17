@@ -2,8 +2,6 @@
 
 use Symfony\Component\Yaml\Dumper as YamlDumper;
 use ApplicationException;
-use ValidationException;
-use Validator;
 use Yaml;
 use File;
 use Lang;
@@ -14,13 +12,8 @@ use Lang;
  * @package rainlab\builder
  * @author Alexey Bobkov, Samuel Georges
  */
-abstract class YamlModel
+abstract class YamlModel extends BaseModel
 {
-    /**
-     * @var boolean This property is used by the system internally.
-     */
-    public $exists = false;
-
     /**
      * @var string Section in the YAML file to save the data into.
      * If empty, the model contents uses the entire file.
@@ -29,15 +22,7 @@ abstract class YamlModel
 
     protected $originalFilePath;
 
-    protected $updatedData = [];
-
     protected $originalFileData = [];
-
-    protected $validationRules = [];
-
-    protected $validationMessages = [];
-
-    protected static $fillable = [];
 
     public function save()
     {
@@ -107,27 +92,6 @@ abstract class YamlModel
         $this->yamlArrayToModel($data);
     }
 
-    public function fill(array $attributes)
-    {
-        $this->updatedData = [];
-
-        foreach ($attributes as $key => $value) {
-            if (!in_array($key, static::$fillable)) {
-                continue;
-            }
-
-            $methodName = 'set'.ucfirst($key);
-            if (method_exists($this, $methodName)) {
-                $this->$methodName($value);
-            }
-            else {
-                $this->$key = $value;
-            }
-
-            $this->updatedData[$key] = $value;
-        }
-    }
-
     public function initDefaults()
     {
     }
@@ -135,32 +99,6 @@ abstract class YamlModel
     protected function isNewModel()
     {
         return !strlen($this->originalFilePath);
-    }
-
-    protected function validate()
-    {
-        $existingData = [];
-        foreach (static::$fillable as $field) {
-            $existingData[$field] = $this->$field;
-        }
-
-        $validation = Validator::make(
-            array_merge($existingData, $this->updatedData),
-            $this->validationRules,
-            $this->validationMessages
-        );
-
-        if ($validation->fails()) {
-            throw new ValidationException($validation);
-        }
-
-        if (!$this->isNewModel()) {
-            $this->validateBeforeCreate();
-        }
-    }
-
-    protected function validateBeforeCreate()
-    {
     }
 
     protected function afterCreate()

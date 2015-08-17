@@ -4,4 +4,5 @@
     'data-window-close-confirm' => e(trans('backend::lang.form.confirm_tab_close'))
 ]) ?>
     <?= $form->render() ?>
+    <input type="hidden" name="plugin_db_prefix" value="<?= e($pluginDbPrefix) ?>">
 <?= Form::close() ?>

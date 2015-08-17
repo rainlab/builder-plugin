@@ -89,7 +89,7 @@ var tabId = null,
     }
 
     Builder.prototype.updateModifiedCounter = function() {
-        throw new Error('Not implemented yet')
+        console.error('Not implemented yet')
     }
 
     // EVENT HANDLERS

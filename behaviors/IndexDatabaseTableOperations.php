@@ -5,6 +5,7 @@ use RainLab\Builder\Classes\DatabaseTableModel;
 use Backend\Behaviors\FormController;
 use ApplicationException;
 use Exception;
+use Request;
 use Input;
 use Lang;
 
@@ -27,11 +28,27 @@ class IndexDatabaseTableOperations extends IndexOperationsBehaviorBase
         $result = [
             'tabTitle' => $this->getTabTitle($tableName),
             'tab' => $this->makePartial('tab', [
-                'form'  => $widget
+                'form'  => $widget,
+                'pluginDbPrefix' => $this->getPluginDbPrefix()
             ])
         ];
 
         return $result;
+    }
+
+    public function onDatabaseTableValidateAndShowPopup()
+    {
+        $tableName = Input::get('tableName');
+
+        $model = $this->loadOrCreateBaseModel($tableName);
+        $model->fill($_POST);
+
+        $model->setPluginPrefix(Request::input('plugin_db_prefix'));
+        $model->validate();
+
+        $model->generateMigrationCode();
+
+        traceLog('onDatabaseTableValidateAndShowPopup');
     }
 
     protected function getTabTitle($tableName)
@@ -52,7 +69,18 @@ class IndexDatabaseTableOperations extends IndexOperationsBehaviorBase
             return $model;
         }
 
-        // $model->loadTable($tableName);
+        $model->load($tableName);
         return $model;
+    }
+
+    protected function getPluginDbPrefix()
+    {
+        $vector = $this->controller->getBuilderActivePluginVector();
+
+        if (!$vector) {
+            throw new ApplicationException('Cannot determine the currently active plugin.');
+        }
+
+        return $vector->pluginCodeObj->toDatabasePrefix();
     }
 }

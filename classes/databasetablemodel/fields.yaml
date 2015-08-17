@@ -29,8 +29,32 @@ tabs:
                     validation: 
                         required: 
                             message: rainlab.builder::lang.database.column_name_required
+                        regex:
+                            pattern: ^[0-9_a-z]+$
+                            message: rainlab.builder::lang.database.column_validation_title
                 type:
                     title: rainlab.builder::lang.database.column_name_type
+                    type: dropdown
+                    options: 
+                        integer: Integer
+                        tinyInteger: Tiny Integer
+                        smallInteger: Small Integer
+                        mediumInteger: Medium Integer
+                        bigInteger: Big Ingeger
+                        date: Date
+                        time: Time
+                        dateTime: Date and Time
+                        timestamp: Timestamp
+                        char: Char
+                        string: String
+                        text: Text
+                        mediumText: Medium Text
+                        longText: Long Text
+                        binary: Binary
+                        boolean: Boolean
+                        decimal: Decimal
+                        double: Double
+                        float: Float
                     validation: 
                         required: 
                             message: rainlab.builder::lang.database.column_type_required
@@ -52,5 +76,6 @@ tabs:
                 primary_key:
                     title: rainlab.builder::lang.database.column_auto_primary_key
                     type: checkbox
+                    width: 50px
                 default:
                     title: rainlab.builder::lang.database.column_default

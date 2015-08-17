@@ -47,6 +47,7 @@ return [
         'column_type_required' => 'Please select the column type',
         'column_name_length' => 'Length',
         'column_validation_length' => 'The Length value should be integer',
+        'column_validation_title' => 'Only digits, lower-case Latin letters and underscores are allowed in column names',
         'column_name_unsigned' => 'Unsigned',
         'column_name_nullable' => 'Nullable',
         'column_auto_increment' => 'AUTOINCR',
@@ -55,6 +56,14 @@ return [
         'tab_new_table' => 'New table',
         'btn_add_column' => 'Add column',
         'btn_delete_column' => 'Delete column',
+        'error_table_name_invalid_prefix' => "Table name should start with the plugin prefix: ':prefix'.",
+        'error_table_name_invalid_characters' => 'Invalid table name. Table names should contain only Latin letters, digits and underscores. Names should start with a Latin letter and could not contain spaces.',
+        'error_table_duplicate_column' => "Duplicate column name: ':column'.",
+        'error_table_mutliple_primary_keys' => 'The table cannot contain multiple primary keys.',
+        'error_table_mutliple_auto_increment' => 'The table cannot contain multiple auto-increment columns.',
+        'error_table_auto_increment_non_integer' => 'Auto-increment columns should have integer type.',
+        'error_table_decimal_length' => "The Length parameter for :type type should be in format '10,2', without spaces.",
+        'error_table_length' => 'The Length parameter for :type type should be specified as integer.'
     ],
     'model' => [
         'menu_label' => 'Models'
