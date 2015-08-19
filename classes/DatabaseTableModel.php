@@ -129,11 +129,17 @@ class DatabaseTableModel extends BaseModel
         return parent::validate();
     }
 
-    public function generateMigrationCode()
+    public function generateCreateOrUpdateMigration()
     {
         $schemaCreator = new DatabaseTableSchemaCreator();
         $newSchema = $schemaCreator->createTableSchema($this->name, $this->columns);
-traceLog($newSchema);
+
+        $codeGenerator = new TableMigrationCodeGenerator();
+
+        $migration = new MigrationModel();
+        $migration->code = $codeGenerator->createOrUpdateTable($newSchema, null);
+
+        return $migration;
     }
 
     protected function validateColumns()

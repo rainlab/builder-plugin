@@ -98,5 +98,13 @@ return [
         'select_plugin_first' => 'Please select a plugin first. To see the plugin list click the > icon on the left sidebar.',
         'plugin_not_selected' => 'Plugin is not selected',
         'add' => 'Add'
+    ],
+    'migration' => [
+        'entity_name' => 'Migration',
+        'error_version_invalid' => 'The version should be specified in format 1.0.1',
+        'field_version' => 'Version',
+        'field_description' => 'Description',
+        'field_code' => 'Code',
+        'save_and_apply' => 'Save & Apply'
     ]
 ];

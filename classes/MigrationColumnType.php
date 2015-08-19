@@ -9,6 +9,18 @@ use Lang;
 /**
  * Represents a database column type used in migrations.
  *
+ * Important: some Doctrine types map to multiple migration types, for example -
+ * Doctrine boolean could be boolean and tinyInteger in migrations.
+ * To eliminate the the necessity of guessing, the following migration column
+ * types are removed from the list:
+ * 
+ *  - tinyInteger
+ *  - mediumInteger
+ *  - char
+ *  - mediumText
+ *  - longText
+ *  - float
+ *
  * @package rainlab\builder
  * @author Alexey Bobkov, Samuel Georges
  */
@@ -19,24 +31,18 @@ class MigrationColumnType extends BaseModel
      */
 
     const TYPE_INTEGER = 'integer';
-    const TYPE_TINYINTEGER = 'tinyInteger';
     const TYPE_SMALLINTEGER = 'smallInteger';
-    const TYPE_MEDIUMINTEGER = 'mediumInteger';
     const TYPE_BIGINTEGER = 'bigInteger';
     const TYPE_DATE = 'date';
     const TYPE_TIME = 'time';
     const TYPE_DATETIME = 'dateTime';
     const TYPE_TIMESTAMP = 'timestamp';
-    const TYPE_CHAR = 'char';
     const TYPE_STRING = 'string';
     const TYPE_TEXT = 'text';
-    const TYPE_MEDIUMTEXT = 'mediumText';
-    const TYPE_LONGTEXT = 'longText';
     const TYPE_BINARY = 'binary';
     const TYPE_BOOLEAN = 'boolean';
     const TYPE_DECIMAL = 'decimal';
     const TYPE_DOUBLE = 'double';
-    const TYPE_FLOAT = 'float';
 
     const REGEX_LENGTH_SINGLE = '/^([0-9]+)$/';
     const REGEX_LENGTH_DOUBLE = '/^([0-9]+)\,([0-9]+)$/';
@@ -45,10 +51,7 @@ class MigrationColumnType extends BaseModel
     {
         return [
             self::TYPE_INTEGER,
-            self::TYPE_TINYINTEGER,
             self::TYPE_SMALLINTEGER,
-            self::TYPE_MEDIUMINTEGER,
-            self::TYPE_MEDIUMINTEGER,
             self::TYPE_BIGINTEGER
         ];
     }
@@ -57,8 +60,26 @@ class MigrationColumnType extends BaseModel
     {
         return [
             self::TYPE_DECIMAL,
-            self::TYPE_DOUBLE,
-            self::TYPE_FLOAT
+            self::TYPE_DOUBLE
+        ];
+    }
+
+    public static function getDoctrineTypeMap()
+    {
+        return [
+            self::TYPE_INTEGER => DoctrineType::INTEGER,
+            self::TYPE_SMALLINTEGER => DoctrineType::SMALLINT,
+            self::TYPE_BIGINTEGER => DoctrineType::BIGINT,
+            self::TYPE_DATE => DoctrineType::DATE,
+            self::TYPE_TIME => DoctrineType::TIME,
+            self::TYPE_DATETIME => DoctrineType::DATETIME,
+            self::TYPE_TIMESTAMP => DoctrineType::DATETIME,
+            self::TYPE_STRING => DoctrineType::STRING,
+            self::TYPE_TEXT => DoctrineType::TEXT,
+            self::TYPE_BINARY => DoctrineType::BLOB,
+            self::TYPE_BOOLEAN => DoctrineType::BOOLEAN,
+            self::TYPE_DECIMAL => DoctrineType::DECIMAL,
+            self::TYPE_DOUBLE => DoctrineType::FLOAT
         ];
     }
 
@@ -67,32 +88,43 @@ class MigrationColumnType extends BaseModel
      */
     public static function toDoctrineTypeName($type)
     {
-        $typeMap = [
-            self::TYPE_INTEGER => DoctrineType::INTEGER,
-            self::TYPE_TINYINTEGER => DoctrineType::BOOLEAN,
-            self::TYPE_SMALLINTEGER => DoctrineType::SMALLINT,
-            self::TYPE_MEDIUMINTEGER => DoctrineType::INTEGER,
-            self::TYPE_BIGINTEGER => DoctrineType::BIGINT,
-            self::TYPE_DATE => DoctrineType::DATE,
-            self::TYPE_TIME => DoctrineType::TIME,
-            self::TYPE_DATETIME => DoctrineType::DATETIME,
-            self::TYPE_TIMESTAMP => DoctrineType::DATETIME,
-            self::TYPE_CHAR => DoctrineType::STRING,
-            self::TYPE_STRING => DoctrineType::STRING,
-            self::TYPE_TEXT => DoctrineType::TEXT,
-            self::TYPE_MEDIUMTEXT => DoctrineType::TEXT,
-            self::TYPE_LONGTEXT => DoctrineType::TEXT,
-            self::TYPE_BINARY => DoctrineType::BLOB,
-            self::TYPE_BOOLEAN => DoctrineType::BOOLEAN,
-            self::TYPE_DECIMAL => DoctrineType::DECIMAL,
-            self::TYPE_DOUBLE => DoctrineType::FLOAT,
-            self::TYPE_FLOAT => DoctrineType::FLOAT
-        ];
+        $typeMap = self::getDoctrineTypeMap();
 
         if (!array_key_exists($type, $typeMap)) {
             throw new SystemException(sprintf('Unknown column type: %s', $type));
         }
 
+        return $typeMap[$type];
+    }
+
+    /**
+     * Converts Doctrine mapping type name to a migration column method name
+     */
+    public static function toMigrationMethodName($type, $columnName)
+    {
+        $typeMap = self::getDoctrineTypeMap();
+
+        if (!in_array($type, $typeMap)) {
+            throw new SystemException(sprintf('Unknown column type: %s', $type));
+        }
+
+        // Some Doctrine types map to multiple migration types, for example
+        // Doctrine boolean could be boolean and tinyInteger in migrations.
+        // Some guessing could be required in this method. The method is not
+        // 100% reliable.
+
+        if ($type == DoctrineType::DATETIME) {
+            // The datetime type maps to datetime and timestamp. Use the name 
+            // guessing as the only possible solution.
+
+            if (in_array($columnName, ['created_at', 'updated_at'])) {
+                return self::TYPE_TIMESTAMP;
+            }
+
+            return self::TYPE_DATETIME;
+        }
+
+        $typeMap = array_flip($typeMap);
         return $typeMap[$type];
     }
 

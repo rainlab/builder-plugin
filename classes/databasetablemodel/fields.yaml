@@ -37,24 +37,18 @@ tabs:
                     type: dropdown
                     options: 
                         integer: Integer
-                        tinyInteger: Tiny Integer
                         smallInteger: Small Integer
-                        mediumInteger: Medium Integer
-                        bigInteger: Big Ingeger
+                        bigInteger: Big Integer
                         date: Date
                         time: Time
                         dateTime: Date and Time
                         timestamp: Timestamp
-                        char: Char
                         string: String
                         text: Text
-                        mediumText: Medium Text
-                        longText: Long Text
                         binary: Binary
                         boolean: Boolean
                         decimal: Decimal
                         double: Double
-                        float: Float
                     validation: 
                         required: 
                             message: rainlab.builder::lang.database.column_type_required

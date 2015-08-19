@@ -18,18 +18,21 @@ use Lang;
 class IndexDatabaseTableOperations extends IndexOperationsBehaviorBase
 {
     protected $baseFormConfigFile = '~/plugins/rainlab/builder/classes/databasetablemodel/fields.yaml';
+    protected $migrationFormConfigFile = '~/plugins/rainlab/builder/classes/migrationmodel/fields.yaml';
 
     public function onDatabaseTableCreate()
     {
         $tableName = null;
+        $dbPrefix = $this->getPluginDbPrefix();
 
         $widget = $this->makeBaseFormWidget($tableName);
+        $widget->model->name = $dbPrefix.'_';
 
         $result = [
             'tabTitle' => $this->getTabTitle($tableName),
             'tab' => $this->makePartial('tab', [
                 'form'  => $widget,
-                'pluginDbPrefix' => $this->getPluginDbPrefix()
+                'pluginDbPrefix' => $dbPrefix
             ])
         ];
 
@@ -46,9 +49,11 @@ class IndexDatabaseTableOperations extends IndexOperationsBehaviorBase
         $model->setPluginPrefix(Request::input('plugin_db_prefix'));
         $model->validate();
 
-        $model->generateMigrationCode();
+        $migration = $model->generateCreateOrUpdateMigration();
 
-        traceLog('onDatabaseTableValidateAndShowPopup');
+        return $this->makePartial('migration-popup-form', [
+            'form' => $this->makeMigrationFormWidget($migration)
+        ]);
     }
 
     protected function getTabTitle($tableName)
@@ -82,5 +87,18 @@ class IndexDatabaseTableOperations extends IndexOperationsBehaviorBase
         }
 
         return $vector->pluginCodeObj->toDatabasePrefix();
+    }
+
+    protected function makeMigrationFormWidget($migration)
+    {
+        $widgetConfig = $this->makeConfig($this->migrationFormConfigFile);
+
+        $widgetConfig->model = $migration;
+        $widgetConfig->alias = 'form_migration_'.uniqid();
+
+        $form = $this->makeWidget('Backend\Widgets\Form', $widgetConfig);
+        $form->context = FormController::CONTEXT_CREATE;
+
+        return $form;
     }
 }

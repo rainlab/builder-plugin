@@ -1,0 +1,9 @@
+fields:
+    version:
+        label: rainlab.builder::lang.migration.field_version
+    description:
+        label: rainlab.builder::lang.migration.field_description
+    code:
+        label: rainlab.builder::lang.migration.field_code
+        type: codeeditor
+        language: php
