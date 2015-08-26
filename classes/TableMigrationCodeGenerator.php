@@ -5,6 +5,7 @@ use Doctrine\DBAL\Schema\Comparator;
 use Doctrine\DBAL\Schema\TableDiff;
 use October\Rain\Parse\Template as TextParser;
 use File;
+use Str;
 
 /**
  * Generates migration code for creating, updates and deleting tables.
@@ -14,6 +15,14 @@ use File;
  */
 class TableMigrationCodeGenerator extends BaseModel
 {
+    const COLUMN_MODE_CREATE = 'create';
+    const COLUMN_MODE_CHANGE = 'change';
+    const COLUMN_MODE_REVERT = 'revert';
+
+    protected $indent = '    ';
+
+    protected $eol = PHP_EOL;
+
     /**
      * Generates code for creating or updating a database table.
      * @param Doctrine\DBAL\Schema\Table $updatedTable Specifies the updated table schema.
@@ -29,7 +38,7 @@ class TableMigrationCodeGenerator extends BaseModel
             // The table already exists
             //
             $comparator = new Comparator();
-            $tableDiff = $comparator->diffTable($updatedTable, $existingTable);
+            $tableDiff = $comparator->diffTable($existingTable, $updatedTable);
         }
         else {
             // The table doesn't exist
@@ -42,68 +51,67 @@ class TableMigrationCodeGenerator extends BaseModel
                 $updatedTable->getIndexes() // Added indexes
             );
         }
-
+traceLog($tableDiff);
         if (!$tableDiff) {
+            return false;
+        }
+
+        if (!$tableDiff->addedColumns 
+            && !$tableDiff->changedColumns 
+            && !$tableDiff->removedColumns 
+            && !$tableDiff->renamedColumns) {
             return false;
         }
 
         return $this->generateCreateOrUpdateCode($tableDiff, !$existingTable);
     }
 
+    /**
+     * Wrap migration's up() and down() functions into a complete migration class declaration
+     * @param string $scriptFileName Specifies the migration script file name
+     * @param string $code Specifies the migration code
+     * @param PluginCode $pluginCodeObj The plugin code object
+     */
+    public function wrapMigrationCode($scriptFilename, $code, $pluginCodeObj)
+    {
+        $templatePath = '$/rainlab/builder/classes/databasetablemodel/templates/full-migration-code.php.tpl';
+        $templatePath = File::symbolizePath($templatePath);
+
+        $fileContents = File::get($templatePath);
+
+        return TextParser::parse($fileContents, [
+            'className' => Str::studly($scriptFilename),
+            'migrationCode' => $this->indent($code),
+            'namespace' => $pluginCodeObj->toPluginNamespace()
+        ]);
+    }
+
     protected function generateCreateOrUpdateCode($tableDiff, $isNewTable)
     {
-
         $templatePath = '$/rainlab/builder/classes/databasetablemodel/templates/migration-code.php.tpl';
         $templatePath = File::symbolizePath($templatePath);
 
         $fileContents = File::get($templatePath);
 
         return TextParser::parse($fileContents, [
-            'upCode' => $this->generateCreateOrUpdateUpCode($tableDiff),
+            'upCode' => $this->generateCreateOrUpdateUpCode($tableDiff, $isNewTable),
             'downCode' => $this->generateCreateOrUpdateDownCode($tableDiff, $isNewTable),
         ]);
     }
 
-    protected function generateCreateOrUpdateUpCode($tableDiff)
+    protected function generateCreateOrUpdateUpCode($tableDiff, $isNewTable)
     {
         // TODO: Implement renaming, implement indexes
         // write unit tests
 
-        $result = sprintf('\tSchema::table(\'%s\', function($table)', $tableDiff->name).PHP_EOL;
-        $result .= '\t{'.PHP_EOL;
+        $result = $this->generateSchemaTableMethodStart($tableDiff->name, $isNewTable);
 
-        $autoincrementColumn = null;
         foreach ($tableDiff->addedColumns as $column) {
-            $columnName = $column->getName();
-            $typeName = $column->getType()->getName();
-
-            $method = MigrationColumnType::toMigrationMethodName($typeName, $columnName);
-
-            $lengthStr = $this->formatLengthParameters($column, $method);
-            $result .= sprintf('\t\t$table->%s(\'%s\'%s)', $method, $columnName, $lengthStr);
-
-            if (!$column->getNotnull()) {
-                $result .= '->nullable()';
-            }
-
-            if ($column->getUnsigned()) {
-                $result .= '->unsigned()';
-            }
-
-            $default = $column->getDefault();
-            if (strlen($default)) {
-                $result .= sprintf('->default(\'%s\')', $this->quoteParameter($default));
-            }
-
-            $result .= ';'.PHP_EOL;
-
-            if ($column->getAutoincrement()) {
-                $autoincrementColumn = $columnName;
-            }
+            $result .= $this->generateColumnCode($column, self::COLUMN_MODE_CREATE);
         }
 
-        if ($autoincrementColumn !== null) {
-            $result .= sprintf('\t\t$table->increments(\'%s\');', $autoincrementColumn).PHP_EOL;
+        foreach ($tableDiff->changedColumns as $columnDiff) {
+            $result .= $this->generateColumnCode($columnDiff, self::COLUMN_MODE_CHANGE);
         }
 
         foreach ($tableDiff->addedIndexes as $index) {
@@ -112,7 +120,7 @@ class TableMigrationCodeGenerator extends BaseModel
             }
         }
 
-        $result .= '\t});';
+        $result .= $this->generateSchemaTableMethodEnd();
 
         return $this->makeTabs($result);
 
@@ -125,13 +133,23 @@ class TableMigrationCodeGenerator extends BaseModel
         if ($isNewTable) {
             $result = sprintf('\tSchema::dropIfExists(\'%s\');', $tableDiff->name);
         }
+        else {
+            if ($tableDiff->addedColumns || $tableDiff->changedColumns) {
+                $result = $this->generateSchemaTableMethodStart($tableDiff->name, $isNewTable);
+
+                foreach ($tableDiff->addedColumns as $column) {
+                    $result .= $this->generateColumnDrop($column);
+                }
+
+                foreach ($tableDiff->changedColumns as $columnDiff) {
+                    $result .= $this->generateColumnCode($columnDiff, self::COLUMN_MODE_REVERT);
+                }
+
+                $result .= $this->generateSchemaTableMethodEnd();
+            }
+        }
 
         return $this->makeTabs($result);
-    }
-
-    protected function makeTabs($str)
-    {
-        return str_replace('\t', '    ', $str);
     }
 
     protected function formatLengthParameters($column, $method)
@@ -165,8 +183,181 @@ class TableMigrationCodeGenerator extends BaseModel
         }
     }
 
+    protected function applyMethodIncrements($method, $column)
+    {
+        if (!$column->getAutoincrement()) {
+            return $method;
+        }
+
+        if ($method == MigrationColumnType::TYPE_BIGINTEGER) {
+            return 'bigIncrements';
+        }
+
+        return 'increments';
+    }
+
+    protected function generateSchemaTableMethodStart($tableName, $isNewTable)
+    {
+        $tableFunction = $isNewTable ? 'create' : 'table';
+        $result = sprintf('\tSchema::%s(\'%s\', function($table)', $tableFunction, $tableName).$this->eol;
+        $result .= '\t{'.$this->eol;
+
+        if ($isNewTable) {
+            $result .= '\t\t$table->engine = \'InnoDB\';'.$this->eol;
+        }
+
+        return $result;
+    }
+
+    protected function generateSchemaTableMethodEnd()
+    {
+        return '\t});';
+    }
+
+    protected function generateColumnDrop($column)
+    {
+        return sprintf('\t\t$table->dropColumn(\'%s\');', $column->getName()).$this->eol;
+    }
+
+    protected function generateColumnCode($columnData, $mode)
+    {
+        $forceFlagsChange = false;
+
+        switch ($mode) {
+            case self::COLUMN_MODE_CREATE: 
+                $column = $columnData;
+                $changeMode = false;
+            break;
+            case self::COLUMN_MODE_CHANGE: 
+                $column = $columnData->column;
+                $changeMode = true;
+
+                $forceFlagsChange = in_array('type', $columnData->changedProperties);
+            break;
+            case self::COLUMN_MODE_REVERT: 
+                $column = $columnData->fromColumn;
+                $changeMode = true;
+
+                $forceFlagsChange = in_array('type', $columnData->changedProperties);
+            break;
+        }
+
+        $result = $this->generateColumnMethodCall($column);
+        $result .= $this->generateNullable($column, $changeMode, $columnData, $forceFlagsChange);
+        $result .= $this->generateUnsigned($column, $changeMode, $columnData, $forceFlagsChange);
+        $result .= $this->generateDefault($column, $changeMode, $columnData, $forceFlagsChange);
+ 
+        if ($changeMode) {
+            $result .= '->change()';
+        }
+
+        $result .= ';'.$this->eol;
+
+        return $result;
+    }
+
+    protected function generateColumnMethodCall($column)
+    {
+        $columnName = $column->getName();
+        $typeName = $column->getType()->getName();
+
+        $method = MigrationColumnType::toMigrationMethodName($typeName, $columnName);
+        $method = $this->applyMethodIncrements($method, $column);
+
+        $lengthStr = $this->formatLengthParameters($column, $method);
+        return sprintf('\t\t$table->%s(\'%s\'%s)', $method, $columnName, $lengthStr);
+    }
+
+    protected function generateNullable($column, $changeMode, $columnData, $forceFlagsChange)
+    {
+        $result = null;
+
+        if (!$changeMode) {
+            if (!$column->getNotnull()) {
+                $result = $this->generateBooleanMethod('nullable', true);
+            }
+        }
+        elseif (in_array('notnull', $columnData->changedProperties) || $forceFlagsChange) {
+            $result = $this->generateBooleanMethod('nullable', !$column->getNotnull());
+        }
+
+        return $result;
+    }
+
+    protected function generateUnsigned($column, $changeMode, $columnData, $forceFlagsChange)
+    {
+        $result = null;
+
+        if (!$changeMode) {
+            if ($column->getUnsigned()) {
+                $result = $this->generateBooleanMethod('unsigned', true);
+            }
+        }
+        elseif (in_array('unsigned', $columnData->changedProperties) || $forceFlagsChange) {
+            $result = $this->generateBooleanMethod('unsigned', $column->getUnsigned());
+        }
+
+        return $result;
+    }
+
+    protected function generateDefault($column, $changeMode, $columnData, $forceFlagsChange)
+    {
+        // See a note about empty strings as default values in
+        // DatabaseTableSchemaCreator::formatOptions() method.
+
+        $result = null;
+        $default = $column->getDefault();
+
+        if (!$changeMode) {
+            if (strlen($default)) {
+                $result = $this->generateDefaultMethodCall($default);
+            }
+        }
+        elseif (in_array('default', $columnData->changedProperties) || $forceFlagsChange) {
+            if (strlen($default)) {
+                $result = $this->generateDefaultMethodCall($default);
+            }
+            elseif ($changeMode) {
+                $result = sprintf('->default(null)');
+            }
+        }
+
+        return $result;
+    }
+
+    protected function generateDefaultMethodCall($default)
+    {
+        return sprintf('->default(\'%s\')', $this->quoteParameter($default));
+    }
+
+    protected function generateBooleanString($value)
+    {
+        $result = $value ? 'true' : 'false';
+
+        return$result;
+    }
+
+    protected function generateBooleanMethod($methodName, $value)
+    {
+        if ($value) {
+            return '->'.$methodName.'()';
+        }
+
+        return '->'.$methodName.'('.$this->generateBooleanString($value).')';
+    }
+
     protected function quoteParameter($str)
     {
         return str_replace("'", "\'", $str);
+    }
+
+    protected function makeTabs($str)
+    {
+        return str_replace('\t', '    ', $str);
+    }
+
+    protected function indent($str)
+    {
+        return $this->indent . str_replace($this->eol, $this->eol . $this->indent, $str);
     }
 }

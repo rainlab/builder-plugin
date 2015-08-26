@@ -12,8 +12,8 @@
     var Base = $.oc.builder.entityControllers.base,
         BaseProto = Base.prototype
 
-    var Plugin = function() {
-        Base.call(this, 'plugin')
+    var Plugin = function(indexController) {
+        Base.call(this, 'plugin', indexController)
 
         this.popupZIndex = 5050 // This popup should be above the flyout overlay, which z-index is 5000
     }
@@ -84,6 +84,6 @@
     // REGISTRATION
     // ============================
 
-    $.oc.builder.entityControllers.plugin = new Plugin()
+    $.oc.builder.entityControllers.plugin = Plugin;
 
 }(window.jQuery);

@@ -96,7 +96,7 @@ abstract class YamlModel extends BaseModel
     {
     }
 
-    protected function isNewModel()
+    public function isNewModel()
     {
         return !strlen($this->originalFilePath);
     }

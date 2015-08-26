@@ -1,6 +1,7 @@
 <?php namespace RainLab\Builder\Classes;
 
 use ValidationException;
+use SystemException;
 use Validator;
 
 /**
@@ -26,6 +27,11 @@ abstract class BaseModel
     protected static $fillable = [];
 
     protected $updatedData = [];
+
+    /**
+     * @var PluginCode The plugin code object the model is associated with.
+     */
+    protected $pluginCodeObj = null;
 
     public function fill(array $attributes)
     {
@@ -70,12 +76,39 @@ abstract class BaseModel
         }
     }
 
+    public function isNewModel()
+    {
+        return $this->exists === false;
+    }
+
+    /**
+     * Sets a string code of a plugin the model is associated with
+     * @param string $code Specifies the plugin code
+     */
+    public function setPluginCode($code)
+    {
+        $this->pluginCodeObj = new PluginCode($code);
+    }
+
+    /**
+     * Sets a code object of a plugin the model is associated with
+     * @param PluginCode $obj Specifies the plugin code object
+     */
+    public function setPluginCodeObj($obj)
+    {
+        $this->pluginCodeObj = $obj;
+    }
+
     protected function validateBeforeCreate()
     {
     }
 
-    protected function isNewModel()
+    protected function getPluginCodeObj()
     {
-        return $this->exists === true;
+        if (!$this->pluginCodeObj) {
+            throw new SystemException(sprintf('The active plugin is not set in the %s object.', get_class($this)));
+        }
+
+        return $this->pluginCodeObj;
     }
 }

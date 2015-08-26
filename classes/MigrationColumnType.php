@@ -202,4 +202,24 @@ class MigrationColumnType extends BaseModel
         $result['length'] = $length;
         return $result;
     }
+
+    /**
+     * Converts Doctrine length, precision and scale to migration-compatible length string
+     * @return string
+     */
+    public static function doctrineLengthToMigrationLength($column)
+    {
+        $typeName = $column->getType()->getName();
+        $migrationTypeName = self::toMigrationMethodName($typeName, $column->getName());
+
+        if (in_array($migrationTypeName, self::getDecimalTypes())) {
+            return $column->getPrecision().','.$column->getScale();
+        }
+
+        if (in_array($migrationTypeName, self::getIntegerTypes())) {
+            return $column->getPrecision();
+        }
+
+        return $column->getLength();
+    }
 }

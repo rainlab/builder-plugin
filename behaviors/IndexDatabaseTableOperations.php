@@ -3,6 +3,9 @@
 use RainLab\Builder\Classes\IndexOperationsBehaviorBase;
 use RainLab\Builder\Classes\DatabaseTableModel;
 use Backend\Behaviors\FormController;
+use RainLab\Builder\Classes\MigrationModel;
+use RainLab\Builder\Classes\TableMigrationCodeGenerator;
+use RainLab\Builder\Classes\PluginCode;
 use ApplicationException;
 use Exception;
 use Request;
@@ -23,16 +26,19 @@ class IndexDatabaseTableOperations extends IndexOperationsBehaviorBase
     public function onDatabaseTableCreate()
     {
         $tableName = null;
-        $dbPrefix = $this->getPluginDbPrefix();
+        $pluginCodeObj = $this->getPluginCode();
 
         $widget = $this->makeBaseFormWidget($tableName);
-        $widget->model->name = $dbPrefix.'_';
+        $widget->model->name = $pluginCodeObj->toDatabasePrefix().'_';
 
         $result = [
             'tabTitle' => $this->getTabTitle($tableName),
+            'tabIcon' => 'icon-hdd-o',
+            'tabId' => $this->getTabId(null),
             'tab' => $this->makePartial('tab', [
                 'form'  => $widget,
-                'pluginDbPrefix' => $dbPrefix
+                'pluginCode' => $pluginCodeObj->toCode(),
+                'tableName' => null
             ])
         ];
 
@@ -41,19 +47,58 @@ class IndexDatabaseTableOperations extends IndexOperationsBehaviorBase
 
     public function onDatabaseTableValidateAndShowPopup()
     {
-        $tableName = Input::get('tableName');
+        $tableName = Input::get('table_name');
 
         $model = $this->loadOrCreateBaseModel($tableName);
         $model->fill($_POST);
 
-        $model->setPluginPrefix(Request::input('plugin_db_prefix'));
+        $pluginCode = Request::input('plugin_code');
+        $model->setPluginCode($pluginCode);
         $model->validate();
 
         $migration = $model->generateCreateOrUpdateMigration();
 
+        if (!$migration) {
+            return $this->makePartial('migration-popup-form', [
+                'noChanges' => true
+            ]);
+        }
+
         return $this->makePartial('migration-popup-form', [
-            'form' => $this->makeMigrationFormWidget($migration)
+            'form' => $this->makeMigrationFormWidget($migration),
+            'operation' => $model->isNewModel() ? 'create' : 'update',
+            'table' => $model->name,
+            'pluginCode' => $pluginCode
         ]);
+    }
+
+    public function onDatabaseTableMigrationApply()
+    {
+        $pluginCode = new PluginCode(Request::input('plugin_code'));
+        $model = new MigrationModel();
+        $model->setPluginCodeObj($pluginCode);
+
+        $model->fill($_POST);
+
+        $operation = Input::get('operation');
+        $table = Input::get('table');
+
+        $model->scriptFileName = 'builder_table_'.$operation.'_'.$table;
+
+        $codeGenerator = new TableMigrationCodeGenerator();
+        $model->code = $codeGenerator->wrapMigrationCode($model->scriptFileName, $model->code, $pluginCode);
+
+        $model->save();
+
+        $result = $this->controller->widget->databaseTabelList->updateList();
+        $result['builderRepsonseData'] = [
+            'builderObjectName'=>$table,
+            'tabId' => $this->getTabId($table),
+            'tabTitle' => $table,
+            'tableName' => $table
+        ];
+
+        return $result;
     }
 
     protected function getTabTitle($tableName)
@@ -65,12 +110,20 @@ class IndexDatabaseTableOperations extends IndexOperationsBehaviorBase
         return $tableName;
     }
 
+    protected function getTabId($tableName)
+    {
+        if (!strlen($tableName)) {
+            return 'databaseTable-'.uniqid(time());
+        }
+
+        return 'databaseTable-'.$tableName;
+    }
+
     protected function loadOrCreateBaseModel($tableName)
     {
         $model = new DatabaseTableModel();
 
         if (!$tableName) {
-            // $model->initDefaults();
             return $model;
         }
 
@@ -78,15 +131,17 @@ class IndexDatabaseTableOperations extends IndexOperationsBehaviorBase
         return $model;
     }
 
-    protected function getPluginDbPrefix()
+    protected function getPluginCode()
     {
+        // TODO: this method could be abstracted in the base behavior 
+
         $vector = $this->controller->getBuilderActivePluginVector();
 
         if (!$vector) {
             throw new ApplicationException('Cannot determine the currently active plugin.');
         }
 
-        return $vector->pluginCodeObj->toDatabasePrefix();
+        return $vector->pluginCodeObj;
     }
 
     protected function makeMigrationFormWidget($migration)

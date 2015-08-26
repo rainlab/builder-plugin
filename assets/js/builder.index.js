@@ -15,6 +15,7 @@
         this.$masterTabs = null
         this.masterTabsObj = null
         this.hideStripeIndicatorProxy = null
+        this.entityControllers = {}
 
         this.init()
     }
@@ -49,6 +50,14 @@
         )
     }
 
+    Builder.prototype.getMasterTabActivePane = function() {
+        return this.$masterTabs.find('> .tab-content > .tab-pane.active')
+    }
+
+    Builder.prototype.unchageTab = function($pane) {
+        $pane.find('form').trigger('unchange.oc.changeMonitor')
+    }
+
     // INTERNAL METHODS
     // ============================
 
@@ -58,14 +67,32 @@
         this.hideStripeIndicatorProxy = this.proxy(this.hideStripeIndicator)
         new $.oc.tabFormExpandControls(this.$masterTabs)
 
+        this.createEntityControllers()
         this.registerHandlers()
+    }
+
+    Builder.prototype.createEntityControllers = function() {
+        for (var controller in $.oc.builder.entityControllers) {
+            if (controller == "base") {
+                continue
+            }
+
+            this.entityControllers[controller] = new $.oc.builder.entityControllers[controller](this)
+        }
     }
 
     Builder.prototype.registerHandlers = function() {
         $(document).on('click', '[data-builder-command]', this.proxy(this.onCommand))
+        $(document).on('submit', '[data-builder-command]', this.proxy(this.onCommand))
 
         this.$masterTabs.on('changed.oc.changeMonitor', this.proxy(this.formChanged))
         this.$masterTabs.on('unchanged.oc.changeMonitor', this.proxy(this.formUnchanged))
+
+        for (var controller in this.entityControllers) {
+            if (this.entityControllers[controller].registerHandlers !== undefined) {
+                this.entityControllers[controller].registerHandlers()
+            }
+        }
     }
 
     Builder.prototype.hideStripeIndicator = function() {
@@ -73,9 +100,7 @@
     }
 
     Builder.prototype.addMasterTab = function(data) {
-var tabId = null,
-    icon = ''
-        this.masterTabsObj.addTab(data.tabTitle, data.tab, tabId, icon)
+        this.masterTabsObj.addTab(data.tabTitle, data.tab, data.tabId, data.tabIcon)
     }
 
     Builder.prototype.formChanged = function(ev) {
@@ -89,13 +114,31 @@ var tabId = null,
     }
 
     Builder.prototype.updateModifiedCounter = function() {
-        console.error('Not implemented yet')
+        var counters = {
+            database: { menu: 'database', count: 0 }
+        }
+
+        $('> div.tab-content > div.tab-pane[data-modified] > form', this.$masterTabs).each(function(){
+            var entity = $(this).data('entity')
+            counters[entity].count++
+        })
+
+        $.each(counters, function(type, data){
+            $.oc.sideNav.setCounter('builder/' + data.menu, data.count);
+        })
     }
 
     // EVENT HANDLERS
     // ============================
 
     Builder.prototype.onCommand = function(ev) {
+        if (ev.currentTarget.tagName == 'FORM' && ev.type == 'click') {
+            // The form elements could have data-builder-command attribute,
+            // but for them we only handle the submit event and ignore clicks. 
+
+            return
+        }
+
         var command = $(ev.currentTarget).data('builderCommand'),
             commandParts = command.split(':')
 
@@ -103,11 +146,11 @@ var tabId = null,
             var entity = commandParts[0],
                 commandToExecute = commandParts[1]
 
-            if ($.oc.builder.entityControllers[entity] === undefined) {
+            if (this.entityControllers[entity] === undefined) {
                 throw new Error('Unknown entity type: ' + entity)
             }
 
-            $.oc.builder.entityControllers[entity].invokeCommand(commandToExecute, ev)
+            this.entityControllers[entity].invokeCommand(commandToExecute, ev)
         }
 
         ev.preventDefault()

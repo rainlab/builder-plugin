@@ -19,13 +19,13 @@ class PluginCode
     {
         $codeParts = explode('.', $pluginCodeStr);
         if (count($codeParts) !== 2) {
-            throw new ApplicationException('Invalid plugin code.');
+            throw new ApplicationException(sprintf('Invalid plugin code: %s', $pluginCodeStr));
         }
 
         list($authorCode, $pluginCode) = $codeParts;
 
         if (!$this->validateCodeWord($authorCode) || !$this->validateCodeWord($pluginCode)) {
-            throw new ApplicationException('Invalid plugin code.');
+            throw new ApplicationException(sprintf('Invalid plugin code: %s', $pluginCodeStr));
         }
 
         $this->authorCode = trim($authorCode);

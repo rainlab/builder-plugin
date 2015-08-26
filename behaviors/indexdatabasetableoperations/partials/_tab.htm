@@ -1,8 +1,10 @@
 <?= Form::open([
     'class' => 'layout',
     'data-change-monitor' => 'true',
-    'data-window-close-confirm' => e(trans('backend::lang.form.confirm_tab_close'))
+    'data-window-close-confirm' => e(trans('backend::lang.form.confirm_tab_close')),
+    'data-entity' => 'database'
 ]) ?>
     <?= $form->render() ?>
-    <input type="hidden" name="plugin_db_prefix" value="<?= e($pluginDbPrefix) ?>">
+    <input type="hidden" name="plugin_code" value="<?= e($pluginCode) ?>">
+    <input type="hidden" name="table_name" value="<?= e($tableName) ?>">
 <?= Form::close() ?>

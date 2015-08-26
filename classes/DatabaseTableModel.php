@@ -42,11 +42,6 @@ class DatabaseTableModel extends BaseModel
     protected $tableInfo;
 
     /**
-     * @var string Contains a database prefix of the plugin the model belongs to.
-     */
-    protected $pluginDbPrefix;
-
-    /**
      * @var Doctrine\DBAL\Schema\AbstractSchemaManager Contains the database schema
      */
     protected static $schemaManager = null;
@@ -86,26 +81,20 @@ class DatabaseTableModel extends BaseModel
         $schema = self::getSchemaManager()->createSchema();
 
         $this->name = $name;
-
         $this->tableInfo = $schema->getTable($this->name);
-
+        $this->loadColumnsFromTableInfo();
         $this->exists = true;
-
-        // TODO: populate the name and columns fields
-    }
-
-    public function setPluginPrefix($prefix)
-    {
-        $this->pluginDbPrefix = $prefix;
     }
 
     public function validate()
     {
-        if (!strlen($this->pluginDbPrefix)) {
+        $pluginDbPrefix = $this->getPluginCodeObj()->toDatabasePrefix();
+
+        if (!strlen($pluginDbPrefix)) {
             throw new SystemException('Error saving the table model - the plugin database prefix is not set for the object.');
         }
 
-        $prefix = $this->pluginDbPrefix.'_';
+        $prefix = $pluginDbPrefix.'_';
 
         $this->validationMessages = [
             'name.table_prefix' => Lang::get('rainlab.builder::lang.database.error_table_name_invalid_prefix', [
@@ -133,11 +122,22 @@ class DatabaseTableModel extends BaseModel
     {
         $schemaCreator = new DatabaseTableSchemaCreator();
         $newSchema = $schemaCreator->createTableSchema($this->name, $this->columns);
+        $existingSchema = $this->tableInfo;
 
         $codeGenerator = new TableMigrationCodeGenerator();
+        $migrationCode = $codeGenerator->createOrUpdateTable($newSchema, $existingSchema);
+        if ($migrationCode === false) {
+            return $migrationCode;
+        }
 
         $migration = new MigrationModel();
-        $migration->code = $codeGenerator->createOrUpdateTable($newSchema, null);
+        $migration->setPluginCodeObj($this->getPluginCodeObj());
+
+        $description = $existingSchema ? 'Updated table %s' : 'Created table %s';
+
+        $migration->code = $migrationCode;
+        $migration->version = $migration->getNextVersion();
+        $migration->description = sprintf($description, $this->name);
 
         return $migration;
     }
@@ -148,6 +148,7 @@ class DatabaseTableModel extends BaseModel
         $this->validateDubplicatePrimaryKeys();
         $this->validateAutoIncrementColumns();
         $this->validateColumnsLengthParameter();
+        $this->validateUnsignedColumns();
     }
 
     protected function validateDubpicateColumns()
@@ -209,6 +210,21 @@ class DatabaseTableModel extends BaseModel
         }
     }
 
+    protected function validateUnsignedColumns()
+    {
+        foreach ($this->columns as $column) {
+            if (!$column['unsigned']) {
+                continue;
+            }
+
+            if (!in_array($column['type'], MigrationColumnType::getIntegerTypes())) {
+                throw new ValidationException([
+                    'columns' => Lang::get('rainlab.builder::lang.database.error_unsigned_type_not_int', ['column'=>$column['name']])
+                ]);
+            }
+        }
+    }
+
     protected function validateColumnsLengthParameter()
     {
         foreach ($this->columns as $column) {
@@ -239,5 +255,36 @@ class DatabaseTableModel extends BaseModel
         }
 
         return self::$schema;
+    }
+
+    protected function loadColumnsFromTableInfo()
+    {
+        $this->columns = [];
+        $columns = $this->tableInfo->getColumns();
+
+        $primaryKey = $this->tableInfo->getPrimaryKey();
+        $primaryKeyColumns =[];
+        if ($primaryKey) {
+            $primaryKeyColumns = $primaryKey->getColumns();
+        }
+
+        foreach ($columns as $column) {
+            $columnName = $column->getName();
+            $typeName = $column->getType()->getName();
+
+            $item = [
+                'name' => $columnName,
+                'type' => MigrationColumnType::toMigrationMethodName($typeName, $columnName),
+                'length' => MigrationColumnType::doctrineLengthToMigrationLength($column),
+                'unsigned' => $column->getUnsigned(),
+                'allow_null' => !$column->getNotnull(),
+                'auto_increment' => $column->getAutoincrement(),
+                'primary_key' => in_array($columnName, $primaryKeyColumns),
+                'default' => $column->getDefault(),
+                'id' => $columnName,
+            ];
+
+            $this->columns[] = $item;
+        }
     }
 }

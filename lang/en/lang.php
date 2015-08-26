@@ -63,7 +63,8 @@ return [
         'error_table_mutliple_auto_increment' => 'The table cannot contain multiple auto-increment columns.',
         'error_table_auto_increment_non_integer' => 'Auto-increment columns should have integer type.',
         'error_table_decimal_length' => "The Length parameter for :type type should be in format '10,2', without spaces.",
-        'error_table_length' => 'The Length parameter for :type type should be specified as integer.'
+        'error_table_length' => 'The Length parameter for :type type should be specified as integer.',
+        'error_unsigned_type_not_int' => "Error in the ':column' column. The Unsigned flag can be applied only to integer type columns."
     ],
     'model' => [
         'menu_label' => 'Models'
@@ -105,6 +106,10 @@ return [
         'field_version' => 'Version',
         'field_description' => 'Description',
         'field_code' => 'Code',
-        'save_and_apply' => 'Save & Apply'
+        'field_code_comment' => 'The migration code is read-only and for the preview purpose only. You can create custom migrations manually in the Versions section of the Builder.',
+        'save_and_apply' => 'Save & Apply',
+        'error_version_exists' => 'The migration version already exists.',
+        'error_script_filename_invalid' => 'The migration script file name can contain only Latin letters, digits and underscores. The name should start with a Latin letter and could not contain spaces.',
+        'no_changes_to_save' => 'There are no changes to save.',
     ]
 ];
