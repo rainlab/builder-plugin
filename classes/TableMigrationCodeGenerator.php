@@ -27,10 +27,11 @@ class TableMigrationCodeGenerator extends BaseModel
      * Generates code for creating or updating a database table.
      * @param Doctrine\DBAL\Schema\Table $updatedTable Specifies the updated table schema.
      * @param Doctrine\DBAL\Schema\Table $existingTable Specifies the existing table schema, if applicable.
+     * @param string $newTableName An updated name of the theme. 
      * @return string|boolean Returns the migration up() and down() methods code. 
      * Returns false if there the table was not changed.
      */
-    public function createOrUpdateTable($updatedTable, $existingTable = null)
+    public function createOrUpdateTable($updatedTable, $existingTable, $newTableName)
     {
         $tableDiff = false;
 
@@ -39,6 +40,14 @@ class TableMigrationCodeGenerator extends BaseModel
             //
             $comparator = new Comparator();
             $tableDiff = $comparator->diffTable($existingTable, $updatedTable);
+
+            if ($newTableName !== $existingTable->getName()) {
+                if (!$tableDiff) {
+                    $tableDiff = new TableDiff($existingTable->getName());
+                }
+
+                $tableDiff->newName = $newTableName;
+            }
         }
         else {
             // The table doesn't exist
@@ -51,15 +60,12 @@ class TableMigrationCodeGenerator extends BaseModel
                 $updatedTable->getIndexes() // Added indexes
             );
         }
-traceLog($tableDiff);
+
         if (!$tableDiff) {
             return false;
         }
 
-        if (!$tableDiff->addedColumns 
-            && !$tableDiff->changedColumns 
-            && !$tableDiff->removedColumns 
-            && !$tableDiff->renamedColumns) {
+        if (!$this->tableHasChanges($tableDiff)) {
             return false;
         }
 
@@ -101,10 +107,24 @@ traceLog($tableDiff);
 
     protected function generateCreateOrUpdateUpCode($tableDiff, $isNewTable)
     {
-        // TODO: Implement renaming, implement indexes
-        // write unit tests
+        $result = null;
 
-        $result = $this->generateSchemaTableMethodStart($tableDiff->name, $isNewTable);
+        $hasColumnChanges = $this->tableHasChanges($tableDiff, true);
+
+        if ($tableDiff->getNewName()) {
+            $result .= $this->generateTableRenameCode($tableDiff->name, $tableDiff->newName);
+
+            if ($hasColumnChanges) {
+                $result .= $this->eol;
+            }
+        }
+
+        if (!$hasColumnChanges) {
+            return $this->makeTabs($result);
+        }
+
+        $tableName = $tableDiff->getNewName() ? $tableDiff->newName : $tableDiff->name;
+        $result .= $this->generateSchemaTableMethodStart($tableName, $isNewTable);
 
         foreach ($tableDiff->addedColumns as $column) {
             $result .= $this->generateColumnCode($column, self::COLUMN_MODE_CREATE);
@@ -112,6 +132,14 @@ traceLog($tableDiff);
 
         foreach ($tableDiff->changedColumns as $columnDiff) {
             $result .= $this->generateColumnCode($columnDiff, self::COLUMN_MODE_CHANGE);
+        }
+
+        foreach ($tableDiff->renamedColumns as $oldName=>$column) {
+            $result .= $this->generateColumnRenameCode($oldName, $column->getName());
+        }
+
+        foreach ($tableDiff->removedColumns as $name=>$column) {
+            $result .= $this->generateColumnRemoveCode($name);
         }
 
         foreach ($tableDiff->addedIndexes as $index) {
@@ -134,8 +162,22 @@ traceLog($tableDiff);
             $result = sprintf('\tSchema::dropIfExists(\'%s\');', $tableDiff->name);
         }
         else {
-            if ($tableDiff->addedColumns || $tableDiff->changedColumns) {
-                $result = $this->generateSchemaTableMethodStart($tableDiff->name, $isNewTable);
+            if ($this->tableHasChanges($tableDiff)) {
+                $hasColumnChanges = $this->tableHasChanges($tableDiff, true);
+
+                if ($tableDiff->getNewName()) {
+                    $result .= $this->generateTableRenameCode($tableDiff->newName, $tableDiff->name);
+
+                    if ($hasColumnChanges) {
+                        $result .= $this->eol;
+                    }
+                }
+
+                if (!$hasColumnChanges) {
+                    return $this->makeTabs($result);
+                }
+
+                $result .= $this->generateSchemaTableMethodStart($tableDiff->name, $isNewTable);
 
                 foreach ($tableDiff->addedColumns as $column) {
                     $result .= $this->generateColumnDrop($column);
@@ -143,6 +185,14 @@ traceLog($tableDiff);
 
                 foreach ($tableDiff->changedColumns as $columnDiff) {
                     $result .= $this->generateColumnCode($columnDiff, self::COLUMN_MODE_REVERT);
+                }
+
+                foreach ($tableDiff->renamedColumns as $oldName=>$column) {
+                    $result .= $this->generateColumnRenameCode($column->getName(), $oldName);
+                }
+
+                foreach ($tableDiff->removedColumns as $name=>$column) {
+                    $result .= $this->generateColumnCode($column, self::COLUMN_MODE_CREATE);
                 }
 
                 $result .= $this->generateSchemaTableMethodEnd();
@@ -256,6 +306,21 @@ traceLog($tableDiff);
         return $result;
     }
 
+    protected function generateColumnRenameCode($fromName, $toName)
+    {
+        return sprintf('\t\t$table->renameColumn(\'%s\', \'%s\');', $fromName, $toName).$this->eol;
+    }
+
+    protected function generateTableRenameCode($fromName, $toName)
+    {
+        return sprintf('\tSchema::rename(\'%s\', \'%s\');', $fromName, $toName);
+    }
+
+    protected function generateColumnRemoveCode($name)
+    {
+        return sprintf('\t\t$table->dropColumn(\'%s\');', $name).$this->eol;
+    }
+
     protected function generateColumnMethodCall($column)
     {
         $columnName = $column->getName();
@@ -310,12 +375,12 @@ traceLog($tableDiff);
 
         if (!$changeMode) {
             if (strlen($default)) {
-                $result = $this->generateDefaultMethodCall($default);
+                $result = $this->generateDefaultMethodCall($default, $column);
             }
         }
         elseif (in_array('default', $columnData->changedProperties) || $forceFlagsChange) {
             if (strlen($default)) {
-                $result = $this->generateDefaultMethodCall($default);
+                $result = $this->generateDefaultMethodCall($default, $column);
             }
             elseif ($changeMode) {
                 $result = sprintf('->default(null)');
@@ -325,8 +390,19 @@ traceLog($tableDiff);
         return $result;
     }
 
-    protected function generateDefaultMethodCall($default)
+    protected function generateDefaultMethodCall($default, $column)
     {
+        $columnName = $column->getName();
+        $typeName = $column->getType()->getName();
+
+        $type = MigrationColumnType::toMigrationMethodName($typeName, $columnName);
+
+        if (in_array($type, MigrationColumnType::getIntegerTypes()) || 
+            in_array($type, MigrationColumnType::getDecimalTypes()) ||
+            $type == MigrationColumnType::TYPE_BOOLEAN) {
+            return sprintf('->default(%s)', $default);
+        }
+
         return sprintf('->default(\'%s\')', $this->quoteParameter($default));
     }
 
@@ -359,5 +435,19 @@ traceLog($tableDiff);
     protected function indent($str)
     {
         return $this->indent . str_replace($this->eol, $this->eol . $this->indent, $str);
+    }
+
+    private function tableHasChanges($tableDiff, $columnChangesOnly = false)
+    {
+        $result = $tableDiff->addedColumns 
+                || $tableDiff->changedColumns 
+                || $tableDiff->removedColumns 
+                || $tableDiff->renamedColumns;
+
+        if ($columnChangesOnly) {
+            return $result;
+        }
+
+        return $result || $tableDiff->getNewName();
     }
 }

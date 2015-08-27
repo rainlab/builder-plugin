@@ -121,11 +121,12 @@ class DatabaseTableModel extends BaseModel
     public function generateCreateOrUpdateMigration()
     {
         $schemaCreator = new DatabaseTableSchemaCreator();
-        $newSchema = $schemaCreator->createTableSchema($this->name, $this->columns);
         $existingSchema = $this->tableInfo;
+        $newSchema = $schemaCreator->createTableSchema($existingSchema->getName(), $this->columns);
+        $newTableName = $this->name;
 
         $codeGenerator = new TableMigrationCodeGenerator();
-        $migrationCode = $codeGenerator->createOrUpdateTable($newSchema, $existingSchema);
+        $migrationCode = $codeGenerator->createOrUpdateTable($newSchema, $existingSchema, $newTableName);
         if ($migrationCode === false) {
             return $migrationCode;
         }
@@ -144,14 +145,15 @@ class DatabaseTableModel extends BaseModel
 
     protected function validateColumns()
     {
-        $this->validateDubpicateColumns();
+        $this->validateDupicateColumns();
         $this->validateDubplicatePrimaryKeys();
         $this->validateAutoIncrementColumns();
         $this->validateColumnsLengthParameter();
         $this->validateUnsignedColumns();
+        $this->validateDefaultValues();
     }
 
-    protected function validateDubpicateColumns()
+    protected function validateDupicateColumns()
     {
         foreach ($this->columns as $outerIndex=>$outerColumn) {
             foreach ($this->columns as $innerIndex=>$innerColumn) {
@@ -235,6 +237,51 @@ class DatabaseTableModel extends BaseModel
                 throw new ValidationException([
                     'columns' => $ex->getMessage()
                 ]);
+            }
+        }
+    }
+
+    protected function validateDefaultValues()
+    {
+        foreach ($this->columns as $column) {
+            if (!strlen($column['default'])) {
+                continue;
+            }
+
+            $default = trim($column['default']);
+
+            if (in_array($column['type'], MigrationColumnType::getIntegerTypes())) {
+                if (!preg_match('/^\-?[0-9]+$/', $default)) {
+                    throw new ValidationException([
+                        'columns' => Lang::get('rainlab.builder::lang.database.error_integer_default_value', ['column'=>$column['name']])
+                    ]);
+                }
+
+                if ($column['unsigned'] && $default < 0) {
+                    throw new ValidationException([
+                        'columns' => Lang::get('rainlab.builder::lang.database.error_unsigned_negative_value', ['column'=>$column['name']])
+                    ]);
+                }
+
+                continue;
+            }
+
+            if (in_array($column['type'], MigrationColumnType::getDecimalTypes())) {
+                if (!preg_match('/^\-?([0-9]+\.[0-9]+|[0-9]+)$/', $default)) {
+                    throw new ValidationException([
+                        'columns' => Lang::get('rainlab.builder::lang.database.error_decimal_default_value', ['column'=>$column['name']])
+                    ]);
+                }
+
+                continue;
+            }
+
+            if ($column['type'] == MigrationColumnType::TYPE_BOOLEAN) {
+                if (!preg_match('/^0|1$/', $default)) {
+                    throw new ValidationException([
+                        'columns' => Lang::get('rainlab.builder::lang.database.error_boolean_default_value', ['column'=>$column['name']])
+                    ]);
+                }
             }
         }
     }
