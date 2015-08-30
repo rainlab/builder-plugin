@@ -52,6 +52,11 @@ class PluginCode
         return '$/'.$this->toFilesystemPath().'/plugin.yaml';
     }
 
+    public function toPluginInformationFilePath()
+    {
+        return '$/'.$this->toFilesystemPath().'/plugin.php';
+    }
+
     public function toDatabasePrefix()
     {
         return strtolower($this->authorCode.'_'.$this->pluginCode);

@@ -59,17 +59,19 @@ class TableMigrationCodeGenerator extends BaseModel
                 [], // Removed columns
                 $updatedTable->getIndexes() // Added indexes
             );
+
+            $tableDiff->fromTable = $updatedTable;
         }
 
         if (!$tableDiff) {
             return false;
         }
 
-        if (!$this->tableHasChanges($tableDiff)) {
+        if (!$this->tableHasNameOrColumnChanges($tableDiff) && !$tableDiff->changedIndexes && !$tableDiff->addedIndexes) {
             return false;
         }
 
-        return $this->generateCreateOrUpdateCode($tableDiff, !$existingTable);
+        return $this->generateCreateOrUpdateCode($tableDiff, !$existingTable, $updatedTable);
     }
 
     /**
@@ -92,7 +94,28 @@ class TableMigrationCodeGenerator extends BaseModel
         ]);
     }
 
-    protected function generateCreateOrUpdateCode($tableDiff, $isNewTable)
+    /**
+     * Generates code for dropping a database table.
+     * @param Doctrine\DBAL\Schema\Table $existingTable Specifies the existing table schema.
+     * @return string Returns the migration up() and down() methods code. 
+     */
+    public function dropTable($existingTable)
+    {
+        return $this->generateMigrationCode(
+            $this->generateDropUpCode($existingTable),
+            $this->generateDropDownCode($existingTable)
+        );
+    }
+
+    protected function generateCreateOrUpdateCode($tableDiff, $isNewTable, $newOrUpdatedTable)
+    {
+        return $this->generateMigrationCode(
+            $this->generateCreateOrUpdateUpCode($tableDiff, $isNewTable, $newOrUpdatedTable),
+            $this->generateCreateOrUpdateDownCode($tableDiff, $isNewTable, $newOrUpdatedTable)
+        );
+    }
+
+    protected function generateMigrationCode($upCode, $downCode)
     {
         $templatePath = '$/rainlab/builder/classes/databasetablemodel/templates/migration-code.php.tpl';
         $templatePath = File::symbolizePath($templatePath);
@@ -100,31 +123,36 @@ class TableMigrationCodeGenerator extends BaseModel
         $fileContents = File::get($templatePath);
 
         return TextParser::parse($fileContents, [
-            'upCode' => $this->generateCreateOrUpdateUpCode($tableDiff, $isNewTable),
-            'downCode' => $this->generateCreateOrUpdateDownCode($tableDiff, $isNewTable),
+            'upCode' => $upCode,
+            'downCode' => $downCode
         ]);
     }
 
-    protected function generateCreateOrUpdateUpCode($tableDiff, $isNewTable)
+    protected function generateCreateOrUpdateUpCode($tableDiff, $isNewTable, $newOrUpdatedTable)
     {
         $result = null;
 
-        $hasColumnChanges = $this->tableHasChanges($tableDiff, true);
+        $hasColumnChanges = $this->tableHasNameOrColumnChanges($tableDiff, true);
+        $changedPrimaryKey = $this->getChangedPrimaryKey($tableDiff);
 
         if ($tableDiff->getNewName()) {
             $result .= $this->generateTableRenameCode($tableDiff->name, $tableDiff->newName);
 
-            if ($hasColumnChanges) {
+            if ($hasColumnChanges || $changedPrimaryKey) {
                 $result .= $this->eol;
             }
         }
 
-        if (!$hasColumnChanges) {
+        if (!$hasColumnChanges && !$changedPrimaryKey) {
             return $this->makeTabs($result);
         }
 
         $tableName = $tableDiff->getNewName() ? $tableDiff->newName : $tableDiff->name;
         $result .= $this->generateSchemaTableMethodStart($tableName, $isNewTable);
+
+        if ($changedPrimaryKey) {
+            $result .= $this->generatePrimaryKeyDrop($tableDiff->fromTable);
+        }
 
         foreach ($tableDiff->addedColumns as $column) {
             $result .= $this->generateColumnCode($column, self::COLUMN_MODE_CREATE);
@@ -142,42 +170,49 @@ class TableMigrationCodeGenerator extends BaseModel
             $result .= $this->generateColumnRemoveCode($name);
         }
 
-        foreach ($tableDiff->addedIndexes as $index) {
-            if (!$index->isPrimary()) {
-                // TODO: implement indexes
-            }
+        $primaryKey = $changedPrimaryKey ?
+            $this->findPrimaryKeyIndex($tableDiff->changedIndexes, $newOrUpdatedTable) : 
+            $this->findPrimaryKeyIndex($tableDiff->addedIndexes, $tableDiff->fromTable);
+
+        if ($primaryKey) {
+            $result .= $this->generatePrimaryKeyCode($primaryKey, self::COLUMN_MODE_CREATE);
         }
 
         $result .= $this->generateSchemaTableMethodEnd();
 
         return $this->makeTabs($result);
-
     }
 
-    protected function generateCreateOrUpdateDownCode($tableDiff, $isNewTable)
+    protected function generateCreateOrUpdateDownCode($tableDiff, $isNewTable, $newOrUpdatedTable)
     {
         $result = '';
 
         if ($isNewTable) {
-            $result = sprintf('\tSchema::dropIfExists(\'%s\');', $tableDiff->name);
+            $result = $this->generateTableDropCode($tableDiff->name);
         }
         else {
-            if ($this->tableHasChanges($tableDiff)) {
-                $hasColumnChanges = $this->tableHasChanges($tableDiff, true);
+            $changedPrimaryKey = $this->getChangedPrimaryKey($tableDiff);
+
+            if ($this->tableHasNameOrColumnChanges($tableDiff) || $changedPrimaryKey) {
+                $hasColumnChanges = $this->tableHasNameOrColumnChanges($tableDiff, true);
 
                 if ($tableDiff->getNewName()) {
                     $result .= $this->generateTableRenameCode($tableDiff->newName, $tableDiff->name);
 
-                    if ($hasColumnChanges) {
+                    if ($hasColumnChanges || $changedPrimaryKey) {
                         $result .= $this->eol;
                     }
                 }
 
-                if (!$hasColumnChanges) {
+                if (!$hasColumnChanges && !$changedPrimaryKey) {
                     return $this->makeTabs($result);
                 }
 
                 $result .= $this->generateSchemaTableMethodStart($tableDiff->name, $isNewTable);
+
+                if ($changedPrimaryKey) {
+                    $result .= $this->generatePrimaryKeyDrop($newOrUpdatedTable);
+                }
 
                 foreach ($tableDiff->addedColumns as $column) {
                     $result .= $this->generateColumnDrop($column);
@@ -195,11 +230,35 @@ class TableMigrationCodeGenerator extends BaseModel
                     $result .= $this->generateColumnCode($column, self::COLUMN_MODE_CREATE);
                 }
 
+                $primaryKey = $this->findPrimaryKeyIndex($tableDiff->fromTable->getIndexes(), $tableDiff->fromTable);
+                if ($primaryKey) {
+                    $result .= $this->generatePrimaryKeyCode($primaryKey, self::COLUMN_MODE_CREATE);
+                }
+
                 $result .= $this->generateSchemaTableMethodEnd();
             }
         }
 
         return $this->makeTabs($result);
+    }
+
+    protected function generateDropUpCode($table)
+    {
+        $result = $this->generateTableDropCode($table->getName());
+        return $this->makeTabs($result);
+    }
+
+    protected function generateDropDownCode($table)
+    {
+        $tableDiff = new TableDiff(
+            $table->getName(), 
+            $table->getColumns(),
+            [], // Changed columns
+            [], // Removed columns
+            $table->getIndexes() // Added indexes
+        );
+
+        return $this->generateCreateOrUpdateUpCode($tableDiff, true);
     }
 
     protected function formatLengthParameters($column, $method)
@@ -269,6 +328,22 @@ class TableMigrationCodeGenerator extends BaseModel
         return sprintf('\t\t$table->dropColumn(\'%s\');', $column->getName()).$this->eol;
     }
 
+    protected function generateIndexDrop($index)
+    {
+        return sprintf('\t\t$table->dropIndex(\'%s\');', $index->getName()).$this->eol;
+    }
+
+    protected function generatePrimaryKeyDrop($table)
+    {
+        $index = $this->findPrimaryKeyIndex($table->getIndexes(), $table);
+        if (!$index) {
+            return;
+        }
+
+        $indexColumns = $index->getColumns();
+        return sprintf('\t\t$table->dropPrimary([%s]);', $this->implodeColumnList($indexColumns)).$this->eol;
+    }
+
     protected function generateColumnCode($columnData, $mode)
     {
         $forceFlagsChange = false;
@@ -314,6 +389,11 @@ class TableMigrationCodeGenerator extends BaseModel
     protected function generateTableRenameCode($fromName, $toName)
     {
         return sprintf('\tSchema::rename(\'%s\', \'%s\');', $fromName, $toName);
+    }
+
+    protected function generateTableDropCode($name)
+    {
+        return sprintf('\tSchema::dropIfExists(\'%s\');', $name);
     }
 
     protected function generateColumnRemoveCode($name)
@@ -406,6 +486,13 @@ class TableMigrationCodeGenerator extends BaseModel
         return sprintf('->default(\'%s\')', $this->quoteParameter($default));
     }
 
+    protected function generatePrimaryKeyCode($index)
+    {
+        $columns = $index->getColumns();
+
+        return sprintf('\t\t$table->primary([%s]);', $this->implodeColumnList($columns)).$this->eol;
+    }
+
     protected function generateBooleanString($value)
     {
         $result = $value ? 'true' : 'false';
@@ -437,7 +524,16 @@ class TableMigrationCodeGenerator extends BaseModel
         return $this->indent . str_replace($this->eol, $this->eol . $this->indent, $str);
     }
 
-    private function tableHasChanges($tableDiff, $columnChangesOnly = false)
+    protected function implodeColumnList($columnNames)
+    {
+        foreach ($columnNames as &$columnName) {
+            $columnName = '\''.$columnName.'\'';
+        }
+
+        return implode(',', $columnNames);
+    }
+
+    protected function tableHasNameOrColumnChanges($tableDiff, $columnChangesOnly = false)
     {
         $result = $tableDiff->addedColumns 
                 || $tableDiff->changedColumns 
@@ -449,5 +545,56 @@ class TableMigrationCodeGenerator extends BaseModel
         }
 
         return $result || $tableDiff->getNewName();
+    }
+
+    protected function getChangedPrimaryKey($tableDiff)
+    {
+        foreach ($tableDiff->changedIndexes as $index) {
+            if ($index->isPrimary()) {
+                return $index;
+            }
+        }
+
+        return null;
+    }
+
+    protected function findPrimaryKeyIndex($indexes, $table)
+    {
+        // This method ignores auto-increment primary keys
+        // as they are managed with the increments() method
+        // instead of the primary().
+        //
+        foreach ($indexes as $index) {
+            if (!$index->isPrimary()) {
+                // TODO: implement indexes
+            }
+            else {
+                if ($this->indexHasAutoincrementColumns($index, $table)) {
+                    continue;
+                }
+
+                return $index;
+            }
+        }
+
+        return null;
+    }
+
+    protected function indexHasAutoincrementColumns($index, $table)
+    {
+        $indexColumns = $index->getColumns();
+
+        foreach ($indexColumns as $indexColumn) {
+            if (!$table->hasColumn($indexColumn)) {
+                continue;
+            }
+
+            $tableColumn = $table->getColumn($indexColumn);
+            if ($tableColumn->getAutoincrement()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

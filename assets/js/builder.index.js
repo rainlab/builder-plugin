@@ -58,11 +58,28 @@
         $pane.find('form').trigger('unchange.oc.changeMonitor')
     }
 
+    Builder.prototype.triggerCommand = function(command, ev) {
+        var commandParts = command.split(':')
+
+        if (commandParts.length === 2) {
+            var entity = commandParts[0],
+                commandToExecute = commandParts[1]
+
+            if (this.entityControllers[entity] === undefined) {
+                throw new Error('Unknown entity type: ' + entity)
+            }
+
+            this.entityControllers[entity].invokeCommand(commandToExecute, ev)
+        }
+    }
+
     // INTERNAL METHODS
     // ============================
 
     Builder.prototype.init = function() {
         this.$masterTabs = $('#builder-master-tabs')
+        this.$sidePanel = $('#builder-side-panel')
+
         this.masterTabsObj = this.$masterTabs.data('oc.tab')
         this.hideStripeIndicatorProxy = this.proxy(this.hideStripeIndicator)
         new $.oc.tabFormExpandControls(this.$masterTabs)
@@ -85,8 +102,10 @@
         $(document).on('click', '[data-builder-command]', this.proxy(this.onCommand))
         $(document).on('submit', '[data-builder-command]', this.proxy(this.onCommand))
 
-        this.$masterTabs.on('changed.oc.changeMonitor', this.proxy(this.formChanged))
-        this.$masterTabs.on('unchanged.oc.changeMonitor', this.proxy(this.formUnchanged))
+        this.$masterTabs.on('changed.oc.changeMonitor', this.proxy(this.onFormChanged))
+        this.$masterTabs.on('unchanged.oc.changeMonitor', this.proxy(this.onFormUnchanged))
+        this.$masterTabs.on('shown.bs.tab', this.proxy(this.onTabShown))
+        this.$masterTabs.on('afterAllClosed.oc.tab', this.proxy(this.onAllTabsClosed))
 
         for (var controller in this.entityControllers) {
             if (this.entityControllers[controller].registerHandlers !== undefined) {
@@ -101,16 +120,6 @@
 
     Builder.prototype.addMasterTab = function(data) {
         this.masterTabsObj.addTab(data.tabTitle, data.tab, data.tabId, data.tabIcon)
-    }
-
-    Builder.prototype.formChanged = function(ev) {
-        $('.form-tabless-fields', ev.target).trigger('modified.oc.tab')
-        this.updateModifiedCounter()
-    }
-
-    Builder.prototype.formUnchanged = function(ev) {
-        $('.form-tabless-fields', ev.target).trigger('unmodified.oc.tab')
-        this.updateModifiedCounter()
     }
 
     Builder.prototype.updateModifiedCounter = function() {
@@ -128,6 +137,14 @@
         })
     }
 
+    Builder.prototype.setPageTitle = function(title) {
+        $.oc.layout.setPageTitle(title.length ? (title + ' | ') : title)
+    }
+
+    Builder.prototype.getFileLists = function() {
+        return $('[data-control=filelist]', this.$sidePanel)
+    }
+
     // EVENT HANDLERS
     // ============================
 
@@ -139,22 +156,44 @@
             return
         }
 
-        var command = $(ev.currentTarget).data('builderCommand'),
-            commandParts = command.split(':')
-
-        if (commandParts.length === 2) {
-            var entity = commandParts[0],
-                commandToExecute = commandParts[1]
-
-            if (this.entityControllers[entity] === undefined) {
-                throw new Error('Unknown entity type: ' + entity)
-            }
-
-            this.entityControllers[entity].invokeCommand(commandToExecute, ev)
-        }
-
+        var command = $(ev.currentTarget).data('builderCommand')
+        this.triggerCommand(command, ev)
         ev.preventDefault()
         return false
+    }
+
+    Builder.prototype.onFormChanged = function(ev) {
+        $('.form-tabless-fields', ev.target).trigger('modified.oc.tab')
+        this.updateModifiedCounter()
+    }
+
+    Builder.prototype.onFormUnchanged = function(ev) {
+        $('.form-tabless-fields', ev.target).trigger('unmodified.oc.tab')
+        this.updateModifiedCounter()
+    }
+
+    Builder.prototype.onTabShown = function(ev) {
+        var $tabControl = $(ev.target).closest('[data-control=tab]')
+
+        if ($tabControl.attr('id') != this.$masterTabs.attr('id')) {
+            return
+        }
+
+        var dataId = $(ev.target).closest('li').attr('data-tab-id'),
+            title = $(ev.target).attr('title')
+
+        if (title) {
+            this.setPageTitle(title)
+        }
+
+        this.getFileLists().fileList('markActive', dataId)
+
+        $(window).trigger('resize')
+    }
+
+    Builder.prototype.onAllTabsClosed = function(ev) {
+        this.setPageTitle('')
+        this.getFileLists().fileList('markActive', null)
     }
 
     // INITIALIZATION

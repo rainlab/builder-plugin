@@ -23,22 +23,22 @@ class IndexDatabaseTableOperations extends IndexOperationsBehaviorBase
     protected $baseFormConfigFile = '~/plugins/rainlab/builder/classes/databasetablemodel/fields.yaml';
     protected $migrationFormConfigFile = '~/plugins/rainlab/builder/classes/migrationmodel/fields.yaml';
 
-    public function onDatabaseTableCreate()
+    public function onDatabaseTableCreateOrOpen()
     {
-        $tableName = null;
+        $tableName = Input::get('table_name');
         $pluginCodeObj = $this->getPluginCode();
 
         $widget = $this->makeBaseFormWidget($tableName);
-        $widget->model->name = $pluginCodeObj->toDatabasePrefix().'_';
+        $this->vars['tableName'] = $tableName;
 
         $result = [
             'tabTitle' => $this->getTabTitle($tableName),
             'tabIcon' => 'icon-hdd-o',
-            'tabId' => $this->getTabId(null),
+            'tabId' => $this->getTabId($tableName),
             'tab' => $this->makePartial('tab', [
                 'form'  => $widget,
                 'pluginCode' => $pluginCodeObj->toCode(),
-                'tableName' => null
+                'tableName' => $tableName
             ])
         ];
 
@@ -50,7 +50,7 @@ class IndexDatabaseTableOperations extends IndexOperationsBehaviorBase
         $tableName = Input::get('table_name');
 
         $model = $this->loadOrCreateBaseModel($tableName);
-        $model->fill($_POST);
+        $model->fill($this->processColumnData($_POST));
 
         $pluginCode = Request::input('plugin_code');
         $model->setPluginCode($pluginCode);
@@ -88,17 +88,41 @@ class IndexDatabaseTableOperations extends IndexOperationsBehaviorBase
         $codeGenerator = new TableMigrationCodeGenerator();
         $model->code = $codeGenerator->wrapMigrationCode($model->scriptFileName, $model->code, $pluginCode);
 
-        $model->save();
+        try {
+            $model->save();
+        } 
+        catch (Exception $ex) {
+            throw new ApplicationException($ex->getMessage());
+        }
 
         $result = $this->controller->widget->databaseTabelList->updateList();
         $result['builderRepsonseData'] = [
             'builderObjectName'=>$table,
             'tabId' => $this->getTabId($table),
             'tabTitle' => $table,
-            'tableName' => $table
+            'tableName' => $table,
+            'operation' => $operation
         ];
 
         return $result;
+    }
+
+    public function onDatabaseTableShowDeletePopup()
+    {
+        $tableName = Input::get('table_name');
+
+        $model = $this->loadOrCreateBaseModel($tableName);
+        $pluginCode = Request::input('plugin_code');
+        $model->setPluginCode($pluginCode);
+
+        $migration = $model->generateDropMigration();
+
+        return $this->makePartial('migration-popup-form', [
+            'form' => $this->makeMigrationFormWidget($migration),
+            'operation' => 'delete',
+            'table' => $model->name,
+            'pluginCode' => $pluginCode
+        ]);
     }
 
     protected function getTabTitle($tableName)
@@ -124,6 +148,8 @@ class IndexDatabaseTableOperations extends IndexOperationsBehaviorBase
         $model = new DatabaseTableModel();
 
         if (!$tableName) {
+            $model->name = $this->getPluginCode()->toDatabasePrefix().'_';
+
             return $model;
         }
 
@@ -155,5 +181,23 @@ class IndexDatabaseTableOperations extends IndexOperationsBehaviorBase
         $form->context = FormController::CONTEXT_CREATE;
 
         return $form;
+    }
+
+    protected function processColumnData($postData)
+    {
+        if (!array_key_exists('columns', $postData)) {
+            return $postData;
+        }
+
+        $booleanColumns = ['unsigned', 'allow_null', 'auto_increment', 'primary_key'];
+        foreach ($postData['columns'] as &$row) {
+            foreach ($row as $column=>$value) {
+                if (in_array($column, $booleanColumns) && $value == 'false') {
+                    $row[$column] = false;
+                }
+            }
+        }
+
+        return $postData;
     }
 }

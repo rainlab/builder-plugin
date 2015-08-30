@@ -56,10 +56,11 @@ return [
         'tab_new_table' => 'New table',
         'btn_add_column' => 'Add column',
         'btn_delete_column' => 'Delete column',
+        'confirm_delete' => 'Do you really want to delete the table?',
         'error_table_name_invalid_prefix' => "Table name should start with the plugin prefix: ':prefix'.",
         'error_table_name_invalid_characters' => 'Invalid table name. Table names should contain only Latin letters, digits and underscores. Names should start with a Latin letter and could not contain spaces.',
         'error_table_duplicate_column' => "Duplicate column name: ':column'.",
-        'error_table_mutliple_primary_keys' => 'The table cannot contain multiple primary keys.',
+        'error_table_auto_increment_in_compound_pk' => 'An auto-increment column cannot be a part of a compound primary key.',
         'error_table_mutliple_auto_increment' => 'The table cannot contain multiple auto-increment columns.',
         'error_table_auto_increment_non_integer' => 'Auto-increment columns should have integer type.',
         'error_table_decimal_length' => "The Length parameter for :type type should be in format '10,2', without spaces.",
@@ -68,7 +69,8 @@ return [
         'error_integer_default_value' => "Invalid default value for the integer column ':column'. The allowed formats are '10', '-10'.",
         'error_decimal_default_value' => "Invalid default value for the decimal or double column ':column'. The allowed formats are '1.00', '-1.00'.",
         'error_boolean_default_value' => "Invalid default value for the boolean column ':column'. The allowed values are '0' and '1'.",
-        'error_unsigned_negative_value' => "The default value for the unsigned column ':column' can't be negative."
+        'error_unsigned_negative_value' => "The default value for the unsigned column ':column' can't be negative.",
+        'error_table_already_exists' => "The table ':name' already exists in the database."
     ],
     'model' => [
         'menu_label' => 'Models'

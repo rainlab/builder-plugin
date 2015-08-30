@@ -41,5 +41,9 @@
                 <?= e(trans('backend::lang.form.cancel')) ?>
             </button>
         </div>
+
+        <script>
+            $.oc.builder.indexController.triggerCommand('databaseTable:cmdUnModifyForm')
+        </script>
     <?php endif ?>
 <?= Form::close() ?>

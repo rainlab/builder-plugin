@@ -10,18 +10,6 @@
                     <span class="title"><?= e($table) ?></span>
                     <span class="borders"></span>
                 </a>
-
-                <div class="checkbox custom-checkbox nolabel">
-                    <?php $cbId = 'cb'.md5($table) ?>
-                    <input
-                        id="<?= $cbId ?>" 
-                        type="checkbox"
-                        name="databaseTable[<?= e($table) ?>]"
-                        <?= $this->isItemSelected($table) ? 'checked' : null ?>
-                        data-request="<?= $this->getEventHandler('onSelect') ?>"
-                        value="1">
-                    <label for="<?= $cbId ?>">Select</label>
-                </div>
             </li>
         <?php endforeach ?>
     </ul>

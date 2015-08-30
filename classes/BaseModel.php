@@ -47,6 +47,10 @@ abstract class BaseModel
                 $this->$methodName($value);
             }
             else {
+                if (is_scalar($value) && strpos($value, ' ') !== false) {
+                    $value = trim($value);
+                }
+
                 $this->$key = $value;
             }
 

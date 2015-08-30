@@ -8,13 +8,10 @@
         <?= e(trans('backend::lang.form.save')) ?>
     </a>
 
-    <?php /*
     <button
         type="button"
-        class="btn btn-default empty oc-icon-trash-o"
-        data-request="onDelete"
-        data-request-confirm="<?= e(trans('rainlab.pages::lang.page.delete_confirm_single')) ?>"
-        data-request-success="$.oc.pagesPage.closeTabs(data, 'page'); $.oc.pagesPage.updateObjectList('page'); $(this).trigger('close.oc.tab', [{force: true}])"
+        class="btn btn-default empty oc-icon-trash-o <?php if (!strlen($tableName)): ?>hide<?php endif ?>"
+        data-builder-command="databaseTable:cmdDeleteTable"
+        data-confirm="<?= e(trans('rainlab.builder::lang.database.confirm_delete')) ?>"
         data-control="delete-button"></button>
-    */ ?>
 </div>

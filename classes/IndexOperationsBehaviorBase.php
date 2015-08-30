@@ -26,7 +26,7 @@ abstract class IndexOperationsBehaviorBase extends ControllerBehavior
         $widgetConfig = $this->makeConfig($this->baseFormConfigFile);
 
         $widgetConfig->model = $this->loadOrCreateBaseModel($modelCode);
-        $widgetConfig->alias = 'form_plugin_'.uniqid();
+        $widgetConfig->alias = 'form_'.md5(get_class($this)).uniqid();
 
         $form = $this->makeWidget('Backend\Widgets\Form', $widgetConfig);
         $form->context = strlen($modelCode) ? FormController::CONTEXT_UPDATE : FormController::CONTEXT_CREATE;

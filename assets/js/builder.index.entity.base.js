@@ -55,6 +55,10 @@
         return this.typeName + Math.random()
     }
 
+    EntityBase.prototype.makeTabId = function(objectName) {
+        return this.typeName + '-' + objectName
+    }
+
     EntityBase.prototype.getMasterTabsActivePane = function() {
         return this.indexController.getMasterTabActivePane()
     } 
@@ -65,6 +69,25 @@
 
     EntityBase.prototype.getIndexController = function() {
         return this.indexController
+    }
+
+    EntityBase.prototype.updateMasterTabIdAndTitle = function($tabPane, responseData) {
+        var tabsObject = this.getMasterTabsObject()
+
+        tabsObject.updateIdentifier($tabPane, responseData.tabId)
+        tabsObject.updateTitle($tabPane, responseData.tabTitle)
+    }
+
+    EntityBase.prototype.unhideFormSaveButton = function($tabPane) {
+        $('[data-control=delete-button]', $tabPane).removeClass('hide')
+    }
+
+    EntityBase.prototype.forceCloseTab = function($tabPane) {
+        $tabPane.trigger('close.oc.tab', [{force: true}])
+    }
+
+    EntityBase.prototype.unmodifyTab = function($tabPane) {
+        this.indexController.unchageTab($tabPane)
     }
 
     $.oc.builder.entityControllers.base = EntityBase;

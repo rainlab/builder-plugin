@@ -33,7 +33,7 @@ class DatabaseTableModel extends BaseModel
     ];
 
     protected $validationRules = [
-        'name' => ['required', 'regex:/^[a-z]+[a-z0-9_]+$/', 'tablePrefix']
+        'name' => ['required', 'regex:/^[a-z]+[a-z0-9_]+$/', 'tablePrefix', 'uniqueTableName']
     ];
 
     /**
@@ -100,7 +100,8 @@ class DatabaseTableModel extends BaseModel
             'name.table_prefix' => Lang::get('rainlab.builder::lang.database.error_table_name_invalid_prefix', [
                 'prefix' => $prefix
             ]),
-            'name.regex' => Lang::get('rainlab.builder::lang.database.error_table_name_invalid_characters')
+            'name.regex' => Lang::get('rainlab.builder::lang.database.error_table_name_invalid_characters'),
+            'name.unique_table_name' => Lang::get('rainlab.builder::lang.database.error_table_already_exists', ['name'=>$this->name])
         ];
 
         Validator::extend('tablePrefix', function($attribute, $value, $parameters) use ($prefix) {
@@ -108,6 +109,21 @@ class DatabaseTableModel extends BaseModel
 
             if (!Str::startsWith($value, $prefix)) {
                 return false;
+            }
+
+            return true;
+        });
+
+        Validator::extend('uniqueTableName', function($attribute, $value, $parameters) {
+            $value = trim($value);
+
+            $schema = $this->getSchema();
+            if ($this->isNewModel()) {
+                return !$schema->hasTable($value);
+            }
+
+            if ($value != $this->tableInfo->getName()) {
+                return !$schema->hasTable($value);
             }
 
             return true;
@@ -122,8 +138,10 @@ class DatabaseTableModel extends BaseModel
     {
         $schemaCreator = new DatabaseTableSchemaCreator();
         $existingSchema = $this->tableInfo;
-        $newSchema = $schemaCreator->createTableSchema($existingSchema->getName(), $this->columns);
         $newTableName = $this->name;
+        $tableName = $existingSchema ? $existingSchema->getName() : $this->name;
+
+        $newSchema = $schemaCreator->createTableSchema($tableName, $this->columns);
 
         $codeGenerator = new TableMigrationCodeGenerator();
         $migrationCode = $codeGenerator->createOrUpdateTable($newSchema, $existingSchema, $newTableName);
@@ -131,16 +149,17 @@ class DatabaseTableModel extends BaseModel
             return $migrationCode;
         }
 
-        $migration = new MigrationModel();
-        $migration->setPluginCodeObj($this->getPluginCodeObj());
-
         $description = $existingSchema ? 'Updated table %s' : 'Created table %s';
+        return $this->createMigrationObject($migrationCode, $description);
+    }
 
-        $migration->code = $migrationCode;
-        $migration->version = $migration->getNextVersion();
-        $migration->description = sprintf($description, $this->name);
+    public function generateDropMigration()
+    {
+        $existingSchema = $this->tableInfo;
+        $codeGenerator = new TableMigrationCodeGenerator();
+        $migrationCode = $codeGenerator->dropTable($existingSchema);
 
-        return $migration;
+        return $this->createMigrationObject($migrationCode, sprintf('Drop table %s', $this->name));
     }
 
     protected function validateColumns()
@@ -171,15 +190,20 @@ class DatabaseTableModel extends BaseModel
     protected function validateDubplicatePrimaryKeys()
     {
         $keysFound = 0;
+        $autoIncrementsFound = 0;
         foreach ($this->columns as $column) {
             if ($column['primary_key']) {
                 $keysFound++;
             }
+
+            if ($column['auto_increment']) {
+                $autoIncrementsFound++;
+            }
         }
 
-        if ($keysFound > 1) {
+        if ($keysFound > 1 && $autoIncrementsFound) {
             throw new ValidationException([
-                'columns' => Lang::get('rainlab.builder::lang.database.error_table_mutliple_primary_keys')
+                'columns' => Lang::get('rainlab.builder::lang.database.error_table_auto_increment_in_compound_pk')
             ]);
         }
     }
@@ -333,5 +357,17 @@ class DatabaseTableModel extends BaseModel
 
             $this->columns[] = $item;
         }
+    }
+
+    protected function createMigrationObject($code, $description)
+    {
+        $migration = new MigrationModel();
+        $migration->setPluginCodeObj($this->getPluginCodeObj());
+
+        $migration->code = $code;
+        $migration->version = $migration->getNextVersion();
+        $migration->description = $description;
+
+        return $migration;
     }
 }

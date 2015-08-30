@@ -5,13 +5,6 @@
                 <button type="button" class="btn btn-primary oc-icon-plus last"
                     data-builder-command="databaseTable:cmdCreateTable"
                     ><?= e(trans('rainlab.builder::lang.common.add')) ?></button>
-                <button type="button" class="btn btn-primary empty oc-icon-trash-o hide"
-                    id="<?= $this->getId('delete-button') ?>"
-                    data-builder-command="database:cmdDeleteSelectedTables"
-                    data-confirmation="<?= e(trans('rainlab.builder::lang.database.confirmation_delete_multiple')) ?>"
-                    data-trigger-action="show"
-                    data-trigger="<?= '#'.$this->getId('database-table-list') ?> input[type=checkbox]"
-                    data-trigger-condition="checked"></button>
             </div>
         </div>
         <div class="relative toolbar-item loading-indicator-container size-input-text">

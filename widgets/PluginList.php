@@ -63,7 +63,7 @@ class PluginList extends WidgetBase
         try {
             if (strlen($pluginCode)) {
                 $pluginCodeObj = new PluginCode($pluginCode);
-                $path = $pluginCodeObj->toPluginFilePath();
+                $path = $pluginCodeObj->toPluginInformationFilePath();
                 if (!File::isFile(File::symbolizePath($path))) {
                     return null;
                 }

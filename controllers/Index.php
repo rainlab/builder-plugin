@@ -49,6 +49,8 @@ class Index extends Controller
         $this->addJs('/plugins/rainlab/builder/assets/js/builder.index.entity.plugin.js', 'RainLab.Builder');
         $this->addJs('/plugins/rainlab/builder/assets/js/builder.index.entity.databasetable.js', 'RainLab.Builder');
         $this->addJs('/plugins/rainlab/builder/assets/js/builder.index.js', 'RainLab.Builder');
+
+        $this->pageTitleTemplate = '%s Builder';
     }
 
     public function setBuilderActivePlugin($pluginCpde, $refreshPluginList = false)

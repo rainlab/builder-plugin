@@ -23,7 +23,15 @@
     // ============================
 
     DatabaseTable.prototype.cmdCreateTable = function(ev) {
-        this.indexController.openOrLoadMasterTab($(ev.target), 'onDatabaseTableCreate', this.newTabId())
+        this.indexController.openOrLoadMasterTab($(ev.target), 'onDatabaseTableCreateOrOpen', this.newTabId())
+    }
+
+    DatabaseTable.prototype.cmdOpenTable = function(ev) {
+        var table = $(ev.currentTarget).data('id')
+
+        this.indexController.openOrLoadMasterTab($(ev.target), 'onDatabaseTableCreateOrOpen', this.makeTabId(table), {
+            table_name: table
+        })
     }
 
     DatabaseTable.prototype.cmdSaveTable = function(ev) {
@@ -59,6 +67,16 @@
         ).done(
             this.proxy(this.saveMigrationDone)
         )
+    }
+
+    DatabaseTable.prototype.cmdDeleteTable = function(ev) {
+        var $target = $(ev.currentTarget)
+        $.oc.confirm($target.data('confirm'), this.proxy(this.deleteConfirmed))
+    }
+
+    DatabaseTable.prototype.cmdUnModifyForm = function() {
+        var $masterTabPane = this.getMasterTabsActivePane()
+        this.unmodifyTab($masterTabPane)
     }
 
     // EVENT HANDLERS
@@ -126,6 +144,7 @@
 
     DatabaseTable.prototype.getTableData = function($target) {
         var tableObj = this.getTableControlObject($target)
+
         return tableObj.dataSource.getAllData()
     }
 
@@ -151,19 +170,29 @@
         var $masterTabPane = this.getMasterTabsActivePane(),
             tabsObject = this.getMasterTabsObject()
 
-        $masterTabPane.find('input[name=table_name]').val(data.builderRepsonseData.tableName)
+        if (data.builderRepsonseData.operation != 'delete') {
+            $masterTabPane.find('input[name=table_name]').val(data.builderRepsonseData.builderObjectName)
+            this.updateMasterTabIdAndTitle($masterTabPane, data.builderRepsonseData)
+            this.unhideFormSaveButton($masterTabPane)
 
-// TODO: the following code could be abstracted in the base entity controller
-//
-        tabsObject.updateIdentifier($masterTabPane, data.builderRepsonseData.tabId)
-        tabsObject.updateTitle($masterTabPane, data.builderRepsonseData.tabTitle)
-
-        this.getTableList().fileList('markActive', data.builderRepsonseData.tabId)
-        this.getIndexController().unchageTab($masterTabPane)
+            this.getTableList().fileList('markActive', data.builderRepsonseData.tabId)
+            this.getIndexController().unchageTab($masterTabPane)
+        }
+        else {
+            this.forceCloseTab($masterTabPane)
+        }
     }
 
     DatabaseTable.prototype.getTableList = function() {
         return $('#layout-side-panel form[data-content-id=database] [data-control=filelist]')
+    }
+
+    DatabaseTable.prototype.deleteConfirmed = function() {
+        var $masterTabPane = this.getMasterTabsActivePane()
+
+        $masterTabPane.find('form').popup({
+            handler: 'onDatabaseTableShowDeletePopup'
+        })
     }
 
     // REGISTRATION
