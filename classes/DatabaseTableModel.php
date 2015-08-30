@@ -150,7 +150,7 @@ class DatabaseTableModel extends BaseModel
         }
 
         $description = $existingSchema ? 'Updated table %s' : 'Created table %s';
-        return $this->createMigrationObject($migrationCode, $description);
+        return $this->createMigrationObject($migrationCode, sprintf($description, $tableName));
     }
 
     public function generateDropMigration()

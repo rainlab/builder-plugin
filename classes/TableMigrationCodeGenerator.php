@@ -67,7 +67,7 @@ class TableMigrationCodeGenerator extends BaseModel
             return false;
         }
 
-        if (!$this->tableHasNameOrColumnChanges($tableDiff) && !$tableDiff->changedIndexes && !$tableDiff->addedIndexes) {
+        if (!$this->tableHasNameOrColumnChanges($tableDiff) && !$this->tableHasPrimaryKeyChanges($tableDiff)) {
             return false;
         }
 
@@ -109,6 +109,10 @@ class TableMigrationCodeGenerator extends BaseModel
 
     protected function generateCreateOrUpdateCode($tableDiff, $isNewTable, $newOrUpdatedTable)
     {
+        // Although it might seem that a reverse diff could be used
+        // for the down() method, that's not so. The up and down operations 
+        // are not fully symmetrical.
+
         return $this->generateMigrationCode(
             $this->generateCreateOrUpdateUpCode($tableDiff, $isNewTable, $newOrUpdatedTable),
             $this->generateCreateOrUpdateDownCode($tableDiff, $isNewTable, $newOrUpdatedTable)
@@ -133,7 +137,8 @@ class TableMigrationCodeGenerator extends BaseModel
         $result = null;
 
         $hasColumnChanges = $this->tableHasNameOrColumnChanges($tableDiff, true);
-        $changedPrimaryKey = $this->getChangedPrimaryKey($tableDiff);
+        $changedPrimaryKey = $this->getChangedOrRemovedPrimaryKey($tableDiff);
+        $addedPrimaryKey = $this->findPrimaryKeyIndex($tableDiff->addedIndexes, $newOrUpdatedTable);
 
         if ($tableDiff->getNewName()) {
             $result .= $this->generateTableRenameCode($tableDiff->name, $tableDiff->newName);
@@ -143,7 +148,7 @@ class TableMigrationCodeGenerator extends BaseModel
             }
         }
 
-        if (!$hasColumnChanges && !$changedPrimaryKey) {
+        if (!$hasColumnChanges && !$changedPrimaryKey && !$addedPrimaryKey) {
             return $this->makeTabs($result);
         }
 
@@ -172,7 +177,7 @@ class TableMigrationCodeGenerator extends BaseModel
 
         $primaryKey = $changedPrimaryKey ?
             $this->findPrimaryKeyIndex($tableDiff->changedIndexes, $newOrUpdatedTable) : 
-            $this->findPrimaryKeyIndex($tableDiff->addedIndexes, $tableDiff->fromTable);
+            $this->findPrimaryKeyIndex($tableDiff->addedIndexes, $newOrUpdatedTable);
 
         if ($primaryKey) {
             $result .= $this->generatePrimaryKeyCode($primaryKey, self::COLUMN_MODE_CREATE);
@@ -191,26 +196,27 @@ class TableMigrationCodeGenerator extends BaseModel
             $result = $this->generateTableDropCode($tableDiff->name);
         }
         else {
-            $changedPrimaryKey = $this->getChangedPrimaryKey($tableDiff);
+            $changedPrimaryKey = $this->getChangedOrRemovedPrimaryKey($tableDiff);
+            $addedPrimaryKey = $this->findPrimaryKeyIndex($tableDiff->addedIndexes, $newOrUpdatedTable);
 
-            if ($this->tableHasNameOrColumnChanges($tableDiff) || $changedPrimaryKey) {
+            if ($this->tableHasNameOrColumnChanges($tableDiff) || $changedPrimaryKey || $addedPrimaryKey) {
                 $hasColumnChanges = $this->tableHasNameOrColumnChanges($tableDiff, true);
 
                 if ($tableDiff->getNewName()) {
                     $result .= $this->generateTableRenameCode($tableDiff->newName, $tableDiff->name);
 
-                    if ($hasColumnChanges || $changedPrimaryKey) {
+                    if ($hasColumnChanges || $changedPrimaryKey || $addedPrimaryKey) {
                         $result .= $this->eol;
                     }
                 }
 
-                if (!$hasColumnChanges && !$changedPrimaryKey) {
+                if (!$hasColumnChanges && !$changedPrimaryKey && !$addedPrimaryKey) {
                     return $this->makeTabs($result);
                 }
 
                 $result .= $this->generateSchemaTableMethodStart($tableDiff->name, $isNewTable);
 
-                if ($changedPrimaryKey) {
+                if ($changedPrimaryKey || $addedPrimaryKey) {
                     $result .= $this->generatePrimaryKeyDrop($newOrUpdatedTable);
                 }
 
@@ -230,9 +236,11 @@ class TableMigrationCodeGenerator extends BaseModel
                     $result .= $this->generateColumnCode($column, self::COLUMN_MODE_CREATE);
                 }
 
-                $primaryKey = $this->findPrimaryKeyIndex($tableDiff->fromTable->getIndexes(), $tableDiff->fromTable);
-                if ($primaryKey) {
-                    $result .= $this->generatePrimaryKeyCode($primaryKey, self::COLUMN_MODE_CREATE);
+                if ($changedPrimaryKey || $addedPrimaryKey) {
+                    $primaryKey = $this->findPrimaryKeyIndex($tableDiff->fromTable->getIndexes(), $tableDiff->fromTable);
+                    if ($primaryKey) {
+                        $result .= $this->generatePrimaryKeyCode($primaryKey, self::COLUMN_MODE_CREATE);
+                    }
                 }
 
                 $result .= $this->generateSchemaTableMethodEnd();
@@ -258,7 +266,7 @@ class TableMigrationCodeGenerator extends BaseModel
             $table->getIndexes() // Added indexes
         );
 
-        return $this->generateCreateOrUpdateUpCode($tableDiff, true);
+        return $this->generateCreateOrUpdateUpCode($tableDiff, true, $table);
     }
 
     protected function formatLengthParameters($column, $method)
@@ -547,9 +555,22 @@ class TableMigrationCodeGenerator extends BaseModel
         return $result || $tableDiff->getNewName();
     }
 
-    protected function getChangedPrimaryKey($tableDiff)
+    protected function tableHasPrimaryKeyChanges($tableDiff)
+    {
+        return $this->findPrimaryKeyIndex($tableDiff->addedIndexes, $tableDiff->fromTable) || 
+                $this->findPrimaryKeyIndex($tableDiff->changedIndexes, $tableDiff->fromTable) ||
+                $this->findPrimaryKeyIndex($tableDiff->removedIndexes, $tableDiff->fromTable);
+    }
+
+    protected function getChangedOrRemovedPrimaryKey($tableDiff)
     {
         foreach ($tableDiff->changedIndexes as $index) {
+            if ($index->isPrimary()) {
+                return $index;
+            }
+        }
+
+        foreach ($tableDiff->removedIndexes as $index) {
             if ($index->isPrimary()) {
                 return $index;
             }
@@ -566,15 +587,14 @@ class TableMigrationCodeGenerator extends BaseModel
         //
         foreach ($indexes as $index) {
             if (!$index->isPrimary()) {
-                // TODO: implement indexes
+                continue;
             }
-            else {
-                if ($this->indexHasAutoincrementColumns($index, $table)) {
-                    continue;
-                }
 
-                return $index;
+            if ($this->indexHasAutoincrementColumns($index, $table)) {
+                continue;
             }
+
+            return $index;
         }
 
         return null;
