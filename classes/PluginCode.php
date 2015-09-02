@@ -57,6 +57,11 @@ class PluginCode
         return '$/'.$this->toFilesystemPath().'/plugin.php';
     }
 
+    public function toPluginDirectoryPath()
+    {
+        return '$/'.$this->toFilesystemPath();
+    }
+
     public function toDatabasePrefix()
     {
         return strtolower($this->authorCode.'_'.$this->pluginCode);

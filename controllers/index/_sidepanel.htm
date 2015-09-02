@@ -10,6 +10,16 @@
                 onsubmit="return false">
                 <?= $this->widget->databaseTabelList->render() ?>
             </form>
+
+            <!-- Models -->
+            <form
+                class="layout hide"
+                data-content-id="models"
+                data-template-type="model"
+                data-type-icon="oc-icon-random"
+                onsubmit="return false">
+                <?= $this->widget->modelList->render() ?>
+            </form>
         </div>
     </div>
 </div>

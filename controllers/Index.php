@@ -4,6 +4,7 @@ use Backend\Classes\Controller;
 use Backend\Traits\InspectableContainer;
 use RainLab\Builder\Widgets\PluginList;
 use RainLab\Builder\Widgets\DatabaseTableList;
+use RainLab\Builder\Widgets\ModelList;
 use RainLab\Builder\Traits\IndexPluginOperations;
 use ApplicationException;
 use Exception;
@@ -40,6 +41,7 @@ class Index extends Controller
 
         new PluginList($this, 'pluginList');
         new DatabaseTableList($this, 'databaseTabelList');
+        new ModelList($this, 'modelList');
     }
 
     public function index()
@@ -64,7 +66,8 @@ class Index extends Controller
 
         $result = array_merge(
             $result,
-            $this->widget->databaseTabelList->refreshActivePlugin()
+            $this->widget->databaseTabelList->refreshActivePlugin(),
+            $this->widget->modelList->refreshActivePlugin()
         );
 
         return $result;

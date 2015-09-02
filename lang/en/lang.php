@@ -73,7 +73,9 @@ return [
         'error_table_already_exists' => "The table ':name' already exists in the database."
     ],
     'model' => [
-        'menu_label' => 'Models'
+        'menu_label' => 'Models',
+        'no_records' => 'No models found',
+        'search' => 'Search...'
     ],
     'controller' => [
         'menu_label' => 'Controllers'
