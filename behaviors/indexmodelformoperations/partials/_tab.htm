@@ -1,0 +1,10 @@
+<?= Form::open([
+    'class' => 'layout',
+    'data-change-monitor' => 'true',
+    'data-window-close-confirm' => e(trans('backend::lang.form.confirm_tab_close')),
+    'data-entity' => 'models'
+]) ?>
+    <?= $form->render() ?>
+    <input type="hidden" name="plugin_code" value="<?= e($pluginCode) ?>">
+    <input type="hidden" name="file_name" value="<?= e($fileName) ?>">
+<?= Form::close() ?>

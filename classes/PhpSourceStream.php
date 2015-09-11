@@ -134,6 +134,63 @@ class PhpSourceStream
     }
 
     /**
+     * Reads the next token, updates the head and and returns the token if it has the expected code.
+     * @param integer $expectedCode Specifies the code to expect.
+     * @return mixed Returns the token or null if the token code was not expected.
+     */
+    public function getNextExpected($expectedCode)
+    {
+        $token = $this->getNext();
+        if ($this->getCurrentCode() != $expectedCode) {
+            return null;
+        }
+
+        return $token;
+    }
+
+    /**
+     * Reads expected tokens, until the termination token is found.
+     * If any unexpected token is found before the termination token, returns null.
+     * If the method succeeds, the head is positioned on the termination token.
+     * @param array $expectedCodesOrValues Specifies the expected codes or token values.
+     * @param integer|string|array $terminationToken Specifies the termination token text or code.
+     * The termination tokens could be specified as array.
+     * @return string|null Returns the tokens text or null
+     */
+    public function getNextExpectedTerminated($expectedCodesOrValues, $terminationToken)
+    {
+        $buffer = null;
+
+        if (!is_array($terminationToken)) {
+            $terminationToken = [$terminationToken];
+        }
+
+        while (($nextToken = $this->getNext()) !== null) {
+            $code = $this->getCurrentCode();
+            $text = $this->getCurrentText();
+
+            if (in_array($code, $expectedCodesOrValues) || in_array($text, $expectedCodesOrValues)) {
+                $buffer .= $text;
+                continue;
+            }
+
+            if (in_array($code, $terminationToken)) {
+                return $buffer;
+            }
+
+            if (in_array($text, $terminationToken)) {
+                return $buffer;
+            }
+
+            // The token should be either expected or termination. 
+            // If something else is found, return null.
+            return null;
+        }
+
+        return $buffer;
+    }
+
+    /**
      * Moves the head forward.
      * @return boolean Returns true if the head was successfully moved.
      * Returns false if the head can't be moved because it has reached the end of the steam.
@@ -145,6 +202,7 @@ class PhpSourceStream
 
     /**
      * Returns the stream text from the head position to the next semicolon and updates the head.
+     * If the method succeeds, the head is positioned on the semicolon.
      */
     public function getTextToSemicolon()
     {
@@ -158,7 +216,7 @@ class PhpSourceStream
             $buffer .= $this->getCurrentText();
         }
 
-        // The semicolon wasn't found
+        // The semicolon wasn't found.
         return null;
     }
 }

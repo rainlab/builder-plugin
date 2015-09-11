@@ -74,8 +74,34 @@ return [
     ],
     'model' => [
         'menu_label' => 'Models',
+        'entity_name' => 'Model',
         'no_records' => 'No models found',
-        'search' => 'Search...'
+        'search' => 'Search...',
+        'add' => 'Add...',
+        'forms' => 'Forms',
+        'lists' => 'Lists',
+        'field_class_name' => 'Class name',
+        'field_database_table' => 'Database table',
+        'error_class_name_exists' => 'Model file already exists for the specified class name: :path',
+        'add_form' => 'Add form',
+        'add_list' => 'Add list',
+    ],
+    'form' => [
+        'confirm_delete' => 'Do you really want to delete the form?',
+        'tab_new_form' => 'New form',
+        'property_label_title' => 'Label',
+        'property_span_title' => 'Span',
+        'property_comment_title' => 'Comment',
+        'property_comment_above_title' => 'Comment above',
+        'property_default_title' => 'Default',
+        'property_css_class_title' => 'CSS class',
+        'property_disabled_title' => 'Disabled',
+        'property_hidden_title' => 'Hidden',
+        'property_required_title' => 'Required',
+        'control_group_standard' => 'Standard',
+        'control_group_widgets' => 'Widgets',
+        'drop_control_here' => 'Drop new field here',
+        'loading' => 'Loading...'
     ],
     'controller' => [
         'menu_label' => 'Controllers'

@@ -124,7 +124,8 @@
 
     Builder.prototype.updateModifiedCounter = function() {
         var counters = {
-            database: { menu: 'database', count: 0 }
+            database: { menu: 'database', count: 0 },
+            models: { menu: 'models', count: 0 }
         }
 
         $('> div.tab-content > div.tab-pane[data-modified] > form', this.$masterTabs).each(function(){

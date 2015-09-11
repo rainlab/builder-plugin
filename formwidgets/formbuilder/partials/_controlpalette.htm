@@ -1,0 +1,27 @@
+<div class="layout-row min-size">
+    <div
+        class="control-tabs auxiliary-tabs layout"
+        data-control="tab"
+        data-slidable
+    >
+        <div class="layout-row tab-content">
+            <?php foreach ($controlGroups as $index=>$group): ?>
+                <div class="tab-pane <?= $index == 0 ? 'active' : null ?> layout-cell">
+                    <div class="form-group builder-control-palette-container">
+                        <!-- The form group element is required to prevent hiding tabs by the Widget JS class -->
+                        
+                        <?= $this->makePartial('controlgroup', ['group'=>$group]) ?>
+                    </div>
+                </div>
+            <?php endforeach ?>
+        </div>
+
+        <div class="layout-row min-size">
+            <ul class="nav nav-tabs">
+                <?php foreach ($controlGroups as $index=>$group): ?>
+                    <li class="<?= $index == 0 ? 'active' : null ?>"><a href="javascript:;"><?= e($group) ?></a></li>
+                <?php endforeach ?>
+            </ul>
+        </div>
+    </div>
+</div>

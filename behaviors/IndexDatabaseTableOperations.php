@@ -157,19 +157,6 @@ class IndexDatabaseTableOperations extends IndexOperationsBehaviorBase
         return $model;
     }
 
-    protected function getPluginCode()
-    {
-        // TODO: this method could be abstracted in the base behavior 
-
-        $vector = $this->controller->getBuilderActivePluginVector();
-
-        if (!$vector) {
-            throw new ApplicationException('Cannot determine the currently active plugin.');
-        }
-
-        return $vector->pluginCodeObj;
-    }
-
     protected function makeMigrationFormWidget($migration)
     {
         $widgetConfig = $this->makeConfig($this->migrationFormConfigFile);

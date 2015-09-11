@@ -1,0 +1,11 @@
+<?php if ($hasLabels): ?>
+    <span class="builder-control-label"><?= e(trans($this->getPropertyValue($properties, 'label'))) ?></span>
+
+    <span class="builder-control-comment-above"><?= e(trans($this->getPropertyValue($properties, 'commentAbove'))) ?></span>
+<?php endif ?>
+
+<?= $body ?>
+
+<?php if ($hasLabels): ?>
+    <span class="builder-control-comment-below"><?= strlen($this->getPropertyValue($properties, 'commentAbove')) ? null : e(trans($this->getPropertyValue($properties, 'comment'))) ?></span>
+<?php endif ?>

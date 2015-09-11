@@ -34,5 +34,16 @@ abstract class IndexOperationsBehaviorBase extends ControllerBehavior
         return $form;
     }
 
+    protected function getPluginCode()
+    {
+        $vector = $this->controller->getBuilderActivePluginVector();
+
+        if (!$vector) {
+            throw new ApplicationException('Cannot determine the currently active plugin.');
+        }
+
+        return $vector->pluginCodeObj;
+    }
+
     abstract protected function loadOrCreateBaseModel($modelCode);
 }

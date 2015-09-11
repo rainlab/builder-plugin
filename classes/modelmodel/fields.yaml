@@ -1,0 +1,7 @@
+fields:
+    className:
+        label: rainlab.builder::lang.model.field_class_name
+
+    databaseTable:
+        label: rainlab.builder::lang.model.field_database_table
+        type: dropdown

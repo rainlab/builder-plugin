@@ -18,6 +18,7 @@ use Lang;
 class ModelList extends WidgetBase
 {
     use \Backend\Traits\SearchableWidget;
+    use \Backend\Traits\CollapsableWidget;
 
     protected $theme;
 
@@ -97,7 +98,7 @@ class ModelList extends WidgetBase
             $result = [];
 
             foreach ($models as $model) {
-                if ($this->textMatchesSearch($words, $model)) {
+                if ($this->textMatchesSearch($words, $model->className)) {
                     $result[] = $model;
                 }
             }

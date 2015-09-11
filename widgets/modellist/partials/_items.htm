@@ -1,15 +1,57 @@
 <?php if ($items): ?>
     <ul>
         <?php foreach ($items as $model):
-            $dataId = 'model-'.$model;
+            $dataId = 'model-'.$model->className;
+
+            $modelGroup = $model->className;
+            $formsGroup = $modelGroup.'-forms';
+            $listsGroup = $modelGroup.'-lists';
+            $modelGroupStatus = $this->getGroupStatus($modelGroup);
+            $formsGroupStatus = $this->getGroupStatus($formsGroup);
+            $listsGroupStatus = $this->getGroupStatus($listsGroup);
         ?>
-            <li class="item" 
+            <li class="group model" 
                 data-id="<?= e($dataId) ?>" 
+                data-status="<?= $modelGroupStatus ? 'expanded' : 'collapsed' ?>"
+                data-group-id="<?= e($modelGroup) ?>"
             >
-                <a href="#" data-id="<?= e($model) ?>">
-                    <span class="title"><?= e($model) ?></span>
-                    <span class="borders"></span>
-                </a>
+                <h4><a href="#" data-id="<?= e($model->className) ?>"><?= e($model->className) ?></a></h4>
+                <ul>
+                    <li class="group form"
+                        data-status="<?= $formsGroupStatus ? 'expanded' : 'collapsed' ?>"
+                        data-group-id="<?= e($formsGroup) ?>"
+                    >
+                        <h4><a href="#"><?= e(trans('rainlab.builder::lang.model.forms')) ?></a></h4>
+                        <div class="controls">
+                            <a
+                                href="javascript:;"
+                                class="control icon btn-primary oc-icon-plus" 
+                                data-builder-command="modelForm:cmdCreateForm"
+                                title="<?= e(trans('rainlab.builder::lang.model.add_form')) ?>"
+                            ><?= e(trans('rainlab.builder::lang.model.add_form')) ?></a>
+                        </div>
+
+                        <ul></ul>
+                    </li>
+
+                    <li class="group list"
+                        data-status="<?= $listsGroupStatus ? 'expanded' : 'collapsed' ?>"
+                        data-group-id="<?= e($listsGroup) ?>"
+                    >
+                        <h4><a href="#"><?= e(trans('rainlab.builder::lang.model.lists')) ?></a></h4>
+                        <div class="controls">
+                            <a
+                                href="javascript:;"
+                                class="control icon btn-primary oc-icon-plus" 
+                                data-builder-command="modelList:cmdCreateList"
+                                title="<?= e(trans('rainlab.builder::lang.model.add_form')) ?>"
+                            ><?= e(trans('rainlab.builder::lang.model.add_form')) ?></a>
+                        </div>
+
+                        <ul></ul>
+                    </li>
+                </ul>
+                
             </li>
         <?php endforeach ?>
     </ul>

@@ -22,7 +22,9 @@ class Index extends Controller
  
      public $implement = [
         'RainLab.Builder.Behaviors.IndexPluginOperations',
-        'RainLab.Builder.Behaviors.IndexDatabaseTableOperations'
+        'RainLab.Builder.Behaviors.IndexDatabaseTableOperations',
+        'RainLab.Builder.Behaviors.IndexModelOperations',
+        'RainLab.Builder.Behaviors.IndexModelFormOperations',
     ];
 
     public $requiredPermissions = ['rainlab.buileder.*'];
@@ -46,10 +48,14 @@ class Index extends Controller
 
     public function index()
     {
+        $this->addCss('/plugins/rainlab/builder/assets/css/builder.css', 'RainLab.Builder');
+
         // TODO: combine the scripts
         $this->addJs('/plugins/rainlab/builder/assets/js/builder.index.entity.base.js', 'RainLab.Builder');
         $this->addJs('/plugins/rainlab/builder/assets/js/builder.index.entity.plugin.js', 'RainLab.Builder');
         $this->addJs('/plugins/rainlab/builder/assets/js/builder.index.entity.databasetable.js', 'RainLab.Builder');
+        $this->addJs('/plugins/rainlab/builder/assets/js/builder.index.entity.model.js', 'RainLab.Builder');
+        $this->addJs('/plugins/rainlab/builder/assets/js/builder.index.entity.modelform.js', 'RainLab.Builder');
         $this->addJs('/plugins/rainlab/builder/assets/js/builder.index.js', 'RainLab.Builder');
 
         $this->pageTitleTemplate = '%s Builder';
