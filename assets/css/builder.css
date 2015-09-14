@@ -9,7 +9,7 @@ ul.builder-control-palette {
   white-space: nowrap;
 }
 ul.builder-control-palette li {
-  margin: 8px;
+  margin: 8px 0 8px 8px;
   color: #555555;
   padding: 10px;
   -webkit-border-radius: 4px;
@@ -30,7 +30,10 @@ ul.builder-control-palette li:hover {
 }
 ul.builder-control-palette li i {
   margin-right: 5px;
-  font-size: 14px;
+  font-size: 18px;
+  position: relative;
+  color: #888888;
+  top: 2px;
 }
 .builder-building-area {
   background: white;
@@ -40,9 +43,8 @@ ul.builder-control-palette li i {
   list-style: none;
 }
 .builder-building-area ul.builder-control-list li {
-  padding: 10px 12px;
   margin-bottom: 20px;
-  cursor: default;
+  cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -50,9 +52,11 @@ ul.builder-control-palette li i {
 }
 .builder-building-area ul.builder-control-list li.placeholder,
 .builder-building-area ul.builder-control-list li.loading-control {
+  cursor: default;
+  padding: 10px 12px;
   position: relative;
   text-align: center;
-  border: 2px solid #f5f5f7;
+  border: 2px solid #dde0e2;
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   border-radius: 4px;
@@ -61,6 +65,9 @@ ul.builder-control-palette li i {
 .builder-building-area ul.builder-control-list li.placeholder i,
 .builder-building-area ul.builder-control-list li.loading-control i {
   margin-right: 8px;
+}
+.builder-building-area ul.builder-control-list li.clear-row {
+  display: none;
 }
 .builder-building-area ul.builder-control-list li.loading-control {
   border-color: #bdc3c7;
@@ -101,6 +108,99 @@ ul.builder-control-palette li i {
   float: right;
   width: 48.5%;
   clear: right;
+}
+.builder-building-area ul.builder-control-list li.span-right + li.clear-row {
+  display: block;
+  clear: both;
+}
+.builder-building-area .builder-control-label {
+  margin-bottom: 10px;
+  color: #555555;
+  font-size: 14px;
+  font-weight: 600;
+}
+.builder-building-area .builder-control-label:empty {
+  margin-bottom: 0;
+}
+.builder-building-area .builder-control-comment-above,
+.builder-building-area .builder-control-comment-below {
+  color: #737373;
+  font-size: 12px;
+}
+.builder-building-area li:not(.placeholder):not(.loading-control):hover * {
+  color: #2581b8 !important;
+}
+.builder-blueprint-control-text {
+  padding: 10px 12px;
+  border: 2px solid #bdc3c7;
+  color: #95a5a6;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+.builder-blueprint-control-text i {
+  margin-right: 5px;
+}
+li:hover > .builder-blueprint-control-text {
+  border-color: #2581b8;
+}
+.builder-blueprint-control-checkbox:before {
+  float: left;
+  content: ' ';
+  border: 2px solid #bdc3c7;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  width: 17px;
+  height: 17px;
+  position: relative;
+  top: 2px;
+}
+.builder-blueprint-control-checkbox .builder-control-label {
+  margin-left: 25px;
+  font-weight: normal;
+}
+.builder-blueprint-control-checkbox .builder-control-comment-below {
+  margin-left: 25px;
+}
+li:hover > .builder-blueprint-control-checkbox:before {
+  border-color: #2581b8;
+}
+.builder-blueprint-control-switch {
+  position: relative;
+}
+.builder-blueprint-control-switch:before,
+.builder-blueprint-control-switch:after {
+  position: absolute;
+  content: ' ';
+  -webkit-border-radius: 30px;
+  -moz-border-radius: 30px;
+  border-radius: 30px;
+}
+.builder-blueprint-control-switch:before {
+  background-color: #bdc3c7;
+  width: 34px;
+  height: 18px;
+  top: 2px;
+  left: 2px;
+}
+.builder-blueprint-control-switch:after {
+  background-color: white;
+  width: 14px;
+  height: 14px;
+  top: 4px;
+  left: 4px;
+  margin-left: 16px;
+}
+.builder-blueprint-control-switch .builder-control-label {
+  margin-left: 45px;
+  font-weight: normal;
+}
+.builder-blueprint-control-switch .builder-control-comment-below {
+  margin-left: 45px;
+}
+li:hover > .builder-blueprint-control-switch:before {
+  background-color: #2581b8;
 }
 .control-filelist ul li.group.model > h4 a:after {
   content: "\f074";

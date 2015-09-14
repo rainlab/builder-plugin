@@ -101,7 +101,11 @@ return [
         'control_group_standard' => 'Standard',
         'control_group_widgets' => 'Widgets',
         'drop_control_here' => 'Drop new field here',
-        'loading' => 'Loading...'
+        'loading' => 'Loading...',
+        'control_text' => 'Text field',
+        'control_password' => 'Password field',
+        'control_checkbox' => 'Checkbox',
+        'control_switch' => 'Switch'
     ],
     'controller' => [
         'menu_label' => 'Controllers'

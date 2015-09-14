@@ -100,9 +100,9 @@ class ControlLibrary
         ];
     }
 
-    public function getStandardProperties()
+    public function getStandardProperties($excludeProperties = [])
     {
-        return [
+        $result = [
             'label' => [
                 'title' => Lang::get('rainlab.builder::lang.form.property_label_title'),
                 'type' => 'string'
@@ -142,6 +142,14 @@ class ControlLibrary
                 'type' => 'checkbox'
             ]
         ];
+
+        foreach ($excludeProperties as $property) {
+            if (array_key_exists($property, $result)) {
+                unset($result[$property]);
+            }
+        }
+
+        return $result;
     }
 
     protected function resolveControlGroupName($group)

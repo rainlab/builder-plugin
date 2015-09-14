@@ -18,4 +18,13 @@ abstract class ControlDesignTimeProviderBase extends WidgetBase
      * @return boolean
      */
     abstract public function controlHasLabels($type);
+
+    protected function getPropertyValue($properties, $property)
+    {
+        if (array_key_exists($property, $properties)) {
+            return $properties[$property];
+        }
+
+        return null;
+    }
 }

@@ -1,11 +1,15 @@
-<?php if ($hasLabels): ?>
-    <span class="builder-control-label"><?= e(trans($this->getPropertyValue($properties, 'label'))) ?></span>
+<?php 
+    /* DIV elements below should not have whitespace, required for CSS element:empty pseudo-class */ 
+?>
 
-    <span class="builder-control-comment-above"><?= e(trans($this->getPropertyValue($properties, 'commentAbove'))) ?></span>
+<?php if ($hasLabels): ?>
+    <div class="builder-control-label"><?= e(trans($this->getPropertyValue($properties, 'label'))) ?></div>
+
+    <div class="builder-control-comment-above"><?= e(trans($this->getPropertyValue($properties, 'commentAbove'))) ?></div>
 <?php endif ?>
 
 <?= $body ?>
 
 <?php if ($hasLabels): ?>
-    <span class="builder-control-comment-below"><?= strlen($this->getPropertyValue($properties, 'commentAbove')) ? null : e(trans($this->getPropertyValue($properties, 'comment'))) ?></span>
+    <div class="builder-control-comment-below"><?= strlen($this->getPropertyValue($properties, 'commentAbove')) ? null : e(trans($this->getPropertyValue($properties, 'comment'))) ?></div>
 <?php endif ?>

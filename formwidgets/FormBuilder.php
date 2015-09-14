@@ -43,7 +43,6 @@ class FormBuilder extends FormWidgetBase
         $controlInfo = $library->getControlInfo($type);
 
         if (!$controlInfo) {
-traceLog($type);
             throw new ApplicationException('The requested control type is not found.');
         }
 
@@ -87,9 +86,10 @@ traceLog($type);
     {
         $type = Input::get('controlType');
         $controlId = Input::get('controlId');
+        $properties = Input::get('properties');
 
         return [
-            'markup' => $this->renderControl($type, []),
+            'markup' => $this->renderControl($type, $properties),
             'controlId' => $controlId
         ];
     }

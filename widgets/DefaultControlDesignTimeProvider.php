@@ -1,6 +1,7 @@
 <?php namespace RainLab\Builder\Widgets;
 
 use RainLab\Builder\Classes\ControlDesignTimeProviderBase;
+use SystemException;
 use Input;
 use Response;
 use Request;
@@ -15,6 +16,21 @@ use Lang;
  */
 class DefaultControlDesignTimeProvider extends ControlDesignTimeProviderBase
 {
+    protected $defaultControlsTypes = [
+        'text',
+        'password',
+        'textarea',
+        'checkbox',
+        'dropdown',
+        'radio',
+        'checkboxlist',
+        'switch',
+        'section',
+        'partial',
+        'hint',
+        'widget'
+    ];
+
     /**
      * Renders conrol body.
      * @param string $type Specifies the control type to render.
@@ -23,7 +39,13 @@ class DefaultControlDesignTimeProvider extends ControlDesignTimeProviderBase
      */
     public function renderControlBody($type, $properties)
     {
-        return $type;
+        if (!in_array($type, $this->defaultControlsTypes)) {
+            $this->renderUnknownControl($type, $properties);
+        }
+
+        return $this->makePartial('control-'.$type, [
+            'properties'=>$properties
+        ]);
     }
 
     /**
@@ -33,6 +55,15 @@ class DefaultControlDesignTimeProvider extends ControlDesignTimeProviderBase
      */
     public function controlHasLabels($type)
     {
+        if (in_array($type, ['checkbox', 'switch'])) {
+            return false;
+        }
+
         return true;
+    }
+
+    protected function renderUnknownControl($type, $properties)
+    {
+        throw new SystemException('To implement - rendering of unknown controls');
     }
 }

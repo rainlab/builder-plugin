@@ -1,0 +1,82 @@
+.builder-blueprint-control-text {
+    padding: 10px 12px;
+    border: 2px solid @builder-control-border-color;
+    color: @builder-control-text-color;
+    .border-radius(4px);
+
+    i {
+        margin-right: 5px;
+    }
+}
+
+li:hover > .builder-blueprint-control-text {
+    border-color: @builder-hover-color;
+} 
+
+.builder-blueprint-control-checkbox {
+    &:before {
+        float: left;
+        content: ' ';
+        border: 2px solid @builder-control-border-color;
+        .border-radius(4px);
+        width: 17px;
+        height: 17px;
+        position: relative;
+        top: 2px;
+    }
+
+    .builder-control-label {
+        margin-left: 25px;
+        font-weight: normal;
+    }
+
+    .builder-control-comment-below {
+        margin-left: 25px;
+    }
+}
+
+li:hover > .builder-blueprint-control-checkbox:before {
+    border-color: @builder-hover-color;
+}
+
+.builder-blueprint-control-switch {
+    position: relative;
+
+    &:before, &:after {
+        position: absolute;
+        content: ' ';
+        .border-radius(30px);
+    }
+
+    &:before {
+        background-color: @builder-control-border-color;
+
+        width: 34px;
+        height: 18px;
+        top: 2px;
+        left: 2px;
+    }
+
+    &:after {
+        background-color: white;
+
+        width: 14px;
+        height: 14px;
+        top: 4px;
+        left: 4px;
+        margin-left: 16px;
+    }
+
+    .builder-control-label {
+        margin-left: 45px;
+        font-weight: normal;
+    }
+
+    .builder-control-comment-below {
+        margin-left: 45px;
+    }
+}
+
+li:hover > .builder-blueprint-control-switch:before {
+    background-color: @builder-hover-color;
+}

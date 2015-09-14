@@ -44,10 +44,13 @@
         return ev.dataTransfer.types.indexOf('builder/source/palette') >= 0
     }
 
-    FormBuilder.prototype.addControlToPlaceholder = function(placeholder, controlType) {
+    FormBuilder.prototype.addControlToPlaceholder = function(placeholder, controlType, controlName) {
         // Duplicate the placeholder and place it after 
         // the existing one
         placeholder.insertAdjacentHTML('afterend', placeholder.outerHTML);
+
+        // Create the clear-row element after the current placeholder
+        this.appendClearRowElement(placeholder)
 
         // Replace the placeholder class with control
         // loading indicator
@@ -56,22 +59,53 @@
         placeholder.innerHTML = ''
         placeholder.removeAttribute('data-builder-placeholder')
 
-
         // Send request to the server to load the 
         // control markup.
         var data = {
             controlType: controlType,
-            controlId: this.getControlId(placeholder)
+            controlId: this.getControlId(placeholder),
+            properties: {
+                'label': controlName
+            }
         }
         $(placeholder).request('onModelFormRenderField', {
             data: data
         }).done(this.proxy(this.controlMarkupLoaded))
 
-        this.reflow()
+        this.reflow(placeholder)
     }
 
-    FormBuilder.prototype.reflow = function() {
-        throw new Error("To implement")
+    FormBuilder.prototype.reflow = function(li) {
+        var list = li.parentNode,
+            items = list.children,
+            prevSpan = null
+
+        for (var i=0, len = items.length; i < len; i++) {
+            var item = items[i],
+                itemSpan = item.getAttribute('data-builder-span')
+
+            if ($.oc.foundation.element.hasClass(item, 'clear-row')) {
+                continue
+            }
+
+            if (itemSpan == 'auto') {
+                if (prevSpan == 'left') {
+                    $.oc.foundation.element.removeClass(item, 'span-left')
+                    $.oc.foundation.element.removeClass(item, 'span-full')
+                    $.oc.foundation.element.addClass(item, 'span-right')
+                    prevSpan = 'right'
+                }
+                else {
+                    $.oc.foundation.element.removeClass(item, 'span-right')
+                    $.oc.foundation.element.removeClass(item, 'span-full')
+                    $.oc.foundation.element.addClass(item, 'span-left')
+                    prevSpan = 'left'
+                }
+            } 
+            else {
+                prevSpan = itemSpan
+            }
+        }
     }
 
     FormBuilder.prototype.getControlId = function(li) {
@@ -95,6 +129,10 @@
         $.oc.foundation.element.removeClass(placeholder, 'loading-control')
     }
 
+    FormBuilder.prototype.appendClearRowElement = function(li) {
+        li.insertAdjacentHTML('afterend', '<li class="clear-row"></li>');
+    }
+
     // EVENT HANDLERS
     // ============================
 
@@ -107,6 +145,7 @@
         ev.dataTransfer.setData('text/html', ev.target.innerHTML);
         ev.dataTransfer.setData('builder/source/palette', 'true');
         ev.dataTransfer.setData('builder/control/type', ev.target.getAttribute('data-builder-control-type'));
+        ev.dataTransfer.setData('builder/control/name', ev.target.getAttribute('data-builder-control-name'));
     }
 
     FormBuilder.prototype.onDragOver = function(ev) {
@@ -157,7 +196,9 @@
             $.oc.foundation.event.stop(ev)
             $.oc.foundation.element.removeClass(ev.target, 'drag-over')
 
-            this.addControlToPlaceholder(ev.target, ev.dataTransfer.getData('builder/control/type'))
+            this.addControlToPlaceholder(ev.target,
+                ev.dataTransfer.getData('builder/control/type'),
+                ev.dataTransfer.getData('builder/control/name'))
         }
     }
 

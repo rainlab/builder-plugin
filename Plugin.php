@@ -2,6 +2,7 @@
 
 use Backend;
 use System\Classes\PluginBase;
+use Event;
 
 class Plugin extends PluginBase
 {
@@ -101,5 +102,42 @@ class Plugin extends PluginBase
                 'order'       => 60
             ]
         ];
+    }
+
+    public function boot()
+    {
+        Event::listen('pages.builder.registerControls', function($controlLibrary) {
+            $controlLibrary->registerControl('text', 
+                'rainlab.builder::lang.form.control_text',
+                $controlLibrary::GROUP_STANDARD,
+                'icon-terminal',
+                $controlLibrary->getStandardProperties(),
+                null
+            );
+
+            $controlLibrary->registerControl('password', 
+                'rainlab.builder::lang.form.control_password',
+                $controlLibrary::GROUP_STANDARD,
+                'icon-lock',
+                $controlLibrary->getStandardProperties(),
+                null
+            );
+
+            $controlLibrary->registerControl('checkbox', 
+                'rainlab.builder::lang.form.control_checkbox',
+                $controlLibrary::GROUP_STANDARD,
+                'icon-check-square-o',
+                $controlLibrary->getStandardProperties(['commentAbove']),
+                null
+            );
+
+            $controlLibrary->registerControl('switch', 
+                'rainlab.builder::lang.form.control_switch',
+                $controlLibrary::GROUP_STANDARD,
+                'icon-toggle-on',
+                $controlLibrary->getStandardProperties(['commentAbove']),
+                null
+            );
+        });
     }
 }
