@@ -14,6 +14,8 @@ use Lang;
  */
 class ControlLibrary
 {
+    use \October\Rain\Support\Traits\Singleton;
+
     const GROUP_STANDARD = 0;
     const GROUP_WIDGETS = 1;
 
@@ -72,6 +74,7 @@ class ControlLibrary
      * Registers a control.
      * @param string $type Specifies the control code, for example "codeeditor".
      * @param string $name Specifies the control name, for example "Code editor".
+     * @param string $description Specifies the control descritpion, can be empty.
      * @param string|integer $controlGroup Specifies the control group.
      * Control groups are used to create tabs in the Control Palette in Form Builder.
      * The group could one of the ControlLibrary::GROUP_ constants or a string.
@@ -85,7 +88,7 @@ class ControlLibrary
      * The class should extend RainLab\Builder\Classes\ControlDesignTimeProvider. If the class is not provided,
      * the default control design and design settings will be used.
      */
-    public function registerControl($code, $name, $controlGroup, $icon, $properties, $designTimeProviderClass)
+    public function registerControl($code, $name, $description, $controlGroup, $icon, $properties, $designTimeProviderClass)
     {
         if (!$designTimeProviderClass) {
             $designTimeProviderClass = 'RainLab\Builder\Widgets\DefaultControlDesignTimeProvider';
@@ -94,6 +97,7 @@ class ControlLibrary
         $this->controls[$code] = [
             'group' => $controlGroup,
             'name' => $name,
+            'description' => $description,
             'icon' => $icon,
             'properties' => $properties,
             'designTimeProvider' => $designTimeProviderClass

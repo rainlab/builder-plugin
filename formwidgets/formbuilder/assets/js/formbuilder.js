@@ -34,6 +34,8 @@
         document.addEventListener('dragenter', this.proxy(this.onDragEnter))
         document.addEventListener('dragleave', this.proxy(this.onDragLeave))
         document.addEventListener('drop', this.proxy(this.onDragDrop), false);
+
+        $(document).on('change', '.builder-control-list > li', this.proxy(this.onControlChange))
     }
 
     FormBuilder.prototype.targetIsPlaceholder = function(ev) {
@@ -47,7 +49,7 @@
     FormBuilder.prototype.addControlToPlaceholder = function(placeholder, controlType, controlName) {
         // Duplicate the placeholder and place it after 
         // the existing one
-        placeholder.insertAdjacentHTML('afterend', placeholder.outerHTML);
+        placeholder.insertAdjacentHTML('afterend', placeholder.outerHTML)
 
         // Create the clear-row element after the current placeholder
         this.appendClearRowElement(placeholder)
@@ -60,7 +62,7 @@
         placeholder.removeAttribute('data-builder-placeholder')
 
         // Send request to the server to load the 
-        // control markup.
+        // control markup, Inspector data schema, inspector title, etc.
         var data = {
             controlType: controlType,
             controlId: this.getControlId(placeholder),
@@ -68,9 +70,9 @@
                 'label': controlName
             }
         }
-        $(placeholder).request('onModelFormRenderField', {
+        $(placeholder).request('onModelFormRenderControlWrapper', {
             data: data
-        }).done(this.proxy(this.controlMarkupLoaded))
+        }).done(this.proxy(this.controlWrapperMarkupLoaded))
 
         this.reflow(placeholder)
     }
@@ -119,11 +121,17 @@
         return this.placeholderIdIndex
     }
 
-    FormBuilder.prototype.controlMarkupLoaded = function(responseData) {
+    FormBuilder.prototype.controlWrapperMarkupLoaded = function(responseData) {
         var placeholder = document.body.querySelector('li[data-builder-control-id="'+responseData.controlId+'"]')
         if (!placeholder) {
             return
         }
+
+        placeholder.setAttribute('data-inspectable', true)
+        placeholder.setAttribute('data-control-type', responseData.type)
+
+        placeholder.setAttribute('data-inspector-title', responseData.controlTitle)
+        placeholder.setAttribute('data-inspector-description', responseData.description)
 
         placeholder.innerHTML = responseData.markup
         $.oc.foundation.element.removeClass(placeholder, 'loading-control')
@@ -131,6 +139,17 @@
 
     FormBuilder.prototype.appendClearRowElement = function(li) {
         li.insertAdjacentHTML('afterend', '<li class="clear-row"></li>');
+    }
+
+    FormBuilder.prototype.controlBodyMarkupLoaded = function(responseData) {
+        var li = document.body.querySelector('li[data-builder-control-id="'+responseData.controlId+'"]')
+        if (!li) {
+            return
+        }
+
+        var wrapper = li.querySelector('.control-wrapper')
+
+        wrapper.innerHTML = responseData.markup
     }
 
     // EVENT HANDLERS
@@ -202,7 +221,28 @@
         }
     }
 
+    FormBuilder.prototype.onControlChange = function(ev) {
+        // Control has changed (with Inspector) -
+        // update the control markup with AJAX
+
+        var li = ev.currentTarget,
+            properties = li.querySelector('[data-inspector-values]').value,
+            controlType = li.getAttribute('data-control-type')
+
+        var data = {
+            controlType: controlType,
+            controlId: this.getControlId(li),
+            properties: $.parseJSON(properties)
+        }
+
+        $(li).request('onModelFormRenderControlBody', {
+            data: data
+        }).done(this.proxy(this.controlBodyMarkupLoaded))
+    }
+
     $(document).ready(function(){
+        // There is a single instance of the form builder. All operations
+        // are stateless, so instance properties or DOM references are not needed.
         new FormBuilder()
     })
 

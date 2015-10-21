@@ -5,6 +5,7 @@ use Backend\Classes\FormWidgetBase;
 use RainLab\Builder\Classes\ControlLibrary;
 use ApplicationException;
 use Input;
+use Lang;
 
 /**
  * Menu items widget.
@@ -37,29 +38,12 @@ class FormBuilder extends FormWidgetBase
         return $this->makePartial('body');
     }
 
-    public function renderControl($type, $properties = [])
-    {
-        $library = new ControlLibrary($type);
-        $controlInfo = $library->getControlInfo($type);
-
-        if (!$controlInfo) {
-            throw new ApplicationException('The requested control type is not found.');
-        }
-
-        $provider = $this->getControlDesignTimeProvider($controlInfo['designTimeProvider']);
-        return $this->makePartial('control', [
-            'hasLabels' => $provider->controlHasLabels($type),
-            'body' => $provider->renderControlBody($type, $properties),
-            'properties' => $properties
-        ]);
-    }
-
     /**
      * Prepares the list data
      */
     public function prepareVars()
     {
-        $library = new ControlLibrary();
+        $library = ControlLibrary::instance();
         $controls = $library->listControls();
         $this->vars['registeredControls'] = $controls;
         $this->vars['controlGroups'] = array_keys($controls);
@@ -71,6 +55,7 @@ class FormBuilder extends FormWidgetBase
     public function loadAssets()
     {
         $this->addJs('js/formbuilder.js', 'builder');
+        $this->addJs('js/formbuilder.domtopropertyjson.js', 'builder');
     }
 
     public function renderContainer($fieldsConfiguration)
@@ -82,14 +67,31 @@ class FormBuilder extends FormWidgetBase
      * Event handlers
      */
 
-    public function onModelFormRenderField()
+    public function onModelFormRenderControlWrapper()
+    {
+        $type = Input::get('controlType');
+        $controlId = Input::get('controlId');
+        $properties = Input::get('properties');
+
+        $controlInfo = $this->getControlInfo($type);
+
+        return [
+            'markup' => $this->renderControlWrapper($type, $properties),
+            'controlId' => $controlId,
+            'controlTitle' => Lang::get($controlInfo['name']),
+            'description' => Lang::get($controlInfo['description']),
+            'type' => $type
+        ];
+    }
+
+    public function onModelFormRenderControlBody()
     {
         $type = Input::get('controlType');
         $controlId = Input::get('controlId');
         $properties = Input::get('properties');
 
         return [
-            'markup' => $this->renderControl($type, $properties),
+            'markup' => $this->renderControlBody($type, $properties),
             'controlId' => $controlId
         ];
     }
@@ -114,5 +116,73 @@ class FormBuilder extends FormWidgetBase
         }
 
         return null;
+    }
+
+    protected function propertiesToInspectorSchema($propertyConfiguration)
+    {
+        $result = [];
+
+        $fieldNameProperty = [
+            'title' => Lang::get('rainlab.builder::lang.form.property_field_name_title'),
+            'property' => 'oc.fieldName',
+            'validation' => [
+                'required' => [
+                    'message' => Lang::get('rainlab.builder::lang.form.property_field_name_required')
+                ],
+                'regex' => [
+                    'message' => Lang::get('rainlab.builder::lang.form.property_field_name_regex'),
+                    'pattern' => '^[a-zA-Z]+[0-9a-z\_]*$'
+                ]
+            ]
+        ];
+
+        $result[] = $fieldNameProperty;
+
+        foreach ($propertyConfiguration as $property=>$propertyData) {
+            $propertyData['property'] = $property;
+
+            $result[] = $propertyData;
+        }
+
+        return $result;
+    }
+
+    protected function getControlInfo($type)
+    {
+        $library = ControlLibrary::instance();
+        $controlInfo = $library->getControlInfo($type);
+
+        if (!$controlInfo) {
+            throw new ApplicationException('The requested control type is not found.');
+        }
+
+        return $controlInfo;
+    }
+
+    protected function renderControlBody($type, $properties)
+    {
+        $controlInfo = $this->getControlInfo($type);
+        $provider = $this->getControlDesignTimeProvider($controlInfo['designTimeProvider']);
+
+        return $this->makePartial('controlbody', [
+            'hasLabels' => $provider->controlHasLabels($type),
+            'body' => $provider->renderControlBody($type, $properties),
+            'properties' => $properties
+        ]);
+    }
+
+    protected function renderControlWrapper($type, $properties = [])
+    {
+        // This method renders the control completely, including 
+        // the wrapping element.
+
+        $controlInfo = $this->getControlInfo($type);
+
+        $provider = $this->getControlDesignTimeProvider($controlInfo['designTimeProvider']);
+        return $this->makePartial('controlwrapper', [
+            'fieldsConfiguration' => $this->propertiesToInspectorSchema($controlInfo['properties']),
+            'type' => $type, 
+            'properties' => $properties
+        ]);
     }
 }

@@ -109,6 +109,7 @@ class Plugin extends PluginBase
         Event::listen('pages.builder.registerControls', function($controlLibrary) {
             $controlLibrary->registerControl('text', 
                 'rainlab.builder::lang.form.control_text',
+                null,
                 $controlLibrary::GROUP_STANDARD,
                 'icon-terminal',
                 $controlLibrary->getStandardProperties(),
@@ -117,6 +118,7 @@ class Plugin extends PluginBase
 
             $controlLibrary->registerControl('password', 
                 'rainlab.builder::lang.form.control_password',
+                null,
                 $controlLibrary::GROUP_STANDARD,
                 'icon-lock',
                 $controlLibrary->getStandardProperties(),
@@ -125,6 +127,7 @@ class Plugin extends PluginBase
 
             $controlLibrary->registerControl('checkbox', 
                 'rainlab.builder::lang.form.control_checkbox',
+                null,
                 $controlLibrary::GROUP_STANDARD,
                 'icon-check-square-o',
                 $controlLibrary->getStandardProperties(['commentAbove']),
@@ -133,6 +136,7 @@ class Plugin extends PluginBase
 
             $controlLibrary->registerControl('switch', 
                 'rainlab.builder::lang.form.control_switch',
+                null,
                 $controlLibrary::GROUP_STANDARD,
                 'icon-toggle-on',
                 $controlLibrary->getStandardProperties(['commentAbove']),

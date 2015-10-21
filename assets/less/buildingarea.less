@@ -91,13 +91,27 @@
         margin-bottom: 0;
     }
 
+    .builder-control-comment-above {
+        margin-bottom: 8px;
+        margin-top: -3px;
+    }
+
+    .builder-control-comment-below {
+        margin-top: 6px;
+    }
+
     .builder-control-comment-above, 
     .builder-control-comment-below {
         color: #737373;
         font-size: 12px;
+
+        &:empty {
+            display: none;
+        }
     }
 
-    li:not(.placeholder):not(.loading-control):hover * {
+    li:not(.placeholder):not(.loading-control):hover *,
+    li.inspector-open:not(.placeholder):not(.loading-control) * {
         color: @builder-hover-color!important;
     }
 }

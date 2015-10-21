@@ -122,15 +122,27 @@ ul.builder-control-palette li i {
 .builder-building-area .builder-control-label:empty {
   margin-bottom: 0;
 }
+.builder-building-area .builder-control-comment-above {
+  margin-bottom: 8px;
+  margin-top: -3px;
+}
+.builder-building-area .builder-control-comment-below {
+  margin-top: 6px;
+}
 .builder-building-area .builder-control-comment-above,
 .builder-building-area .builder-control-comment-below {
   color: #737373;
   font-size: 12px;
 }
-.builder-building-area li:not(.placeholder):not(.loading-control):hover * {
+.builder-building-area .builder-control-comment-above:empty,
+.builder-building-area .builder-control-comment-below:empty {
+  display: none;
+}
+.builder-building-area li:not(.placeholder):not(.loading-control):hover *,
+.builder-building-area li.inspector-open:not(.placeholder):not(.loading-control) * {
   color: #2581b8 !important;
 }
-.builder-blueprint-control-text {
+.builder-building-area .builder-blueprint-control-text {
   padding: 10px 12px;
   border: 2px solid #bdc3c7;
   color: #95a5a6;
@@ -138,13 +150,14 @@ ul.builder-control-palette li i {
   -moz-border-radius: 4px;
   border-radius: 4px;
 }
-.builder-blueprint-control-text i {
+.builder-building-area .builder-blueprint-control-text i {
   margin-right: 5px;
 }
-li:hover > .builder-blueprint-control-text {
+.builder-building-area li:hover .builder-blueprint-control-text,
+.builder-building-area li.inspector-open .builder-blueprint-control-text {
   border-color: #2581b8;
 }
-.builder-blueprint-control-checkbox:before {
+.builder-building-area .builder-blueprint-control-checkbox:before {
   float: left;
   content: ' ';
   border: 2px solid #bdc3c7;
@@ -156,35 +169,36 @@ li:hover > .builder-blueprint-control-text {
   position: relative;
   top: 2px;
 }
-.builder-blueprint-control-checkbox .builder-control-label {
+.builder-building-area .builder-blueprint-control-checkbox .builder-control-label {
   margin-left: 25px;
   font-weight: normal;
 }
-.builder-blueprint-control-checkbox .builder-control-comment-below {
+.builder-building-area .builder-blueprint-control-checkbox .builder-control-comment-below {
   margin-left: 25px;
 }
-li:hover > .builder-blueprint-control-checkbox:before {
+.builder-building-area li:hover .builder-blueprint-control-checkbox:before,
+.builder-building-area li.inspector-open .builder-blueprint-control-checkbox:before {
   border-color: #2581b8;
 }
-.builder-blueprint-control-switch {
+.builder-building-area .builder-blueprint-control-switch {
   position: relative;
 }
-.builder-blueprint-control-switch:before,
-.builder-blueprint-control-switch:after {
+.builder-building-area .builder-blueprint-control-switch:before,
+.builder-building-area .builder-blueprint-control-switch:after {
   position: absolute;
   content: ' ';
   -webkit-border-radius: 30px;
   -moz-border-radius: 30px;
   border-radius: 30px;
 }
-.builder-blueprint-control-switch:before {
+.builder-building-area .builder-blueprint-control-switch:before {
   background-color: #bdc3c7;
   width: 34px;
   height: 18px;
   top: 2px;
   left: 2px;
 }
-.builder-blueprint-control-switch:after {
+.builder-building-area .builder-blueprint-control-switch:after {
   background-color: white;
   width: 14px;
   height: 14px;
@@ -192,14 +206,15 @@ li:hover > .builder-blueprint-control-checkbox:before {
   left: 4px;
   margin-left: 16px;
 }
-.builder-blueprint-control-switch .builder-control-label {
+.builder-building-area .builder-blueprint-control-switch .builder-control-label {
   margin-left: 45px;
   font-weight: normal;
 }
-.builder-blueprint-control-switch .builder-control-comment-below {
+.builder-building-area .builder-blueprint-control-switch .builder-control-comment-below {
   margin-left: 45px;
 }
-li:hover > .builder-blueprint-control-switch:before {
+.builder-building-area li:hover .builder-blueprint-control-switch:before,
+.builder-building-area li.inspector-open .builder-blueprint-control-switch:before {
   background-color: #2581b8;
 }
 .control-filelist ul li.group.model > h4 a:after {
