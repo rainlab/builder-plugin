@@ -78,7 +78,7 @@
         tabsObject.updateTitle($tabPane, responseData.tabTitle)
     }
 
-    EntityBase.prototype.unhideFormSaveButton = function($tabPane) {
+    EntityBase.prototype.unhideFormDeleteButton = function($tabPane) {
         $('[data-control=delete-button]', $tabPane).removeClass('hide')
     }
 

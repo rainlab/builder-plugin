@@ -48,7 +48,7 @@ class IndexModelOperations extends IndexOperationsBehaviorBase
         return $this->controller->widget->modelList->updateList();
     }
 
-    protected function loadOrCreateBaseModel($className)
+    protected function loadOrCreateBaseModel($className, $options = [])
     {
         // Editing model is not supported, always return
         // a new object.

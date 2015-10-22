@@ -173,7 +173,7 @@
         if (data.builderRepsonseData.operation != 'delete') {
             $masterTabPane.find('input[name=table_name]').val(data.builderRepsonseData.builderObjectName)
             this.updateMasterTabIdAndTitle($masterTabPane, data.builderRepsonseData)
-            this.unhideFormSaveButton($masterTabPane)
+            this.unhideFormDeleteButton($masterTabPane)
 
             this.getTableList().fileList('markActive', data.builderRepsonseData.tabId)
             this.getIndexController().unchageTab($masterTabPane)

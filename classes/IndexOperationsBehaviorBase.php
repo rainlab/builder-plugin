@@ -45,5 +45,5 @@ abstract class IndexOperationsBehaviorBase extends ControllerBehavior
         return $vector->pluginCodeObj;
     }
 
-    abstract protected function loadOrCreateBaseModel($modelCode);
+    abstract protected function loadOrCreateBaseModel($modelCode, $options = []);
 }

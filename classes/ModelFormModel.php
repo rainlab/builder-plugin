@@ -7,18 +7,30 @@ use Lang;
 use File;
 
 /**
- * Represents and manages models forms.
+ * Represents and manages model forms.
  *
  * @package rainlab\builder
  * @author Alexey Bobkov, Samuel Georges
  */
-class ModelFormModel extends YamlModel
+class ModelFormModel extends ModelYamlModel
 {
+    public $controls;
+
     protected static $fillable = [
+        'fileName',
+        'controls'
     ];
 
     protected $validationRules = [
+        'fileName' => ['required', 'regex:/^[a-z0-9\.\-]+$/i']
     ];
+
+    public function loadForm($path)
+    {
+        $this->fileName = $path;
+        
+        return parent::load($this->getFilePath());
+    }
 
     /**
      * Converts the model's data to an array before it's saved to a YAML file.
@@ -26,7 +38,7 @@ class ModelFormModel extends YamlModel
      */
     protected function modelToYamlArray()
     {
-
+        return $this->controls;
     }
 
     /**
@@ -35,15 +47,6 @@ class ModelFormModel extends YamlModel
      */
     protected function yamlArrayToModel($array)
     {
-
-    }
-
-    /**
-     * Returns a file path to save the model to.
-     * @return string Returns a path.
-     */
-    protected function getFilePath()
-    {
-        
+        $this->controls = $array;
     }
 }

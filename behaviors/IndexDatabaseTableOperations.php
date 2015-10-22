@@ -143,7 +143,7 @@ class IndexDatabaseTableOperations extends IndexOperationsBehaviorBase
         return 'databaseTable-'.$tableName;
     }
 
-    protected function loadOrCreateBaseModel($tableName)
+    protected function loadOrCreateBaseModel($tableName, $options = [])
     {
         $model = new DatabaseTableModel();
 

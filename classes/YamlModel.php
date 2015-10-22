@@ -2,6 +2,7 @@
 
 use Symfony\Component\Yaml\Dumper as YamlDumper;
 use ApplicationException;
+use ValidationException;
 use Yaml;
 use File;
 use Lang;
@@ -36,12 +37,21 @@ abstract class YamlModel extends BaseModel
         }
 
         $dumper = new YamlDumper();
-        $yamlData = $dumper->dump($data, 20, 0, false, true);
+
+        if ($data !== null) {
+            $yamlData = $dumper->dump($data, 20, 0, false, true);
+        }
+        else {
+            $yamlData = '';
+        }
 
         $filePath = File::symbolizePath($this->getFilePath());
+        $isNew = $this->isNewModel();
 
-        if (File::isFile($filePath) && $this->isNewModel()) {
-            throw new ApplicationException(Lang::get('rainlab.builder::lang.common.error_file_exists', ['path'=>$filePath]));
+        if (File::isFile($filePath)) {
+            if ($isNew || $this->originalFilePath != $filePath) {
+                throw new ValidationException(['fileName' => Lang::get('rainlab.builder::lang.common.error_file_exists', ['path'=>$filePath])]);
+            }
         }
 
         $fileDirectory = dirname($filePath);
@@ -65,12 +75,20 @@ abstract class YamlModel extends BaseModel
             $this->originalFileData = $data;
         }
 
+        if (strlen($this->originalFilePath) > 0 && $this->originalFilePath != $filePath) {
+            @File::delete($this->originalFilePath);
+        }
+
         $this->originalFilePath = $filePath;
     }
 
-    public function load($filePath)
+    protected function load($filePath)
     {
         $filePath = File::symbolizePath($filePath);
+
+        if (!File::isFile($filePath)) {
+            throw new ApplicationException('Cannot save the model - the original file is not found: '.$filePath);
+        }
 
         $data = Yaml::parse(File::get($filePath));
         $this->originalFilePath = $filePath;

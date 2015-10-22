@@ -27,11 +27,14 @@
                                 href="javascript:;"
                                 class="control icon btn-primary oc-icon-plus" 
                                 data-builder-command="modelForm:cmdCreateForm"
+                                data-model-class="<?= e($model->className) ?>"
                                 title="<?= e(trans('rainlab.builder::lang.model.add_form')) ?>"
                             ><?= e(trans('rainlab.builder::lang.model.add_form')) ?></a>
                         </div>
 
-                        <ul></ul>
+                        <ul>
+
+                        </ul>
                     </li>
 
                     <li class="group list"

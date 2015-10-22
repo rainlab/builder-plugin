@@ -36,6 +36,8 @@ class IndexModelFormOperations extends IndexOperationsBehaviorBase
     public function onModelFormCreateOrOpen()
     {
         $fileName = Input::get('file_name');
+        $modelClass = Input::get('model_class');
+
         $pluginCodeObj = $this->getPluginCode();
 
         $widget = $this->makeBaseFormWidget($fileName);
@@ -44,12 +46,40 @@ class IndexModelFormOperations extends IndexOperationsBehaviorBase
         $result = [
             'tabTitle' => $this->getTabTitle($fileName),
             'tabIcon' => 'icon-check-square',
-            'tabId' => $this->getTabId($fileName),
+            'tabId' => $this->getTabId($modelClass, $fileName),
             'tab' => $this->makePartial('tab', [
                 'form'  => $widget,
                 'pluginCode' => $pluginCodeObj->toCode(),
-                'fileName' => $fileName
+                'fileName' => $fileName,
+                'modelClass' => $modelClass
             ])
+        ];
+
+        return $result;
+    }
+
+    public function onModelFormSave()
+    {
+        $pluginCode = Request::input('plugin_code');
+        $modelClass = Input::get('model_class');
+        $fileName = Input::get('file_name');
+
+        $options = [
+            'pluginCode' => $pluginCode,
+            'modelClass' => $modelClass
+        ];
+
+        $model = $this->loadOrCreateBaseModel($fileName, $options);
+
+        $model->fill($_POST);
+        $model->save();
+
+        //$result = $this->controller->widget->databaseTabelList->updateList();
+$result = [];
+        $result['builderRepsonseData'] = [
+            'builderObjectName'=>$model->fileName,
+            'tabId' => $this->getTabId($modelClass, $model->fileName),
+            'tabTitle' => $model->getDisplayName()
         ];
 
         return $result;
@@ -64,24 +94,29 @@ class IndexModelFormOperations extends IndexOperationsBehaviorBase
         return $fileName;
     }
 
-    protected function getTabId($fileName)
+    protected function getTabId($modelClass, $fileName)
     {
         if (!strlen($fileName)) {
             return 'modelForm-'.uniqid(time());
         }
 
-        return 'modelForm-'.$fileName;
+        return 'modelForm-'.$modelClass.'-'.$fileName;
     }
 
-    protected function loadOrCreateBaseModel($fileName)
+    protected function loadOrCreateBaseModel($fileName, $options = [])
     {
         $model = new ModelFormModel();
+
+        if (isset($options['pluginCode']) && isset($options['modelClass'])) {
+            $model->setPluginCode($options['pluginCode']);
+            $model->setModelClassName($options['modelClass']);
+        }
 
         if (!$fileName) {
             return $model;
         }
 
-        $model->load($fileName);
+        $model->loadForm($fileName);
         return $model;
     }
 }

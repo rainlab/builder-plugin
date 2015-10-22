@@ -23,26 +23,48 @@
     // ============================
 
     ModelForm.prototype.cmdCreateForm = function(ev) {
-        this.indexController.openOrLoadMasterTab($(ev.target), 'onModelFormCreateOrOpen', this.newTabId())
+        var $link = $(ev.currentTarget),
+            data = {
+                model_class: $link.data('modelClass')
+            }
+
+        this.indexController.openOrLoadMasterTab($link, 'onModelFormCreateOrOpen', this.newTabId(), data)
     }
 
     ModelForm.prototype.cmdSaveForm = function(ev) {
         var $form = $(ev.currentTarget).closest('form'),
             $rootContainer = $('[data-root-control-wrapper] > [data-contol-container]', $form), 
             data = {
-                'controls': $.oc.builder.formbuilder.domToPropertyJson.convert($rootContainer.get(0))
+                controls: $.oc.builder.formbuilder.domToPropertyJson.convert($rootContainer.get(0))
             }
 
-        // $.oc.stripeLoadIndicator.show()
-        // $target.request('onPluginSetActive', {
-        //     data: {
-        //         pluginCode: selectedPluginCode
-        //     }
-        // }).always(
-        //     $.oc.builder.indexController.hideStripeIndicatorProxy
-        // ).done(
-        //     this.proxy(this.makePluginActiveDone)
-        // )
+        $.oc.stripeLoadIndicator.show()
+        $form.request('onModelFormSave', {
+            data: data
+        }).always(
+            $.oc.builder.indexController.hideStripeIndicatorProxy
+        ).done(
+            this.proxy(this.saveFormDone)
+        )
+    }
+
+    // INTERNAL METHODS
+    // ============================
+
+    ModelForm.prototype.saveFormDone = function(data) {
+        if (data['builderRepsonseData'] === undefined) {
+            throw new Error('Invalid response data')
+        }
+
+        var $masterTabPane = this.getMasterTabsActivePane()
+
+        $masterTabPane.find('input[name=file_name]').val(data.builderRepsonseData.builderObjectName)
+        this.updateMasterTabIdAndTitle($masterTabPane, data.builderRepsonseData)
+        this.unhideFormDeleteButton($masterTabPane)
+
+// this.getTableList().fileList('markActive', data.builderRepsonseData.tabId)
+        this.getIndexController().unchageTab($masterTabPane)
+     
     }
 
     // REGISTRATION

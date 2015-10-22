@@ -100,7 +100,7 @@ return [
         'property_required_title' => 'Required',
         'property_field_name_title' => 'Field name',
         'property_field_name_required' => 'The field name is required',
-        'property_field_name_regex' => 'The field name can contain only Latin letters, digits, underscores and dashes',
+        'property_field_name_regex' => 'The field name can contain only Latin letters, digits, underscores and dashes.',
         'control_group_standard' => 'Standard',
         'control_group_widgets' => 'Widgets',
         'drop_control_here' => 'Drop new field here',
@@ -108,7 +108,9 @@ return [
         'control_text' => 'Text field',
         'control_password' => 'Password field',
         'control_checkbox' => 'Checkbox',
-        'control_switch' => 'Switch'
+        'control_switch' => 'Switch',
+        'error_file_name_required' => 'Please enter the form file name.',
+        'error_file_name_invalid' => 'The file name can contain only Latin letters, digits, underscores, dots and hashes.',
     ],
     'controller' => [
         'menu_label' => 'Controllers'

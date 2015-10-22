@@ -57,7 +57,7 @@ class IndexPluginOperations extends IndexOperationsBehaviorBase
         return $result;
     }
 
-    protected function loadOrCreateBaseModel($pluginCode)
+    protected function loadOrCreateBaseModel($pluginCode, $options = [])
     {
         $model = new PluginBaseModel();
 
