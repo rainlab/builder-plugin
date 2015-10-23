@@ -40,11 +40,16 @@ class IndexModelFormOperations extends IndexOperationsBehaviorBase
 
         $pluginCodeObj = $this->getPluginCode();
 
-        $widget = $this->makeBaseFormWidget($fileName);
+        $options = [
+            'pluginCode' => $pluginCodeObj->toCode(),
+            'modelClass' => $modelClass
+        ];
+
+        $widget = $this->makeBaseFormWidget($fileName, $options);
         $this->vars['fileName'] = $fileName;
 
         $result = [
-            'tabTitle' => $this->getTabTitle($fileName),
+            'tabTitle' => $widget->model->getDisplayName(Lang::get('rainlab.builder::lang.form.tab_new_form')),
             'tabIcon' => 'icon-check-square',
             'tabId' => $this->getTabId($modelClass, $fileName),
             'tab' => $this->makePartial('tab', [
@@ -74,24 +79,15 @@ class IndexModelFormOperations extends IndexOperationsBehaviorBase
         $model->fill($_POST);
         $model->save();
 
-        //$result = $this->controller->widget->databaseTabelList->updateList();
-$result = [];
+        $result = $this->controller->widget->modelList->updateList();
+
         $result['builderRepsonseData'] = [
             'builderObjectName'=>$model->fileName,
             'tabId' => $this->getTabId($modelClass, $model->fileName),
-            'tabTitle' => $model->getDisplayName()
+            'tabTitle' => $model->getDisplayName(Lang::get('rainlab.builder::lang.form.tab_new_form'))
         ];
 
         return $result;
-    }
-
-    protected function getTabTitle($fileName)
-    {
-        if (!strlen($fileName)) {
-            return Lang::get('rainlab.builder::lang.form.tab_new_form');
-        }
-
-        return $fileName;
     }
 
     protected function getTabId($modelClass, $fileName)

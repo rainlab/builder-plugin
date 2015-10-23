@@ -48,6 +48,16 @@
         )
     }
 
+    ModelForm.prototype.cmdOpenForm = function(ev) {
+        var form = $(ev.currentTarget).data('form'),
+            model = $(ev.currentTarget).data('modelClass')
+
+        this.indexController.openOrLoadMasterTab($(ev.target), 'onModelFormCreateOrOpen', this.makeTabId(model+'-'+form), {
+            file_name: form,
+            model_class: model
+        })
+    }
+
     // INTERNAL METHODS
     // ============================
 
@@ -62,9 +72,12 @@
         this.updateMasterTabIdAndTitle($masterTabPane, data.builderRepsonseData)
         this.unhideFormDeleteButton($masterTabPane)
 
-// this.getTableList().fileList('markActive', data.builderRepsonseData.tabId)
+        this.getModelList().fileList('markActive', data.builderRepsonseData.tabId)
         this.getIndexController().unchageTab($masterTabPane)
-     
+    }
+
+    ModelForm.prototype.getModelList = function() {
+        return $('#layout-side-panel form[data-content-id=models] [data-control=filelist]')
     }
 
     // REGISTRATION

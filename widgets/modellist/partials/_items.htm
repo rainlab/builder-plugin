@@ -1,6 +1,8 @@
 <?php if ($items): ?>
     <ul>
-        <?php foreach ($items as $model):
+        <?php foreach ($items as $modelInfo):
+            $model = $modelInfo['model'];
+            $modelForms = $modelInfo['forms'];
             $dataId = 'model-'.$model->className;
 
             $modelGroup = $model->className;
@@ -33,10 +35,22 @@
                         </div>
 
                         <ul>
-
+                            <?php foreach ($modelForms as $modelForm):
+                                $formDataId = 'modelForm-'.$model->className.'-'.$modelForm;
+                            ?>
+                                <li class="item"
+                                    data-id="<?= e($formDataId) ?>" 
+                                >
+                                    <a 
+                                        href="javascript:;"
+                                        data-builder-command="modelForm:cmdOpenForm"
+                                        data-model-class="<?= e($model->className) ?>"
+                                        data-form="<?= e($modelForm) ?>"
+                                        ><span class="title"><?= e($modelForm) ?></span></a>
+                                </li>
+                            <?php endforeach?>
                         </ul>
                     </li>
-
                     <li class="group list"
                         data-status="<?= $listsGroupStatus ? 'expanded' : 'collapsed' ?>"
                         data-group-id="<?= e($listsGroup) ?>"

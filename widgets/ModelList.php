@@ -2,6 +2,7 @@
 
 use Backend\Classes\WidgetBase;
 use RainLab\Builder\Classes\ModelModel;
+use RainLab\Builder\Classes\ModelFormModel;
 use RainLab\Builder\Models\Settings as PluginSettings;
 use Input;
 use Response;
@@ -97,9 +98,9 @@ class ModelList extends WidgetBase
             $words = explode(' ', $searchTerm);
             $result = [];
 
-            foreach ($models as $model) {
-                if ($this->textMatchesSearch($words, $model->className)) {
-                    $result[] = $model;
+            foreach ($models as $modelInfo) {
+                if ($this->textMatchesSearch($words, $modelInfo['model']->className)) {
+                    $result[] = $modelInfo;
                 }
             }
 
@@ -111,7 +112,15 @@ class ModelList extends WidgetBase
 
     protected function getModelList($pluginCode)
     {
-        $result = ModelModel::listPluginModels($pluginCode);
+        $models = ModelModel::listPluginModels($pluginCode);
+        $result = [];
+
+        foreach ($models as $model) {
+            $result[] = [
+                'model' => $model,
+                'forms' => ModelFormModel::listModelFiles($pluginCode, $model->className)
+            ];
+        }
 
         return $result;
     }

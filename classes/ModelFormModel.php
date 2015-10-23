@@ -2,6 +2,7 @@
 
 use ApplicationException;
 use SystemException;
+use ValidationException;
 use Exception;
 use Lang;
 use File;
@@ -30,6 +31,32 @@ class ModelFormModel extends ModelYamlModel
         $this->fileName = $path;
         
         return parent::load($this->getFilePath());
+    }
+
+    public static function validateFileIsModelType($fileContentsArray)
+    {
+        $modelRootNodes = [
+            'fields',
+            'tabs',
+            'secondaryTabs'
+        ];
+
+        foreach ($modelRootNodes as $node) {
+            if (array_key_exists($node, $fileContentsArray)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function validate()
+    {
+        parent::validate();
+
+        if (!$this->controls) {
+            throw new ValidationException(['controls' => 'Please create at least one field.']);
+        }
     }
 
     /**

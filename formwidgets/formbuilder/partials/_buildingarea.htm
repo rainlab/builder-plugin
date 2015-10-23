@@ -5,7 +5,7 @@
                 <div class="control-scrollpad" data-control="scrollpad">
                     <div class="scroll-wrapper">
                         <div data-root-control-wrapper>
-                            <?= $this->makePartial('controlcontainer', ['fieldsConfiguration'=>[]]) ?>
+                            <?= $this->makePartial('controlcontainer', ['fieldsConfiguration'=>$model->controls]) ?>
                         </div>
                     </div>
                 </div>

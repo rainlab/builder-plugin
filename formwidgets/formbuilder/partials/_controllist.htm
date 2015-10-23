@@ -1,10 +1,26 @@
 <ul class="builder-control-list" data-control-list="<?= e($listName) ?>">
     <?php
+        foreach ($controls as $controlName=>$controlConfig):
+            $controlRenderingInfo = $this->getControlRenderingInfo($controlName, $controlConfig);
 
         // Render other controls here. Each li should have:
         // - data-inspectable
         // - data-control-type
     ?>
+        <li
+            class="span-left"
+            data-builder-span="<?= e($controlRenderingInfo['span']) ?>"
+            data-inspectable="true"
+            data-control-type="<?= e($controlRenderingInfo['type']) ?>"
+            data-inspector-title="<?= e($controlRenderingInfo['title']) ?>"
+            data-inspector-description="<?= e($controlRenderingInfo['description']) ?>">
+
+                <?= $this->renderControlWrapper($controlRenderingInfo['type'], $controlRenderingInfo['properties']) ?>
+
+        </li>
+        
+        <li class="clear-row"></li>
+    <?php endforeach ?>
 
     <li 
         class="placeholder span-left"

@@ -46,6 +46,7 @@ class FormBuilder extends FormWidgetBase
         $library = ControlLibrary::instance();
         $controls = $library->listControls();
         $this->vars['registeredControls'] = $controls;
+        $this->vars['model'] = $this->model;
         $this->vars['controlGroups'] = array_keys($controls);
     }
 
@@ -184,5 +185,23 @@ class FormBuilder extends FormWidgetBase
             'type' => $type, 
             'properties' => $properties
         ]);
+    }
+
+    protected function getControlRenderingInfo($controlName, $properties)
+    {
+        $type = isset($properties['type']) ? $properties['type'] : 'text';
+        $span = isset($properties['span']) ? $properties['span'] : 'autp';
+
+        $properties['oc.fieldName'] = $controlName;
+
+        $controlInfo = $this->getControlInfo($type);
+
+        return [
+            'title' => Lang::get($controlInfo['name']),
+            'description' => Lang::get($controlInfo['description']),
+            'type' => $type,
+            'span' => $span,
+            'properties' => $properties
+        ];
     }
 }

@@ -1,5 +1,8 @@
 <div class="builder-form-container" data-contol-container>
 
     <!-- Some containers allow up to 3 lists - tabless fields, primary tabs, secondary tabs -->
-    <?= $this->makePartial('controllist', ['fields'=>[], 'listName'=>null]) ?>
+    <?= $this->makePartial('controllist', [
+        'controls' => isset($fieldsConfiguration['fields']) ? $fieldsConfiguration['fields'] : [], 
+        'listName' => ''
+    ]) ?>
 </div>

@@ -1,10 +1,12 @@
 <?php namespace RainLab\Builder\Classes;
 
 use ApplicationException;
+use DirectoryIterator;
 use SystemException;
 use Exception;
 use Lang;
 use File;
+use Yaml;
 
 /**
  * A base class for models belonging to databse models (forms, lists, etc.).
@@ -49,7 +51,7 @@ abstract class ModelYamlModel extends YamlModel
     /**
      * Returns a string suitable for displaying in the Builder UI tabs.
      */
-    public function getDisplayName()
+    public function getDisplayName($nameFallback)
     {
         $fileName = $this->fileName;
 
@@ -57,12 +59,52 @@ abstract class ModelYamlModel extends YamlModel
             $fileName = substr($fileName, 0, -5);
         }
 
+        if (!strlen($fileName)) {
+            $fileName = $nameFallback;
+        }
+
         return $this->getModelClassName().'/'.$fileName;
     }
 
     public static function listModelFiles($pluginCodeObj, $modelClassName)
     {
+        if (!preg_match('/^[A-Z]+[a-zA-Z0-9_]+$/i', $modelClassName)) {
+            throw new SystemException('Invalid model class name: '.$modelClassName);
+        }
 
+        $modelDirectoryPath = $pluginCodeObj->toPluginDirectoryPath().'/models/'.strtolower($modelClassName);
+
+        $modelDirectoryPath = File::symbolizePath($modelDirectoryPath);
+
+        if (!File::isDirectory($modelDirectoryPath)) {
+            return [];
+        }
+
+        $result = [];
+        foreach (new DirectoryIterator($modelDirectoryPath) as $fileInfo) {
+            if (!$fileInfo->isFile() && $fileInfo->getExtension() != 'yaml') {
+                continue;
+            }
+
+            $fileContents = Yaml::parseFile($fileInfo->getPathname());
+
+            if (!is_array($fileContents)) {
+                $fileContents = [];
+            }
+
+            if (!static::validateFileIsModelType($fileContents)) {
+                continue;
+            }
+
+            $result[] = $fileInfo->getBasename();
+        }
+
+        return $result;
+    }
+
+    public static function validateFileIsModelType($fileContentsArray)
+    {
+        return false;
     }
 
     protected function getModelClassName()
