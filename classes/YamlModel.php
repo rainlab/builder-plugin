@@ -50,7 +50,7 @@ abstract class YamlModel extends BaseModel
 
         if (File::isFile($filePath)) {
             if ($isNew || $this->originalFilePath != $filePath) {
-                throw new ValidationException(['fileName' => Lang::get('rainlab.builder::lang.common.error_file_exists', ['path'=>$filePath])]);
+                throw new ValidationException(['fileName' => Lang::get('rainlab.builder::lang.common.error_file_exists', ['path'=>basename($filePath)])]);
             }
         }
 
@@ -87,7 +87,7 @@ abstract class YamlModel extends BaseModel
         $filePath = File::symbolizePath($filePath);
 
         if (!File::isFile($filePath)) {
-            throw new ApplicationException('Cannot save the model - the original file is not found: '.$filePath);
+            throw new ApplicationException('Cannot load the model - the original file is not found: '.$filePath);
         }
 
         $data = Yaml::parse(File::get($filePath));
@@ -108,6 +108,19 @@ abstract class YamlModel extends BaseModel
         }
 
         $this->yamlArrayToModel($data);
+    }
+
+    public function deleteModel()
+    {
+        if (!File::isFile($this->originalFilePath)) {
+            throw new ApplicationException('Cannot load the model - the original file is not found: '.$filePath);
+        }
+
+        if (strtolower(substr($this->originalFilePath, -5)) !== '.yaml') {
+            throw new ApplicationException('Cannot delete the model - the original file should be a YAML document');
+        }
+
+        File::delete($this->originalFilePath);
     }
 
     public function initDefaults()

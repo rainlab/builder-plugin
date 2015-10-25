@@ -58,6 +58,11 @@
         })
     }
 
+    ModelForm.prototype.cmdDeleteForm = function(ev) {
+        var $target = $(ev.currentTarget)
+        $.oc.confirm($target.data('confirm'), this.proxy(this.deleteConfirmed))
+    }
+
     // INTERNAL METHODS
     // ============================
 
@@ -74,6 +79,25 @@
 
         this.getModelList().fileList('markActive', data.builderRepsonseData.tabId)
         this.getIndexController().unchageTab($masterTabPane)
+    }
+
+    ModelForm.prototype.deleteConfirmed = function() {
+        var $masterTabPane = this.getMasterTabsActivePane(),
+            $form = $masterTabPane.find('form')
+
+        $.oc.stripeLoadIndicator.show()
+        $form.request('onModelFormDelete').always(
+            $.oc.builder.indexController.hideStripeIndicatorProxy
+        ).done(
+            this.proxy(this.deleteDone)
+        )
+    }
+
+    ModelForm.prototype.deleteDone = function() {
+        var $masterTabPane = this.getMasterTabsActivePane()
+
+        this.getIndexController().unchageTab($masterTabPane)
+        this.forceCloseTab($masterTabPane)
     }
 
     ModelForm.prototype.getModelList = function() {

@@ -2,9 +2,12 @@
     background: white;
 
     ul.builder-control-list {
+        .clearfix();
+
         padding: 20px;
+        margin-bottom: 0;
         list-style: none;
-        li {
+        > li {
             margin-bottom: 20px;
             cursor: pointer;
             .user-select(none);
@@ -23,8 +26,13 @@
                 }
             }
 
+            &.placeholder {
+                margin-top: 20px;
+            }
+
             &.clear-row {
                 display: none;
+                margin-bottom: 0;
             }
 
             &.loading-control {
@@ -110,8 +118,8 @@
         }
     }
 
-    li:not(.placeholder):not(.loading-control):hover *,
-    li.inspector-open:not(.placeholder):not(.loading-control) * {
+    > li:not(.placeholder):not(.loading-control):hover *,
+    > li.inspector-open:not(.placeholder):not(.loading-control) * {
         color: @builder-hover-color!important;
     }
 }

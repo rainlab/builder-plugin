@@ -5,4 +5,10 @@
         'controls' => isset($fieldsConfiguration['fields']) ? $fieldsConfiguration['fields'] : [], 
         'listName' => ''
     ]) ?>
+
+    <?= $this->makePartial('tabs', [
+        'type' => 'primary',
+        'controls' => [],
+        'listName' => 'tabs'
+    ]) ?>
 </div>

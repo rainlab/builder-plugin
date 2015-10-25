@@ -1,0 +1,168 @@
+.builder-tabs {
+    > .tabs {
+        display: relative;
+
+        > ul {
+            padding: 0 20px 0 40px;
+            margin: 0;
+            list-style: none;
+            font-size: 0;
+            position: relative;
+
+            &:after {
+                position: absolute;
+                content: '';
+                display: block;
+                height: 2px;
+                left: 0;
+                bottom: -2px;
+                width: 100%;
+                background: #bdc3c7;
+                z-index: 106;
+            }
+
+            > li {
+                display: inline-block;
+                font-size: 13px;
+                white-space: nowrap;
+                bottom: -2px; 
+                position: relative;
+                margin-left: -20px;
+                z-index: 105;
+                cursor: pointer;
+
+                > div.tab-container {
+                    padding: 0 21px 0 21px;
+                    position: relative;
+                    height: 27px;
+                    color: #bdc3c7!important;
+
+                    > div {
+                        padding: 4px 5px 0 5px;
+                        .transition(padding .3s);
+                        position: relative;
+                        border-top: 2px solid #e5e5e5; 
+
+                        > span {
+                            position: relative;
+                            top: -2px;
+                        }
+                    }
+
+                    &:before, &:after {
+                        content: '';
+                        display: block;
+                        position: absolute;
+                        top: 0;
+                        height: 27px;
+                        width: 21px;
+                        background: transparent url(../images/tab.png) no-repeat;
+                    }
+
+                    &:before {
+                        left: 0;
+                        background-position: 0 -27px;
+                    }
+
+                    &:after {
+                        right: 0;
+                        background-position: -75px -27px;
+                    }
+                }
+
+                &:hover > div {
+                    color: #95a5a6!important;
+                }
+
+                .control {
+                    position: absolute;
+                    display: none;
+
+                    &.close-btn {
+                        font-size: 15px;
+                        top: 9px;
+                        right: 18px;
+                        line-height: 15px;
+                        height: 15px;
+                        width: 15px;
+                        text-align: center;
+                        cursor: pointer;
+                        color: #95a5a6;
+
+                        &:hover {
+                            color: @link-color!important;
+                        }
+                    }
+
+                    &.tab-inspector-trigger{
+                        right: 34px;
+                        top: 10px;
+                        font-size: 14px;
+                        padding-left: 5px;
+                        padding-right: 5px;
+                        cursor: pointer;
+
+                        span {
+                            display: block;
+                            width: 3px;
+                            height: 3px;
+                            margin-bottom: 2px;
+                            background: #95a5a6;
+
+                            &:last-child {
+                                margin-bottom: 0;
+                            }
+                        }
+
+                        &:hover {
+                            span {
+                                background: @link-color;
+                            }
+                        }
+                    }
+                }
+
+                &.active {
+                    z-index: 107;
+
+                    > div.tab-container {
+                        color: #95a5a6!important;
+
+                        &:before {
+                            background-position: 0 0;
+                        }
+
+                        &:after {
+                            background-position: -75px 0;
+                        }
+
+                        > div {
+                            padding-right: 30px;
+                            border-top: 2px solid #bdc3c7; 
+
+                            > span {
+                                top: 0;
+                            }
+                        }
+                    }
+
+                    &:before {
+                        position: absolute;
+                        content: '';
+                        display: block;
+                        height: 2px;
+                        left: 0;
+                        bottom: 0;
+                        width: 100%;
+                        background: white;
+                    }
+
+                    .control {
+                        display: block;
+                    }
+                }
+
+            }
+        }
+    }
+}

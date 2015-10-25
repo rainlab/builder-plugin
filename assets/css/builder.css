@@ -40,9 +40,18 @@ ul.builder-control-palette li i {
 }
 .builder-building-area ul.builder-control-list {
   padding: 20px;
+  margin-bottom: 0;
   list-style: none;
 }
-.builder-building-area ul.builder-control-list li {
+.builder-building-area ul.builder-control-list:before,
+.builder-building-area ul.builder-control-list:after {
+  content: " ";
+  display: table;
+}
+.builder-building-area ul.builder-control-list:after {
+  clear: both;
+}
+.builder-building-area ul.builder-control-list > li {
   margin-bottom: 20px;
   cursor: pointer;
   -webkit-user-select: none;
@@ -50,8 +59,8 @@ ul.builder-control-palette li i {
   -ms-user-select: none;
   user-select: none;
 }
-.builder-building-area ul.builder-control-list li.placeholder,
-.builder-building-area ul.builder-control-list li.loading-control {
+.builder-building-area ul.builder-control-list > li.placeholder,
+.builder-building-area ul.builder-control-list > li.loading-control {
   cursor: default;
   padding: 10px 12px;
   position: relative;
@@ -62,18 +71,22 @@ ul.builder-control-palette li i {
   border-radius: 4px;
   color: #dae0e0;
 }
-.builder-building-area ul.builder-control-list li.placeholder i,
-.builder-building-area ul.builder-control-list li.loading-control i {
+.builder-building-area ul.builder-control-list > li.placeholder i,
+.builder-building-area ul.builder-control-list > li.loading-control i {
   margin-right: 8px;
 }
-.builder-building-area ul.builder-control-list li.clear-row {
-  display: none;
+.builder-building-area ul.builder-control-list > li.placeholder {
+  margin-top: 20px;
 }
-.builder-building-area ul.builder-control-list li.loading-control {
+.builder-building-area ul.builder-control-list > li.clear-row {
+  display: none;
+  margin-bottom: 0;
+}
+.builder-building-area ul.builder-control-list > li.loading-control {
   border-color: #bdc3c7;
   text-align: left;
 }
-.builder-building-area ul.builder-control-list li.loading-control:before {
+.builder-building-area ul.builder-control-list > li.loading-control:before {
   background-image: url(../../../../../modules/system/assets/ui/images/loader-transparent.svg);
   background-size: 15px 15px;
   background-position: 50% 50%;
@@ -87,29 +100,29 @@ ul.builder-control-palette li i {
   -webkit-animation: spin 1s linear infinite;
   animation: spin 1s linear infinite;
 }
-.builder-building-area ul.builder-control-list li.loading-control:after {
+.builder-building-area ul.builder-control-list > li.loading-control:after {
   content: attr(data-builder-loading-text);
   display: inline-block;
 }
-.builder-building-area ul.builder-control-list li.drag-over {
+.builder-building-area ul.builder-control-list > li.drag-over {
   color: #2581b8;
   border-color: #2581b8;
 }
-.builder-building-area ul.builder-control-list li.span-full {
+.builder-building-area ul.builder-control-list > li.span-full {
   width: 100%;
   float: left;
 }
-.builder-building-area ul.builder-control-list li.span-left {
+.builder-building-area ul.builder-control-list > li.span-left {
   float: left;
   width: 48.5%;
   clear: left;
 }
-.builder-building-area ul.builder-control-list li.span-right {
+.builder-building-area ul.builder-control-list > li.span-right {
   float: right;
   width: 48.5%;
   clear: right;
 }
-.builder-building-area ul.builder-control-list li.span-right + li.clear-row {
+.builder-building-area ul.builder-control-list > li.span-right + li.clear-row {
   display: block;
   clear: both;
 }
@@ -138,8 +151,8 @@ ul.builder-control-palette li i {
 .builder-building-area .builder-control-comment-below:empty {
   display: none;
 }
-.builder-building-area li:not(.placeholder):not(.loading-control):hover *,
-.builder-building-area li.inspector-open:not(.placeholder):not(.loading-control) * {
+.builder-building-area > li:not(.placeholder):not(.loading-control):hover *,
+.builder-building-area > li.inspector-open:not(.placeholder):not(.loading-control) * {
   color: #2581b8 !important;
 }
 .builder-building-area .builder-blueprint-control-text {
@@ -216,6 +229,146 @@ ul.builder-control-palette li i {
 .builder-building-area li:hover .builder-blueprint-control-switch:before,
 .builder-building-area li.inspector-open .builder-blueprint-control-switch:before {
   background-color: #2581b8;
+}
+.builder-tabs > .tabs {
+  display: relative;
+}
+.builder-tabs > .tabs > ul {
+  padding: 0 20px 0 40px;
+  margin: 0;
+  list-style: none;
+  font-size: 0;
+  position: relative;
+}
+.builder-tabs > .tabs > ul:after {
+  position: absolute;
+  content: '';
+  display: block;
+  height: 2px;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  background: #bdc3c7;
+  z-index: 106;
+}
+.builder-tabs > .tabs > ul > li {
+  display: inline-block;
+  font-size: 13px;
+  white-space: nowrap;
+  bottom: -2px;
+  position: relative;
+  margin-left: -20px;
+  z-index: 105;
+  cursor: pointer;
+}
+.builder-tabs > .tabs > ul > li > div.tab-container {
+  padding: 0 21px 0 21px;
+  position: relative;
+  height: 27px;
+  color: #bdc3c7!important;
+}
+.builder-tabs > .tabs > ul > li > div.tab-container > div {
+  padding: 4px 5px 0 5px;
+  -webkit-transition: padding 0.3s;
+  transition: padding 0.3s;
+  position: relative;
+  border-top: 2px solid #e5e5e5;
+}
+.builder-tabs > .tabs > ul > li > div.tab-container > div > span {
+  position: relative;
+  top: -2px;
+}
+.builder-tabs > .tabs > ul > li > div.tab-container:before,
+.builder-tabs > .tabs > ul > li > div.tab-container:after {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 0;
+  height: 27px;
+  width: 21px;
+  background: transparent url(../images/tab.png) no-repeat;
+}
+.builder-tabs > .tabs > ul > li > div.tab-container:before {
+  left: 0;
+  background-position: 0 -27px;
+}
+.builder-tabs > .tabs > ul > li > div.tab-container:after {
+  right: 0;
+  background-position: -75px -27px;
+}
+.builder-tabs > .tabs > ul > li:hover > div {
+  color: #95a5a6!important;
+}
+.builder-tabs > .tabs > ul > li .control {
+  position: absolute;
+  display: none;
+}
+.builder-tabs > .tabs > ul > li .control.close-btn {
+  font-size: 15px;
+  top: 9px;
+  right: 18px;
+  line-height: 15px;
+  height: 15px;
+  width: 15px;
+  text-align: center;
+  cursor: pointer;
+  color: #95a5a6;
+}
+.builder-tabs > .tabs > ul > li .control.close-btn:hover {
+  color: #0181b9 !important;
+}
+.builder-tabs > .tabs > ul > li .control.tab-inspector-trigger {
+  right: 34px;
+  top: 10px;
+  font-size: 14px;
+  padding-left: 5px;
+  padding-right: 5px;
+  cursor: pointer;
+}
+.builder-tabs > .tabs > ul > li .control.tab-inspector-trigger span {
+  display: block;
+  width: 3px;
+  height: 3px;
+  margin-bottom: 2px;
+  background: #95a5a6;
+}
+.builder-tabs > .tabs > ul > li .control.tab-inspector-trigger span:last-child {
+  margin-bottom: 0;
+}
+.builder-tabs > .tabs > ul > li .control.tab-inspector-trigger:hover span {
+  background: #0181b9;
+}
+.builder-tabs > .tabs > ul > li.active {
+  z-index: 107;
+}
+.builder-tabs > .tabs > ul > li.active > div.tab-container {
+  color: #95a5a6!important;
+}
+.builder-tabs > .tabs > ul > li.active > div.tab-container:before {
+  background-position: 0 0;
+}
+.builder-tabs > .tabs > ul > li.active > div.tab-container:after {
+  background-position: -75px 0;
+}
+.builder-tabs > .tabs > ul > li.active > div.tab-container > div {
+  padding-right: 30px;
+  border-top: 2px solid #bdc3c7;
+}
+.builder-tabs > .tabs > ul > li.active > div.tab-container > div > span {
+  top: 0;
+}
+.builder-tabs > .tabs > ul > li.active:before {
+  position: absolute;
+  content: '';
+  display: block;
+  height: 2px;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background: white;
+}
+.builder-tabs > .tabs > ul > li.active .control {
+  display: block;
 }
 .control-filelist ul li.group.model > h4 a:after {
   content: "\f074";

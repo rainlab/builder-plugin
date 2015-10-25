@@ -187,10 +187,28 @@ class FormBuilder extends FormWidgetBase
         ]);
     }
 
-    protected function getControlRenderingInfo($controlName, $properties)
+    protected function getSpan($currentSpan, $prevSpan)
+    {
+        if ($currentSpan == 'auto' || !strlen($currentSpan)) {
+            if ($prevSpan == 'left') {
+                return 'right';
+            }
+            else {
+                return  'left';
+            }
+        }
+
+        return $currentSpan;
+    }
+
+    protected function getControlRenderingInfo($controlName, $properties, $prevProperties)
     {
         $type = isset($properties['type']) ? $properties['type'] : 'text';
-        $span = isset($properties['span']) ? $properties['span'] : 'autp';
+        $spanFixed = isset($properties['span']) ? $properties['span'] : 'auto';
+        $prevSpan = isset($prevProperties['span']) ? $prevProperties['span'] : 'auto';
+
+        $span = $this->getSpan($spanFixed, $prevSpan);
+        $spanClass = 'span-'.$span;
 
         $properties['oc.fieldName'] = $controlName;
 
@@ -201,6 +219,8 @@ class FormBuilder extends FormWidgetBase
             'description' => Lang::get($controlInfo['description']),
             'type' => $type,
             'span' => $span,
+            'spanFixed' => $spanFixed,
+            'spanClass' => $spanClass,
             'properties' => $properties
         ];
     }

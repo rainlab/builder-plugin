@@ -111,6 +111,11 @@ return [
         'control_switch' => 'Switch',
         'error_file_name_required' => 'Please enter the form file name.',
         'error_file_name_invalid' => 'The file name can contain only Latin letters, digits, underscores, dots and hashes.',
+        'span_left' => 'Left',
+        'span_right' => 'Right',
+        'span_full' => 'Full',
+        'span_auto' => 'Auto',
+        'empty_tab' => 'Empty tab'
     ],
     'controller' => [
         'menu_label' => 'Controllers'

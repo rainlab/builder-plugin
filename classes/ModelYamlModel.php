@@ -82,7 +82,7 @@ abstract class ModelYamlModel extends YamlModel
 
         $result = [];
         foreach (new DirectoryIterator($modelDirectoryPath) as $fileInfo) {
-            if (!$fileInfo->isFile() && $fileInfo->getExtension() != 'yaml') {
+            if (!$fileInfo->isFile() || $fileInfo->getExtension() != 'yaml') {
                 continue;
             }
 

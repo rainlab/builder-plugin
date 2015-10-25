@@ -4,6 +4,7 @@ use Backend\Classes\ControllerBehavior;
 use RainLab\Builder\Classes\PluginBaseModel;
 use Backend\Behaviors\FormController;
 use SystemException;
+use ApplicationException;
 use Exception;
 use Input;
 

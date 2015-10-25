@@ -67,7 +67,8 @@
             controlType: controlType,
             controlId: this.getControlId(placeholder),
             properties: {
-                'label': controlName
+                'label': controlName,
+                'span': 'auto'
             }
         }
         $(placeholder).request('onModelFormRenderControlWrapper', {
@@ -105,6 +106,11 @@
                 }
             } 
             else {
+                $.oc.foundation.element.removeClass(item, 'span-left')
+                $.oc.foundation.element.removeClass(item, 'span-full')
+                $.oc.foundation.element.removeClass(item, 'span-right')
+                $.oc.foundation.element.addClass(item, 'span-' + itemSpan)
+
                 prevSpan = itemSpan
             }
         }
@@ -227,12 +233,18 @@
 
         var li = ev.currentTarget,
             properties = li.querySelector('[data-inspector-values]').value,
-            controlType = li.getAttribute('data-control-type')
+            controlType = li.getAttribute('data-control-type'),
+            propertiesParsed = $.parseJSON(properties)
 
         var data = {
             controlType: controlType,
             controlId: this.getControlId(li),
-            properties: $.parseJSON(properties)
+            properties: propertiesParsed
+        }
+
+        if (propertiesParsed.span !== undefined) {
+            li.setAttribute('data-builder-span', propertiesParsed.span)
+            this.reflow(li)
         }
 
         $(li).request('onModelFormRenderControlBody', {

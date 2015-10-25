@@ -115,7 +115,12 @@ class ControlLibrary
                 'title' => Lang::get('rainlab.builder::lang.form.property_span_title'),
                 'type' => 'dropdown',
                 'default' => 'full',
-                'options' => ['left', 'right', 'full']
+                'options' => [
+                    'left'=>Lang::get('rainlab.builder::lang.form.span_left'), 
+                    'right'=>Lang::get('rainlab.builder::lang.form.span_right'), 
+                    'full'=>Lang::get('rainlab.builder::lang.form.span_full'), 
+                    'auto'=>Lang::get('rainlab.builder::lang.form.span_auto')
+                ]
             ],
             'comment' => [
                 'title' => Lang::get('rainlab.builder::lang.form.property_comment_title'),

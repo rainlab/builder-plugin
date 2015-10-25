@@ -65,6 +65,34 @@ class IndexModelFormOperations extends IndexOperationsBehaviorBase
 
     public function onModelFormSave()
     {
+        $model = $this->loadOrCreateFormFromPost();
+
+        $model->fill($_POST);
+        $model->save();
+
+        $result = $this->controller->widget->modelList->updateList();
+
+        $modelClass = Input::get('model_class');
+        $result['builderRepsonseData'] = [
+            'builderObjectName'=>$model->fileName,
+            'tabId' => $this->getTabId($modelClass, $model->fileName),
+            'tabTitle' => $model->getDisplayName(Lang::get('rainlab.builder::lang.form.tab_new_form'))
+        ];
+
+        return $result;
+    }
+
+    public function onModelFormDelete()
+    {
+        $model = $this->loadOrCreateFormFromPost();
+
+        $model->deleteModel();
+
+        return $this->controller->widget->modelList->updateList();
+    }
+
+    protected function loadOrCreateFormFromPost()
+    {
         $pluginCode = Request::input('plugin_code');
         $modelClass = Input::get('model_class');
         $fileName = Input::get('file_name');
@@ -74,20 +102,7 @@ class IndexModelFormOperations extends IndexOperationsBehaviorBase
             'modelClass' => $modelClass
         ];
 
-        $model = $this->loadOrCreateBaseModel($fileName, $options);
-
-        $model->fill($_POST);
-        $model->save();
-
-        $result = $this->controller->widget->modelList->updateList();
-
-        $result['builderRepsonseData'] = [
-            'builderObjectName'=>$model->fileName,
-            'tabId' => $this->getTabId($modelClass, $model->fileName),
-            'tabTitle' => $model->getDisplayName(Lang::get('rainlab.builder::lang.form.tab_new_form'))
-        ];
-
-        return $result;
+        return $this->loadOrCreateBaseModel($fileName, $options);
     }
 
     protected function getTabId($modelClass, $fileName)
