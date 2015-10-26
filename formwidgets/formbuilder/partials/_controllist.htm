@@ -10,7 +10,7 @@
             $prevConfig = $controlConfig;
     ?>
         <li
-            class="<?= e($controlRenderingInfo['spanClass']) ?>"
+            class="control <?= e($controlRenderingInfo['spanClass']) ?>"
             data-builder-span="<?= e($controlRenderingInfo['spanFixed']) ?>"
             data-inspectable="true"
             data-control-type="<?= e($controlRenderingInfo['type']) ?>"
@@ -25,7 +25,7 @@
     <?php endforeach ?>
 
     <li 
-        class="placeholder <?= 'span-'.$this->getSpan('auto', $prevSpan) ?>"
+        class="control placeholder <?= 'span-'.$this->getSpan('auto', $prevSpan) ?>"
         data-builder-span="auto"
         data-builder-placeholder="true"
         data-builder-loading-text="<?= e(trans('rainlab.builder::lang.form.loading')) ?>"

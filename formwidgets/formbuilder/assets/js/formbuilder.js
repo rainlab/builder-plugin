@@ -35,7 +35,7 @@
         document.addEventListener('dragleave', this.proxy(this.onDragLeave))
         document.addEventListener('drop', this.proxy(this.onDragDrop), false);
 
-        $(document).on('change', '.builder-control-list > li', this.proxy(this.onControlChange))
+        $(document).on('change', '.builder-control-list > li.control', this.proxy(this.onControlChange))
     }
 
     FormBuilder.prototype.targetIsPlaceholder = function(ev) {

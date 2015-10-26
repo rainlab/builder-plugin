@@ -22,6 +22,8 @@ class FormBuilder extends FormWidgetBase
 
     protected $designTimeProviders = [];
 
+    protected $tabConfigurationSchema = null;
+
     /**
      * {@inheritDoc}
      */
@@ -57,6 +59,7 @@ class FormBuilder extends FormWidgetBase
     {
         $this->addJs('js/formbuilder.js', 'builder');
         $this->addJs('js/formbuilder.domtopropertyjson.js', 'builder');
+        $this->addJs('js/formbuilder.tabs.js', 'builder');
     }
 
     public function renderContainer($fieldsConfiguration)
@@ -223,5 +226,31 @@ class FormBuilder extends FormWidgetBase
             'spanClass' => $spanClass,
             'properties' => $properties
         ];
+    }
+
+    protected function getTabConfigurationSchema()
+    {
+        if ($this->tabConfigurationSchema !== null) {
+            return $this->tabConfigurationSchema;
+        }
+
+        $result = [
+            [
+                'title' => Lang::get('rainlab.builder::lang.form.tab_title'),
+                'property' => 'title',
+                'validation' => [
+                    'required' => [
+                        'message' => Lang::get('rainlab.builder::lang.form.property_tab_title_required')
+                    ]
+                ]
+            ]
+        ];
+
+        return $this->tabConfigurationSchema = json_encode($result);
+    }
+
+    protected function getTabConfigurationValues($values)
+    {
+        return json_encode($values);
     }
 }

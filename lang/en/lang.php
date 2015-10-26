@@ -115,7 +115,11 @@ return [
         'span_right' => 'Right',
         'span_full' => 'Full',
         'span_auto' => 'Auto',
-        'empty_tab' => 'Empty tab'
+        'empty_tab' => 'Empty tab',
+        'confirm_close_tab' => 'The tab contains controls which will be deleted. Continue?',
+        'tab' => 'Form tab',
+        'tab_title' => 'Title',
+        'property_tab_title_required' => 'The tab title is required.'
     ],
     'controller' => [
         'menu_label' => 'Controllers'

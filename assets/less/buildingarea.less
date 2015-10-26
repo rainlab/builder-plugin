@@ -7,7 +7,7 @@
         padding: 20px;
         margin-bottom: 0;
         list-style: none;
-        > li {
+        > li.control {
             margin-bottom: 20px;
             cursor: pointer;
             .user-select(none);
@@ -86,6 +86,11 @@
                 clear: both;
             }
         }
+
+        > li.control:not(.placeholder):not(.loading-control):hover *,
+        > li.control.inspector-open:not(.placeholder):not(.loading-control) * {
+            color: @builder-hover-color!important;
+        }
     }
 
     .builder-control-label {
@@ -116,10 +121,5 @@
         &:empty {
             display: none;
         }
-    }
-
-    > li:not(.placeholder):not(.loading-control):hover *,
-    > li.inspector-open:not(.placeholder):not(.loading-control) * {
-        color: @builder-hover-color!important;
     }
 }

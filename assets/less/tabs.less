@@ -1,12 +1,50 @@
 .builder-tabs {
     > .tabs {
-        display: relative;
+        position: relative;
 
-        > ul {
+        .tab-control {
+            position: absolute;
+            display: block;
+
+            &.inspector-trigger {
+                font-size: 14px;
+                padding-left: 5px;
+                padding-right: 5px;
+                cursor: pointer;
+
+                span {
+                    display: block;
+                    width: 3px;
+                    height: 3px;
+                    margin-bottom: 2px;
+                    background: #95a5a6;
+
+                    &:last-child {
+                        margin-bottom: 0;
+                    }
+                }
+
+                &:hover, &.inspector-open {
+                    span {
+                        background: @link-color;
+                    }
+                }
+
+                &.global  {
+                    top: 5px;
+                    right: 15px;
+                }
+            }
+        }
+
+        > ul.tabs {
             padding: 0 20px 0 40px;
+            height: 31px;
             margin: 0;
             list-style: none;
             font-size: 0;
+            white-space: nowrap;
+            overflow: hidden;
             position: relative;
 
             &:after {
@@ -15,13 +53,14 @@
                 display: block;
                 height: 2px;
                 left: 0;
-                bottom: -2px;
+                bottom: 0;
                 width: 100%;
                 background: #bdc3c7;
                 z-index: 106;
             }
 
             > li {
+                .user-select(none);
                 display: inline-block;
                 font-size: 13px;
                 white-space: nowrap;
@@ -39,13 +78,14 @@
 
                     > div {
                         padding: 4px 5px 0 5px;
-                        .transition(padding .3s);
+                        .transition(padding .1s);
                         position: relative;
                         border-top: 2px solid #e5e5e5; 
 
                         > span {
                             position: relative;
                             top: -2px;
+                            .transition(top .1s);
                         }
                     }
 
@@ -74,8 +114,7 @@
                     color: #95a5a6!important;
                 }
 
-                .control {
-                    position: absolute;
+                .tab-control {
                     display: none;
 
                     &.close-btn {
@@ -94,31 +133,9 @@
                         }
                     }
 
-                    &.tab-inspector-trigger{
+                    &.inspector-trigger{
                         right: 34px;
                         top: 10px;
-                        font-size: 14px;
-                        padding-left: 5px;
-                        padding-right: 5px;
-                        cursor: pointer;
-
-                        span {
-                            display: block;
-                            width: 3px;
-                            height: 3px;
-                            margin-bottom: 2px;
-                            background: #95a5a6;
-
-                            &:last-child {
-                                margin-bottom: 0;
-                            }
-                        }
-
-                        &:hover {
-                            span {
-                                background: @link-color;
-                            }
-                        }
                     }
                 }
 
@@ -157,11 +174,39 @@
                         background: white;
                     }
 
-                    .control {
+                    .tab-control {
                         display: block;
                     }
                 }
 
+                &.new-tab {
+                    background: transparent url(../images/tab.png) no-repeat;
+                    background-position: -24px 0;
+                    width: 27px;
+                    height: 22px;
+
+                    margin-left: -11px;
+                    top: 4px;
+                    position: relative;
+                    cursor: pointer;
+
+                    &:hover {
+                        background-position: -24px -32px;
+                    }
+                }
+            }
+        }
+
+        > ul.panels {
+            padding: 0;
+            list-style: none;
+
+            > li {
+                display: none;
+
+                &.active {
+                    display: block;
+                }
             }
         }
     }
