@@ -24,6 +24,8 @@ class FormBuilder extends FormWidgetBase
 
     protected $tabConfigurationSchema = null;
 
+    protected $tabsConfigurationSchema = null;
+
     /**
      * {@inheritDoc}
      */
@@ -249,8 +251,46 @@ class FormBuilder extends FormWidgetBase
         return $this->tabConfigurationSchema = json_encode($result);
     }
 
+    protected function getTabsConfigurationSchema()
+    {
+        if ($this->tabsConfigurationSchema !== null) {
+            return $this->tabsConfigurationSchema;
+        }
+
+        $result = [
+            [
+                'title' => Lang::get('rainlab.builder::lang.form.tab_stretch'),
+                'description' => Lang::get('rainlab.builder::lang.form.tab_stretch_description'),
+                'property' => 'stretch',
+                'type' => 'checkbox'
+            ],
+            [
+                'title' => Lang::get('rainlab.builder::lang.form.tab_css_class'),
+                'description' => Lang::get('rainlab.builder::lang.form.tab_css_class_description'),
+                'property' => 'cssClass',
+                'type' => 'string'
+            ]
+        ];
+
+        return $this->tabsConfigurationSchema = json_encode($result);
+    }
+
     protected function getTabConfigurationValues($values)
     {
+        if (!count($values)) {
+            return '{}';
+        }
+
         return json_encode($values);
     }
+
+    protected function getTabsConfigurationValues($values)
+    {
+        if (!count($values)) {
+            return '{}';
+        }
+
+        return json_encode($values);
+    }
+
 }

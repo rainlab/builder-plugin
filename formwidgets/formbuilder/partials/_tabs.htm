@@ -1,4 +1,4 @@
-<div data-control-list-container class="builder-tabs <?= e($type) ?>">
+<div data-control-list-container data-control-list-container-type="tabs" class="builder-tabs <?= e($type) ?>">
     <div class="tabs" data-tab-close-confirmation="<?= e(trans('rainlab.builder::lang.form.confirm_close_tab')) ?>">
         <ul class="tabs">
 
@@ -15,12 +15,20 @@
             <?php endif ?>
         </ul>
 
-        <div class="inspector-trigger tab-control global">
+        <div class="inspector-trigger tab-control global"
+            data-inspectable 
+            data-inspector-title="<?= e($tabsTitle) ?>" 
+            data-inspector-config="<?= e($this->getTabsConfigurationSchema()) ?>"
+            data-inspector-offset-x="3"
+            data-inspector-offset-y="-8"
+        >
             <div>
                 <span></span>
                 <span></span>
                 <span></span>
             </div>
+
+            <input data-inspector-values type="hidden" value="<?= e($this->getTabsConfigurationValues($configuration)) ?>"/>
         </div>
     </div>
 

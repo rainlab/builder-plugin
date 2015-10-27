@@ -119,7 +119,13 @@ return [
         'confirm_close_tab' => 'The tab contains controls which will be deleted. Continue?',
         'tab' => 'Form tab',
         'tab_title' => 'Title',
-        'property_tab_title_required' => 'The tab title is required.'
+        'property_tab_title_required' => 'The tab title is required.',
+        'tabs_primary' => 'Primary tabs',
+        'tabs_secondary' => 'Secondary tabs',
+        'tab_stretch' => 'Stretch',
+        'tab_stretch_description' => 'Specifies if this tabs container stretches to fit the parent height.',
+        'tab_css_class' => 'CSS class',
+        'tab_css_class_description' => 'Assigns a CSS class to the tabs container.'
     ],
     'controller' => [
         'menu_label' => 'Controllers'

@@ -21,7 +21,7 @@
         return false
     }
 
-    function listToJson(list) {
+    function listToJson(list, injectProperties) {
         var listItems = list.children,
             result = {}
 
@@ -48,6 +48,10 @@
             values.type = listItem.getAttribute('data-control-type')
             delete values['oc.fieldName']
 
+            if (injectProperties !== undefined) {
+                values = $.extend(values, injectProperties)
+            }
+
             result[fieldName] = values
 
             // TODO: for the Repeater we should check if the control element
@@ -57,38 +61,111 @@
         return result
     }
 
+    function getControlListContainerLists(controlListContainer) {
+        var controlLists = controlListContainer.querySelectorAll('[data-control-list]'),
+            result = [],
+            listName = null
+
+        for (var i=0, len=controlLists.length; i<len; i++) {
+            var controlList = controlLists[i],
+                currentListName = String(controlList.getAttribute('data-control-list'))
+
+            if (currentListName.length === 0 || (listName !== null && currentListName != listName)) {
+                throw new Error('Lists in control list containers should have names, and the name should be equal for all lists in a container.')
+            }
+
+            result.push(controlList)
+        }
+
+        return result
+    }
+
+    function mergeListContainerControlsToResult(result, container) {
+        var listContainerType = String(container.getAttribute('data-control-list-container-type'))
+
+        if (listContainerType.length === 0) {
+            throw new Error('Control list container type is not specified')
+        }
+
+        if (listContainerType !== 'tabs') {
+            // Other container types could be added here.
+            //
+            throw new Error('Unknown control list container type: '+listContainerType)
+        }
+
+        var controlLists = getControlListContainerLists(container),
+            globalTabsProperties = $.oc.builder.formbuilder.tabManager.getGlobalTabsProperties(container)
+
+        for (var i=0, len=controlLists.length; i<len; i++) {
+            var controlList = controlLists[i],
+                tabTitle = $.oc.builder.formbuilder.tabManager.getElementTabTitle(controlList),
+                injectProperties = {
+                    tab: tabTitle
+                },
+                listControls = listToJson(controlList, injectProperties),
+                listName = String(controlList.getAttribute('data-control-list'))
+
+            if (result[listName] === undefined) {
+                result[listName] = {}
+            }
+
+            result[listName] = $.extend(result[listName], globalTabsProperties)
+
+            mergeControlListControlsToResult(result, listControls, listName)
+        }
+    }
+
+    function mergeControlListControlsToResult(result, controls, listName) {
+        if (listName.length > 0) {
+            if (result[listName] === undefined) {
+                result[listName] = {
+                    fields: {}
+                }
+            }
+
+            result[listName].fields = $.extend(result[listName].fields, controls)
+        }
+        else {
+            result.fields = $.extend(result.fields, controls)
+        }
+    }
+
     function containerToJson(container) {
-        var controlLists = container.children,
+        var containerElements = container.children,
             result = {
                 fields: {} // The "fields" property name is fixed, but could be customized later if needed.
             }
 
-        for (var i=0, len=controlLists.length; i<len; i++) {
-            var controlList = controlLists[i]
+        for (var i=0, len=containerElements.length; i<len; i++) {
+            var currentElement = containerElements[i],
+                isControlListContainer = currentElement.hasAttribute('data-control-list-container')
 
-            if (controlList.tagName !== 'UL') {
-                throw new Error('Control container can contain only UL elements.')
+            if (currentElement.tagName !== 'UL' && !isControlListContainer) {
+                throw new Error('Control container can contain only UL elements and control list containers.')
             }
 
-            if (!controlList.hasAttribute('data-control-list')) {
-                throw new Error('Control container can contain only UL elements with data-control-list attribute.')
+            if (isControlListContainer) {
+                mergeListContainerControlsToResult(result, currentElement)
+                continue
+            } 
+            else {
+                if (!currentElement.hasAttribute('data-control-list')) {
+                    throw new Error('Control container can contain only UL elements with data-control-list attribute or control list containers.')
+                }
             }
 
-            var listProperties = listToJson(controlList),
+            // This part processes control lists (UL) defined directly in the control container.
+            // Lists can have names, in that case a property with the corresponding name
+            // is created in the result object, and controls are injected to the fields sub-property 
+            // of that property (result.listname.fields). If a list doesn't have a name, its controls
+            // are injected directly to the result's fields property (result.fields).
+            //
+
+            var controlList = currentElement,
+                listControls = listToJson(controlList),
                 listName = String(controlList.getAttribute('data-control-list'))
 
-            if (listName.length > 0) {
-                if (result[listName] === undefined) {
-                    result[listName] = {
-                        fields: {}
-                    }
-                }
-
-                result[listName].fields = listProperties
-            }
-            else {
-                result.fields = listProperties
-            }
+            mergeControlListControlsToResult(result, listControls, listName)
         }
 
         return result

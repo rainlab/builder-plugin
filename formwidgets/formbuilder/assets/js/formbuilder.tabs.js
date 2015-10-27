@@ -28,7 +28,7 @@
         $layoutBody.on('click', 'li[data-builder-new-tab]', this.proxy(this.onNewTabClick))
         $layoutBody.on('click', 'div[data-builder-tab]', this.proxy(this.onTabClick))
         $layoutBody.on('click', 'div[data-builder-close-tab]', this.proxy(this.onTabCloseClick))
-        $layoutBody.on('change', 'div.inspector-trigger.tab-control', this.proxy(this.onTabChange))
+        $layoutBody.on('change', 'ul.tabs > li div.inspector-trigger.tab-control', this.proxy(this.onTabChange))
 
     }
 
@@ -49,6 +49,35 @@
             tabIndex = $tab.index()
 
         return this.getPanelList($tabControl).find(' > li').eq(tabIndex)
+    }
+
+    TabManager.prototype.findPanelTab = function($panel) {
+        var $tabControl = this.findTabControl($panel),
+            tabIndex = $panel.index()
+
+        return this.getTabList($tabControl).find(' > li').eq(tabIndex)
+    }
+
+    TabManager.prototype.getGlobalTabsProperties = function(tabsContainer) {
+        var properties = $(tabsContainer).find('.inspector-trigger.tab-control.global [data-inspector-values]').val()
+
+        if (properties.length == 0) {
+            properties = '{}'
+        }
+        
+        return $.parseJSON(properties)
+    }
+
+    /*
+     * Returns tab title an element belongs to
+     */
+    TabManager.prototype.getElementTabTitle = function(element) {
+        var $panel = $(element).closest('li.tab-panel'),
+            $tab = this.findPanelTab($panel),
+            properties = $tab.find('[data-inspector-values]').val(),
+            propertiesParsed = $.parseJSON(properties)
+
+        return propertiesParsed.title
     }
 
     TabManager.prototype.tabHasControls = function($tab) {
@@ -90,6 +119,7 @@
         }
 
         var $prevTab = $tab.prev(),
+            $nextTab = $tab.next(),
             $tabPanel = this.findTabPanel($tab)
 
         $tab.remove()
@@ -99,7 +129,12 @@
             this.gotoTab($prevTab)
         }
         else {
-            this.createNewTab($tabControl)
+            if ($nextTab.length > 0 && !$nextTab.hasClass('new-tab')) {
+                this.gotoTab($nextTab)
+            }
+            else {
+                this.createNewTab($tabControl)
+            }
         }
     }
 
@@ -146,7 +181,7 @@
 
     $(document).ready(function(){
         // There is a single instance of the tabs manager.
-        new TabManager()
+        $.oc.builder.formbuilder.tabManager = new TabManager()
     })
 
 }(window.jQuery);
