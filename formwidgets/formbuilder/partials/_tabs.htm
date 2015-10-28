@@ -1,9 +1,23 @@
 <div data-control-list-container data-control-list-container-type="tabs" class="builder-tabs <?= e($type) ?>">
-    <div class="tabs" data-tab-close-confirmation="<?= e(trans('rainlab.builder::lang.form.confirm_close_tab')) ?>">
+    <div class="tabs" 
+        data-tab-close-confirmation="<?= e(trans('rainlab.builder::lang.form.confirm_close_tab')) ?>"
+        data-tab-name-template="<?= e($tabNameTemplate) ?>"
+        data-tab-already-exists="<?= e(trans('rainlab.builder::lang.form.tab_already_exists')) ?>"
+    >
         <ul class="tabs">
 
             <?php if (!$controls): ?>
-                <?= $this->makePartial('tab', ['active'=>true, 'title'=>trans('rainlab.builder::lang.form.empty_tab')]) ?>
+                <?= $this->makePartial('tab', ['active'=>true, 'title'=>sprintf($tabNameTemplate, '1') ]) ?>
+            <?php else: ?>
+
+                <?php 
+                    $tabIndex = 0;
+                    foreach ($controls as $tabName=>$tabControls): 
+                        $tabIndex++;
+                ?>
+                    <?= $this->makePartial('tab', ['active'=>$tabIndex == 1, 'title'=>trans($tabName)]) ?>
+                <?php endforeach ?>
+
             <?php endif ?>
 
             <li class="new-tab" data-builder-new-tab></li>
@@ -11,7 +25,17 @@
 
         <ul class="panels">
             <?php if (!$controls): ?>
-                <?= $this->makePartial('tabpanel', ['controls' => [], 'listName'=>$listName, 'active'=>true]) ?>
+                <?= $this->makePartial('tabpanel', ['controls' => [], 'listName'=>$listName, 'active'=>true]); ?>
+            <?php else: ?>
+
+                <?php 
+                    $tabIndex = 0;
+                    foreach ($controls as $tabName=>$tabControls): 
+                        $tabIndex++;
+                ?>
+                    <?= $this->makePartial('tabpanel', ['controls' => $tabControls, 'listName'=>$listName, 'active'=>$tabIndex == 1]); ?>
+                <?php endforeach ?>
+
             <?php endif ?>
         </ul>
 

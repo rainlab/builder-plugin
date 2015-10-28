@@ -106,6 +106,7 @@
         this.$masterTabs.on('unchanged.oc.changeMonitor', this.proxy(this.onFormUnchanged))
         this.$masterTabs.on('shown.bs.tab', this.proxy(this.onTabShown))
         this.$masterTabs.on('afterAllClosed.oc.tab', this.proxy(this.onAllTabsClosed))
+        this.$masterTabs.on('closed.oc.tab', this.proxy(this.onTabClosed))
 
         for (var controller in this.entityControllers) {
             if (this.entityControllers[controller].registerHandlers !== undefined) {
@@ -195,6 +196,10 @@
     Builder.prototype.onAllTabsClosed = function(ev) {
         this.setPageTitle('')
         this.getFileLists().fileList('markActive', null)
+    }
+
+    Builder.prototype.onTabClosed = function(ev) {
+        this.updateModifiedCounter()
     }
 
     // INITIALIZATION

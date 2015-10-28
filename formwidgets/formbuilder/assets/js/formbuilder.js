@@ -92,16 +92,22 @@
             }
 
             if (itemSpan == 'auto') {
+                $.oc.foundation.element.removeClass(item, 'span-left')
+                $.oc.foundation.element.removeClass(item, 'span-full')
+                $.oc.foundation.element.removeClass(item, 'span-right')
+
                 if (prevSpan == 'left') {
-                    $.oc.foundation.element.removeClass(item, 'span-left')
-                    $.oc.foundation.element.removeClass(item, 'span-full')
                     $.oc.foundation.element.addClass(item, 'span-right')
                     prevSpan = 'right'
                 }
                 else {
-                    $.oc.foundation.element.removeClass(item, 'span-right')
-                    $.oc.foundation.element.removeClass(item, 'span-full')
-                    $.oc.foundation.element.addClass(item, 'span-left')
+                    if (!$.oc.foundation.element.hasClass(item, 'placeholder')) {
+                        $.oc.foundation.element.addClass(item, 'span-left')
+                    } 
+                    else {
+                        $.oc.foundation.element.addClass(item, 'span-full')
+                    }
+
                     prevSpan = 'left'
                 }
             } 
@@ -224,6 +230,8 @@
             this.addControlToPlaceholder(ev.target,
                 ev.dataTransfer.getData('builder/control/type'),
                 ev.dataTransfer.getData('builder/control/name'))
+
+            $(ev.target.parentNode).trigger('change')
         }
     }
 

@@ -174,7 +174,7 @@
     var DomToJson = {}
 
     DomToJson.convert = function(rootContainer) {
-        return containerToJson(rootContainer)
+        return JSON.stringify(containerToJson(rootContainer))
     }
 
     $.oc.builder.formbuilder.domToPropertyJson = DomToJson

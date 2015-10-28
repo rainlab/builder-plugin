@@ -100,7 +100,7 @@ return [
         'property_required_title' => 'Required',
         'property_field_name_title' => 'Field name',
         'property_field_name_required' => 'The field name is required',
-        'property_field_name_regex' => 'The field name can contain only Latin letters, digits, underscores and dashes.',
+        'property_field_name_regex' => 'The field name can contain only Latin letters, digits, underscores, dashes and square brackets.',
         'control_group_standard' => 'Standard',
         'control_group_widgets' => 'Widgets',
         'drop_control_here' => 'Drop new field here',
@@ -125,7 +125,9 @@ return [
         'tab_stretch' => 'Stretch',
         'tab_stretch_description' => 'Specifies if this tabs container stretches to fit the parent height.',
         'tab_css_class' => 'CSS class',
-        'tab_css_class_description' => 'Assigns a CSS class to the tabs container.'
+        'tab_css_class_description' => 'Assigns a CSS class to the tabs container.',
+        'tab_name_template' => 'Tab %s',
+        'tab_already_exists' => 'Tab with the specified title already exists.'
     ],
     'controller' => [
         'menu_label' => 'Controllers'

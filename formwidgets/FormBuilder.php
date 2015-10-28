@@ -137,7 +137,7 @@ class FormBuilder extends FormWidgetBase
                 ],
                 'regex' => [
                     'message' => Lang::get('rainlab.builder::lang.form.property_field_name_regex'),
-                    'pattern' => '^[a-zA-Z]+[0-9a-z\_]*$'
+                    'pattern' => '^[a-zA-Z]+[0-9a-z\_\[\]]*$'
                 ]
             ]
         ];
@@ -192,14 +192,14 @@ class FormBuilder extends FormWidgetBase
         ]);
     }
 
-    protected function getSpan($currentSpan, $prevSpan)
+    protected function getSpan($currentSpan, $prevSpan, $isPlaceholder = false)
     {
         if ($currentSpan == 'auto' || !strlen($currentSpan)) {
             if ($prevSpan == 'left') {
                 return 'right';
             }
             else {
-                return  'left';
+                return $isPlaceholder ? 'full' : 'left';
             }
         }
 
@@ -242,7 +242,7 @@ class FormBuilder extends FormWidgetBase
                 'property' => 'title',
                 'validation' => [
                     'required' => [
-                        'message' => Lang::get('rainlab.builder::lang.form.property_tab_title_required')
+                        'message' => Lang::get('rainlab.builder::lang.form.property_tab_title_required')    
                     ]
                 ]
             ]
@@ -293,4 +293,36 @@ class FormBuilder extends FormWidgetBase
         return json_encode($values);
     }
 
+    protected function getTabsFields($tabsName, $fields)
+    {
+        $result = [];
+
+        if (!is_array($fields)) {
+            return $result;
+        }
+
+        if (!array_key_exists($tabsName, $fields) || !array_key_exists('fields', $fields[$tabsName])) {
+            return $result;
+        }
+
+        $defaultTab = Lang::get('backend::lang.form.undefined_tab');
+        if (array_key_exists('defaultTab', $fields[$tabsName])) {
+            $defaultTab = Lang::get($fields[$tabsName]['defaultTab']);
+        }
+
+        foreach ($fields[$tabsName]['fields'] as $fieldName=>$fieldConfiguration) {
+            if (!isset($fieldConfiguration['tab'])) {
+                $fieldConfiguration['tab'] = $defaultTab;
+            }
+
+            $tab = $fieldConfiguration['tab'];
+            if (!array_key_exists($tab, $result)) {
+                $result[$tab] = [];
+            }
+
+            $result[$tab][$fieldName] = $fieldConfiguration;
+        }
+
+        return $result;
+    }
 }

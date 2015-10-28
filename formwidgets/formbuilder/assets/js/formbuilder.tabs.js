@@ -29,7 +29,7 @@
         $layoutBody.on('click', 'div[data-builder-tab]', this.proxy(this.onTabClick))
         $layoutBody.on('click', 'div[data-builder-close-tab]', this.proxy(this.onTabCloseClick))
         $layoutBody.on('change', 'ul.tabs > li div.inspector-trigger.tab-control', this.proxy(this.onTabChange))
-
+        $layoutBody.on('hiding.oc.inspector', 'ul.tabs > li div.inspector-trigger.tab-control', this.proxy(this.onTabInspectorHiding))
     }
 
     TabManager.prototype.getTabList = function($tabControl) {
@@ -84,11 +84,48 @@
         return this.findTabPanel($tab).find('ul[data-control-list] li.control:not(.placeholder)').length > 0
     }
 
+    TabManager.prototype.tabNameExists = function($tabList, name, $ignoreTab) {
+        var tabs = $tabList.get(0).children
+
+        for (var i=0, len = tabs.length; i<len; i++) {
+            if ($ignoreTab !== undefined && $ignoreTab.get(0) === tabs[i]) {
+                continue
+            }
+
+            var currentTabName = $('[data-tab-title]', tabs[i]).text()
+
+            if (currentTabName == name) {
+                return true
+            }
+        }
+
+        return false
+    }
+
+    TabManager.prototype.generateTabName = function($tabList, $tabControl) {
+        var nameTemplate = $tabControl.data('tabNameTemplate'),
+            tabs = $tabList.get(0).children,
+            index = tabs.length
+            name = nameTemplate.replace('%s', index)
+
+        while (this.tabNameExists($tabList, name)) {
+            name = nameTemplate.replace('%s', index)
+
+            index++;
+        }
+
+        return name
+    }
+
     TabManager.prototype.createNewTab = function($tabControl) {
         var tabTemplate = $('[data-tab-template]').html(),
             panelTemplate = $('[data-panel-template]').html(),
+            $tabList = this.getTabList($tabControl),
+            tabName = this.generateTabName($tabList, $tabControl),
             $newTab = $(tabTemplate),
-            $newTabControl = this.getTabList($tabControl).find('> li[data-builder-new-tab]')
+            $newTabControl = $tabList.find('> li[data-builder-new-tab]')
+
+        $('[data-tab-title]', $newTab).text(tabName)
         
         $newTab.insertBefore($newTabControl)
         this.getPanelList($tabControl).append(panelTemplate)
@@ -116,6 +153,8 @@
             if (!confirm($tabControl.data('tabCloseConfirmation'))) {
                 return
             }
+
+            $tab.trigger('change')
         }
 
         var $prevTab = $tab.prev(),
@@ -177,6 +216,18 @@
 
     TabManager.prototype.onTabChange = function(ev) {
         this.updateTabProperties($(ev.currentTarget).closest('li'))
+    }
+
+    TabManager.prototype.onTabInspectorHiding = function(ev, data) {
+        var $tab = $(ev.currentTarget).closest('li'),
+            $tabControl = this.findTabControl($tab),
+            $tabList = this.getTabList($tabControl)
+
+        if (this.tabNameExists($tabList, data.values.title, $tab)) {
+            alert($tabControl.data('tabAlreadyExists'))
+
+            ev.preventDefault()
+        }
     }
 
     $(document).ready(function(){
