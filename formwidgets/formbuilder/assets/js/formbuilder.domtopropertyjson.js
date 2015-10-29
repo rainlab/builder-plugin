@@ -52,6 +52,10 @@
                 values = $.extend(values, injectProperties)
             }
 
+            if (result[fieldName] !== undefined) {
+                throw new Error('Duplicate field name: ' + fieldName)
+            }
+
             result[fieldName] = values
 
             // TODO: for the Repeater we should check if the control element
@@ -171,10 +175,23 @@
         return result
     }
 
-    var DomToJson = {}
+    var lastConvertError = null,
+        DomToJson = {}
 
     DomToJson.convert = function(rootContainer) {
-        return JSON.stringify(containerToJson(rootContainer))
+        lastConvertError = null
+
+        try {
+           return JSON.stringify(containerToJson(rootContainer))
+        }
+        catch (ex) {
+           lastConvertError = ex.message
+           return false
+        }
+    }
+
+    DomToJson.getLastError = function() {
+        return lastConvertError
     }
 
     $.oc.builder.formbuilder.domToPropertyJson = DomToJson

@@ -65,7 +65,7 @@ ul.builder-control-palette li i {
   padding: 10px 12px;
   position: relative;
   text-align: center;
-  border: 2px solid #dde0e2;
+  border: 2px dotted #dde0e2;
   margin-top: 20px;
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;

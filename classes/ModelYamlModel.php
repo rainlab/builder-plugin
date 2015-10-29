@@ -86,7 +86,12 @@ abstract class ModelYamlModel extends YamlModel
                 continue;
             }
 
-            $fileContents = Yaml::parseFile($fileInfo->getPathname());
+            try {
+                $fileContents = Yaml::parseFile($fileInfo->getPathname());
+            } 
+            catch (Exception $ex) {
+                continue;
+            }
 
             if (!is_array($fileContents)) {
                 $fileContents = [];

@@ -46,6 +46,58 @@
         return ev.dataTransfer.types.indexOf('builder/source/palette') >= 0
     }
 
+    FormBuilder.prototype.findControlContainer = function(element) {
+        var current = element
+
+        while (current) {
+            if (current.hasAttribute('data-contol-container') ) {
+                return current
+            }
+
+            current = current.parentNode
+        }
+
+        return null
+    }
+
+    FormBuilder.prototype.fieldNameExistsInContainer = function(container, fieldName) {
+        var valueInputs = container.querySelectorAll('li.control[data-inspectable] input[data-inspector-values]')
+
+        for (var i=valueInputs.length-1; i>=0; i--) {
+            var value = String(valueInputs[i].value)
+
+            if (value.length === 0) {
+                continue
+            }
+
+            var properties = $.parseJSON(value)
+
+            if (properties['oc.fieldName'] == fieldName) {
+                return true
+            }
+        }
+
+        return false
+    }
+
+    FormBuilder.prototype.generateFieldName = function(controlType, placeholder) {
+        var controlContainer = this.findControlContainer(placeholder)
+
+        if (!controlContainer) {
+            throw new Error('Cannot find control container for a placeholder.')
+        }
+
+        var counter = 1,
+            fieldName = controlType + counter
+
+        while (this.fieldNameExistsInContainer(controlContainer, fieldName)) {
+            counter ++
+            fieldName = controlType + counter
+        }
+
+        return fieldName
+    }
+
     FormBuilder.prototype.addControlToPlaceholder = function(placeholder, controlType, controlName) {
         // Duplicate the placeholder and place it after 
         // the existing one
@@ -61,6 +113,8 @@
         placeholder.innerHTML = ''
         placeholder.removeAttribute('data-builder-placeholder')
 
+        var fieldName = this.generateFieldName(controlType, placeholder)
+
         // Send request to the server to load the 
         // control markup, Inspector data schema, inspector title, etc.
         var data = {
@@ -68,7 +122,8 @@
             controlId: this.getControlId(placeholder),
             properties: {
                 'label': controlName,
-                'span': 'auto'
+                'span': 'auto',
+                'oc.fieldName': fieldName
             }
         }
         $(placeholder).request('onModelFormRenderControlWrapper', {

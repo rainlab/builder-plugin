@@ -3,6 +3,7 @@
 use Symfony\Component\Yaml\Dumper as YamlDumper;
 use ApplicationException;
 use ValidationException;
+use Exception;
 use Yaml;
 use File;
 use Lang;
@@ -87,10 +88,16 @@ abstract class YamlModel extends BaseModel
         $filePath = File::symbolizePath($filePath);
 
         if (!File::isFile($filePath)) {
-            throw new ApplicationException('Cannot load the model - the original file is not found: '.$filePath);
+            throw new ApplicationException('Cannot load the model - the original file is not found: '.basename($filePath));
         }
 
-        $data = Yaml::parse(File::get($filePath));
+        try {
+            $data = Yaml::parse(File::get($filePath));
+        } 
+        catch (Exception $ex) {
+            throw new ApplicationException(sprintf('Cannot parse the YAML file %s: %s', basename($filePath), $ex->getMessage()));
+        }
+
         $this->originalFilePath = $filePath;
 
         if ($this->yamlSection) {
