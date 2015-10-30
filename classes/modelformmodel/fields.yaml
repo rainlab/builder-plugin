@@ -21,3 +21,4 @@ secondaryTabs:
             type: RainLab\Builder\FormWidgets\FormBuilder
             stretch: true
             cssClass: layout
+            tab: rainlab.builder::lang.form.controls

@@ -119,6 +119,7 @@ return [
         'confirm_close_tab' => 'The tab contains controls which will be deleted. Continue?',
         'tab' => 'Form tab',
         'tab_title' => 'Title',
+        'controls' => 'Controls',
         'property_tab_title_required' => 'The tab title is required.',
         'tabs_primary' => 'Primary tabs',
         'tabs_secondary' => 'Secondary tabs',

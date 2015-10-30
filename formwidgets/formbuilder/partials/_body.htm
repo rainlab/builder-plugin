@@ -1,2 +1,12 @@
-<?= $this->makePartial('controlpalette') ?>
-<?= $this->makePartial('buildingarea') ?>
+<!-- Start -->
+<div class="layout" data-inspector-container=".inspector-container">
+    <div class="layout-row">
+        <div class="layout-cell layout-relative">
+            <div class="layout">
+                <?= $this->makePartial('controlpalette') ?>
+                <?= $this->makePartial('buildingarea') ?>
+            </div>
+        </div>
+        <div class="layout-cell inspector-container builder-inspector-container" data-inspector-scrollable></div>
+    </div>
+</div>

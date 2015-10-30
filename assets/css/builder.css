@@ -52,6 +52,7 @@ ul.builder-control-palette li i {
   clear: both;
 }
 .builder-building-area ul.builder-control-list > li.control {
+  position: relative;
   margin-bottom: 20px;
   cursor: pointer;
   -webkit-user-select: none;
@@ -84,6 +85,7 @@ ul.builder-control-palette li i {
   border-color: #bdc3c7;
   text-align: left;
 }
+.builder-building-area ul.builder-control-list > li.control.updating-control:after,
 .builder-building-area ul.builder-control-list > li.control.loading-control:before {
   background-image: url(../../../../../modules/system/assets/ui/images/loader-transparent.svg);
   background-size: 15px 15px;
@@ -101,6 +103,23 @@ ul.builder-control-palette li i {
 .builder-building-area ul.builder-control-list > li.control.loading-control:after {
   content: attr(data-builder-loading-text);
   display: inline-block;
+}
+.builder-building-area ul.builder-control-list > li.control.updating-control:after {
+  position: absolute;
+  right: -8px;
+  top: 5px;
+}
+.builder-building-area ul.builder-control-list > li.control.updating-control:before {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 25px;
+  height: 25px;
+  background: rgba(127, 127, 127, 0.1);
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
 }
 .builder-building-area ul.builder-control-list > li.control.drag-over {
   color: #2581b8;
@@ -427,6 +446,13 @@ ul.builder-control-palette li i {
 }
 html.gecko .control-filelist ul li.group {
   margin-right: 10px;
+}
+.builder-inspector-container {
+  width: 350px;
+  border-left: 1px solid #d9d9d9;
+}
+.builder-inspector-container:empty {
+  display: none!important;
 }
 .control-tabs.auxiliary-tabs {
   background: white;

@@ -14,6 +14,7 @@
         Base.call(this)
 
         this.placeholderIdIndex = 0
+        this.updateControlBodyTimer = null
 
         this.init()
     }
@@ -36,6 +37,7 @@
         document.addEventListener('drop', this.proxy(this.onDragDrop), false);
 
         $(document).on('change', '.builder-control-list > li.control', this.proxy(this.onControlChange))
+        $(document).on('livechange', '.builder-control-list > li.control', this.proxy(this.onControlLiveChange))
     }
 
     FormBuilder.prototype.targetIsPlaceholder = function(ev) {
@@ -219,6 +221,61 @@
         wrapper.innerHTML = responseData.markup
     }
 
+    FormBuilder.prototype.getControlProperties = function(li) {
+        var properties = li.querySelector('[data-inspector-values]').value
+            
+        return $.parseJSON(properties)
+    }
+
+    FormBuilder.prototype.setControlSpanFromProperties = function(li, properties) {
+        if (properties.span === undefined) {
+            return
+        }
+
+        li.setAttribute('data-builder-span', properties.span)
+        this.reflow(li)
+    }
+
+    FormBuilder.prototype.startUpdateControlBody = function(controlId) {
+        this.clearUpdateControlBodyTimer()
+
+        var self = this
+        this.updateControlBodyTimer = window.setTimeout(function(){
+            self.updateControlBody(controlId)
+        }, 300)
+    }
+
+    FormBuilder.prototype.clearUpdateControlBodyTimer = function() {
+        if (this.updateControlBodyTimer === null) {
+            return
+        }
+
+        clearTimeout(this.updateControlBodyTimer)
+        this.updateControlBodyTimer = null
+    }
+
+    FormBuilder.prototype.updateControlBody = function(controlId) {
+        var placeholder = document.body.querySelector('li[data-builder-control-id="'+controlId+'"]')
+        if (!placeholder) {
+            return
+        }
+
+        this.clearUpdateControlBodyTimer()
+
+        var controls = document.body.querySelectorAll('li.control.updating-control')
+// It's better to find controls inside the curent root container, not in the entire document
+        for (var i=controls.length-1; i>=0; i--) {
+            $.oc.foundation.element.removeClass(controls[i], 'updating-control')
+        }
+
+// Do request from the onControlChange
+// Set updating-control class before start
+// Remove the class after end
+
+// onControlChange should use this method as well.
+
+    }
+
     // EVENT HANDLERS
     // ============================
 
@@ -295,9 +352,8 @@
         // update the control markup with AJAX
 
         var li = ev.currentTarget,
-            properties = li.querySelector('[data-inspector-values]').value,
             controlType = li.getAttribute('data-control-type'),
-            propertiesParsed = $.parseJSON(properties)
+            propertiesParsed = this.getControlProperties(li)
 
         var data = {
             controlType: controlType,
@@ -305,14 +361,24 @@
             properties: propertiesParsed
         }
 
-        if (propertiesParsed.span !== undefined) {
-            li.setAttribute('data-builder-span', propertiesParsed.span)
-            this.reflow(li)
-        }
-
+        this.setControlSpanFromProperties(li, propertiesParsed)
+        
         $(li).request('onModelFormRenderControlBody', {
             data: data
         }).done(this.proxy(this.controlBodyMarkupLoaded))
+    }
+
+    FormBuilder.prototype.onControlLiveChange = function(ev) {
+        $(ev.currentTarget.parentNode).trigger('change')  // Set modified state for the form
+
+        var li = ev.currentTarget,
+            propertiesParsed = this.getControlProperties(li)
+
+        this.setControlSpanFromProperties(li, propertiesParsed)
+
+        this.startUpdateControlBody(this.getControlId(li))
+
+        // Do other stuff from onControlChange on timer
     }
 
     $(document).ready(function(){

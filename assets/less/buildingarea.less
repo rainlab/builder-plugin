@@ -8,6 +8,7 @@
         margin-bottom: 0;
         list-style: none;
         > li.control {
+            position: relative;
             margin-bottom: 20px;
             cursor: pointer;
             .user-select(none);
@@ -37,6 +38,7 @@
                 text-align: left;
             }
 
+            &.updating-control:after, 
             &.loading-control:before {
                 background-image:url(../../../../../modules/system/assets/ui/images/loader-transparent.svg);
                 background-size: 15px 15px;
@@ -54,6 +56,23 @@
             &.loading-control:after {
                 content: attr(data-builder-loading-text);
                 display: inline-block;
+            }
+
+            &.updating-control:after {
+                position: absolute;
+                right: -8px;
+                top: 5px;
+            }
+
+            &.updating-control:before {
+                content: '';
+                position: absolute;
+                right: 0;
+                top: 0;
+                width: 25px;
+                height: 25px;
+                background: rgba(127, 127, 127, 0.1);
+                .border-radius(4px);
             }
 
             &.drag-over {
