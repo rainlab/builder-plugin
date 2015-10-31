@@ -122,13 +122,17 @@ class ControlLibrary
                     'auto'=>Lang::get('rainlab.builder::lang.form.span_auto')
                 ]
             ],
-            'comment' => [
+            'oc.comment' => [
                 'title' => Lang::get('rainlab.builder::lang.form.property_comment_title'),
                 'type' => 'string'
             ],
-            'commentAbove' => [
-                'title' => Lang::get('rainlab.builder::lang.form.property_comment_above_title'),
-                'type' => 'string'
+            'oc.commentPosition' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_comment_position'),
+                'type' => 'dropdown',
+                'options' => [
+                    'above' => Lang::get('rainlab.builder::lang.form.property_comment_position_above'),
+                    'below' => Lang::get('rainlab.builder::lang.form.property_comment_position_below')
+                ]
             ],
             'default' => [
                 'title' => Lang::get('rainlab.builder::lang.form.property_default_title'),

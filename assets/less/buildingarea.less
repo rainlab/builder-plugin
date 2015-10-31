@@ -109,11 +109,24 @@
         }
     }
 
+    .control-body {
+        &.field-disabled,
+        &.field-hidden {
+            .opacity(0.5);
+        }
+    }
+
     .builder-control-label {
         margin-bottom: 10px;
         color: #555555;
         font-size: 14px;
         font-weight: 600;
+
+        &.required:after {
+            vertical-align: super;
+            font-size: 60%;
+            content: " *";
+        }
     }
 
     .builder-control-label:empty {

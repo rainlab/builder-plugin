@@ -179,10 +179,23 @@ class FormBuilder extends FormWidgetBase
 
     protected function renderControlWrapper($type, $properties = [])
     {
-        // This method renders the control completely, including 
+        // This method renders the entire control, including 
         // the wrapping element.
 
         $controlInfo = $this->getControlInfo($type);
+
+        // Builder UI displays Comment and Comment Above properties
+        // as Comment and Comment Position properties.
+
+        if (array_key_exists('comment', $properties) && strlen($properties['comment'])) {
+            $properties['oc.comment'] = $properties['comment'];
+            $properties['oc.commentPosition'] = 'below';
+        }
+
+        if (array_key_exists('commentAbove', $properties) && strlen($properties['commentAbove'])) {
+            $properties['oc.comment'] = $properties['commentAbove'];
+            $properties['oc.commentPosition'] = 'above';
+        }
 
         $provider = $this->getControlDesignTimeProvider($controlInfo['designTimeProvider']);
         return $this->makePartial('controlwrapper', [

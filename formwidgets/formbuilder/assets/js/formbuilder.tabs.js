@@ -28,7 +28,7 @@
         $layoutBody.on('click', 'li[data-builder-new-tab]', this.proxy(this.onNewTabClick))
         $layoutBody.on('click', 'div[data-builder-tab]', this.proxy(this.onTabClick))
         $layoutBody.on('click', 'div[data-builder-close-tab]', this.proxy(this.onTabCloseClick))
-        $layoutBody.on('change', 'ul.tabs > li div.inspector-trigger.tab-control', this.proxy(this.onTabChange))
+        $layoutBody.on('change livechange', 'ul.tabs > li div.inspector-trigger.tab-control', this.proxy(this.onTabChange))
         $layoutBody.on('hiding.oc.inspector', 'ul.tabs > li div.inspector-trigger.tab-control', this.proxy(this.onTabInspectorHiding))
     }
 
@@ -146,6 +146,22 @@
         $('> li', $panelList).eq(tabIndex).addClass('active')
     }
 
+    TabManager.prototype.findInspectorContainer = function($element) {
+        var $containerRoot = $element.closest('[data-inspector-container]')
+
+        return $containerRoot.find('.inspector-container')
+    }
+
+    TabManager.prototype.closeTabInspectors = function($tab, $tabPanel) {
+        if ($tab.find('.inspector-open').length === 0 && $tabPanel.find('.inspector-open').length === 0) {
+            return
+        }
+
+        var $inspectorContainer = this.findInspectorContainer($tab)
+
+        $.oc.foundation.controlUtils.disposeControls($inspectorContainer.get(0))
+    }
+
     TabManager.prototype.closeTab = function($tab) {
         var $tabControl = this.findTabControl($tab)
 
@@ -160,6 +176,8 @@
         var $prevTab = $tab.prev(),
             $nextTab = $tab.next(),
             $tabPanel = this.findTabPanel($tab)
+
+        this.closeTabInspectors($tab, $tabPanel)
 
         $tab.remove()
         $tabPanel.remove()

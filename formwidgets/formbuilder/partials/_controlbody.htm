@@ -1,11 +1,21 @@
-<?php if ($hasLabels): ?>
-    <div class="builder-control-label"><?= e(trans($this->getPropertyValue($properties, 'label'))) ?></div>
+<div 
+    class="control-body
+        <?= $this->getPropertyValue($properties, 'disabled') ? 'field-disabled' : null ?>
+        <?= $this->getPropertyValue($properties, 'hidden') ? 'field-hidden' : null ?>
+    "
+>
+    <?php if ($hasLabels): ?>
+        <div class="
+            builder-control-label
+            <?= $this->getPropertyValue($properties, 'required') ? 'required' : null ?>
+        "><?= e(trans($this->getPropertyValue($properties, 'label'))) ?></div>
 
-    <div class="builder-control-comment-above"><?= e(trans($this->getPropertyValue($properties, 'commentAbove'))) ?></div>
-<?php endif ?>
+        <div class="builder-control-comment-above"><?= $this->getPropertyValue($properties, 'oc.commentPosition') == 'above' ? e(trans($this->getPropertyValue($properties, 'oc.comment'))) : null ?></div>
+    <?php endif ?>
 
-<?= $body ?>
+    <?= $body ?>
 
-<?php if ($hasLabels): ?>
-    <div class="builder-control-comment-below"><?= strlen($this->getPropertyValue($properties, 'commentAbove')) ? null : e(trans($this->getPropertyValue($properties, 'comment'))) ?></div>
-<?php endif ?>
+    <?php if ($hasLabels): ?>
+        <div class="builder-control-comment-below"><?= $this->getPropertyValue($properties, 'oc.commentPosition') == 'below' ? e(trans($this->getPropertyValue($properties, 'oc.comment'))) : null ?></div>
+    <?php endif ?>
+</div>

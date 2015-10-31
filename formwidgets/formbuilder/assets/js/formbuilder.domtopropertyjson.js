@@ -21,6 +21,32 @@
         return false
     }
 
+    function preProcessSpecialProperties(properties) {
+        delete properties['oc.fieldName']
+
+        if (String(properties['oc.comment']).length > 0 && properties['oc.commentPosition'] == 'above') {
+            properties['commentAbove'] = properties['oc.comment']
+
+            if (properties['comment'] !== undefined) {
+                delete properties['comment']
+            }
+
+            delete properties['oc.comment']
+            delete properties['oc.commentPosition']
+        }
+
+        if (String(properties['oc.comment']).length > 0 && properties['oc.commentPosition'] == 'below') {
+            properties['comment'] = properties['oc.comment']
+
+            if (properties['comentAbove'] !== undefined) {
+                delete properties['comentAbove']
+            }
+
+            delete properties['oc.comment']
+            delete properties['oc.commentPosition']
+        }
+    }
+
     function listToJson(list, injectProperties) {
         var listItems = list.children,
             result = {}
@@ -46,7 +72,7 @@
             var fieldName = values['oc.fieldName']
 
             values.type = listItem.getAttribute('data-control-type')
-            delete values['oc.fieldName']
+            preProcessSpecialProperties(values)
 
             if (injectProperties !== undefined) {
                 values = $.extend(values, injectProperties)

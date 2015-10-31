@@ -147,11 +147,21 @@ ul.builder-control-palette li i {
 .builder-building-area ul.builder-control-list > li.control.inspector-open:not(.placeholder):not(.loading-control) * {
   color: #2581b8 !important;
 }
+.builder-building-area .control-body.field-disabled,
+.builder-building-area .control-body.field-hidden {
+  opacity: 0.5;
+  filter: alpha(opacity=50);
+}
 .builder-building-area .builder-control-label {
   margin-bottom: 10px;
   color: #555555;
   font-size: 14px;
   font-weight: 600;
+}
+.builder-building-area .builder-control-label.required:after {
+  vertical-align: super;
+  font-size: 60%;
+  content: " *";
 }
 .builder-building-area .builder-control-label:empty {
   margin-bottom: 0;

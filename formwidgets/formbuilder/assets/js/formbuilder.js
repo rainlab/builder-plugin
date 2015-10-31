@@ -236,6 +236,20 @@
         this.reflow(li)
     }
 
+    FormBuilder.prototype.findRootControlWrapper = function(control) {
+        var current = control
+
+        while (current) {
+            if (current.hasAttribute('data-root-control-wrapper')) {
+                return current
+            }
+
+            current = current.parentNode
+        }
+
+        throw new Error('Cannot find root control wrapper.')
+    }
+    
     FormBuilder.prototype.startUpdateControlBody = function(controlId) {
         this.clearUpdateControlBodyTimer()
 
@@ -255,25 +269,37 @@
     }
 
     FormBuilder.prototype.updateControlBody = function(controlId) {
-        var placeholder = document.body.querySelector('li[data-builder-control-id="'+controlId+'"]')
-        if (!placeholder) {
+        var control = document.body.querySelector('li[data-builder-control-id="'+controlId+'"]')
+        if (!control) {
             return
         }
 
         this.clearUpdateControlBodyTimer()
 
-        var controls = document.body.querySelectorAll('li.control.updating-control')
-// It's better to find controls inside the curent root container, not in the entire document
+        var rootWrapper = this.findRootControlWrapper(control),
+            controls = document.body.querySelectorAll('li.control.updating-control')
+
         for (var i=controls.length-1; i>=0; i--) {
             $.oc.foundation.element.removeClass(controls[i], 'updating-control')
         }
 
-// Do request from the onControlChange
-// Set updating-control class before start
-// Remove the class after end
+        $.oc.foundation.element.addClass(control, 'updating-control')
 
-// onControlChange should use this method as well.
+        var controlType = control.getAttribute('data-control-type'),
+            properties = this.getControlProperties(control),
+            data = {
+                controlType: controlType,
+                controlId: controlId,
+                properties: properties
+            }
 
+        $(control).request('onModelFormRenderControlBody', {
+            data: data
+        }).done(
+            this.proxy(this.controlBodyMarkupLoaded)
+        ).always(function(){
+            $.oc.foundation.element.removeClass(control, 'updating-control')
+        })
     }
 
     // EVENT HANDLERS
@@ -352,20 +378,10 @@
         // update the control markup with AJAX
 
         var li = ev.currentTarget,
-            controlType = li.getAttribute('data-control-type'),
-            propertiesParsed = this.getControlProperties(li)
+            properties = this.getControlProperties(li)
 
-        var data = {
-            controlType: controlType,
-            controlId: this.getControlId(li),
-            properties: propertiesParsed
-        }
-
-        this.setControlSpanFromProperties(li, propertiesParsed)
-        
-        $(li).request('onModelFormRenderControlBody', {
-            data: data
-        }).done(this.proxy(this.controlBodyMarkupLoaded))
+        this.setControlSpanFromProperties(li, properties)
+        this.updateControlBody(this.getControlId(li))
     }
 
     FormBuilder.prototype.onControlLiveChange = function(ev) {
@@ -375,10 +391,7 @@
             propertiesParsed = this.getControlProperties(li)
 
         this.setControlSpanFromProperties(li, propertiesParsed)
-
         this.startUpdateControlBody(this.getControlId(li))
-
-        // Do other stuff from onControlChange on timer
     }
 
     $(document).ready(function(){
