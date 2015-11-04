@@ -1,5 +1,7 @@
 .builder-building-area {
-    .builder-blueprint-control-text {
+    .builder-blueprint-control-text,
+    .builder-blueprint-control-textarea,
+    .builder-blueprint-control-dropdown {
         padding: 10px 12px;
         border: 2px solid @builder-control-border-color;
         color: @builder-control-text-color;
@@ -11,8 +13,48 @@
     }
 
     li.control:hover, li.inspector-open {
-        .builder-blueprint-control-text {
+        .builder-blueprint-control-text,
+        .builder-blueprint-control-textarea,
+        .builder-blueprint-control-dropdown {
             border-color: @builder-hover-color;
+        }
+
+        .builder-blueprint-control-dropdown:before {
+            background-color: @builder-hover-color;
+        }
+    }
+
+    .builder-blueprint-control-textarea {
+        &.size-tiny { min-height: @size-tiny; }
+        &.size-small { min-height: @size-small; }
+        &.size-large { min-height: @size-large; }
+        &.size-huge { min-height: @size-huge; }
+        &.size-giant { min-height: @size-giant; }
+    }
+
+    .builder-blueprint-control-dropdown {
+        position: relative;
+
+        &:before, &:after {
+            position: absolute;
+            content: '';
+        }
+
+        &:before {
+            top: 0;
+            width: 2px;
+            background: @builder-control-border-color;
+            right: 40px;
+            height: 100%;
+        }
+
+        &:after {
+            .icon(@angle-down);
+            color: inherit;
+            right: 15px;
+            top: 12px;
+            font-size: 20px;
+            line-height: 20px;
         }
     }
 

@@ -4,6 +4,7 @@ use RainLab\Builder\Classes\IndexOperationsBehaviorBase;
 use RainLab\Builder\Classes\ModelFormModel;
 use RainLab\Builder\Classes\PluginCode;
 use RainLab\Builder\FormWidgets\FormBuilder;
+use RainLab\Builder\Classes\ModelModel;
 use Backend\Classes\FormField;
 use ApplicationException;
 use Exception;
@@ -89,6 +90,25 @@ class IndexModelFormOperations extends IndexOperationsBehaviorBase
         $model->deleteModel();
 
         return $this->controller->widget->modelList->updateList();
+    }
+
+    public function onModelFormGetModelFields()
+    {
+        $columnNames = ModelModel::getModelFields($this->getPluginCode(), Input::get('model_class'));
+
+        $result = [];
+        foreach ($columnNames as $columnName) {
+            $result[] = [
+                'title' => $columnName,
+                'value' => $columnName
+            ];
+        }
+
+        return [
+            'responseData' => [
+                'options' => $result
+            ]
+        ];
     }
 
     protected function loadOrCreateFormFromPost()

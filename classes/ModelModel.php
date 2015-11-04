@@ -69,7 +69,7 @@ class ModelModel extends BaseModel
 
             $model = new ModelModel();
             $model->className = $modelInfo['class'];
-            $model->databaseTable = $modelInfo['table'];;
+            $model->databaseTable = $modelInfo['table'];
 
             $result[] = $model;
         }
@@ -128,6 +128,36 @@ class ModelModel extends BaseModel
 
         $tables = DatabaseTableModel::listPluginTables($pluginCode);
         return array_combine($tables, $tables);
+    }
+
+    public static function getModelFields($pluginCodeObj, $modelClassName)
+    {
+        if (!preg_match('/^[A-Z]+[a-zA-Z0-9_]+$/', $modelClassName)) {
+            throw new SystemException('Invalid model class name: '.$modelClassName);
+        }
+
+        $modelsDirectoryPath = File::symbolizePath($pluginCodeObj->toPluginDirectoryPath().'/models');
+        if (!File::isDirectory($modelsDirectoryPath)) {
+            return [];
+        }
+
+        $modelFilePath = $modelsDirectoryPath.'/'.$modelClassName.'.php';
+        if (!File::isFile($modelFilePath)) {
+            return [];
+        }
+
+        $parser = new ModelFileParser();
+        $modelInfo = $parser->extractModelInfoFromSource(File::get($modelFilePath));
+        if (!$modelInfo || !isset($modelInfo['table'])) {
+            return [];
+        }
+
+        $tableName = $modelInfo['table'];
+
+        // Currently we return only table columns,
+        // but eventually we might want to return relations as well.
+
+        return Schema::getColumnListing($tableName);
     }
 
     protected function getFilePath()

@@ -104,22 +104,16 @@ class ControlLibrary
         ];
     }
 
-    public function getStandardProperties($excludeProperties = [])
+    public function getStandardProperties($excludeProperties = [], $addProperties = [])
     {
         $result = [
             'label' => [
                 'title' => Lang::get('rainlab.builder::lang.form.property_label_title'),
-                'type' => 'string'
-            ],
-            'span' => [
-                'title' => Lang::get('rainlab.builder::lang.form.property_span_title'),
-                'type' => 'dropdown',
-                'default' => 'full',
-                'options' => [
-                    'left'=>Lang::get('rainlab.builder::lang.form.span_left'), 
-                    'right'=>Lang::get('rainlab.builder::lang.form.span_right'), 
-                    'full'=>Lang::get('rainlab.builder::lang.form.span_full'), 
-                    'auto'=>Lang::get('rainlab.builder::lang.form.span_auto')
+                'type' => 'string',
+                'validation' => [
+                    'required' => [
+                        'message' => Lang::get('rainlab.builder::lang.form.property_label_required')
+                    ]
                 ]
             ],
             'oc.comment' => [
@@ -134,12 +128,28 @@ class ControlLibrary
                     'below' => Lang::get('rainlab.builder::lang.form.property_comment_position_below')
                 ]
             ],
+            'span' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_span_title'),
+                'type' => 'dropdown',
+                'default' => 'full',
+                'options' => [
+                    'left'=>Lang::get('rainlab.builder::lang.form.span_left'), 
+                    'right'=>Lang::get('rainlab.builder::lang.form.span_right'), 
+                    'full'=>Lang::get('rainlab.builder::lang.form.span_full'), 
+                    'auto'=>Lang::get('rainlab.builder::lang.form.span_auto')
+                ]
+            ],
+            'placeholder' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_placeholder_title'),
+                'type' => 'string'
+            ],
             'default' => [
                 'title' => Lang::get('rainlab.builder::lang.form.property_default_title'),
                 'type' => 'string'
             ],
             'cssClass' => [
                 'title' => Lang::get('rainlab.builder::lang.form.property_css_class_title'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_css_class_description'),
                 'type' => 'string'
             ],
             'disabled' => [
@@ -153,8 +163,122 @@ class ControlLibrary
             'required' => [
                 'title' => Lang::get('rainlab.builder::lang.form.property_required_title'),
                 'type' => 'checkbox'
+            ],
+            'stretch' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_stretch_title'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_stretch_description'),
+                'type' => 'checkbox'
+            ],
+            'context' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_context_title'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_context_description'),
+                'type' => 'set',
+                'items' => [
+                    'create' => Lang::get('rainlab.builder::lang.form.property_context_create'),
+                    'update' => Lang::get('rainlab.builder::lang.form.property_context_update'),
+                    'preview' => Lang::get('rainlab.builder::lang.form.property_context_preview')
+                ],
+                'default' => ['create', 'update', 'preview'],
+                'ignoreIfDefault' => true
             ]
         ];
+
+        $result = array_merge($result, $addProperties);
+
+        $advancedProperties = [
+            'defaultFrom' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_default_from_title'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_default_from_description'),
+                'type' => 'dropdown',
+                'group' => Lang::get('rainlab.builder::lang.form.property_group_advanced'),
+                'ignoreIfEmpty' => true
+            ],
+            'dependsOn' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_dependson_title'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_dependson_description'),
+                'type' => 'stringList',
+                'group' => Lang::get('rainlab.builder::lang.form.property_group_advanced'),
+            ],
+            'trigger' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_trigger_title'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_trigger_description'),
+                'type' => 'object',
+                'group' => Lang::get('rainlab.builder::lang.form.property_group_advanced'),
+                'ignoreIfPropertyEmpty' => 'field',
+                'properties' => [
+                    [
+                        'property' => 'action',
+                        'title' => Lang::get('rainlab.builder::lang.form.property_trigger_action'),
+                        'type' => 'dropdown',
+                        'options' => [
+                            'show' => Lang::get('rainlab.builder::lang.form.property_trigger_show'),
+                            'hide' => Lang::get('rainlab.builder::lang.form.property_trigger_hide'),
+                            'enable' => Lang::get('rainlab.builder::lang.form.property_trigger_enable'),
+                            'disable' => Lang::get('rainlab.builder::lang.form.property_trigger_disable'),
+                            'empty' => Lang::get('rainlab.builder::lang.form.property_trigger_empty')
+                        ]
+                    ],
+                    [
+                        'property' => 'field',
+                        'title' => Lang::get('rainlab.builder::lang.form.property_trigger_field'),
+                        'description' => Lang::get('rainlab.builder::lang.form.property_trigger_field_description'),
+                        'type' => 'dropdown'
+                    ],
+                    [
+                        'property' => 'condition',
+                        'title' => Lang::get('rainlab.builder::lang.form.property_trigger_condition'),
+                        'description' => Lang::get('rainlab.builder::lang.form.property_trigger_condition_description'),
+                        'type' => 'autocomplete',
+                        'items' => [
+                            'checked' => Lang::get('rainlab.builder::lang.form.property_trigger_condition_checked'),
+                            'unchecked' => Lang::get('rainlab.builder::lang.form.property_trigger_condition_unchecked'),
+                            'value[somevalue]' => Lang::get('rainlab.builder::lang.form.property_trigger_condition_somevalue'),
+                        ]
+                    ]
+                ]
+            ],
+            'preset' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_preset_title'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_preset_description'),
+                'type' => 'object',
+                'group' => Lang::get('rainlab.builder::lang.form.property_group_advanced'),
+                'ignoreIfPropertyEmpty' => 'field',
+                'properties' => [
+                    [
+                        'property' => 'field',
+                        'title' => Lang::get('rainlab.builder::lang.form.property_preset_field'),
+                        'description' => Lang::get('rainlab.builder::lang.form.property_preset_field_description'),
+                        'type' => 'dropdown',
+                    ],
+                    [
+                        'property' => 'type',
+                        'title' => Lang::get('rainlab.builder::lang.form.property_preset_type'),
+                        'description' => Lang::get('rainlab.builder::lang.form.property_preset_type_description'),
+                        'type' => 'dropdown',
+                        'options' => [
+                            'url' => 'URL',
+                            'file' => 'File',
+                            'slug' => 'Slug',
+                            'camel' => 'Camel'
+                        ]
+                    ]
+                ]
+            ],
+            'attributes' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_attributes_title'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_attributes_description'),
+                'type' => 'dictionary',
+                'group' => Lang::get('rainlab.builder::lang.form.property_group_advanced'),
+            ],
+            'containerAttributes' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_container_attributes_title'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_container_attributes_description'),
+                'type' => 'dictionary',
+                'group' => Lang::get('rainlab.builder::lang.form.property_group_advanced'),
+            ]
+        ];
+
+        $result = array_merge($result, $advancedProperties);
 
         foreach ($excludeProperties as $property) {
             if (array_key_exists($property, $result)) {

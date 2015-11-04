@@ -38,6 +38,8 @@
 
         $(document).on('change', '.builder-control-list > li.control', this.proxy(this.onControlChange))
         $(document).on('livechange', '.builder-control-list > li.control', this.proxy(this.onControlLiveChange))
+        $(document).on('autocompleteitems.oc.inspector', '.builder-control-list > li.control', this.proxy(this.onAutocompleteItems))
+        $(document).on('dropdownoptions.oc.inspector', '.builder-control-list > li.control', this.proxy(this.onDropdownOptions))
     }
 
     FormBuilder.prototype.targetIsPlaceholder = function(ev) {
@@ -53,6 +55,20 @@
 
         while (current) {
             if (current.hasAttribute('data-contol-container') ) {
+                return current
+            }
+
+            current = current.parentNode
+        }
+
+        return null
+    }
+
+    FormBuilder.prototype.findForm = function(element) {
+        var current = element
+
+        while (current) {
+            if (current.tagName === 'FORM') {
                 return current
             }
 
@@ -277,7 +293,7 @@
         this.clearUpdateControlBodyTimer()
 
         var rootWrapper = this.findRootControlWrapper(control),
-            controls = document.body.querySelectorAll('li.control.updating-control')
+            controls = rootWrapper.querySelectorAll('li.control.updating-control')
 
         for (var i=controls.length-1; i>=0; i--) {
             $.oc.foundation.element.removeClass(controls[i], 'updating-control')
@@ -300,6 +316,47 @@
         ).always(function(){
             $.oc.foundation.element.removeClass(control, 'updating-control')
         })
+    }
+
+    FormBuilder.prototype.loadModelFields = function(control, callback) {
+        var $form = $(this.findForm(control)),
+            cachedFields = $form.data('oc.model-field-cache')
+
+        if (cachedFields !== undefined) {
+            callback({
+                options: cachedFields
+            })
+
+            return
+        }
+
+        $form.request('onModelFormGetModelFields')
+            .done(function(data){
+                $form.data('oc.model-field-cache', data.responseData.options)
+                callback({
+                    options: data.responseData.options
+                })
+            })
+    }
+
+    FormBuilder.prototype.getContainerFieldNames = function(control, callback) {
+        var controlWrapper = this.findRootControlWrapper(control),
+            fieldNames = $.oc.builder.formbuilder.domToPropertyJson.getAllControlNames(controlWrapper),
+            options = []
+
+        options.push({
+            title: '---',
+            value: ''
+        })
+
+        for (var i=0, len=fieldNames.length; i<len; i++){
+            options.push({
+                title: fieldNames[i],
+                value: fieldNames[i]
+            })
+        }
+
+        callback({options: options})
     }
 
     // EVENT HANDLERS
@@ -392,6 +449,21 @@
 
         this.setControlSpanFromProperties(li, propertiesParsed)
         this.startUpdateControlBody(this.getControlId(li))
+    }
+
+    FormBuilder.prototype.onAutocompleteItems = function(ev, data) {
+
+        if (data.property === 'oc.fieldName') {
+            ev.preventDefault()
+            this.loadModelFields(ev.target, data.callback)
+        }
+    }
+
+    FormBuilder.prototype.onDropdownOptions = function(ev, data) {
+        if (data.property === 'trigger.field' || data.property == 'preset.field' || data.property == 'defaultFrom') {
+            this.getContainerFieldNames(ev.target, data.callback)
+            ev.preventDefault()
+        }
     }
 
     $(document).ready(function(){

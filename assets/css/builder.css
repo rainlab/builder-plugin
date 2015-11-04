@@ -182,7 +182,9 @@ ul.builder-control-palette li i {
 .builder-building-area .builder-control-comment-below:empty {
   display: none;
 }
-.builder-building-area .builder-blueprint-control-text {
+.builder-building-area .builder-blueprint-control-text,
+.builder-building-area .builder-blueprint-control-textarea,
+.builder-building-area .builder-blueprint-control-dropdown {
   padding: 10px 12px;
   border: 2px solid #bdc3c7;
   color: #95a5a6;
@@ -190,12 +192,66 @@ ul.builder-control-palette li i {
   -moz-border-radius: 4px;
   border-radius: 4px;
 }
-.builder-building-area .builder-blueprint-control-text i {
+.builder-building-area .builder-blueprint-control-text i,
+.builder-building-area .builder-blueprint-control-textarea i,
+.builder-building-area .builder-blueprint-control-dropdown i {
   margin-right: 5px;
 }
 .builder-building-area li.control:hover .builder-blueprint-control-text,
-.builder-building-area li.inspector-open .builder-blueprint-control-text {
+.builder-building-area li.inspector-open .builder-blueprint-control-text,
+.builder-building-area li.control:hover .builder-blueprint-control-textarea,
+.builder-building-area li.inspector-open .builder-blueprint-control-textarea,
+.builder-building-area li.control:hover .builder-blueprint-control-dropdown,
+.builder-building-area li.inspector-open .builder-blueprint-control-dropdown {
   border-color: #2581b8;
+}
+.builder-building-area li.control:hover .builder-blueprint-control-dropdown:before,
+.builder-building-area li.inspector-open .builder-blueprint-control-dropdown:before {
+  background-color: #2581b8;
+}
+.builder-building-area .builder-blueprint-control-textarea.size-tiny {
+  min-height: 50px;
+}
+.builder-building-area .builder-blueprint-control-textarea.size-small {
+  min-height: 100px;
+}
+.builder-building-area .builder-blueprint-control-textarea.size-large {
+  min-height: 200px;
+}
+.builder-building-area .builder-blueprint-control-textarea.size-huge {
+  min-height: 250px;
+}
+.builder-building-area .builder-blueprint-control-textarea.size-giant {
+  min-height: 350px;
+}
+.builder-building-area .builder-blueprint-control-dropdown {
+  position: relative;
+}
+.builder-building-area .builder-blueprint-control-dropdown:before,
+.builder-building-area .builder-blueprint-control-dropdown:after {
+  position: absolute;
+  content: '';
+}
+.builder-building-area .builder-blueprint-control-dropdown:before {
+  top: 0;
+  width: 2px;
+  background: #bdc3c7;
+  right: 40px;
+  height: 100%;
+}
+.builder-building-area .builder-blueprint-control-dropdown:after {
+  font-family: FontAwesome;
+  font-weight: normal;
+  font-style: normal;
+  text-decoration: inherit;
+  -webkit-font-smoothing: antialiased;
+  *margin-right: .3em;
+  content: "\f107";
+  color: inherit;
+  right: 15px;
+  top: 12px;
+  font-size: 20px;
+  line-height: 20px;
 }
 .builder-building-area .builder-blueprint-control-checkbox:before {
   float: left;

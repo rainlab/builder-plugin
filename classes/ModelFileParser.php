@@ -104,6 +104,10 @@ class ModelFileParser
             return null;
         }
 
-        return $stream->getCurrentText();
+        $tableName = $stream->getCurrentText();
+        $tableName = trim($tableName, '\''); 
+        $tableName = trim($tableName, '"'); 
+
+        return $tableName;
     }
 }

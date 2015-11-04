@@ -62,6 +62,15 @@ class DefaultControlDesignTimeProvider extends ControlDesignTimeProviderBase
         return true;
     }
 
+    protected function getPropertyValue($properties, $property)
+    {
+        if (array_key_exists($property, $properties)) {
+            return $properties[$property];
+        }
+
+        return null;
+    }
+
     protected function renderUnknownControl($type, $properties)
     {
         throw new SystemException('To implement - rendering of unknown controls');

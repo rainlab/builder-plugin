@@ -220,6 +220,34 @@
         return lastConvertError
     }
 
+    DomToJson.getAllControlNames = function(rootContainer) {
+        var controls = rootContainer.querySelectorAll('ul[data-control-list] > li.control'),
+            result = []
+
+        for (var i=controls.length-1; i>=0; i--) {
+            var properties = getItemPropertyValues(controls[i])
+
+            if (typeof properties !== 'object') {
+                continue
+            }
+
+            if (properties['oc.fieldName'] === undefined) {
+                continue
+            }
+
+            var name = properties['oc.fieldName']
+
+            if (result.indexOf(name) === -1) {
+                result.push(name)
+            }
+        }
+
+        result.sort()
+
+        return result
+    }
+
+
     $.oc.builder.formbuilder.domToPropertyJson = DomToJson
 
 }(window.jQuery);

@@ -3,6 +3,7 @@
 use Backend;
 use System\Classes\PluginBase;
 use Event;
+use Lang;
 
 class Plugin extends PluginBase
 {
@@ -112,7 +113,7 @@ class Plugin extends PluginBase
                 null,
                 $controlLibrary::GROUP_STANDARD,
                 'icon-terminal',
-                $controlLibrary->getStandardProperties(),
+                $controlLibrary->getStandardProperties(['stretch']),
                 null
             );
 
@@ -121,7 +122,7 @@ class Plugin extends PluginBase
                 null,
                 $controlLibrary::GROUP_STANDARD,
                 'icon-lock',
-                $controlLibrary->getStandardProperties(),
+                $controlLibrary->getStandardProperties(['stretch']),
                 null
             );
 
@@ -130,7 +131,7 @@ class Plugin extends PluginBase
                 null,
                 $controlLibrary::GROUP_STANDARD,
                 'icon-check-square-o',
-                $controlLibrary->getStandardProperties(['commentAbove']),
+                $controlLibrary->getStandardProperties(['commentAbove', 'stretch']),
                 null
             );
 
@@ -139,7 +140,47 @@ class Plugin extends PluginBase
                 null,
                 $controlLibrary::GROUP_STANDARD,
                 'icon-toggle-on',
-                $controlLibrary->getStandardProperties(['commentAbove']),
+                $controlLibrary->getStandardProperties(['commentAbove', 'stretch']),
+                null
+            );
+
+            $properties = [
+                'size' =>  [
+                    'title' => Lang::get('rainlab.builder::lang.form.property_attributes_size'),
+                    'type' => 'dropdown',
+                    'options' => [
+                        'tiny' => Lang::get('rainlab.builder::lang.form.property_attributes_size_tiny'),
+                        'small' => Lang::get('rainlab.builder::lang.form.property_attributes_size_small'),
+                        'large' => Lang::get('rainlab.builder::lang.form.property_attributes_size_large'),
+                        'huge' => Lang::get('rainlab.builder::lang.form.property_attributes_size_huge'),
+                        'giant' => Lang::get('rainlab.builder::lang.form.property_attributes_size_giant')
+                    ]
+                ]
+            ];
+
+            $controlLibrary->registerControl('textarea', 
+                'rainlab.builder::lang.form.control_textarea',
+                null,
+                $controlLibrary::GROUP_STANDARD,
+                'icon-pencil-square-o',
+                $controlLibrary->getStandardProperties(['stretch'], $properties),
+                null
+            );
+
+            $properties = [
+                'options' =>  [
+                    'title' => Lang::get('rainlab.builder::lang.form.property_options'),
+                    'type' => 'dictionary',
+                    'ignoreIfEmpty' => true
+                ]
+            ];
+
+            $controlLibrary->registerControl('dropdown', 
+                'rainlab.builder::lang.form.control_dropdown',
+                null,
+                $controlLibrary::GROUP_STANDARD,
+                'icon-angle-double-down',
+                $controlLibrary->getStandardProperties(['stretch'], $properties),
                 null
             );
         });
