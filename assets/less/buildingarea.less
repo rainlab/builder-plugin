@@ -101,6 +101,34 @@
                 display: block;
                 clear: both;
             }
+
+            div.remove-control {
+                display: none;
+            }
+
+            &:not(.placeholder):not(.loading-control):not(.updating-control):hover > {
+                div.remove-control {
+                    display: block;
+                    position: absolute;
+                    right: 0;
+                    top: 0;
+                    cursor: pointer;
+                    width: 21px;
+                    height: 21px;
+                    padding-left: 6px;
+                    font-size: 16px;
+                    font-weight: bold;
+                    line-height: 21px;
+                    .border-radius(20px);
+                    background: #ecf0f1;
+                    color: #95a5a6!important;
+
+                    &:hover {
+                        color: white!important;
+                        background: #c03f31;
+                    }
+                }
+            }
         }
 
         > li.control:not(.placeholder):not(.loading-control):hover *,

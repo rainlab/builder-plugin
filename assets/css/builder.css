@@ -143,6 +143,31 @@ ul.builder-control-palette li i {
   display: block;
   clear: both;
 }
+.builder-building-area ul.builder-control-list > li.control div.remove-control {
+  display: none;
+}
+.builder-building-area ul.builder-control-list > li.control:not(.placeholder):not(.loading-control):not(.updating-control):hover div.remove-control {
+  display: block;
+  position: absolute;
+  right: 0;
+  top: 0;
+  cursor: pointer;
+  width: 21px;
+  height: 21px;
+  padding-left: 6px;
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 21px;
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  border-radius: 20px;
+  background: #ecf0f1;
+  color: #95a5a6!important;
+}
+.builder-building-area ul.builder-control-list > li.control:not(.placeholder):not(.loading-control):not(.updating-control):hover div.remove-control:hover {
+  color: white!important;
+  background: #c03f31;
+}
 .builder-building-area ul.builder-control-list > li.control:not(.placeholder):not(.loading-control):hover *,
 .builder-building-area ul.builder-control-list > li.control.inspector-open:not(.placeholder):not(.loading-control) * {
   color: #2581b8 !important;

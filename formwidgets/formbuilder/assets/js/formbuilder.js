@@ -37,45 +37,71 @@
         document.addEventListener('drop', this.proxy(this.onDragDrop), false);
 
         $(document).on('change', '.builder-control-list > li.control', this.proxy(this.onControlChange))
+        $(document).on('click', '.builder-control-list > li.control div[data-builder-remove-control]', this.proxy(this.onRemoveControl))
         $(document).on('livechange', '.builder-control-list > li.control', this.proxy(this.onControlLiveChange))
         $(document).on('autocompleteitems.oc.inspector', '.builder-control-list > li.control', this.proxy(this.onAutocompleteItems))
         $(document).on('dropdownoptions.oc.inspector', '.builder-control-list > li.control', this.proxy(this.onDropdownOptions))
     }
 
-    FormBuilder.prototype.targetIsPlaceholder = function(ev) {
-        return ev.target.getAttribute('data-builder-placeholder')
-    }
-
-    FormBuilder.prototype.sourceIsControlPalette = function(ev) {
-        return ev.dataTransfer.types.indexOf('builder/source/palette') >= 0
-    }
-
-    FormBuilder.prototype.findControlContainer = function(element) {
-        var current = element
-
-        while (current) {
-            if (current.hasAttribute('data-contol-container') ) {
-                return current
-            }
-
-            current = current.parentNode
+    FormBuilder.prototype.getControlId = function(li) {
+        if (li.hasAttribute('data-builder-control-id')) {
+            return li.getAttribute('data-builder-control-id')
         }
 
-        return null
+        this.placeholderIdIndex++
+        li.setAttribute('data-builder-control-id', this.placeholderIdIndex)
+
+        return this.placeholderIdIndex
     }
 
-    FormBuilder.prototype.findForm = function(element) {
-        var current = element
+    // PROPERTY HELPERS
+    // ============================
 
-        while (current) {
-            if (current.tagName === 'FORM') {
-                return current
-            }
+    FormBuilder.prototype.getControlProperties = function(li) {
+        var properties = li.querySelector('[data-inspector-values]').value
+            
+        return $.parseJSON(properties)
+    }
 
-            current = current.parentNode
+    FormBuilder.prototype.loadModelFields = function(control, callback) {
+        var $form = $(this.findForm(control)),
+            cachedFields = $form.data('oc.model-field-cache')
+
+        if (cachedFields !== undefined) {
+            callback({
+                options: cachedFields
+            })
+
+            return
         }
 
-        return null
+        $form.request('onModelFormGetModelFields')
+            .done(function(data){
+                $form.data('oc.model-field-cache', data.responseData.options)
+                callback({
+                    options: data.responseData.options
+                })
+            })
+    }
+
+    FormBuilder.prototype.getContainerFieldNames = function(control, callback) {
+        var controlWrapper = this.findRootControlWrapper(control),
+            fieldNames = $.oc.builder.formbuilder.domToPropertyJson.getAllControlNames(controlWrapper),
+            options = []
+
+        options.push({
+            title: '---',
+            value: ''
+        })
+
+        for (var i=0, len=fieldNames.length; i<len; i++){
+            options.push({
+                title: fieldNames[i],
+                value: fieldNames[i]
+            })
+        }
+
+        callback({options: options})
     }
 
     FormBuilder.prototype.fieldNameExistsInContainer = function(container, fieldName) {
@@ -97,6 +123,146 @@
 
         return false
     }
+
+    // FLOW MANAGEMENT
+    // ============================
+
+    FormBuilder.prototype.reflow = function(li) {
+        var list = li.parentNode,
+            items = list.children,
+            prevSpan = null
+
+        for (var i=0, len = items.length; i < len; i++) {
+            var item = items[i],
+                itemSpan = item.getAttribute('data-builder-span')
+
+            if ($.oc.foundation.element.hasClass(item, 'clear-row')) {
+                continue
+            }
+
+            if (itemSpan == 'auto') {
+                $.oc.foundation.element.removeClass(item, 'span-left')
+                $.oc.foundation.element.removeClass(item, 'span-full')
+                $.oc.foundation.element.removeClass(item, 'span-right')
+
+                if (prevSpan == 'left') {
+                    $.oc.foundation.element.addClass(item, 'span-right')
+                    prevSpan = 'right'
+                }
+                else {
+                    if (!$.oc.foundation.element.hasClass(item, 'placeholder')) {
+                        $.oc.foundation.element.addClass(item, 'span-left')
+                    } 
+                    else {
+                        $.oc.foundation.element.addClass(item, 'span-full')
+                    }
+
+                    prevSpan = 'left'
+                }
+            } 
+            else {
+                $.oc.foundation.element.removeClass(item, 'span-left')
+                $.oc.foundation.element.removeClass(item, 'span-full')
+                $.oc.foundation.element.removeClass(item, 'span-right')
+                $.oc.foundation.element.addClass(item, 'span-' + itemSpan)
+
+                prevSpan = itemSpan
+            }
+        }
+    }
+
+    FormBuilder.prototype.setControlSpanFromProperties = function(li, properties) {
+        if (properties.span === undefined) {
+            return
+        }
+
+        li.setAttribute('data-builder-span', properties.span)
+        this.reflow(li)
+    }
+
+    FormBuilder.prototype.appendClearRowElement = function(li) {
+        li.insertAdjacentHTML('afterend', '<li class="clear-row"></li>');
+    }
+
+    // DRAG AND DROP
+    // ============================
+
+    FormBuilder.prototype.targetIsPlaceholder = function(ev) {
+        return ev.target.getAttribute('data-builder-placeholder')
+    }
+
+    FormBuilder.prototype.sourceIsControlPalette = function(ev) {
+        return ev.dataTransfer.types.indexOf('builder/source/palette') >= 0
+    }
+
+    // UPDATING CONTROLS
+    // ============================
+    
+    FormBuilder.prototype.startUpdateControlBody = function(controlId) {
+        this.clearUpdateControlBodyTimer()
+
+        var self = this
+        this.updateControlBodyTimer = window.setTimeout(function(){
+            self.updateControlBody(controlId)
+        }, 300)
+    }
+
+    FormBuilder.prototype.clearUpdateControlBodyTimer = function() {
+        if (this.updateControlBodyTimer === null) {
+            return
+        }
+
+        clearTimeout(this.updateControlBodyTimer)
+        this.updateControlBodyTimer = null
+    }
+
+    FormBuilder.prototype.updateControlBody = function(controlId) {
+        var control = document.body.querySelector('li[data-builder-control-id="'+controlId+'"]')
+        if (!control) {
+            return
+        }
+
+        this.clearUpdateControlBodyTimer()
+
+        var rootWrapper = this.findRootControlWrapper(control),
+            controls = rootWrapper.querySelectorAll('li.control.updating-control')
+
+        for (var i=controls.length-1; i>=0; i--) {
+            $.oc.foundation.element.removeClass(controls[i], 'updating-control')
+        }
+
+        $.oc.foundation.element.addClass(control, 'updating-control')
+
+        var controlType = control.getAttribute('data-control-type'),
+            properties = this.getControlProperties(control),
+            data = {
+                controlType: controlType,
+                controlId: controlId,
+                properties: properties
+            }
+
+        $(control).request('onModelFormRenderControlBody', {
+            data: data
+        }).done(
+            this.proxy(this.controlBodyMarkupLoaded)
+        ).always(function(){
+            $.oc.foundation.element.removeClass(control, 'updating-control')
+        })
+    }
+
+    FormBuilder.prototype.controlBodyMarkupLoaded = function(responseData) {
+        var li = document.body.querySelector('li[data-builder-control-id="'+responseData.controlId+'"]')
+        if (!li) {
+            return
+        }
+
+        var wrapper = li.querySelector('.control-wrapper')
+
+        wrapper.innerHTML = responseData.markup
+    }
+
+    // ADDING CONTROLS
+    // ============================
 
     FormBuilder.prototype.generateFieldName = function(controlType, placeholder) {
         var controlContainer = this.findControlContainer(placeholder)
@@ -151,61 +317,6 @@
         this.reflow(placeholder)
     }
 
-    FormBuilder.prototype.reflow = function(li) {
-        var list = li.parentNode,
-            items = list.children,
-            prevSpan = null
-
-        for (var i=0, len = items.length; i < len; i++) {
-            var item = items[i],
-                itemSpan = item.getAttribute('data-builder-span')
-
-            if ($.oc.foundation.element.hasClass(item, 'clear-row')) {
-                continue
-            }
-
-            if (itemSpan == 'auto') {
-                $.oc.foundation.element.removeClass(item, 'span-left')
-                $.oc.foundation.element.removeClass(item, 'span-full')
-                $.oc.foundation.element.removeClass(item, 'span-right')
-
-                if (prevSpan == 'left') {
-                    $.oc.foundation.element.addClass(item, 'span-right')
-                    prevSpan = 'right'
-                }
-                else {
-                    if (!$.oc.foundation.element.hasClass(item, 'placeholder')) {
-                        $.oc.foundation.element.addClass(item, 'span-left')
-                    } 
-                    else {
-                        $.oc.foundation.element.addClass(item, 'span-full')
-                    }
-
-                    prevSpan = 'left'
-                }
-            } 
-            else {
-                $.oc.foundation.element.removeClass(item, 'span-left')
-                $.oc.foundation.element.removeClass(item, 'span-full')
-                $.oc.foundation.element.removeClass(item, 'span-right')
-                $.oc.foundation.element.addClass(item, 'span-' + itemSpan)
-
-                prevSpan = itemSpan
-            }
-        }
-    }
-
-    FormBuilder.prototype.getControlId = function(li) {
-        if (li.hasAttribute('data-builder-control-id')) {
-            return li.getAttribute('data-builder-control-id')
-        }
-
-        this.placeholderIdIndex++
-        li.setAttribute('data-builder-control-id', this.placeholderIdIndex)
-
-        return this.placeholderIdIndex
-    }
-
     FormBuilder.prototype.controlWrapperMarkupLoaded = function(responseData) {
         var placeholder = document.body.querySelector('li[data-builder-control-id="'+responseData.controlId+'"]')
         if (!placeholder) {
@@ -222,34 +333,51 @@
         $.oc.foundation.element.removeClass(placeholder, 'loading-control')
     }
 
-    FormBuilder.prototype.appendClearRowElement = function(li) {
-        li.insertAdjacentHTML('afterend', '<li class="clear-row"></li>');
-    }
+    // REMOVING CONTROLS
+    // ============================
 
-    FormBuilder.prototype.controlBodyMarkupLoaded = function(responseData) {
-        var li = document.body.querySelector('li[data-builder-control-id="'+responseData.controlId+'"]')
-        if (!li) {
-            return
+    FormBuilder.prototype.removeControl = function($control) {
+        if ($control.hasClass('inspector-open')) {
+            var $inspectorContainer = this.findInspectorContainer($control)
+            $.oc.foundation.controlUtils.disposeControls($inspectorContainer.get(0))
         }
 
-        var wrapper = li.querySelector('.control-wrapper')
+        var $nextControl = $control.next() // Even if the removed element was alone, there's always a placeholder element
+        $control.remove()
 
-        wrapper.innerHTML = responseData.markup
+        this.reflow($nextControl.get(0))
+        $nextControl.trigger('change')
     }
 
-    FormBuilder.prototype.getControlProperties = function(li) {
-        var properties = li.querySelector('[data-inspector-values]').value
-            
-        return $.parseJSON(properties)
-    }
+    // DOM HELPERS
+    // ============================
 
-    FormBuilder.prototype.setControlSpanFromProperties = function(li, properties) {
-        if (properties.span === undefined) {
-            return
+    FormBuilder.prototype.findControlContainer = function(element) {
+        var current = element
+
+        while (current) {
+            if (current.hasAttribute('data-contol-container') ) {
+                return current
+            }
+
+            current = current.parentNode
         }
 
-        li.setAttribute('data-builder-span', properties.span)
-        this.reflow(li)
+        return null
+    }
+
+    FormBuilder.prototype.findForm = function(element) {
+        var current = element
+
+        while (current) {
+            if (current.tagName === 'FORM') {
+                return current
+            }
+
+            current = current.parentNode
+        }
+
+        return null
     }
 
     FormBuilder.prototype.findRootControlWrapper = function(control) {
@@ -265,98 +393,11 @@
 
         throw new Error('Cannot find root control wrapper.')
     }
-    
-    FormBuilder.prototype.startUpdateControlBody = function(controlId) {
-        this.clearUpdateControlBodyTimer()
 
-        var self = this
-        this.updateControlBodyTimer = window.setTimeout(function(){
-            self.updateControlBody(controlId)
-        }, 300)
-    }
+    FormBuilder.prototype.findInspectorContainer = function($element) {
+        var $containerRoot = $element.closest('[data-inspector-container]')
 
-    FormBuilder.prototype.clearUpdateControlBodyTimer = function() {
-        if (this.updateControlBodyTimer === null) {
-            return
-        }
-
-        clearTimeout(this.updateControlBodyTimer)
-        this.updateControlBodyTimer = null
-    }
-
-    FormBuilder.prototype.updateControlBody = function(controlId) {
-        var control = document.body.querySelector('li[data-builder-control-id="'+controlId+'"]')
-        if (!control) {
-            return
-        }
-
-        this.clearUpdateControlBodyTimer()
-
-        var rootWrapper = this.findRootControlWrapper(control),
-            controls = rootWrapper.querySelectorAll('li.control.updating-control')
-
-        for (var i=controls.length-1; i>=0; i--) {
-            $.oc.foundation.element.removeClass(controls[i], 'updating-control')
-        }
-
-        $.oc.foundation.element.addClass(control, 'updating-control')
-
-        var controlType = control.getAttribute('data-control-type'),
-            properties = this.getControlProperties(control),
-            data = {
-                controlType: controlType,
-                controlId: controlId,
-                properties: properties
-            }
-
-        $(control).request('onModelFormRenderControlBody', {
-            data: data
-        }).done(
-            this.proxy(this.controlBodyMarkupLoaded)
-        ).always(function(){
-            $.oc.foundation.element.removeClass(control, 'updating-control')
-        })
-    }
-
-    FormBuilder.prototype.loadModelFields = function(control, callback) {
-        var $form = $(this.findForm(control)),
-            cachedFields = $form.data('oc.model-field-cache')
-
-        if (cachedFields !== undefined) {
-            callback({
-                options: cachedFields
-            })
-
-            return
-        }
-
-        $form.request('onModelFormGetModelFields')
-            .done(function(data){
-                $form.data('oc.model-field-cache', data.responseData.options)
-                callback({
-                    options: data.responseData.options
-                })
-            })
-    }
-
-    FormBuilder.prototype.getContainerFieldNames = function(control, callback) {
-        var controlWrapper = this.findRootControlWrapper(control),
-            fieldNames = $.oc.builder.formbuilder.domToPropertyJson.getAllControlNames(controlWrapper),
-            options = []
-
-        options.push({
-            title: '---',
-            value: ''
-        })
-
-        for (var i=0, len=fieldNames.length; i<len; i++){
-            options.push({
-                title: fieldNames[i],
-                value: fieldNames[i]
-            })
-        }
-
-        callback({options: options})
+        return $containerRoot.find('.inspector-container')
     }
 
     // EVENT HANDLERS
@@ -452,7 +493,6 @@
     }
 
     FormBuilder.prototype.onAutocompleteItems = function(ev, data) {
-
         if (data.property === 'oc.fieldName') {
             ev.preventDefault()
             this.loadModelFields(ev.target, data.callback)
@@ -464,6 +504,15 @@
             this.getContainerFieldNames(ev.target, data.callback)
             ev.preventDefault()
         }
+    }
+
+    FormBuilder.prototype.onRemoveControl = function(ev) {
+        this.removeControl($(ev.target).closest('li.control'))
+
+        ev.preventDefault()
+        ev.stopPropagation()
+
+        return false
     }
 
     $(document).ready(function(){
