@@ -129,11 +129,34 @@
                     }
                 }
             }
+
+            > .control-wrapper {
+                position: relative;
+                .transition(margin 0.1s);
+            }
         }
 
         > li.control:not(.placeholder):not(.loading-control):hover *,
         > li.control.inspector-open:not(.placeholder):not(.loading-control) * {
             color: @builder-hover-color!important;
+        }
+
+        > li.control.drag-over:not(.placeholder) {
+            &:before {
+                position: absolute;
+                content: '';
+                top: 0;
+                left: 0;
+                width: 10px;
+                height: 100%;
+                .border-radius(5px);
+                background-color: @builder-hover-color;
+            }
+
+            > .control-wrapper {
+                margin-left: 20px;
+                margin-right: -20px;
+            }
         }
     }
 

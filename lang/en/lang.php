@@ -153,7 +153,7 @@ return [
         'property_options' => 'Options',
         'control_group_standard' => 'Standard',
         'control_group_widgets' => 'Widgets',
-        'drop_control_here' => 'Drop new field here',
+        'drop_control_here' => 'Drop a control here',
         'loading' => 'Loading...',
         'control_text' => 'Text field',
         'control_password' => 'Password field',

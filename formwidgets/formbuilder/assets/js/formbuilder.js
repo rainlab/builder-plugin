@@ -63,6 +63,13 @@
         return $.parseJSON(properties)
     }
 
+    FormBuilder.prototype.setControlProperties = function(li, propertiesObj) {
+        var propertiesStr = JSON.stringify(propertiesObj),
+            valuesInput = li.querySelector('[data-inspector-values]')
+
+        valuesInput.value = propertiesStr
+    }
+
     FormBuilder.prototype.loadModelFields = function(control, callback) {
         var $form = $(this.findForm(control)),
             cachedFields = $form.data('oc.model-field-cache')
@@ -127,8 +134,12 @@
     // FLOW MANAGEMENT
     // ============================
 
-    FormBuilder.prototype.reflow = function(li) {
-        var list = li.parentNode,
+    FormBuilder.prototype.reflow = function(li, listElement) {
+        if (!li && !listElement) {
+            throw new Error('Invalid call of the reflow method. Either li or list parameter should be not empty.')
+        }
+
+        var list = listElement ? listElement : li.parentNode,
             items = list.children,
             prevSpan = null
 
@@ -184,6 +195,14 @@
         li.insertAdjacentHTML('afterend', '<li class="clear-row"></li>');
     }
 
+    FormBuilder.prototype.patchControlSpan = function(li, span) {
+        li.setAttribute('data-builder-span', span)
+
+        var properties = this.getControlProperties(li)
+        properties.span = span
+        this.setControlProperties(li, properties)
+    }
+
     // DRAG AND DROP
     // ============================
 
@@ -193,6 +212,106 @@
 
     FormBuilder.prototype.sourceIsControlPalette = function(ev) {
         return ev.dataTransfer.types.indexOf('builder/source/palette') >= 0
+    }
+
+    FormBuilder.prototype.sourceIsContainer = function(ev) {
+        return ev.dataTransfer.types.indexOf('builder/source/container') >= 0
+    }
+
+    FormBuilder.prototype.startDragFromControlPalette = function(ev) {
+        ev.dataTransfer.effectAllowed = 'move'
+        ev.dataTransfer.setData('text/html', ev.target.innerHTML)
+        ev.dataTransfer.setData('builder/source/palette', 'true')
+        ev.dataTransfer.setData('builder/control/type', ev.target.getAttribute('data-builder-control-type'))
+        ev.dataTransfer.setData('builder/control/name', ev.target.getAttribute('data-builder-control-name'))
+    }
+
+    FormBuilder.prototype.startDragFromContainer = function(ev) {
+        ev.dataTransfer.effectAllowed = 'move'
+        ev.dataTransfer.setData('builder/source/container', 'true')
+        ev.dataTransfer.setData('builder/control/id', this.getControlId(ev.target))
+    }
+
+    FormBuilder.prototype.dropFromPaletteToPlaceholder = function(ev) {
+        $.oc.foundation.event.stop(ev)
+        this.stopHighlightingTargets(ev.target)
+
+        this.addControlToPlaceholder(ev.target,
+            ev.dataTransfer.getData('builder/control/type'),
+            ev.dataTransfer.getData('builder/control/name'))
+
+        $(ev.target.parentNode).trigger('change')
+    }
+
+    FormBuilder.prototype.dropFromPaletteToControl = function(ev, targetControl) {
+        $.oc.foundation.event.stop(ev)
+        this.stopHighlightingTargets(ev.target)
+
+        var placeholder = this.createPlaceholder(targetControl)
+
+        this.addControlToPlaceholder(placeholder,
+            ev.dataTransfer.getData('builder/control/type'),
+            ev.dataTransfer.getData('builder/control/name'),
+            true)
+
+        $(targetControl.parentNode).trigger('change')
+    }
+
+    FormBuilder.prototype.dropFromContainerToPlaceholderOrControl = function(ev, targetControl) {
+        var targetElement = targetControl ? targetControl : ev.target
+
+        $.oc.foundation.event.stop(ev)
+        this.stopHighlightingTargets(targetElement)
+
+        var controlId = ev.dataTransfer.getData('builder/control/id'),
+            originalControl = document.body.querySelector('li[data-builder-control-id="'+controlId+'"]')
+
+        if (!originalControl) {
+            return
+        }
+
+        var isSameList = originalControl.parentNode === targetElement.parentNode,
+            originalList = originalControl.parentNode,
+            $originalClearRow = $(originalControl).next()
+
+        targetElement.parentNode.insertBefore(originalControl, targetElement)
+
+        this.appendClearRowElement(originalControl)
+        if ($originalClearRow.hasClass('clear-row')) {
+            $originalClearRow.remove()
+        }
+
+        if (!$.oc.foundation.element.hasClass(originalControl, 'inspector-open')) {
+            this.patchControlSpan(originalControl, 'auto')
+        }
+
+        this.reflow(targetElement)
+
+        if (!isSameList) {
+            this.reflow(null, originalList)
+        }
+
+        $(targetElement.parentNode).trigger('change')
+    }
+
+    FormBuilder.prototype.elementContainsPoint = function(point, element) {
+        var elementPosition = $.oc.foundation.element.absolutePosition(element),
+            elementRight = elementPosition.left + element.offsetWidth,
+            elementBottom = elementPosition.top + element.offsetHeight
+
+        return point.x >= elementPosition.left && point.x <= elementRight 
+                && point.y >= elementPosition.top && point.y <= elementBottom
+    }
+
+    FormBuilder.prototype.stopHighlightingTargets = function(target, excludeTarget) {
+        var rootWrapper = this.findRootControlWrapper(target),
+            controls = rootWrapper.querySelectorAll('li.control.drag-over')
+
+        for (var i=controls.length-1; i>= 0; i--) {
+            if (!excludeTarget || target !== controls[i]) {
+                $.oc.foundation.element.removeClass(controls[i], 'drag-over')
+            }
+        }
     }
 
     // UPDATING CONTROLS
@@ -282,10 +401,12 @@
         return fieldName
     }
 
-    FormBuilder.prototype.addControlToPlaceholder = function(placeholder, controlType, controlName) {
+    FormBuilder.prototype.addControlToPlaceholder = function(placeholder, controlType, controlName, noNewPlaceholder) {
         // Duplicate the placeholder and place it after 
         // the existing one
-        placeholder.insertAdjacentHTML('afterend', placeholder.outerHTML)
+        if (!noNewPlaceholder) {
+            placeholder.insertAdjacentHTML('afterend', placeholder.outerHTML)
+        }
 
         // Create the clear-row element after the current placeholder
         this.appendClearRowElement(placeholder)
@@ -317,12 +438,22 @@
         this.reflow(placeholder)
     }
 
+    FormBuilder.prototype.createPlaceholder = function(beforeElement) {
+        var controlList = this.findControlList(beforeElement),
+            existingPlaceholder = this.findPlaceholder(controlList)
+            
+        beforeElement.insertAdjacentHTML('beforebegin', existingPlaceholder.outerHTML)
+
+        return beforeElement.previousSibling
+    }
+
     FormBuilder.prototype.controlWrapperMarkupLoaded = function(responseData) {
         var placeholder = document.body.querySelector('li[data-builder-control-id="'+responseData.controlId+'"]')
         if (!placeholder) {
             return
         }
 
+        placeholder.setAttribute('draggable', true)
         placeholder.setAttribute('data-inspectable', true)
         placeholder.setAttribute('data-control-type', responseData.type)
 
@@ -380,6 +511,34 @@
         return null
     }
 
+    FormBuilder.prototype.findControlList = function(element) {
+        var current = element
+
+        while (current) {
+            if (current.hasAttribute('data-control-list')) {
+                return current
+            }
+
+            current = current.parentNode
+        }
+
+        throw new Error('Cannot find control list for an element.')
+    }
+
+    FormBuilder.prototype.findPlaceholder = function(controlList) {
+        var children = controlList.children
+
+        for (var i=children.length-1; i>=0; i--) {
+            var element = children[i]
+
+            if (element.tagName === 'LI' && $.oc.foundation.element.hasClass(element, 'placeholder')) {
+                return element
+            }
+        }
+
+        throw new Error('Cannot find placeholder in a control list.')
+    }
+
     FormBuilder.prototype.findRootControlWrapper = function(control) {
         var current = control
 
@@ -400,74 +559,154 @@
         return $containerRoot.find('.inspector-container')
     }
 
+    FormBuilder.prototype.elementIsControl = function(element) {
+        return element.tagName === 'LI' && element.hasAttribute('data-inspectable') && $.oc.foundation.element.hasClass(element, 'control')
+    }
+
+    FormBuilder.prototype.getClosestControl = function(element) {
+        var current = element
+
+        while (current) {
+            if (this.elementIsControl(current)) {
+                return current
+            }
+
+            current = current.parentNode
+        }
+
+        return null
+    }
+
     // EVENT HANDLERS
     // ============================
 
     FormBuilder.prototype.onDragStart = function(ev) {
-        if (!ev.target.getAttribute('data-builder-control-palette-control')) {
+        if (ev.target.getAttribute('data-builder-control-palette-control')) {
+            this.startDragFromControlPalette(ev)
+
             return
         }
 
-        ev.dataTransfer.effectAllowed = 'move';
-        ev.dataTransfer.setData('text/html', ev.target.innerHTML);
-        ev.dataTransfer.setData('builder/source/palette', 'true');
-        ev.dataTransfer.setData('builder/control/type', ev.target.getAttribute('data-builder-control-type'));
-        ev.dataTransfer.setData('builder/control/name', ev.target.getAttribute('data-builder-control-name'));
+        if (this.elementIsControl(ev.target)) {
+            this.startDragFromContainer(ev)
+
+            return
+        }
     }
 
     FormBuilder.prototype.onDragOver = function(ev) {
-        if (ev.target.tagName != 'LI') {
+        var targetLi = ev.target
+
+        if (ev.target.tagName !== 'LI') {
+            targetLi = this.getClosestControl(ev.target)
+        }
+
+        if (!targetLi || targetLi.tagName != 'LI') {
             return
         }
 
-        if (this.targetIsPlaceholder(ev) && this.sourceIsControlPalette(ev)) {
-            // Dragging from the control palette over a placeholder.
+        if ((this.targetIsPlaceholder(ev) || this.elementIsControl(targetLi)) && (this.sourceIsControlPalette(ev) || this.sourceIsContainer(ev))) {
+            // Dragging from the control palette or container over a placeholder or another control.
             // Allow the drop.
             $.oc.foundation.event.stop(ev)
             ev.dataTransfer.dropEffect = 'move'
+            return
         }
     }
 
     FormBuilder.prototype.onDragEnter = function(ev) {
-        if (ev.target.tagName != 'LI') {
+        var targetLi = ev.target
+
+        if (ev.target.tagName !== 'LI') {
+            targetLi = this.getClosestControl(ev.target)
+        }
+
+        if (!targetLi || targetLi.tagName != 'LI') {
             return
         }
 
-        if (this.targetIsPlaceholder(ev) && this.sourceIsControlPalette(ev)) {
-            // Dragging from the control palette over a placeholder.
+        if (this.targetIsPlaceholder(ev) && (this.sourceIsControlPalette(ev) || this.sourceIsContainer(ev))) {
+            // Dragging from the control palette or container over a placeholder.
             // Highlight the placeholder.
             $.oc.foundation.element.addClass(ev.target, 'drag-over')
+            return
+        }
+
+        if (this.elementIsControl(targetLi) && (this.sourceIsContainer(ev) || this.sourceIsControlPalette(ev))) {
+            // Dragging from a container or control palette over another control.
+            // Highlight the other control.
+            $.oc.foundation.element.addClass(targetLi, 'drag-over')
+
+            this.stopHighlightingTargets(targetLi, true)
+
+            return
         }
     }
 
     FormBuilder.prototype.onDragLeave = function(ev) {
-        if (ev.target.tagName != 'LI') {
+        var targetLi = ev.target
+
+        if (ev.target.tagName !== 'LI') {
+            targetLi = this.getClosestControl(ev.target)
+        }
+
+        if (!targetLi || targetLi.tagName != 'LI') {
             return
         }
 
-        if (this.targetIsPlaceholder(ev) && this.sourceIsControlPalette(ev)) {
-            // Dragging from the control palette over a placeholder.
+        if (this.targetIsPlaceholder(ev) && (this.sourceIsControlPalette(ev) || this.sourceIsContainer(ev))) {
+            // Dragging from the control palette or container over a placeholder.
             // Stop highlighting the placeholder.
-            $.oc.foundation.element.removeClass(ev.target, 'drag-over')
+            this.stopHighlightingTargets(ev.target)
+
+            return
+        }
+
+        if (this.elementIsControl(targetLi) && (this.sourceIsContainer(ev) || this.sourceIsControlPalette(ev))) {
+            // Dragging from a container or control palette over another control.
+            // Stop highlighting the other control.
+            var mousePosition = $.oc.foundation.event.pageCoordinates(ev)
+
+            if (!this.elementContainsPoint(mousePosition, targetLi)) {
+                this.stopHighlightingTargets(targetLi)
+            }
         }
     }
 
     FormBuilder.prototype.onDragDrop = function(ev) {
-        if (ev.target.tagName != 'LI') {
+        var targetLi = ev.target
+
+        if (ev.target.tagName !== 'LI') {
+            targetLi = this.getClosestControl(ev.target)
+        }
+
+        if (!targetLi || targetLi.tagName != 'LI') {
             return
         }
 
         if (this.targetIsPlaceholder(ev) && this.sourceIsControlPalette(ev)) {
-            // Dragging from the control palette over a placeholder.
-            // Stop highlighting the placeholder.
-            $.oc.foundation.event.stop(ev)
-            $.oc.foundation.element.removeClass(ev.target, 'drag-over')
+            // Dropped from the control palette to a placeholder.
+            // Stop highlighting the placeholder, add the new control.
+            this.dropFromPaletteToPlaceholder(ev)
+            return
+        }
 
-            this.addControlToPlaceholder(ev.target,
-                ev.dataTransfer.getData('builder/control/type'),
-                ev.dataTransfer.getData('builder/control/name'))
+        var elementIsControl = this.elementIsControl(targetLi)
 
-            $(ev.target.parentNode).trigger('change')
+        if (elementIsControl && this.sourceIsControlPalette(ev)) {
+            // Dropped from the control palette to another element.
+            // Stop highlighting the placeholder, add the new control.
+            this.dropFromPaletteToControl(ev, targetLi)
+            return
+        }
+
+        if ((elementIsControl || this.targetIsPlaceholder(ev)) && this.sourceIsContainer(ev)) {
+            this.stopHighlightingTargets(targetLi)
+
+            // Dropped from a container to a placeholder or another control.
+            // Stop highlighting the placeholder, move the control.
+            this.dropFromContainerToPlaceholderOrControl(ev, targetLi)
+            return
         }
     }
 

@@ -168,9 +168,30 @@ ul.builder-control-palette li i {
   color: white!important;
   background: #c03f31;
 }
+.builder-building-area ul.builder-control-list > li.control > .control-wrapper {
+  position: relative;
+  -webkit-transition: margin 0.1s;
+  transition: margin 0.1s;
+}
 .builder-building-area ul.builder-control-list > li.control:not(.placeholder):not(.loading-control):hover *,
 .builder-building-area ul.builder-control-list > li.control.inspector-open:not(.placeholder):not(.loading-control) * {
   color: #2581b8 !important;
+}
+.builder-building-area ul.builder-control-list > li.control.drag-over:not(.placeholder):before {
+  position: absolute;
+  content: '';
+  top: 0;
+  left: 0;
+  width: 10px;
+  height: 100%;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  background-color: #2581b8;
+}
+.builder-building-area ul.builder-control-list > li.control.drag-over:not(.placeholder) > .control-wrapper {
+  margin-left: 20px;
+  margin-right: -20px;
 }
 .builder-building-area .control-body.field-disabled,
 .builder-building-area .control-body.field-hidden {
