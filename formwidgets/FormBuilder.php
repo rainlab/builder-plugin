@@ -240,7 +240,8 @@ class FormBuilder extends FormWidgetBase
             'span' => $span,
             'spanFixed' => $spanFixed,
             'spanClass' => $spanClass,
-            'properties' => $properties
+            'properties' => $properties,
+            'unknownControl' => isset($controlInfo['unknownControl']) && $controlInfo['unknownControl']
         ];
     }
 

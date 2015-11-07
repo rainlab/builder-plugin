@@ -38,6 +38,7 @@
 
         $(document).on('change', '.builder-control-list > li.control', this.proxy(this.onControlChange))
         $(document).on('click', '.builder-control-list > li.control div[data-builder-remove-control]', this.proxy(this.onRemoveControl))
+        $(document).on('showing.oc.inspector', '.builder-control-list > li.control', this.proxy(this.onInspectorShowing))
         $(document).on('livechange', '.builder-control-list > li.control', this.proxy(this.onControlLiveChange))
         $(document).on('autocompleteitems.oc.inspector', '.builder-control-list > li.control', this.proxy(this.onAutocompleteItems))
         $(document).on('dropdownoptions.oc.inspector', '.builder-control-list > li.control', this.proxy(this.onDropdownOptions))
@@ -560,7 +561,7 @@
     }
 
     FormBuilder.prototype.elementIsControl = function(element) {
-        return element.tagName === 'LI' && element.hasAttribute('data-inspectable') && $.oc.foundation.element.hasClass(element, 'control')
+        return element.tagName === 'LI' && element.hasAttribute('data-control-type') && $.oc.foundation.element.hasClass(element, 'control')
     }
 
     FormBuilder.prototype.getClosestControl = function(element) {
@@ -752,6 +753,13 @@
         ev.stopPropagation()
 
         return false
+    }
+
+    FormBuilder.prototype.onInspectorShowing = function(ev) {
+        if ($(ev.target).find('input[data-non-inspectable-control]').length > 0) {
+            ev.preventDefault()
+            return false
+        }
     }
 
     $(document).ready(function(){

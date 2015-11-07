@@ -18,6 +18,7 @@ class ControlLibrary
 
     const GROUP_STANDARD = 0;
     const GROUP_WIDGETS = 1;
+    const DEFAULT_DESIGN_TIME_PROVIDER = 'RainLab\Builder\Widgets\DefaultControlDesignTimeProvider';
 
     protected $controls = [];
 
@@ -67,7 +68,13 @@ class ControlLibrary
             return $controls[$code];
         }
 
-        return null;
+        return [
+            'properties' => [],
+            'designTimeProvider' => self::DEFAULT_DESIGN_TIME_PROVIDER,
+            'name' => $code,
+            'description' => null,
+            'unknownControl' => true
+        ];
     }
 
     /**
@@ -91,7 +98,7 @@ class ControlLibrary
     public function registerControl($code, $name, $description, $controlGroup, $icon, $properties, $designTimeProviderClass)
     {
         if (!$designTimeProviderClass) {
-            $designTimeProviderClass = 'RainLab\Builder\Widgets\DefaultControlDesignTimeProvider';
+            $designTimeProviderClass = self::DEFAULT_DESIGN_TIME_PROVIDER;
         }
 
         $this->controls[$code] = [

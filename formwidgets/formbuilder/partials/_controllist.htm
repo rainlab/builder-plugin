@@ -12,7 +12,11 @@
         <li
             class="control <?= e($controlRenderingInfo['spanClass']) ?>"
             data-builder-span="<?= e($controlRenderingInfo['spanFixed']) ?>"
+            <?php if (!$controlRenderingInfo['unknownControl']): ?>
             data-inspectable="true"
+            <?php else: ?>
+            data-unknown
+            <?php endif ?>
             draggable="true"
             data-control-type="<?= e($controlRenderingInfo['type']) ?>"
             data-inspector-title="<?= e($controlRenderingInfo['title']) ?>"

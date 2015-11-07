@@ -1,6 +1,7 @@
 .builder-building-area {
     .builder-blueprint-control-text,
     .builder-blueprint-control-textarea,
+    .builder-blueprint-control-unknown,
     .builder-blueprint-control-dropdown {
         padding: 10px 12px;
         border: 2px solid @builder-control-border-color;
@@ -30,6 +31,11 @@
         &.size-large { min-height: @size-large; }
         &.size-huge { min-height: @size-huge; }
         &.size-giant { min-height: @size-giant; }
+    }
+
+    .builder-blueprint-control-unknown {
+        border-color: #eee;
+        background: #eee;
     }
 
     .builder-blueprint-control-dropdown {

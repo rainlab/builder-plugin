@@ -34,7 +34,12 @@
     ModelForm.prototype.cmdSaveForm = function(ev) {
         var $form = $(ev.currentTarget).closest('form'),
             $rootContainer = $('[data-root-control-wrapper] > [data-contol-container]', $form), 
+            $inspectorContainer = $form.find('.inspector-container'),
             controls = $.oc.builder.formbuilder.domToPropertyJson.convert($rootContainer.get(0))
+
+        if (!$.oc.inspector.manager.applyValuesFromContainer($inspectorContainer)) {
+            return 
+        }
 
         if (controls === false) {
             $.oc.flashMsg({

@@ -13,6 +13,10 @@
             cursor: pointer;
             .user-select(none);
 
+            &[data-unknown] {
+                cursor: default;
+            }
+
             &.placeholder, &.loading-control {
                 cursor: default;
                 padding: 10px 12px;
@@ -115,7 +119,7 @@
                     cursor: pointer;
                     width: 21px;
                     height: 21px;
-                    padding-left: 6px;
+                    padding-left: 5px;
                     font-size: 16px;
                     font-weight: bold;
                     line-height: 21px;
@@ -136,7 +140,7 @@
             }
         }
 
-        > li.control:not(.placeholder):not(.loading-control):hover *,
+        > li.control:not(.placeholder):not(.loading-control):not([data-unknown]):hover *,
         > li.control.inspector-open:not(.placeholder):not(.loading-control) * {
             color: @builder-hover-color!important;
         }

@@ -60,6 +60,9 @@ ul.builder-control-palette li i {
   -ms-user-select: none;
   user-select: none;
 }
+.builder-building-area ul.builder-control-list > li.control[data-unknown] {
+  cursor: default;
+}
 .builder-building-area ul.builder-control-list > li.control.placeholder,
 .builder-building-area ul.builder-control-list > li.control.loading-control {
   cursor: default;
@@ -154,7 +157,7 @@ ul.builder-control-palette li i {
   cursor: pointer;
   width: 21px;
   height: 21px;
-  padding-left: 6px;
+  padding-left: 5px;
   font-size: 16px;
   font-weight: bold;
   line-height: 21px;
@@ -173,7 +176,7 @@ ul.builder-control-palette li i {
   -webkit-transition: margin 0.1s;
   transition: margin 0.1s;
 }
-.builder-building-area ul.builder-control-list > li.control:not(.placeholder):not(.loading-control):hover *,
+.builder-building-area ul.builder-control-list > li.control:not(.placeholder):not(.loading-control):not([data-unknown]):hover *,
 .builder-building-area ul.builder-control-list > li.control.inspector-open:not(.placeholder):not(.loading-control) * {
   color: #2581b8 !important;
 }
@@ -230,6 +233,7 @@ ul.builder-control-palette li i {
 }
 .builder-building-area .builder-blueprint-control-text,
 .builder-building-area .builder-blueprint-control-textarea,
+.builder-building-area .builder-blueprint-control-unknown,
 .builder-building-area .builder-blueprint-control-dropdown {
   padding: 10px 12px;
   border: 2px solid #bdc3c7;
@@ -240,6 +244,7 @@ ul.builder-control-palette li i {
 }
 .builder-building-area .builder-blueprint-control-text i,
 .builder-building-area .builder-blueprint-control-textarea i,
+.builder-building-area .builder-blueprint-control-unknown i,
 .builder-building-area .builder-blueprint-control-dropdown i {
   margin-right: 5px;
 }
@@ -269,6 +274,10 @@ ul.builder-control-palette li i {
 }
 .builder-building-area .builder-blueprint-control-textarea.size-giant {
   min-height: 350px;
+}
+.builder-building-area .builder-blueprint-control-unknown {
+  border-color: #eee;
+  background: #eee;
 }
 .builder-building-area .builder-blueprint-control-dropdown {
   position: relative;

@@ -40,7 +40,7 @@ class DefaultControlDesignTimeProvider extends ControlDesignTimeProviderBase
     public function renderControlBody($type, $properties)
     {
         if (!in_array($type, $this->defaultControlsTypes)) {
-            $this->renderUnknownControl($type, $properties);
+            return $this->renderUnknownControl($type, $properties);
         }
 
         return $this->makePartial('control-'.$type, [
@@ -73,6 +73,9 @@ class DefaultControlDesignTimeProvider extends ControlDesignTimeProviderBase
 
     protected function renderUnknownControl($type, $properties)
     {
-        throw new SystemException('To implement - rendering of unknown controls');
+        return $this->makePartial('control-unknowncontrol', [
+            'properties'=>$properties,
+            'type'=>$type
+        ]);
     }
 }

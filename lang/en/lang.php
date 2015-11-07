@@ -161,6 +161,7 @@ return [
         'control_switch' => 'Switch',
         'control_textarea' => 'Text area',
         'control_dropdown' => 'Dropdown',
+        'control_unknown' => 'Unknown control type: :type',
         'error_file_name_required' => 'Please enter the form file name.',
         'error_file_name_invalid' => 'The file name can contain only Latin letters, digits, underscores, dots and hashes.',
         'span_left' => 'Left',
