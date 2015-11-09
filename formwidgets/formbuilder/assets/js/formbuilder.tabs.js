@@ -118,11 +118,13 @@
     }
 
     TabManager.prototype.createNewTab = function($tabControl) {
-        var tabTemplate = $('[data-tab-template]').html(),
-            panelTemplate = $('[data-panel-template]').html(),
+        var tabTemplate = $('[data-tab-template]', $tabControl).html(),
+            panelTemplate = $('[data-panel-template]', $tabControl).html(),
             $tabList = this.getTabList($tabControl),
             tabName = this.generateTabName($tabList, $tabControl),
-            $newTab = $(tabTemplate),
+            patchedTabTemplate = tabTemplate.replace(/tabtitle/mg, tabName)
+
+        var $newTab = $(patchedTabTemplate),
             $newTabControl = $tabList.find('> li[data-builder-new-tab]')
 
         $('[data-tab-title]', $newTab).text(tabName)

@@ -38,8 +38,6 @@
         }
 
         > ul.tabs {
-            padding: 0 20px 0 40px;
-            height: 31px;
             margin: 0;
             list-style: none;
             font-size: 0;
@@ -47,66 +45,21 @@
             overflow: hidden;
             position: relative;
 
-            &:after {
-                position: absolute;
-                content: '';
-                display: block;
-                height: 2px;
-                left: 0;
-                bottom: 0;
-                width: 100%;
-                background: #bdc3c7;
-                z-index: 106;
-            }
-
             > li {
                 .user-select(none);
                 display: inline-block;
                 font-size: 13px;
                 white-space: nowrap;
-                bottom: -2px; 
                 position: relative;
-                margin-left: -20px;
-                z-index: 105;
                 cursor: pointer;
 
                 > div.tab-container {
-                    padding: 0 21px 0 21px;
                     position: relative;
-                    height: 27px;
                     color: #bdc3c7!important;
 
                     > div {
-                        padding: 4px 5px 0 5px;
                         .transition(padding .1s);
                         position: relative;
-                        border-top: 2px solid #e5e5e5; 
-
-                        > span {
-                            position: relative;
-                            top: -2px;
-                            .transition(top .1s);
-                        }
-                    }
-
-                    &:before, &:after {
-                        content: '';
-                        display: block;
-                        position: absolute;
-                        top: 0;
-                        height: 27px;
-                        width: 21px;
-                        background: transparent url(../images/tab.png) no-repeat;
-                    }
-
-                    &:before {
-                        left: 0;
-                        background-position: 0 -27px;
-                    }
-
-                    &:after {
-                        right: 0;
-                        background-position: -75px -27px;
                     }
                 }
 
@@ -140,58 +93,12 @@
                 }
 
                 &.active {
-                    z-index: 107;
-
                     > div.tab-container {
                         color: #95a5a6!important;
-
-                        &:before {
-                            background-position: 0 0;
-                        }
-
-                        &:after {
-                            background-position: -75px 0;
-                        }
-
-                        > div {
-                            padding-right: 30px;
-                            border-top: 2px solid #bdc3c7; 
-
-                            > span {
-                                top: 0;
-                            }
-                        }
-                    }
-
-                    &:before {
-                        position: absolute;
-                        content: '';
-                        display: block;
-                        height: 2px;
-                        left: 0;
-                        bottom: 0;
-                        width: 100%;
-                        background: white;
                     }
 
                     .tab-control {
                         display: block;
-                    }
-                }
-
-                &.new-tab {
-                    background: transparent url(../images/tab.png) no-repeat;
-                    background-position: -24px 0;
-                    width: 27px;
-                    height: 22px;
-
-                    margin-left: -11px;
-                    top: 4px;
-                    position: relative;
-                    cursor: pointer;
-
-                    &:hover {
-                        background-position: -24px -32px;
                     }
                 }
             }
@@ -206,6 +113,178 @@
 
                 &.active {
                     display: block;
+                }
+            }
+        }
+    }
+
+    &.primary {
+        > .tabs {
+            > ul.tabs {
+                padding: 0 20px 0 40px;
+                height: 31px;
+
+                &:after {
+                    position: absolute;
+                    content: '';
+                    display: block;
+                    height: 2px;
+                    left: 0;
+                    bottom: 0;
+                    width: 100%;
+                    background: #bdc3c7;
+                    z-index: 106;
+                }
+
+                > li {
+                    bottom: -2px; 
+                    margin-left: -20px;
+                    z-index: 105;
+
+                    > div.tab-container {
+                        padding: 0 21px 0 21px;
+                        height: 27px;
+
+                        > div {
+                            padding: 4px 5px 0 5px;
+                            border-top: 2px solid #e5e5e5; 
+
+                            > span {
+                                position: relative;
+                                top: -2px;
+                                .transition(top .1s);
+                            }
+                        }
+
+                        &:before, &:after {
+                            content: '';
+                            display: block;
+                            position: absolute;
+                            top: 0;
+                            height: 27px;
+                            width: 21px;
+                            background: transparent url(../images/tab.png) no-repeat;
+                        }
+
+                        &:before {
+                            left: 0;
+                            background-position: 0 -27px;
+                        }
+
+                        &:after {
+                            right: 0;
+                            background-position: -75px -27px;
+                        }
+                    }
+
+                    &.active {
+                        z-index: 107;
+
+                        > div.tab-container {
+
+                            &:before {
+                                background-position: 0 0;
+                            }
+
+                            &:after {
+                                background-position: -75px 0;
+                            }
+
+                            > div {
+                                padding-right: 30px;
+                                border-top: 2px solid #bdc3c7; 
+
+                                > span {
+                                    top: 0;
+                                }
+                            }
+                        }
+
+                        &:before {
+                            position: absolute;
+                            content: '';
+                            display: block;
+                            height: 2px;
+                            left: 0;
+                            bottom: 0;
+                            width: 100%;
+                            background: white;
+                        }
+                    }
+
+                    &.new-tab {
+                        background: transparent url(../images/tab.png) no-repeat;
+                        background-position: -24px 0;
+                        width: 27px;
+                        height: 22px;
+
+                        margin-left: -11px;
+                        top: 4px;
+                        position: relative;
+                        cursor: pointer;
+
+                        &:hover {
+                            background-position: -24px -32px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    &.secondary {
+        > .tabs {
+            ul.tabs {
+                margin-left: 12px;
+                padding-left: 0;
+
+                > li {
+                    border-right: 1px solid #bdc3c7;
+                    padding-right: 1px;
+
+                    > div.tab-container {
+                        > div {
+                            padding: 4px 10px;
+                        }
+                    }
+
+                    .tab-control { 
+                        right: 23px;
+                        top: 7px;
+
+                        &.close-btn {
+                            right: 6px;
+                            top: 6px;
+                        }
+                    }
+
+                    &.new-tab {
+                        background: transparent;
+                        border: 2px solid #e4e4e4;
+                        width: 27px;
+                        height: 22px;
+                        left: 9px;
+                        top: 7px;
+                        position: relative;
+                        cursor: pointer;
+                        .border-radius(4px);
+
+                        &:hover {
+                            background-color: #2581b8;
+                            border-color: #2581b8;
+                        }
+                    }
+
+                    &.active {
+                        padding-right: 10px;
+
+                        > div.tab-container {
+                            > div {
+                                color: #555555;
+                                padding-right: 30px;
+                            }
+                        }
+                    }
                 }
             }
         }

@@ -13,4 +13,14 @@
         'configuration' => [],
         'tabNameTemplate' =>  trans('rainlab.builder::lang.form.tab_name_template'),
     ]) ?>
+
+    <?= $this->makePartial('tabs', [
+        'type' => 'secondary',
+        'controls' => $this->getTabsFields('secondaryTabs', $fieldsConfiguration),
+        'listName' => 'secondaryTabs',
+        'tabsTitle' => trans('rainlab.builder::lang.form.tabs_secondary'),
+        'configuration' => [],
+        'tabNameTemplate' =>  trans('rainlab.builder::lang.form.tab_name_template'),
+    ]) ?>
+
 </div>

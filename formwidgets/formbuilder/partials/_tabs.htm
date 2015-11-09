@@ -54,13 +54,13 @@
 
             <input data-inspector-values type="hidden" value="<?= e($this->getTabsConfigurationValues($configuration)) ?>"/>
         </div>
+
+        <script type="text/template" data-tab-template>
+            <?= $this->makePartial('tab', ['active'=>false, 'title'=>'tabtitle']) ?>
+        </script>
+
+        <script type="text/template" data-panel-template>
+            <?= $this->makePartial('tabpanel', ['controls' => [], 'listName'=>$listName, 'active'=>false]) ?>
+        </script>
     </div>
-
-    <script type="text/template" data-tab-template>
-        <?= $this->makePartial('tab', ['active'=>false, 'title'=>trans('rainlab.builder::lang.form.empty_tab')]) ?>
-    </script>
-
-    <script type="text/template" data-panel-template>
-        <?= $this->makePartial('tabpanel', ['controls' => [], 'listName'=>$listName, 'active'=>false]) ?>
-    </script>
 </div>
