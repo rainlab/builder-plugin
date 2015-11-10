@@ -59,9 +59,17 @@
     // ============================
 
     FormBuilder.prototype.getControlProperties = function(li) {
-        var properties = li.querySelector('[data-inspector-values]').value
-            
-        return $.parseJSON(properties)
+        var children = li.children
+
+        for (var i=children.length-1; i>=0; i--) {
+            var element = children[i]
+
+            if (element.tagName === 'INPUT' && element.hasAttribute('data-inspector-values')) {
+                return $.parseJSON(element.value)
+            }
+        }
+
+        throw new Error('Inspector values element is not found in control.')
     }
 
     FormBuilder.prototype.setControlProperties = function(li, propertiesObj) {
@@ -229,8 +237,25 @@
 
     FormBuilder.prototype.startDragFromContainer = function(ev) {
         ev.dataTransfer.effectAllowed = 'move'
+
+        var controlId = this.getControlId(ev.target)
         ev.dataTransfer.setData('builder/source/container', 'true')
-        ev.dataTransfer.setData('builder/control/id', this.getControlId(ev.target))
+        ev.dataTransfer.setData('builder/control/id', controlId)
+        ev.dataTransfer.setData(controlId, controlId)
+    }
+
+    FormBuilder.prototype.dropTargetIsChildOf = function(target, ev) {
+        var current = target
+
+        while (current) {
+            if (this.elementIsControl(current) && ev.dataTransfer.types.indexOf(this.getControlId(current)) >= 0) {
+                return true
+            }
+
+            current = current.parentNode
+        }
+
+        return false
     }
 
     FormBuilder.prototype.dropFromPaletteToPlaceholder = function(ev) {
@@ -241,7 +266,7 @@
             ev.dataTransfer.getData('builder/control/type'),
             ev.dataTransfer.getData('builder/control/name'))
 
-        $(ev.target.parentNode).trigger('change')
+        $(ev.target).closest('form').trigger('change')
     }
 
     FormBuilder.prototype.dropFromPaletteToControl = function(ev, targetControl) {
@@ -255,7 +280,7 @@
             ev.dataTransfer.getData('builder/control/name'),
             true)
 
-        $(targetControl.parentNode).trigger('change')
+        $(targetControl).closest('form').trigger('change')
     }
 
     FormBuilder.prototype.dropFromContainerToPlaceholderOrControl = function(ev, targetControl) {
@@ -292,7 +317,7 @@
             this.reflow(null, originalList)
         }
 
-        $(targetElement.parentNode).trigger('change')
+        $(targetElement).closest('form').trigger('change')
     }
 
     FormBuilder.prototype.elementContainsPoint = function(point, element) {
@@ -606,7 +631,16 @@
             return
         }
 
-        if ((this.targetIsPlaceholder(ev) || this.elementIsControl(targetLi)) && (this.sourceIsControlPalette(ev) || this.sourceIsContainer(ev))) {
+        var sourceIsContainer = this.sourceIsContainer(ev),
+            elementIsControl = this.elementIsControl(targetLi)
+
+        if ((this.targetIsPlaceholder(ev) || elementIsControl) && (this.sourceIsControlPalette(ev) || sourceIsContainer)) {
+            // Do not allow dropping controls to themselves or their
+            // children controls.
+            if (sourceIsContainer && elementIsControl && this.dropTargetIsChildOf(targetLi, ev)) {
+                return false
+            }
+
             // Dragging from the control palette or container over a placeholder or another control.
             // Allow the drop.
             $.oc.foundation.event.stop(ev)
@@ -626,14 +660,32 @@
             return
         }
 
-        if (this.targetIsPlaceholder(ev) && (this.sourceIsControlPalette(ev) || this.sourceIsContainer(ev))) {
+        var sourceIsContainer = this.sourceIsContainer(ev)
+
+        if (this.targetIsPlaceholder(ev) && (this.sourceIsControlPalette(ev) || sourceIsContainer)) {
+            // Do not allow dropping controls to themselves or their
+            // children controls.
+            if (sourceIsContainer && this.dropTargetIsChildOf(ev.target, ev)) {
+                this.stopHighlightingTargets(ev.target, true)
+                return
+            }
+
             // Dragging from the control palette or container over a placeholder.
             // Highlight the placeholder.
             $.oc.foundation.element.addClass(ev.target, 'drag-over')
             return
         }
 
-        if (this.elementIsControl(targetLi) && (this.sourceIsContainer(ev) || this.sourceIsControlPalette(ev))) {
+        var elementIsControl = this.elementIsControl(targetLi)
+
+        if (elementIsControl && (sourceIsContainer || this.sourceIsControlPalette(ev))) {
+            // Do not allow dropping controls to themselves or their
+            // children controls.
+            if (sourceIsContainer && elementIsControl && this.dropTargetIsChildOf(targetLi, ev)) {
+                this.stopHighlightingTargets(targetLi, true)
+                return
+            }
+
             // Dragging from a container or control palette over another control.
             // Highlight the other control.
             $.oc.foundation.element.addClass(targetLi, 'drag-over')
@@ -701,8 +753,14 @@
             return
         }
 
-        if ((elementIsControl || this.targetIsPlaceholder(ev)) && this.sourceIsContainer(ev)) {
+        var sourceIsContainer = this.sourceIsContainer(ev)
+
+        if ((elementIsControl || this.targetIsPlaceholder(ev)) && sourceIsContainer) {
             this.stopHighlightingTargets(targetLi)
+
+            if (this.dropTargetIsChildOf(targetLi, ev)) {
+                return
+            }
 
             // Dropped from a container to a placeholder or another control.
             // Stop highlighting the placeholder, move the control.
@@ -720,16 +778,22 @@
 
         this.setControlSpanFromProperties(li, properties)
         this.updateControlBody(this.getControlId(li))
+
+        ev.stopPropagation()
+        return false
     }
 
     FormBuilder.prototype.onControlLiveChange = function(ev) {
-        $(ev.currentTarget.parentNode).trigger('change')  // Set modified state for the form
+        $(this.findForm(ev.currentTarget)).trigger('change')  // Set modified state for the form
 
         var li = ev.currentTarget,
             propertiesParsed = this.getControlProperties(li)
 
         this.setControlSpanFromProperties(li, propertiesParsed)
         this.startUpdateControlBody(this.getControlId(li))
+
+        ev.stopPropagation()
+        return false
     }
 
     FormBuilder.prototype.onAutocompleteItems = function(ev, data) {

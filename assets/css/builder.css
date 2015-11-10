@@ -146,10 +146,10 @@ ul.builder-control-palette li i {
   display: block;
   clear: both;
 }
-.builder-building-area ul.builder-control-list > li.control div.remove-control {
+.builder-building-area ul.builder-control-list > li.control > div.remove-control {
   display: none;
 }
-.builder-building-area ul.builder-control-list > li.control:not(.placeholder):not(.loading-control):not(.updating-control):hover div.remove-control {
+.builder-building-area ul.builder-control-list > li.control:not(.placeholder):not(.loading-control):not(.updating-control):hover > div.remove-control {
   display: block;
   position: absolute;
   right: 0;
@@ -167,7 +167,7 @@ ul.builder-control-palette li i {
   background: #ecf0f1;
   color: #95a5a6!important;
 }
-.builder-building-area ul.builder-control-list > li.control:not(.placeholder):not(.loading-control):not(.updating-control):hover div.remove-control:hover {
+.builder-building-area ul.builder-control-list > li.control:not(.placeholder):not(.loading-control):not(.updating-control):hover > div.remove-control:hover {
   color: white!important;
   background: #c03f31;
 }
@@ -176,8 +176,8 @@ ul.builder-control-palette li i {
   -webkit-transition: margin 0.1s;
   transition: margin 0.1s;
 }
-.builder-building-area ul.builder-control-list > li.control:not(.placeholder):not(.loading-control):not([data-unknown]):hover *,
-.builder-building-area ul.builder-control-list > li.control.inspector-open:not(.placeholder):not(.loading-control) * {
+.builder-building-area ul.builder-control-list > li.control:not(.placeholder):not(.loading-control):not([data-unknown]):hover > .control-wrapper *,
+.builder-building-area ul.builder-control-list > li.control.inspector-open:not(.placeholder):not(.loading-control) > .control-wrapper * {
   color: #2581b8 !important;
 }
 .builder-building-area ul.builder-control-list > li.control.drag-over:not(.placeholder):before {
@@ -248,16 +248,16 @@ ul.builder-control-palette li i {
 .builder-building-area .builder-blueprint-control-dropdown i {
   margin-right: 5px;
 }
-.builder-building-area li.control:hover .builder-blueprint-control-text,
-.builder-building-area li.inspector-open .builder-blueprint-control-text,
-.builder-building-area li.control:hover .builder-blueprint-control-textarea,
-.builder-building-area li.inspector-open .builder-blueprint-control-textarea,
-.builder-building-area li.control:hover .builder-blueprint-control-dropdown,
-.builder-building-area li.inspector-open .builder-blueprint-control-dropdown {
+.builder-building-area li.control:hover > .control-wrapper .builder-blueprint-control-text,
+.builder-building-area li.inspector-open > .control-wrapper .builder-blueprint-control-text,
+.builder-building-area li.control:hover > .control-wrapper .builder-blueprint-control-textarea,
+.builder-building-area li.inspector-open > .control-wrapper .builder-blueprint-control-textarea,
+.builder-building-area li.control:hover > .control-wrapper .builder-blueprint-control-dropdown,
+.builder-building-area li.inspector-open > .control-wrapper .builder-blueprint-control-dropdown {
   border-color: #2581b8;
 }
-.builder-building-area li.control:hover .builder-blueprint-control-dropdown:before,
-.builder-building-area li.inspector-open .builder-blueprint-control-dropdown:before {
+.builder-building-area li.control:hover > .control-wrapper .builder-blueprint-control-dropdown:before,
+.builder-building-area li.inspector-open > .control-wrapper .builder-blueprint-control-dropdown:before {
   background-color: #2581b8;
 }
 .builder-building-area .builder-blueprint-control-textarea.size-tiny {
@@ -327,8 +327,8 @@ ul.builder-control-palette li i {
 .builder-building-area .builder-blueprint-control-checkbox .builder-control-comment-below {
   margin-left: 25px;
 }
-.builder-building-area li.control:hover .builder-blueprint-control-checkbox:before,
-.builder-building-area li.inspector-open .builder-blueprint-control-checkbox:before {
+.builder-building-area li.control:hover > .control-wrapper .builder-blueprint-control-checkbox:before,
+.builder-building-area li.inspector-open > .control-wrapper .builder-blueprint-control-checkbox:before {
   border-color: #2581b8;
 }
 .builder-building-area .builder-blueprint-control-switch {
@@ -364,8 +364,8 @@ ul.builder-control-palette li i {
 .builder-building-area .builder-blueprint-control-switch .builder-control-comment-below {
   margin-left: 45px;
 }
-.builder-building-area li.control:hover .builder-blueprint-control-switch:before,
-.builder-building-area li.inspector-open .builder-blueprint-control-switch:before {
+.builder-building-area li.control:hover > .control-wrapper .builder-blueprint-control-switch:before,
+.builder-building-area li.inspector-open > .control-wrapper .builder-blueprint-control-switch:before {
   background-color: #2581b8;
 }
 .builder-tabs > .tabs {

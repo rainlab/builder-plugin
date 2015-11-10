@@ -26,6 +26,8 @@ class FormBuilder extends FormWidgetBase
 
     protected $tabsConfigurationSchema = null;
 
+    protected $controlInfoCache = [];
+
     /**
      * {@inheritDoc}
      */
@@ -64,9 +66,12 @@ class FormBuilder extends FormWidgetBase
         $this->addJs('js/formbuilder.tabs.js', 'builder');
     }
 
-    public function renderContainer($fieldsConfiguration)
+    public function renderControlList($controls, $listName = '')
     {
-        return $this->makePartial('container', ['fieldsConfiguration' => $fieldsConfiguration]);
+        return $this->makePartial('controllist', [
+            'controls' => $controls, 
+            'listName' => $listName
+        ]);
     }
 
     /*
@@ -97,7 +102,7 @@ class FormBuilder extends FormWidgetBase
         $properties = Input::get('properties');
 
         return [
-            'markup' => $this->renderControlBody($type, $properties),
+            'markup' => $this->renderControlBody($type, $properties, $this),
             'controlId' => $controlId
         ];
     }
@@ -148,6 +153,13 @@ class FormBuilder extends FormWidgetBase
         foreach ($propertyConfiguration as $property=>$propertyData) {
             $propertyData['property'] = $property;
 
+            if ($propertyData['type'] === 'control-container') {
+                // Control container type properties are handled with the form builder UI and
+                // should not be available in Inspector.
+                //
+                continue;
+            }
+
             $result[] = $propertyData;
         }
 
@@ -156,6 +168,10 @@ class FormBuilder extends FormWidgetBase
 
     protected function getControlInfo($type)
     {
+        if (array_key_exists($type, $this->controlInfoCache)) {
+            return $this->controlInfoCache[$type];
+        }
+
         $library = ControlLibrary::instance();
         $controlInfo = $library->getControlInfo($type);
 
@@ -163,7 +179,7 @@ class FormBuilder extends FormWidgetBase
             throw new ApplicationException('The requested control type is not found.');
         }
 
-        return $controlInfo;
+        return $this->controlInfoCache[$type] = $controlInfo;
     }
 
     protected function renderControlBody($type, $properties)
@@ -173,9 +189,20 @@ class FormBuilder extends FormWidgetBase
 
         return $this->makePartial('controlbody', [
             'hasLabels' => $provider->controlHasLabels($type),
-            'body' => $provider->renderControlBody($type, $properties),
+            'body' => $provider->renderControlBody($type, $properties, $this),
             'properties' => $properties
         ]);
+    }
+
+    protected function renderControlStaticBody($type, $properties)
+    {
+        // The control body footer is never updated with AJAX and currently
+        // used only by the Repeater widget to display its controls.
+
+        $controlInfo = $this->getControlInfo($type);
+        $provider = $this->getControlDesignTimeProvider($controlInfo['designTimeProvider']);
+
+        return $provider->renderControlStaticBody($type, $properties, $this);
     }
 
     protected function renderControlWrapper($type, $properties = [])
@@ -220,6 +247,23 @@ class FormBuilder extends FormWidgetBase
         return $currentSpan;
     }
 
+    protected function preprocessPropertyValues($controlName, $properties, $controlInfo)
+    {
+        $properties['oc.fieldName'] = $controlName;
+
+        // Remove the control container type property values.
+        //
+        if (isset($controlInfo['properties'])) {
+            foreach ($controlInfo['properties'] as $property=>$propertyConfig) {
+                if (isset($propertyConfig['type']) && $propertyConfig['type'] === 'control-container' && isset($properties[$property])) {
+                    unset($properties[$property]);
+                }
+            }
+        }
+
+        return $properties;
+    }
+
     protected function getControlRenderingInfo($controlName, $properties, $prevProperties)
     {
         $type = isset($properties['type']) ? $properties['type'] : 'text';
@@ -229,9 +273,9 @@ class FormBuilder extends FormWidgetBase
         $span = $this->getSpan($spanFixed, $prevSpan);
         $spanClass = 'span-'.$span;
 
-        $properties['oc.fieldName'] = $controlName;
-
         $controlInfo = $this->getControlInfo($type);
+
+        $properties = $this->preprocessPropertyValues($controlName, $properties, $controlInfo);
 
         return [
             'title' => Lang::get($controlInfo['name']),

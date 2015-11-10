@@ -6,6 +6,8 @@
     <?= $this->renderControlBody($type, $properties) ?>
 </div>
 
+<?= $this->renderControlStaticBody($type, $properties) ?>
+
 <input type="hidden" value="<?= e(json_encode($fieldsConfiguration)) ?>" data-inspector-config>
 <input type="hidden" value="<?= e(json_encode($properties)) ?>" data-inspector-values>
 

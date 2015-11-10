@@ -108,6 +108,8 @@ class Plugin extends PluginBase
     public function boot()
     {
         Event::listen('pages.builder.registerControls', function($controlLibrary) {
+            // Standard controls
+            //
             $controlLibrary->registerControl('text', 
                 'rainlab.builder::lang.form.control_text',
                 null,
@@ -181,6 +183,31 @@ class Plugin extends PluginBase
                 $controlLibrary::GROUP_STANDARD,
                 'icon-angle-double-down',
                 $controlLibrary->getStandardProperties(['stretch'], $properties),
+                null
+            );
+
+            // Widgets
+            //
+
+            $properties = [
+                'prompt' =>  [
+                    'title' => Lang::get('rainlab.builder::lang.form.property_prompt'),
+                    'description' => Lang::get('rainlab.builder::lang.form.property_prompt_description'),
+                    'type' => 'string',
+                    'ignoreIfEmpty' => true,
+                    'default' => Lang::get('rainlab.builder::lang.form.property_prompt_default'),
+                ],
+                'form' => [
+                    'type' => 'control-container'
+                ]
+            ];
+
+            $controlLibrary->registerControl('repeater', 
+                'rainlab.builder::lang.form.control_repeater',
+                null,
+                $controlLibrary::GROUP_WIDGETS,
+                'icon-server',
+                $controlLibrary->getStandardProperties(['stretch', 'placeholder', 'default', 'required', 'defaultFrom', 'dependsOn', 'trigger', 'preset', 'attributes'], $properties),
                 null
             );
         });

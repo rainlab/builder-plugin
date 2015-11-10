@@ -106,12 +106,12 @@
                 clear: both;
             }
 
-            div.remove-control {
+            > div.remove-control {
                 display: none;
             }
 
             &:not(.placeholder):not(.loading-control):not(.updating-control):hover > {
-                div.remove-control {
+                > div.remove-control {
                     display: block;
                     position: absolute;
                     right: 0;
@@ -140,8 +140,8 @@
             }
         }
 
-        > li.control:not(.placeholder):not(.loading-control):not([data-unknown]):hover *,
-        > li.control.inspector-open:not(.placeholder):not(.loading-control) * {
+        > li.control:not(.placeholder):not(.loading-control):not([data-unknown]):hover > .control-wrapper *,
+        > li.control.inspector-open:not(.placeholder):not(.loading-control) > .control-wrapper * {
             color: @builder-hover-color!important;
         }
 
