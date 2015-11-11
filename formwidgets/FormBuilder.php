@@ -194,7 +194,7 @@ class FormBuilder extends FormWidgetBase
         ]);
     }
 
-    protected function renderControlStaticBody($type, $properties)
+    protected function renderControlStaticBody($type, $properties, $controlConfiguration)
     {
         // The control body footer is never updated with AJAX and currently
         // used only by the Repeater widget to display its controls.
@@ -202,10 +202,10 @@ class FormBuilder extends FormWidgetBase
         $controlInfo = $this->getControlInfo($type);
         $provider = $this->getControlDesignTimeProvider($controlInfo['designTimeProvider']);
 
-        return $provider->renderControlStaticBody($type, $properties, $this);
+        return $provider->renderControlStaticBody($type, $properties, $controlConfiguration, $this);
     }
 
-    protected function renderControlWrapper($type, $properties = [])
+    protected function renderControlWrapper($type, $properties = [], $controlConfiguration = [])
     {
         // This method renders the entire control, including 
         // the wrapping element.
@@ -228,6 +228,7 @@ class FormBuilder extends FormWidgetBase
         $provider = $this->getControlDesignTimeProvider($controlInfo['designTimeProvider']);
         return $this->makePartial('controlwrapper', [
             'fieldsConfiguration' => $this->propertiesToInspectorSchema($controlInfo['properties']),
+            'controlConfiguration' => $controlConfiguration,
             'type' => $type, 
             'properties' => $properties
         ]);

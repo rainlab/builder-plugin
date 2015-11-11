@@ -22,7 +22,7 @@
             data-inspector-title="<?= e($controlRenderingInfo['title']) ?>"
             data-inspector-description="<?= e($controlRenderingInfo['description']) ?>">
 
-                <?= $this->renderControlWrapper($controlRenderingInfo['type'], $controlRenderingInfo['properties']) ?>
+                <?= $this->renderControlWrapper($controlRenderingInfo['type'], $controlRenderingInfo['properties'], $controlConfig) ?>
 
         </li>
         

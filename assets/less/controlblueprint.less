@@ -141,4 +141,66 @@
             }
         }
     }
+
+    .builder-blueprint-control-repeater-body {
+        > .repeater-button {
+            padding: 8px 13px;
+            background: @builder-control-border-color;
+            color: white;
+            display: inline-block;
+            margin-bottom: 10px;
+            .border-radius(2px);
+        }
+    }
+
+    ul.builder-control-list > li.control:hover,
+    ul.builder-control-list > li.inspector-open {
+        > .control-wrapper > .control-body {
+            .builder-blueprint-control-repeater-body {
+                > .repeater-button {
+                    background: @builder-hover-color;
+                    color: white!important;
+                }
+            }
+        }
+    }
+
+    .builder-blueprint-control-repeater {
+        position: relative;
+
+        &:before {
+            content: '';
+            position: absolute;
+            width: 2px;
+            top: 0;
+            left: 2px;
+            height: 100%;
+            background: @builder-control-border-color;
+        }
+
+        &:after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            top: 14px;
+            left: 0;
+            .border-radius(6px);
+            background: @builder-control-border-color;
+        }
+
+        > ul.builder-control-list {
+            padding-right: 0;
+            padding-bottom: 0;
+            padding-top: 10px;
+        }
+    }
+
+    li.control:hover, li.inspector-open {
+        > .builder-blueprint-control-repeater {
+            &:before, &:after {
+                background-color: @builder-hover-color;
+            }
+        }
+    }
 }

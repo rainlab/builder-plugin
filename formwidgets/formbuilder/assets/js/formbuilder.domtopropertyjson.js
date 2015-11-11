@@ -9,7 +9,7 @@
     if ($.oc.builder.formbuilder === undefined)
         $.oc.builder.formbuilder = {}
 
-    function getItemPropertyValues(item)  {
+    function getControlPropertyValues(item)  {
         for (var i=0, len=item.children.length; i<len; i++) {
             var child = item.children[i]
 
@@ -47,6 +47,26 @@
         }
     }
 
+    function parseControlControlContainer(control) {
+        var children = control.children,
+            result = {}
+
+        for (var i=0, len=children.length; i<len; i++) {
+            var child = children[i]
+
+            if (child.tagName !== 'DIV' || !child.hasAttribute('data-contol-container') || !child.hasAttribute('data-container-name')) {
+                continue
+            }
+
+            var containerName = String(child.getAttribute('data-container-name')), 
+                childControls = containerToJson(child)
+
+            result[containerName] = childControls
+        }
+
+        return result
+    }
+
     function listToJson(list, injectProperties) {
         var listItems = list.children,
             result = {}
@@ -60,7 +80,7 @@
                 continue
             }
 
-            var values = getItemPropertyValues(listItem)
+            var values = getControlPropertyValues(listItem)
             if (values === null) {
                 throw new Error('Property values are not found for a control list item.')
             }
@@ -80,6 +100,15 @@
 
             if (result[fieldName] !== undefined) {
                 throw new Error('Duplicate field name: ' + fieldName)
+            }
+
+            // If a control contains control containers, parse them
+            // and assign parsed object to the current control property.
+
+            var childControls = parseControlControlContainer(listItem)
+
+            if (!$.isEmptyObject(childControls)) {
+                values = $.extend(values, childControls)
             }
 
             result[fieldName] = values
@@ -135,13 +164,16 @@
                 listControls = listToJson(controlList, injectProperties),
                 listName = String(controlList.getAttribute('data-control-list'))
 
-            if (result[listName] === undefined) {
-                result[listName] = {}
+            if (!$.isEmptyObject(listControls) || !$.isEmptyObject(listControls)) {
+                // Create tabs sections only if there are controls.
+                //
+                if (result[listName] === undefined) {
+                    result[listName] = {}
+                }
+
+                result[listName] = $.extend(result[listName], globalTabsProperties)
+                mergeControlListControlsToResult(result, listControls, listName)
             }
-
-            result[listName] = $.extend(result[listName], globalTabsProperties)
-
-            mergeControlListControlsToResult(result, listControls, listName)
         }
     }
 
@@ -225,7 +257,7 @@
             result = []
 
         for (var i=controls.length-1; i>=0; i--) {
-            var properties = getItemPropertyValues(controls[i])
+            var properties = getControlPropertyValues(controls[i])
 
             if (typeof properties !== 'object') {
                 continue

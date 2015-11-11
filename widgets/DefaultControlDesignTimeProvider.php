@@ -56,11 +56,12 @@ class DefaultControlDesignTimeProvider extends ControlDesignTimeProviderBase
      * Renders conrol static body.
      * The control static body is never updated with AJAX during the form editing.
      * @param string $type Specifies the control type to render.
-     * @param array $properties Control property values.
+     * @param array $properties Control property values preprocessed for the Inspector.
+     * @param array $controlConfiguration Raw control property values.
      * @param  RainLab\Builder\FormWidgets\FormBuilder $formBuilder FormBuilder widget instance.
      * @return string Returns HTML markup string.
      */
-    public function renderControlStaticBody($type, $properties, $formBuilder)
+    public function renderControlStaticBody($type, $properties, $controlConfiguration, $formBuilder)
     {
         if (!in_array($type, $this->defaultControlsTypes)) {
             return null;
@@ -75,6 +76,7 @@ class DefaultControlDesignTimeProvider extends ControlDesignTimeProviderBase
 
         return $this->makePartial($partialName, [
             'properties'=>$properties,
+            'controlConfiguration' => $controlConfiguration,
             'formBuilder' => $formBuilder
         ]);
     }

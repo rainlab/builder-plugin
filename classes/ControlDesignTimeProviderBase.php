@@ -18,10 +18,11 @@ abstract class ControlDesignTimeProviderBase extends WidgetBase
      * The control static body is never updated with AJAX during the form editing.
      * @param string $type Specifies the control type to render.
      * @param array $properties Control property values.
+     * @param array $controlConfiguration Raw control property values.
      * @param  RainLab\Builder\FormWidgets\FormBuilder $formBuilder FormBuilder widget instance.
      * @return string Returns HTML markup string.
      */
-    abstract public function renderControlStaticBody($type, $properties, $formBuilder);
+    abstract public function renderControlStaticBody($type, $properties, $controlConfiguration, $formBuilder);
 
     /**
      * Determines whether a control supports default labels and comments.

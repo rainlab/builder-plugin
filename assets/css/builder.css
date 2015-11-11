@@ -171,7 +171,8 @@ ul.builder-control-palette li i {
   color: white!important;
   background: #c03f31;
 }
-.builder-building-area ul.builder-control-list > li.control > .control-wrapper {
+.builder-building-area ul.builder-control-list > li.control > .control-wrapper,
+.builder-building-area ul.builder-control-list > li.control > .control-static-contents {
   position: relative;
   -webkit-transition: margin 0.1s;
   transition: margin 0.1s;
@@ -192,7 +193,8 @@ ul.builder-control-palette li i {
   border-radius: 5px;
   background-color: #2581b8;
 }
-.builder-building-area ul.builder-control-list > li.control.drag-over:not(.placeholder) > .control-wrapper {
+.builder-building-area ul.builder-control-list > li.control.drag-over:not(.placeholder) > .control-wrapper,
+.builder-building-area ul.builder-control-list > li.control.drag-over:not(.placeholder) > .control-static-contents {
   margin-left: 20px;
   margin-right: -20px;
 }
@@ -366,6 +368,56 @@ ul.builder-control-palette li i {
 }
 .builder-building-area li.control:hover > .control-wrapper .builder-blueprint-control-switch:before,
 .builder-building-area li.inspector-open > .control-wrapper .builder-blueprint-control-switch:before {
+  background-color: #2581b8;
+}
+.builder-building-area .builder-blueprint-control-repeater-body > .repeater-button {
+  padding: 8px 13px;
+  background: #bdc3c7;
+  color: white;
+  display: inline-block;
+  margin-bottom: 10px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+}
+.builder-building-area ul.builder-control-list > li.control:hover > .control-wrapper > .control-body .builder-blueprint-control-repeater-body > .repeater-button,
+.builder-building-area ul.builder-control-list > li.inspector-open > .control-wrapper > .control-body .builder-blueprint-control-repeater-body > .repeater-button {
+  background: #2581b8;
+  color: white!important;
+}
+.builder-building-area .builder-blueprint-control-repeater {
+  position: relative;
+}
+.builder-building-area .builder-blueprint-control-repeater:before {
+  content: '';
+  position: absolute;
+  width: 2px;
+  top: 0;
+  left: 2px;
+  height: 100%;
+  background: #bdc3c7;
+}
+.builder-building-area .builder-blueprint-control-repeater:after {
+  content: '';
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  top: 14px;
+  left: 0;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  border-radius: 6px;
+  background: #bdc3c7;
+}
+.builder-building-area .builder-blueprint-control-repeater > ul.builder-control-list {
+  padding-right: 0;
+  padding-bottom: 0;
+  padding-top: 10px;
+}
+.builder-building-area li.control:hover > .builder-blueprint-control-repeater:before,
+.builder-building-area li.inspector-open > .builder-blueprint-control-repeater:before,
+.builder-building-area li.control:hover > .builder-blueprint-control-repeater:after,
+.builder-building-area li.inspector-open > .builder-blueprint-control-repeater:after {
   background-color: #2581b8;
 }
 .builder-tabs > .tabs {

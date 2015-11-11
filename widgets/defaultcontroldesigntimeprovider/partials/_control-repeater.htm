@@ -1,0 +1,9 @@
+<div class="builder-blueprint-control-repeater-body">
+    <?php
+        $prompt = $this->getPropertyValue($properties, 'prompt');
+        if (!strlen($prompt)) {
+            $prompt = 'rainlab.builder::lang.form.property_prompt_default';
+        }
+    ?>
+    <div class="repeater-button"><?= e(trans($prompt)) ?></div>
+</div>
