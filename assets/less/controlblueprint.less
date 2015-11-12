@@ -1,6 +1,7 @@
 .builder-building-area {
     .builder-blueprint-control-text,
     .builder-blueprint-control-textarea,
+    .builder-blueprint-control-partial,
     .builder-blueprint-control-unknown,
     .builder-blueprint-control-dropdown {
         padding: 10px 12px;
@@ -35,7 +36,22 @@
         &.size-giant { min-height: @size-giant; }
     }
 
+    .builder-blueprint-control-section {
+        border-bottom: 1px solid @builder-control-border-color;
+        padding-bottom: 4px;
+
+        .builder-control-label {
+            font-size: 16px;
+            margin-bottom: 6px;
+        }
+    }
+
     .builder-blueprint-control-unknown {
+        border-color: #eee;
+        background: #eee;
+    }
+
+    .builder-blueprint-control-partial {
         border-color: #eee;
         background: #eee;
     }
@@ -200,6 +216,27 @@
         > .builder-blueprint-control-repeater {
             &:before, &:after {
                 background-color: @builder-hover-color;
+            }
+        }
+    }
+
+    .builder-blueprint-control-radiolist,
+    .builder-blueprint-control-checkboxlist {
+        ul {
+            list-style: none;
+            padding: 0;
+            color: @builder-control-text-color;
+
+            li {
+                margin-bottom: 3px;
+
+                &:last-child {
+                    margin-bottom: 0;
+                }
+ 
+                i {
+                    margin-right: 5px;
+                }
             }
         }
     }

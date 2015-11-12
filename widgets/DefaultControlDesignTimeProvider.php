@@ -19,6 +19,7 @@ class DefaultControlDesignTimeProvider extends ControlDesignTimeProviderBase
 {
     protected $defaultControlsTypes = [
         'text',
+        'number',
         'password',
         'textarea',
         'checkbox',
@@ -88,7 +89,7 @@ class DefaultControlDesignTimeProvider extends ControlDesignTimeProviderBase
      */
     public function controlHasLabels($type)
     {
-        if (in_array($type, ['checkbox', 'switch'])) {
+        if (in_array($type, ['checkbox', 'switch', 'hint', 'partial', 'section'])) {
             return false;
         }
 

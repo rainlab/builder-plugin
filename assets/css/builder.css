@@ -25,6 +25,9 @@ ul.builder-control-palette li {
   display: inline-block;
   font-size: 12px;
 }
+ul.builder-control-palette li:last-child {
+  margin-right: 10px;
+}
 ul.builder-control-palette li:hover {
   background: #ecf0f1;
 }
@@ -171,6 +174,21 @@ ul.builder-control-palette li i {
   color: white!important;
   background: #c03f31;
 }
+.builder-building-area ul.builder-control-list > li.control:not(.placeholder):not(.loading-control):not(.updating-control):hover[data-control-type=hint] > div.remove-control,
+.builder-building-area ul.builder-control-list > li.control:not(.placeholder):not(.loading-control):not(.updating-control):hover[data-control-type=partial] > div.remove-control {
+  top: 12px;
+  right: 12px;
+}
+.builder-building-area ul.builder-control-list > li.control[data-control-type=hint].updating-control:before,
+.builder-building-area ul.builder-control-list > li.control[data-control-type=partial].updating-control:before {
+  right: 12px;
+  top: 7;
+}
+.builder-building-area ul.builder-control-list > li.control[data-control-type=hint].updating-control:after,
+.builder-building-area ul.builder-control-list > li.control[data-control-type=partial].updating-control:after {
+  right: 4px;
+  top: 13px;
+}
 .builder-building-area ul.builder-control-list > li.control > .control-wrapper,
 .builder-building-area ul.builder-control-list > li.control > .control-static-contents {
   position: relative;
@@ -235,6 +253,7 @@ ul.builder-control-palette li i {
 }
 .builder-building-area .builder-blueprint-control-text,
 .builder-building-area .builder-blueprint-control-textarea,
+.builder-building-area .builder-blueprint-control-partial,
 .builder-building-area .builder-blueprint-control-unknown,
 .builder-building-area .builder-blueprint-control-dropdown {
   padding: 10px 12px;
@@ -246,6 +265,7 @@ ul.builder-control-palette li i {
 }
 .builder-building-area .builder-blueprint-control-text i,
 .builder-building-area .builder-blueprint-control-textarea i,
+.builder-building-area .builder-blueprint-control-partial i,
 .builder-building-area .builder-blueprint-control-unknown i,
 .builder-building-area .builder-blueprint-control-dropdown i {
   margin-right: 5px;
@@ -277,7 +297,19 @@ ul.builder-control-palette li i {
 .builder-building-area .builder-blueprint-control-textarea.size-giant {
   min-height: 350px;
 }
+.builder-building-area .builder-blueprint-control-section {
+  border-bottom: 1px solid #bdc3c7;
+  padding-bottom: 4px;
+}
+.builder-building-area .builder-blueprint-control-section .builder-control-label {
+  font-size: 16px;
+  margin-bottom: 6px;
+}
 .builder-building-area .builder-blueprint-control-unknown {
+  border-color: #eee;
+  background: #eee;
+}
+.builder-building-area .builder-blueprint-control-partial {
   border-color: #eee;
   background: #eee;
 }
@@ -419,6 +451,24 @@ ul.builder-control-palette li i {
 .builder-building-area li.control:hover > .builder-blueprint-control-repeater:after,
 .builder-building-area li.inspector-open > .builder-blueprint-control-repeater:after {
   background-color: #2581b8;
+}
+.builder-building-area .builder-blueprint-control-radiolist ul,
+.builder-building-area .builder-blueprint-control-checkboxlist ul {
+  list-style: none;
+  padding: 0;
+  color: #95a5a6;
+}
+.builder-building-area .builder-blueprint-control-radiolist ul li,
+.builder-building-area .builder-blueprint-control-checkboxlist ul li {
+  margin-bottom: 3px;
+}
+.builder-building-area .builder-blueprint-control-radiolist ul li:last-child,
+.builder-building-area .builder-blueprint-control-checkboxlist ul li:last-child {
+  margin-bottom: 0;
+}
+.builder-building-area .builder-blueprint-control-radiolist ul li i,
+.builder-building-area .builder-blueprint-control-checkboxlist ul li i {
+  margin-right: 5px;
 }
 .builder-tabs > .tabs {
   position: relative;

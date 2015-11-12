@@ -132,6 +132,27 @@
                         background: #c03f31;
                     }
                 }
+
+                &[data-control-type=hint], &[data-control-type=partial] {
+                    > div.remove-control {
+                        top: 12px;
+                        right: 12px;
+                    }
+                }
+            }
+
+            &[data-control-type=hint], &[data-control-type=partial] {
+                &.updating-control {
+                    &:before {
+                        right: 12px;
+                        top: 7;
+                    }
+
+                    &:after {
+                        right: 4px;
+                        top: 13px;
+                    }
+                }
             }
 
             > .control-wrapper,

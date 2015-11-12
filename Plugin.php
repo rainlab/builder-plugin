@@ -4,6 +4,7 @@ use Backend;
 use System\Classes\PluginBase;
 use Event;
 use Lang;
+use RainLab\Builder\Classes\StandardControlsRegistry;
 
 class Plugin extends PluginBase
 {
@@ -108,108 +109,7 @@ class Plugin extends PluginBase
     public function boot()
     {
         Event::listen('pages.builder.registerControls', function($controlLibrary) {
-            // Standard controls
-            //
-            $controlLibrary->registerControl('text', 
-                'rainlab.builder::lang.form.control_text',
-                null,
-                $controlLibrary::GROUP_STANDARD,
-                'icon-terminal',
-                $controlLibrary->getStandardProperties(['stretch']),
-                null
-            );
-
-            $controlLibrary->registerControl('password', 
-                'rainlab.builder::lang.form.control_password',
-                null,
-                $controlLibrary::GROUP_STANDARD,
-                'icon-lock',
-                $controlLibrary->getStandardProperties(['stretch']),
-                null
-            );
-
-            $controlLibrary->registerControl('checkbox', 
-                'rainlab.builder::lang.form.control_checkbox',
-                null,
-                $controlLibrary::GROUP_STANDARD,
-                'icon-check-square-o',
-                $controlLibrary->getStandardProperties(['commentAbove', 'stretch']),
-                null
-            );
-
-            $controlLibrary->registerControl('switch', 
-                'rainlab.builder::lang.form.control_switch',
-                null,
-                $controlLibrary::GROUP_STANDARD,
-                'icon-toggle-on',
-                $controlLibrary->getStandardProperties(['commentAbove', 'stretch']),
-                null
-            );
-
-            $properties = [
-                'size' =>  [
-                    'title' => Lang::get('rainlab.builder::lang.form.property_attributes_size'),
-                    'type' => 'dropdown',
-                    'options' => [
-                        'tiny' => Lang::get('rainlab.builder::lang.form.property_attributes_size_tiny'),
-                        'small' => Lang::get('rainlab.builder::lang.form.property_attributes_size_small'),
-                        'large' => Lang::get('rainlab.builder::lang.form.property_attributes_size_large'),
-                        'huge' => Lang::get('rainlab.builder::lang.form.property_attributes_size_huge'),
-                        'giant' => Lang::get('rainlab.builder::lang.form.property_attributes_size_giant')
-                    ]
-                ]
-            ];
-
-            $controlLibrary->registerControl('textarea', 
-                'rainlab.builder::lang.form.control_textarea',
-                null,
-                $controlLibrary::GROUP_STANDARD,
-                'icon-pencil-square-o',
-                $controlLibrary->getStandardProperties(['stretch'], $properties),
-                null
-            );
-
-            $properties = [
-                'options' =>  [
-                    'title' => Lang::get('rainlab.builder::lang.form.property_options'),
-                    'type' => 'dictionary',
-                    'ignoreIfEmpty' => true
-                ]
-            ];
-
-            $controlLibrary->registerControl('dropdown', 
-                'rainlab.builder::lang.form.control_dropdown',
-                null,
-                $controlLibrary::GROUP_STANDARD,
-                'icon-angle-double-down',
-                $controlLibrary->getStandardProperties(['stretch'], $properties),
-                null
-            );
-
-            // Widgets
-            //
-
-            $properties = [
-                'prompt' =>  [
-                    'title' => Lang::get('rainlab.builder::lang.form.property_prompt'),
-                    'description' => Lang::get('rainlab.builder::lang.form.property_prompt_description'),
-                    'type' => 'string',
-                    'ignoreIfEmpty' => true,
-                    'default' => Lang::get('rainlab.builder::lang.form.property_prompt_default'),
-                ],
-                'form' => [
-                    'type' => 'control-container'
-                ]
-            ];
-
-            $controlLibrary->registerControl('repeater', 
-                'rainlab.builder::lang.form.control_repeater',
-                null,
-                $controlLibrary::GROUP_WIDGETS,
-                'icon-server',
-                $controlLibrary->getStandardProperties(['stretch', 'placeholder', 'default', 'required', 'defaultFrom', 'dependsOn', 'trigger', 'preset', 'attributes'], $properties),
-                null
-            );
+            new StandardControlsRegistry($controlLibrary);
         });
     }
 }

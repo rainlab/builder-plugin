@@ -45,6 +45,14 @@
             delete properties['oc.comment']
             delete properties['oc.commentPosition']
         }
+
+        if (properties['oc.comment'] !== undefined) {
+            if (String(properties['oc.comment']).length > 0) {
+                properties['comment'] = properties['oc.comment']
+            }
+
+            delete properties['oc.comment']
+        }
     }
 
     function parseControlControlContainer(control) {
