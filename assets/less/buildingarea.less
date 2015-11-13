@@ -230,3 +230,13 @@
         }
     }
 }
+
+html.gecko.mac {
+    // Fixes a quirk in FireFox on mac
+
+    .builder-building-area {
+        div[data-root-control-wrapper] {
+            margin-right: 17px;
+        }
+    }
+}

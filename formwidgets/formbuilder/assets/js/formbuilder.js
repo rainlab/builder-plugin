@@ -219,12 +219,20 @@
         return ev.target.getAttribute('data-builder-placeholder')
     }
 
+    FormBuilder.prototype.dataTransferContains = function(ev, element) {
+        if (ev.dataTransfer.types.indexOf !== undefined){
+            return ev.dataTransfer.types.indexOf(element) >= 0
+        }
+
+        return ev.dataTransfer.types.contains(element)
+    }
+
     FormBuilder.prototype.sourceIsControlPalette = function(ev) {
-        return ev.dataTransfer.types.indexOf('builder/source/palette') >= 0
+        return this.dataTransferContains(ev, 'builder/source/palette')
     }
 
     FormBuilder.prototype.sourceIsContainer = function(ev) {
-        return ev.dataTransfer.types.indexOf('builder/source/container') >= 0
+        return this.dataTransferContains(ev, 'builder/source/container')
     }
 
     FormBuilder.prototype.startDragFromControlPalette = function(ev) {
@@ -248,7 +256,7 @@
         var current = target
 
         while (current) {
-            if (this.elementIsControl(current) && ev.dataTransfer.types.indexOf(this.getControlId(current)) >= 0) {
+            if (this.elementIsControl(current) && this.dataTransferContains(ev, this.getControlId(current))) {
                 return true
             }
 
@@ -797,14 +805,14 @@
     }
 
     FormBuilder.prototype.onAutocompleteItems = function(ev, data) {
-        if (data.property === 'oc.fieldName') {
+        if (data.propertyDefinition.fillFrom === 'model-fields') {
             ev.preventDefault()
             this.loadModelFields(ev.target, data.callback)
         }
     }
 
     FormBuilder.prototype.onDropdownOptions = function(ev, data) {
-        if (data.property === 'trigger.field' || data.property == 'preset.field' || data.property == 'defaultFrom') {
+        if (data.propertyDefinition.fillFrom === 'form-controls') {
             this.getContainerFieldNames(ev.target, data.callback)
             ev.preventDefault()
         }

@@ -198,7 +198,8 @@ class ControlLibrary
                 'description' => Lang::get('rainlab.builder::lang.form.property_default_from_description'),
                 'type' => 'dropdown',
                 'group' => Lang::get('rainlab.builder::lang.form.property_group_advanced'),
-                'ignoreIfEmpty' => true
+                'ignoreIfEmpty' => true,
+                'fillFrom' => 'form-controls'
             ],
             'dependsOn' => [
                 'title' => Lang::get('rainlab.builder::lang.form.property_dependson_title'),
@@ -229,7 +230,8 @@ class ControlLibrary
                         'property' => 'field',
                         'title' => Lang::get('rainlab.builder::lang.form.property_trigger_field'),
                         'description' => Lang::get('rainlab.builder::lang.form.property_trigger_field_description'),
-                        'type' => 'dropdown'
+                        'type' => 'dropdown',
+                        'fillFrom' => 'form-controls'
                     ],
                     [
                         'property' => 'condition',
@@ -256,6 +258,7 @@ class ControlLibrary
                         'title' => Lang::get('rainlab.builder::lang.form.property_preset_field'),
                         'description' => Lang::get('rainlab.builder::lang.form.property_preset_field_description'),
                         'type' => 'dropdown',
+                        'fillFrom' => 'form-controls'
                     ],
                     [
                         'property' => 'type',

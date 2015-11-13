@@ -137,6 +137,7 @@ class FormBuilder extends FormWidgetBase
             'title' => Lang::get('rainlab.builder::lang.form.property_field_name_title'),
             'property' => 'oc.fieldName',
             'type' => 'autocomplete',
+            'fillFrom' => 'model-fields',
             'validation' => [
                 'required' => [
                     'message' => Lang::get('rainlab.builder::lang.form.property_field_name_required')

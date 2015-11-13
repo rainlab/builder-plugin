@@ -251,6 +251,9 @@ ul.builder-control-palette li i {
 .builder-building-area .builder-control-comment-below:empty {
   display: none;
 }
+html.gecko.mac .builder-building-area div[data-root-control-wrapper] {
+  margin-right: 17px;
+}
 .builder-building-area .builder-blueprint-control-text,
 .builder-building-area .builder-blueprint-control-textarea,
 .builder-building-area .builder-blueprint-control-partial,
@@ -469,6 +472,15 @@ ul.builder-control-palette li i {
 .builder-building-area .builder-blueprint-control-radiolist ul li i,
 .builder-building-area .builder-blueprint-control-checkboxlist ul li i {
   margin-right: 5px;
+}
+.builder-building-area .builder-blueprint-control-text.fileupload.image {
+  width: 100px;
+  height: 100px;
+  text-align: center;
+}
+.builder-building-area .builder-blueprint-control-text.fileupload.image i {
+  line-height: 77px;
+  margin-right: 0;
 }
 .builder-tabs > .tabs {
   position: relative;
