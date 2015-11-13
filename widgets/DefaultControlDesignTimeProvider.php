@@ -31,7 +31,12 @@ class DefaultControlDesignTimeProvider extends ControlDesignTimeProviderBase
         'partial',
         'hint',
         'widget',
-        'repeater'
+        'repeater',
+        'codeeditor',
+        'colorpicker',
+        'datepicker',
+        'richeditor',
+        'markdown'
     ];
 
     /**
