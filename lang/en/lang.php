@@ -87,6 +87,7 @@ return [
         'add_list' => 'Add list',
     ],
     'form' => [
+        'saved'=> 'The form has been successfully saved.',
         'confirm_delete' => 'Do you really want to delete the form?',
         'tab_new_form' => 'New form',
         'property_label_title' => 'Label',

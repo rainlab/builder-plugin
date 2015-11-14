@@ -19,8 +19,8 @@ use BackendMenu;
 class Index extends Controller
 {
     use InspectableContainer;
- 
-     public $implement = [
+
+    public $implement = [
         'RainLab.Builder.Behaviors.IndexPluginOperations',
         'RainLab.Builder.Behaviors.IndexDatabaseTableOperations',
         'RainLab.Builder.Behaviors.IndexModelOperations',

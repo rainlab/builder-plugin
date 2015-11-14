@@ -176,7 +176,7 @@
             this.unhideFormDeleteButton($masterTabPane)
 
             this.getTableList().fileList('markActive', data.builderRepsonseData.tabId)
-            this.getIndexController().unchageTab($masterTabPane)
+            this.getIndexController().unchangeTab($masterTabPane)
         }
         else {
             this.forceCloseTab($masterTabPane)

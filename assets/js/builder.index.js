@@ -54,7 +54,7 @@
         return this.$masterTabs.find('> .tab-content > .tab-pane.active')
     }
 
-    Builder.prototype.unchageTab = function($pane) {
+    Builder.prototype.unchangeTab = function($pane) {
         $pane.find('form').trigger('unchange.oc.changeMonitor')
     }
 

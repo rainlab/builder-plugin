@@ -9,6 +9,7 @@ use Backend\Classes\FormField;
 use ApplicationException;
 use Exception;
 use Request;
+use Flash;
 use Input;
 use Lang;
 
@@ -51,7 +52,7 @@ class IndexModelFormOperations extends IndexOperationsBehaviorBase
 
         $result = [
             'tabTitle' => $widget->model->getDisplayName(Lang::get('rainlab.builder::lang.form.tab_new_form')),
-            'tabIcon' => 'icon-check-square',
+            'tabIcon' => 'oc-icon-check-square',
             'tabId' => $this->getTabId($modelClass, $fileName),
             'tab' => $this->makePartial('tab', [
                 'form'  => $widget,
@@ -73,9 +74,11 @@ class IndexModelFormOperations extends IndexOperationsBehaviorBase
 
         $result = $this->controller->widget->modelList->updateList();
 
+        Flash::success(Lang::get('rainlab.builder::lang.form.saved'));
+
         $modelClass = Input::get('model_class');
         $result['builderRepsonseData'] = [
-            'builderObjectName'=>$model->fileName,
+            'builderObjectName' => $model->fileName,
             'tabId' => $this->getTabId($modelClass, $model->fileName),
             'tabTitle' => $model->getDisplayName(Lang::get('rainlab.builder::lang.form.tab_new_form'))
         ];

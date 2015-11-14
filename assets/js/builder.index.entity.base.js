@@ -87,7 +87,7 @@
     }
 
     EntityBase.prototype.unmodifyTab = function($tabPane) {
-        this.indexController.unchageTab($tabPane)
+        this.indexController.unchangeTab($tabPane)
     }
 
     $.oc.builder.entityControllers.base = EntityBase;

@@ -32,20 +32,22 @@
     }
 
     ModelForm.prototype.cmdSaveForm = function(ev) {
-        var $form = $(ev.currentTarget).closest('form'),
+        var $target = $(ev.currentTarget),
+            $form = $target.closest('form'),
             $rootContainer = $('[data-root-control-wrapper] > [data-contol-container]', $form), 
             $inspectorContainer = $form.find('.inspector-container'),
             controls = $.oc.builder.formbuilder.domToPropertyJson.convert($rootContainer.get(0))
-            
+
         if (!$.oc.inspector.manager.applyValuesFromContainer($inspectorContainer)) {
-            return 
+            return
         }
 
         if (controls === false) {
             $.oc.flashMsg({
-                text: $.oc.builder.formbuilder.domToPropertyJson.getLastError(),
-                'class': 'error', 
-                'interval': 5})
+                'text': $.oc.builder.formbuilder.domToPropertyJson.getLastError(),
+                'class': 'error',
+                'interval': 5
+            })
 
             return
         }
@@ -54,12 +56,9 @@
                 controls: controls
             }
 
-        $.oc.stripeLoadIndicator.show()
-        $form.request('onModelFormSave', {
+        $target.request('onModelFormSave', {
             data: data
-        }).always(
-            $.oc.builder.indexController.hideStripeIndicatorProxy
-        ).done(
+        }).done(
             this.proxy(this.saveFormDone)
         )
     }
@@ -94,7 +93,7 @@
         this.unhideFormDeleteButton($masterTabPane)
 
         this.getModelList().fileList('markActive', data.builderRepsonseData.tabId)
-        this.getIndexController().unchageTab($masterTabPane)
+        this.getIndexController().unchangeTab($masterTabPane)
     }
 
     ModelForm.prototype.deleteConfirmed = function() {
@@ -112,7 +111,7 @@
     ModelForm.prototype.deleteDone = function() {
         var $masterTabPane = this.getMasterTabsActivePane()
 
-        this.getIndexController().unchageTab($masterTabPane)
+        this.getIndexController().unchangeTab($masterTabPane)
         this.forceCloseTab($masterTabPane)
     }
 
