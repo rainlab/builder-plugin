@@ -15,7 +15,6 @@
 
         this.placeholderIdIndex = 0
         this.updateControlBodyTimer = null
-        this.controlPaletteMarkup = null
 
         this.init()
     }
@@ -233,21 +232,9 @@
         return ev.dataTransfer.types.contains(element)
     }
 
-    // FormBuilder.prototype.sourceIsControlPalette = function(ev) {
-    //     return this.dataTransferContains(ev, 'builder/source/palette')
-    // }
-
     FormBuilder.prototype.sourceIsContainer = function(ev) {
         return this.dataTransferContains(ev, 'builder/source/container')
     }
-
-    // FormBuilder.prototype.startDragFromControlPalette = function(ev) {
-    //     ev.dataTransfer.effectAllowed = 'move'
-    //     ev.dataTransfer.setData('text/html', ev.target.innerHTML)
-    //     ev.dataTransfer.setData('builder/source/palette', 'true')
-    //     ev.dataTransfer.setData('builder/control/type', ev.target.getAttribute('data-builder-control-type'))
-    //     ev.dataTransfer.setData('builder/control/name', ev.target.getAttribute('data-builder-control-name'))
-    // }
 
     FormBuilder.prototype.startDragFromContainer = function(ev) {
         ev.dataTransfer.effectAllowed = 'move'
@@ -271,31 +258,6 @@
 
         return false
     }
-
-    // FormBuilder.prototype.dropFromPaletteToPlaceholder = function(ev) {
-    //     $.oc.foundation.event.stop(ev)
-    //     this.stopHighlightingTargets(ev.target)
-
-    //     this.addControlToPlaceholder(ev.target,
-    //         ev.dataTransfer.getData('builder/control/type'),
-    //         ev.dataTransfer.getData('builder/control/name'))
-
-    //     $(ev.target).closest('form').trigger('change')
-    // }
-
-    // FormBuilder.prototype.dropFromPaletteToControl = function(ev, targetControl) {
-    //     $.oc.foundation.event.stop(ev)
-    //     this.stopHighlightingTargets(ev.target)
-
-    //     var placeholder = this.createPlaceholder(targetControl)
-
-    //     this.addControlToPlaceholder(placeholder,
-    //         ev.dataTransfer.getData('builder/control/type'),
-    //         ev.dataTransfer.getData('builder/control/name'),
-    //         true)
-
-    //     $(targetControl).closest('form').trigger('change')
-    // }
 
     FormBuilder.prototype.dropFromContainerToPlaceholderOrControl = function(ev, targetControl) {
         var targetElement = targetControl ? targetControl : ev.target
@@ -445,7 +407,11 @@
         // Duplicate the placeholder and place it after 
         // the existing one
         if (!noNewPlaceholder) {
-            placeholder.insertAdjacentHTML('afterend', placeholder.outerHTML)
+            var newPlaceholder = $(placeholder.outerHTML)
+
+            newPlaceholder.removeAttr('data-builder-control-id')
+
+            placeholder.insertAdjacentHTML('afterend', newPlaceholder.get(0).outerHTML)
         }
 
         // Create the clear-row element after the current placeholder
@@ -478,15 +444,6 @@
         this.reflow(placeholder)
     }
 
-    FormBuilder.prototype.createPlaceholder = function(beforeElement) {
-        var controlList = this.findControlList(beforeElement),
-            existingPlaceholder = this.findPlaceholder(controlList)
-            
-        beforeElement.insertAdjacentHTML('beforebegin', existingPlaceholder.outerHTML)
-
-        return beforeElement.previousSibling
-    }
-
     FormBuilder.prototype.controlWrapperMarkupLoaded = function(responseData) {
         var placeholder = document.body.querySelector('li[data-builder-control-id="'+responseData.controlId+'"]')
         if (!placeholder) {
@@ -505,39 +462,16 @@
     }
 
     FormBuilder.prototype.displayControlPaletteForPlaceholder = function(element) {
-        this.loadControlPalette(element)
+        $.oc.builder.formbuilder.controlPalette.loadControlPalette(element, this.getControlId(element))
     }
 
-    FormBuilder.prototype.loadControlPalette = function(element) {
-        var controlId = this.getControlId(element)
-
-        if (this.controlPaletteMarkup === null) {
-            var data = {
-                controlId: controlId
-            }
-
-            $.oc.stripeLoadIndicator.show()
-            $(element).request('onModelFormLoadControlPalette', {
-                data: data
-            }).done(
-                this.proxy(this.controlPaletteMarkupLoaded)
-            ).always(function(){
-                $.oc.stripeLoadIndicator.hide()
-            })
+    FormBuilder.prototype.addControlFromControlPalette = function(placeholderId, controlType, controlName) {
+        var placeholder = document.body.querySelector('li[data-builder-control-id="'+placeholderId+'"]')
+        if (!placeholder) {
+            return
         }
-        else {
-            this.showControlPalette(controlId)
-        }
-    }
 
-    FormBuilder.prototype.controlPaletteMarkupLoaded = function(responseData) {
-        this.controlPaletteMarkup = responseData.markup
-
-        this.showControlPalette(responseData.controlId)
-    }
-
-    FormBuilder.prototype.showControlPalette = function(controlId) {
-        console.log(this.controlPaletteMarkup)
+        this.addControlToPlaceholder(placeholder, controlType, controlName)
     }
 
     // REMOVING CONTROLS
@@ -657,12 +591,6 @@
     // ============================
 
     FormBuilder.prototype.onDragStart = function(ev) {
-        // if (ev.target.getAttribute('data-builder-control-palette-control')) {
-        //     this.startDragFromControlPalette(ev)
-
-        //     return
-        // }
-
         if (this.elementIsControl(ev.target)) {
             this.startDragFromContainer(ev)
 
@@ -787,27 +715,8 @@
             return
         }
 
-        /*
-        if (this.targetIsPlaceholder(ev) && this.sourceIsControlPalette(ev)) {
-            // Dropped from the control palette to a placeholder.
-            // Stop highlighting the placeholder, add the new control.
-            this.dropFromPaletteToPlaceholder(ev)
-            return
-        }
-        */
-
-        var elementIsControl = this.elementIsControl(targetLi)
-
-        /*
-        if (elementIsControl && this.sourceIsControlPalette(ev)) {
-            // Dropped from the control palette to another element.
-            // Stop highlighting the placeholder, add the new control.
-            this.dropFromPaletteToControl(ev, targetLi)
-            return
-        }
-        */
-
-        var sourceIsContainer = this.sourceIsContainer(ev)
+        var elementIsControl = this.elementIsControl(targetLi),
+            sourceIsContainer = this.sourceIsContainer(ev)
 
         if ((elementIsControl || this.targetIsPlaceholder(ev)) && sourceIsContainer) {
             this.stopHighlightingTargets(targetLi)
@@ -887,7 +796,7 @@
     $(document).ready(function(){
         // There is a single instance of the form builder. All operations
         // are stateless, so instance properties or DOM references are not needed.
-        new FormBuilder()
+        $.oc.builder.formbuilder.controller = new FormBuilder()
     })
 
 }(window.jQuery);

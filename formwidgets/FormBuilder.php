@@ -49,11 +49,7 @@ class FormBuilder extends FormWidgetBase
      */
     public function prepareVars()
     {
-        $library = ControlLibrary::instance();
-        $controls = $library->listControls();
-        $this->vars['registeredControls'] = $controls;
         $this->vars['model'] = $this->model;
-        $this->vars['controlGroups'] = array_keys($controls);
     }
 
     /**
@@ -64,6 +60,7 @@ class FormBuilder extends FormWidgetBase
         $this->addJs('js/formbuilder.js', 'builder');
         $this->addJs('js/formbuilder.domtopropertyjson.js', 'builder');
         $this->addJs('js/formbuilder.tabs.js', 'builder');
+        $this->addJs('js/formbuilder.controlpalette.js', 'builder');
     }
 
     public function renderControlList($controls, $listName = '')
@@ -111,8 +108,13 @@ class FormBuilder extends FormWidgetBase
     {
         $controlId = Input::get('controlId');
 
+        $library = ControlLibrary::instance();
+        $controls = $library->listControls();
+        $this->vars['registeredControls'] = $controls;
+        $this->vars['controlGroups'] = array_keys($controls);
+
         return [
-            'markup' => 'Hello!',
+            'markup' => $this->makePartial('controlpalette'),
             'controlId' => $controlId
         ];
     }

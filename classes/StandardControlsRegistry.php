@@ -54,7 +54,7 @@ class StandardControlsRegistry
     {
         $this->controlLibrary->registerControl('text', 
             'rainlab.builder::lang.form.control_text',
-            null,
+            'rainlab.builder::lang.form.control_text_description',
             ControlLibrary::GROUP_STANDARD,
             'icon-terminal',
             $this->controlLibrary->getStandardProperties(['stretch']),
@@ -66,7 +66,7 @@ class StandardControlsRegistry
     {
         $this->controlLibrary->registerControl('password', 
             'rainlab.builder::lang.form.control_password',
-            null,
+            'rainlab.builder::lang.form.control_password_description',
             ControlLibrary::GROUP_STANDARD,
             'icon-lock',
             $this->controlLibrary->getStandardProperties(['stretch']),
@@ -78,7 +78,7 @@ class StandardControlsRegistry
     {
         $this->controlLibrary->registerControl('number', 
             'rainlab.builder::lang.form.control_number',
-            null,
+            'rainlab.builder::lang.form.control_number_description',
             ControlLibrary::GROUP_STANDARD,
             'icon-superscript',
             $this->controlLibrary->getStandardProperties(['stretch']),
@@ -90,7 +90,7 @@ class StandardControlsRegistry
     {
         $this->controlLibrary->registerControl('checkbox', 
             'rainlab.builder::lang.form.control_checkbox',
-            null,
+            'rainlab.builder::lang.form.control_checkbox_description',
             ControlLibrary::GROUP_STANDARD,
             'icon-check-square-o',
             $this->controlLibrary->getStandardProperties(['oc.commentPosition', 'stretch'], $this->getCheckboxTypeProperties()),
@@ -102,7 +102,7 @@ class StandardControlsRegistry
     {
         $this->controlLibrary->registerControl('switch', 
             'rainlab.builder::lang.form.control_switch',
-            null,
+            'rainlab.builder::lang.form.control_switch_description',
             ControlLibrary::GROUP_STANDARD,
             'icon-toggle-on',
             $this->controlLibrary->getStandardProperties(['oc.commentPosition', 'stretch'], $this->getCheckboxTypeProperties()),
@@ -116,7 +116,7 @@ class StandardControlsRegistry
 
         $this->controlLibrary->registerControl('textarea', 
             'rainlab.builder::lang.form.control_textarea',
-            null,
+            'rainlab.builder::lang.form.control_textarea_description',
             ControlLibrary::GROUP_STANDARD,
             'icon-pencil-square-o',
             $this->controlLibrary->getStandardProperties(['stretch'], $properties),
@@ -137,7 +137,7 @@ class StandardControlsRegistry
 
         $this->controlLibrary->registerControl('dropdown', 
             'rainlab.builder::lang.form.control_dropdown',
-            null,
+            'rainlab.builder::lang.form.control_dropdown_description',
             ControlLibrary::GROUP_STANDARD,
             'icon-angle-double-down',
             $this->controlLibrary->getStandardProperties(['stretch'], $properties),
@@ -163,7 +163,7 @@ class StandardControlsRegistry
 
         $this->controlLibrary->registerControl('hint', 
             'rainlab.builder::lang.form.control_hint',
-            null,
+            'rainlab.builder::lang.form.control_hint_description',
             ControlLibrary::GROUP_STANDARD,
             'icon-question-circle',
             $this->controlLibrary->getStandardProperties($this->getPartialIgnoreProperties(), $properties),
@@ -189,7 +189,7 @@ class StandardControlsRegistry
 
         $this->controlLibrary->registerControl('partial', 
             'rainlab.builder::lang.form.control_partial',
-            null,
+            'rainlab.builder::lang.form.control_partial_description',
             ControlLibrary::GROUP_STANDARD,
             'icon-file-text-o',
             $this->controlLibrary->getStandardProperties($this->getPartialIgnoreProperties(), $properties),
@@ -214,7 +214,7 @@ class StandardControlsRegistry
 
         $this->controlLibrary->registerControl('section', 
             'rainlab.builder::lang.form.control_section',
-            null,
+            'rainlab.builder::lang.form.control_section_description',
             ControlLibrary::GROUP_STANDARD,
             'icon-minus',
             $this->controlLibrary->getStandardProperties($ignoreProperties),
@@ -243,7 +243,7 @@ class StandardControlsRegistry
 
         $this->controlLibrary->registerControl('radio', 
             'rainlab.builder::lang.form.control_radio',
-            null,
+            'rainlab.builder::lang.form.control_radio_description',
             ControlLibrary::GROUP_STANDARD,
             'icon-dot-circle-o',
             $this->controlLibrary->getStandardProperties($ignoreProperties, $properties),
@@ -272,7 +272,7 @@ class StandardControlsRegistry
 
         $this->controlLibrary->registerControl('checkboxlist', 
             'rainlab.builder::lang.form.control_checkboxlist',
-            null,
+            'rainlab.builder::lang.form.control_checkboxlist_description',
             ControlLibrary::GROUP_STANDARD,
             'icon-list',
             $this->controlLibrary->getStandardProperties($ignoreProperties, $properties),
@@ -338,7 +338,7 @@ class StandardControlsRegistry
 
         $this->controlLibrary->registerControl('repeater', 
             'rainlab.builder::lang.form.control_repeater',
-            null,
+            'rainlab.builder::lang.form.control_repeater_description',
             ControlLibrary::GROUP_WIDGETS,
             'icon-server',
             $this->controlLibrary->getStandardProperties($ignoreProperties, $properties),
@@ -552,7 +552,7 @@ class StandardControlsRegistry
 
         $this->controlLibrary->registerControl('codeeditor', 
             'rainlab.builder::lang.form.control_codeeditor',
-            null,
+            'rainlab.builder::lang.form.control_codeeditor_description',
             ControlLibrary::GROUP_WIDGETS,
             'icon-code',
             $this->controlLibrary->getStandardProperties($ignoreProperties, $properties),
@@ -578,7 +578,7 @@ class StandardControlsRegistry
 
         $this->controlLibrary->registerControl('colorpicker', 
             'rainlab.builder::lang.form.control_colorpicker',
-            null,
+            'rainlab.builder::lang.form.control_colorpicker_description',
             ControlLibrary::GROUP_WIDGETS,
             'icon-eyedropper',
             $this->controlLibrary->getStandardProperties($ignoreProperties, $properties),
@@ -634,7 +634,7 @@ class StandardControlsRegistry
 
         $this->controlLibrary->registerControl('datepicker', 
             'rainlab.builder::lang.form.control_datepicker',
-            null,
+            'rainlab.builder::lang.form.control_datepicker_description',
             ControlLibrary::GROUP_WIDGETS,
             'icon-calendar',
             $this->controlLibrary->getStandardProperties($ignoreProperties, $properties),
@@ -648,7 +648,7 @@ class StandardControlsRegistry
 
         $this->controlLibrary->registerControl('richeditor', 
             'rainlab.builder::lang.form.control_richeditor',
-            null,
+            'rainlab.builder::lang.form.control_richeditor_description',
             ControlLibrary::GROUP_WIDGETS,
             'icon-indent',
             $this->controlLibrary->getStandardProperties([], $properties),
@@ -693,7 +693,7 @@ class StandardControlsRegistry
 
         $this->controlLibrary->registerControl('markdown', 
             'rainlab.builder::lang.form.control_markdown',
-            null,
+            'rainlab.builder::lang.form.control_markdown_description',
             ControlLibrary::GROUP_WIDGETS,
             'icon-columns',
             $this->controlLibrary->getStandardProperties([], $properties),
@@ -823,7 +823,7 @@ class StandardControlsRegistry
 
         $this->controlLibrary->registerControl('fileupload', 
             'rainlab.builder::lang.form.control_fileupload',
-            null,
+            'rainlab.builder::lang.form.control_fileupload_description',
             ControlLibrary::GROUP_WIDGETS,
             'icon-upload',
             $this->controlLibrary->getStandardProperties($ignoreProperties, $properties),
@@ -886,7 +886,7 @@ class StandardControlsRegistry
  
         $this->controlLibrary->registerControl('recordfinder', 
             'rainlab.builder::lang.form.control_recordfinder',
-            null,
+            'rainlab.builder::lang.form.control_recordfinder_description',
             ControlLibrary::GROUP_WIDGETS,
             'icon-search',
             $this->controlLibrary->getStandardProperties($ignoreProperties, $properties),
@@ -930,7 +930,7 @@ class StandardControlsRegistry
 
         $this->controlLibrary->registerControl('mediafinder', 
             'rainlab.builder::lang.form.control_mediafinder',
-            null,
+            'rainlab.builder::lang.form.control_mediafinder_description',
             ControlLibrary::GROUP_WIDGETS,
             'icon-picture-o',
             $this->controlLibrary->getStandardProperties($ignoreProperties, $properties),
@@ -982,7 +982,7 @@ class StandardControlsRegistry
 
         $this->controlLibrary->registerControl('relation', 
             'rainlab.builder::lang.form.control_relation',
-            null,
+            'rainlab.builder::lang.form.control_relation_description',
             ControlLibrary::GROUP_WIDGETS,
             'icon-code-fork',
             $this->controlLibrary->getStandardProperties($ignoreProperties, $properties),
