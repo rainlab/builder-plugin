@@ -68,7 +68,6 @@ ul.builder-control-palette li i {
 }
 .builder-building-area ul.builder-control-list > li.control.placeholder,
 .builder-building-area ul.builder-control-list > li.control.loading-control {
-  cursor: default;
   padding: 10px 12px;
   position: relative;
   text-align: center;
@@ -194,6 +193,12 @@ ul.builder-control-palette li i {
   position: relative;
   -webkit-transition: margin 0.1s;
   transition: margin 0.1s;
+}
+.builder-building-area ul.builder-control-list > li.placeholder:hover {
+  background-color: #2581b8 !important;
+  color: white!important;
+  border-style: solid;
+  border-color: #2581b8;
 }
 .builder-building-area ul.builder-control-list > li.control:not(.placeholder):not(.loading-control):not([data-unknown]):hover > .control-wrapper *,
 .builder-building-area ul.builder-control-list > li.control.inspector-open:not(.placeholder):not(.loading-control) > .control-wrapper * {
@@ -714,6 +719,12 @@ html.gecko.mac .builder-building-area div[data-root-control-wrapper] {
 .builder-tabs.secondary > .tabs ul.tabs > li.active > div.tab-container > div {
   color: #555555;
   padding-right: 30px;
+}
+html.gecko .builder-tabs.primary > .tabs > ul.tabs > li {
+  bottom: -3px;
+}
+html.gecko .builder-tabs.primary > .tabs > ul.tabs > li > div.tab-container > div {
+  padding-top: 5px;
 }
 .control-filelist ul li.group.model > h4 a:after {
   content: "\f074";

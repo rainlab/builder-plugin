@@ -16,10 +16,10 @@
             data-control="tab"
             data-closable
             data-close-confirmation="<?= e(trans('backend::lang.form.confirm_tab_close')) ?>"
-            data-pane-classes="layout-cell"
+            data-pane-classes="layout-fill-container"
             data-max-title-symbols="15"
             data-title-as-file-names="false"
-            class="layout control-tabs master-tabs fancy-layout oc-bg-logo"
+            class="flex-layout-column fill-container control-tabs master-tabs fancy-layout oc-bg-logo"
             id="builder-master-tabs">
 
             <div class="layout-row min-size">
@@ -27,7 +27,7 @@
                     <ul class="nav nav-tabs"></ul>
                 </div>
             </div>
-            <div class="tab-content layout-row">
+            <div class="tab-content flex-layout-item stretch relative">
             </div>
 
         </div>

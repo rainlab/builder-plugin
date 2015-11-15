@@ -15,6 +15,7 @@
 
         this.placeholderIdIndex = 0
         this.updateControlBodyTimer = null
+        this.controlPaletteMarkup = null
 
         this.init()
     }
@@ -38,6 +39,7 @@
 
         $(document).on('change', '.builder-control-list > li.control', this.proxy(this.onControlChange))
         $(document).on('click', '.builder-control-list > li.control div[data-builder-remove-control]', this.proxy(this.onRemoveControl))
+        $(document).on('click', '.builder-control-list > li.placeholder', this.proxy(this.onPlaceholderClick))
         $(document).on('showing.oc.inspector', '.builder-control-list > li.control', this.proxy(this.onInspectorShowing))
         $(document).on('livechange', '.builder-control-list > li.control', this.proxy(this.onControlLiveChange))
         $(document).on('autocompleteitems.oc.inspector', '.builder-control-list > li.control', this.proxy(this.onAutocompleteItems))
@@ -216,6 +218,10 @@
     // ============================
 
     FormBuilder.prototype.targetIsPlaceholder = function(ev) {
+        if (!ev.target.getAttribute) {
+            return false // In Gecko ev.target could be a text node
+        }
+
         return ev.target.getAttribute('data-builder-placeholder')
     }
 
@@ -227,21 +233,21 @@
         return ev.dataTransfer.types.contains(element)
     }
 
-    FormBuilder.prototype.sourceIsControlPalette = function(ev) {
-        return this.dataTransferContains(ev, 'builder/source/palette')
-    }
+    // FormBuilder.prototype.sourceIsControlPalette = function(ev) {
+    //     return this.dataTransferContains(ev, 'builder/source/palette')
+    // }
 
     FormBuilder.prototype.sourceIsContainer = function(ev) {
         return this.dataTransferContains(ev, 'builder/source/container')
     }
 
-    FormBuilder.prototype.startDragFromControlPalette = function(ev) {
-        ev.dataTransfer.effectAllowed = 'move'
-        ev.dataTransfer.setData('text/html', ev.target.innerHTML)
-        ev.dataTransfer.setData('builder/source/palette', 'true')
-        ev.dataTransfer.setData('builder/control/type', ev.target.getAttribute('data-builder-control-type'))
-        ev.dataTransfer.setData('builder/control/name', ev.target.getAttribute('data-builder-control-name'))
-    }
+    // FormBuilder.prototype.startDragFromControlPalette = function(ev) {
+    //     ev.dataTransfer.effectAllowed = 'move'
+    //     ev.dataTransfer.setData('text/html', ev.target.innerHTML)
+    //     ev.dataTransfer.setData('builder/source/palette', 'true')
+    //     ev.dataTransfer.setData('builder/control/type', ev.target.getAttribute('data-builder-control-type'))
+    //     ev.dataTransfer.setData('builder/control/name', ev.target.getAttribute('data-builder-control-name'))
+    // }
 
     FormBuilder.prototype.startDragFromContainer = function(ev) {
         ev.dataTransfer.effectAllowed = 'move'
@@ -266,30 +272,30 @@
         return false
     }
 
-    FormBuilder.prototype.dropFromPaletteToPlaceholder = function(ev) {
-        $.oc.foundation.event.stop(ev)
-        this.stopHighlightingTargets(ev.target)
+    // FormBuilder.prototype.dropFromPaletteToPlaceholder = function(ev) {
+    //     $.oc.foundation.event.stop(ev)
+    //     this.stopHighlightingTargets(ev.target)
 
-        this.addControlToPlaceholder(ev.target,
-            ev.dataTransfer.getData('builder/control/type'),
-            ev.dataTransfer.getData('builder/control/name'))
+    //     this.addControlToPlaceholder(ev.target,
+    //         ev.dataTransfer.getData('builder/control/type'),
+    //         ev.dataTransfer.getData('builder/control/name'))
 
-        $(ev.target).closest('form').trigger('change')
-    }
+    //     $(ev.target).closest('form').trigger('change')
+    // }
 
-    FormBuilder.prototype.dropFromPaletteToControl = function(ev, targetControl) {
-        $.oc.foundation.event.stop(ev)
-        this.stopHighlightingTargets(ev.target)
+    // FormBuilder.prototype.dropFromPaletteToControl = function(ev, targetControl) {
+    //     $.oc.foundation.event.stop(ev)
+    //     this.stopHighlightingTargets(ev.target)
 
-        var placeholder = this.createPlaceholder(targetControl)
+    //     var placeholder = this.createPlaceholder(targetControl)
 
-        this.addControlToPlaceholder(placeholder,
-            ev.dataTransfer.getData('builder/control/type'),
-            ev.dataTransfer.getData('builder/control/name'),
-            true)
+    //     this.addControlToPlaceholder(placeholder,
+    //         ev.dataTransfer.getData('builder/control/type'),
+    //         ev.dataTransfer.getData('builder/control/name'),
+    //         true)
 
-        $(targetControl).closest('form').trigger('change')
-    }
+    //     $(targetControl).closest('form').trigger('change')
+    // }
 
     FormBuilder.prototype.dropFromContainerToPlaceholderOrControl = function(ev, targetControl) {
         var targetElement = targetControl ? targetControl : ev.target
@@ -498,6 +504,42 @@
         $.oc.foundation.element.removeClass(placeholder, 'loading-control')
     }
 
+    FormBuilder.prototype.displayControlPaletteForPlaceholder = function(element) {
+        this.loadControlPalette(element)
+    }
+
+    FormBuilder.prototype.loadControlPalette = function(element) {
+        var controlId = this.getControlId(element)
+
+        if (this.controlPaletteMarkup === null) {
+            var data = {
+                controlId: controlId
+            }
+
+            $.oc.stripeLoadIndicator.show()
+            $(element).request('onModelFormLoadControlPalette', {
+                data: data
+            }).done(
+                this.proxy(this.controlPaletteMarkupLoaded)
+            ).always(function(){
+                $.oc.stripeLoadIndicator.hide()
+            })
+        }
+        else {
+            this.showControlPalette(controlId)
+        }
+    }
+
+    FormBuilder.prototype.controlPaletteMarkupLoaded = function(responseData) {
+        this.controlPaletteMarkup = responseData.markup
+
+        this.showControlPalette(responseData.controlId)
+    }
+
+    FormBuilder.prototype.showControlPalette = function(controlId) {
+        console.log(this.controlPaletteMarkup)
+    }
+
     // REMOVING CONTROLS
     // ============================
 
@@ -615,11 +657,11 @@
     // ============================
 
     FormBuilder.prototype.onDragStart = function(ev) {
-        if (ev.target.getAttribute('data-builder-control-palette-control')) {
-            this.startDragFromControlPalette(ev)
+        // if (ev.target.getAttribute('data-builder-control-palette-control')) {
+        //     this.startDragFromControlPalette(ev)
 
-            return
-        }
+        //     return
+        // }
 
         if (this.elementIsControl(ev.target)) {
             this.startDragFromContainer(ev)
@@ -642,14 +684,14 @@
         var sourceIsContainer = this.sourceIsContainer(ev),
             elementIsControl = this.elementIsControl(targetLi)
 
-        if ((this.targetIsPlaceholder(ev) || elementIsControl) && (this.sourceIsControlPalette(ev) || sourceIsContainer)) {
+        if ((this.targetIsPlaceholder(ev) || elementIsControl) && sourceIsContainer) {
             // Do not allow dropping controls to themselves or their
             // children controls.
             if (sourceIsContainer && elementIsControl && this.dropTargetIsChildOf(targetLi, ev)) {
                 return false
             }
 
-            // Dragging from the control palette or container over a placeholder or another control.
+            // Dragging from container over a placeholder or another control.
             // Allow the drop.
             $.oc.foundation.event.stop(ev)
             ev.dataTransfer.dropEffect = 'move'
@@ -670,7 +712,7 @@
 
         var sourceIsContainer = this.sourceIsContainer(ev)
 
-        if (this.targetIsPlaceholder(ev) && (this.sourceIsControlPalette(ev) || sourceIsContainer)) {
+        if (this.targetIsPlaceholder(ev) && sourceIsContainer) {
             // Do not allow dropping controls to themselves or their
             // children controls.
             if (sourceIsContainer && this.dropTargetIsChildOf(ev.target, ev)) {
@@ -678,7 +720,7 @@
                 return
             }
 
-            // Dragging from the control palette or container over a placeholder.
+            // Dragging from a container over a placeholder.
             // Highlight the placeholder.
             $.oc.foundation.element.addClass(ev.target, 'drag-over')
             return
@@ -686,7 +728,7 @@
 
         var elementIsControl = this.elementIsControl(targetLi)
 
-        if (elementIsControl && (sourceIsContainer || this.sourceIsControlPalette(ev))) {
+        if (elementIsControl && sourceIsContainer) {
             // Do not allow dropping controls to themselves or their
             // children controls.
             if (sourceIsContainer && elementIsControl && this.dropTargetIsChildOf(targetLi, ev)) {
@@ -694,7 +736,7 @@
                 return
             }
 
-            // Dragging from a container or control palette over another control.
+            // Dragging from a container over another control.
             // Highlight the other control.
             $.oc.foundation.element.addClass(targetLi, 'drag-over')
 
@@ -715,16 +757,16 @@
             return
         }
 
-        if (this.targetIsPlaceholder(ev) && (this.sourceIsControlPalette(ev) || this.sourceIsContainer(ev))) {
-            // Dragging from the control palette or container over a placeholder.
+        if (this.targetIsPlaceholder(ev) && this.sourceIsContainer(ev)) {
+            // Dragging from a container over a placeholder.
             // Stop highlighting the placeholder.
             this.stopHighlightingTargets(ev.target)
 
             return
         }
 
-        if (this.elementIsControl(targetLi) && (this.sourceIsContainer(ev) || this.sourceIsControlPalette(ev))) {
-            // Dragging from a container or control palette over another control.
+        if (this.elementIsControl(targetLi) && this.sourceIsContainer(ev)) {
+            // Dragging from a container over another control.
             // Stop highlighting the other control.
             var mousePosition = $.oc.foundation.event.pageCoordinates(ev)
 
@@ -745,21 +787,25 @@
             return
         }
 
+        /*
         if (this.targetIsPlaceholder(ev) && this.sourceIsControlPalette(ev)) {
             // Dropped from the control palette to a placeholder.
             // Stop highlighting the placeholder, add the new control.
             this.dropFromPaletteToPlaceholder(ev)
             return
         }
+        */
 
         var elementIsControl = this.elementIsControl(targetLi)
 
+        /*
         if (elementIsControl && this.sourceIsControlPalette(ev)) {
             // Dropped from the control palette to another element.
             // Stop highlighting the placeholder, add the new control.
             this.dropFromPaletteToControl(ev, targetLi)
             return
         }
+        */
 
         var sourceIsContainer = this.sourceIsContainer(ev)
 
@@ -832,6 +878,10 @@
             ev.preventDefault()
             return false
         }
+    }
+
+    FormBuilder.prototype.onPlaceholderClick = function(ev) {
+        this.displayControlPaletteForPlaceholder(ev.target)
     }
 
     $(document).ready(function(){

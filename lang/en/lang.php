@@ -244,7 +244,7 @@ return [
         'property_relation_prompt_description' => 'Text to display when there is no available selections.',
         'control_group_standard' => 'Standard',
         'control_group_widgets' => 'Widgets',
-        'drop_control_here' => 'Drop a control here',
+        'click_to_add_control' => 'Add control',
         'loading' => 'Loading...',
         'control_text' => 'Text',
         'control_password' => 'Password',

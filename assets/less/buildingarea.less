@@ -18,7 +18,6 @@
             }
 
             &.placeholder, &.loading-control {
-                cursor: default;
                 padding: 10px 12px;
                 position: relative;
                 text-align: center;
@@ -160,6 +159,13 @@
                 position: relative;
                 .transition(margin 0.1s);
             }
+        }
+
+        > li.placeholder:hover {
+            background-color: @builder-hover-color!important;
+            color: white!important;
+            border-style: solid;
+            border-color: @builder-hover-color;
         }
 
         > li.control:not(.placeholder):not(.loading-control):not([data-unknown]):hover > .control-wrapper *,

@@ -107,6 +107,16 @@ class FormBuilder extends FormWidgetBase
         ];
     }
 
+    public function onModelFormLoadControlPalette()
+    {
+        $controlId = Input::get('controlId');
+
+        return [
+            'markup' => 'Hello!',
+            'controlId' => $controlId
+        ];
+    }
+
     //
     // Methods for the internal use
     //
