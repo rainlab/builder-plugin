@@ -1,4 +1,4 @@
-<div class="layout-row min-size panel-contents">
+<div class="flex-layout-item fix panel-contents">
     <div class="sidepanel-content-header">
         <?php if ($pluginVector): ?>
             <?= e(trans($pluginVector->getPluginName())) ?>
@@ -10,7 +10,7 @@
 
 <?php if ($pluginVector): ?>
     <?= $this->makePartial('toolbar') ?>
-    <div class="layout-row">
+    <div class="flex-layout-item fix">
         <div class="layout-cell">
             <div class="layout-relative">
                 <?= $this->makePartial('model-list', ['items'=>$items]) ?>
