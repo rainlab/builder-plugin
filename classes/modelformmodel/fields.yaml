@@ -16,6 +16,7 @@ fields:
 
 secondaryTabs:
     stretch: true
+    cssClass: stretch
     fields:
         formBuilder: 
             type: RainLab\Builder\FormWidgets\FormBuilder
