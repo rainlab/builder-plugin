@@ -3,6 +3,7 @@
 use Backend\Classes\WidgetBase;
 use RainLab\Builder\Classes\ModelModel;
 use RainLab\Builder\Classes\ModelFormModel;
+use RainLab\Builder\Classes\ModelListModel;
 use RainLab\Builder\Models\Settings as PluginSettings;
 use Input;
 use Response;
@@ -118,7 +119,8 @@ class ModelList extends WidgetBase
         foreach ($models as $model) {
             $result[] = [
                 'model' => $model,
-                'forms' => ModelFormModel::listModelFiles($pluginCode, $model->className)
+                'forms' => ModelFormModel::listModelFiles($pluginCode, $model->className),
+                'lists' => ModelListModel::listModelFiles($pluginCode, $model->className)
             ];
         }
 

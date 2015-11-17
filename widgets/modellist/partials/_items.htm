@@ -3,6 +3,7 @@
         <?php foreach ($items as $modelInfo):
             $model = $modelInfo['model'];
             $modelForms = $modelInfo['forms'];
+            $modelLists = $modelInfo['lists'];
             $dataId = 'model-'.$model->className;
 
             $modelGroup = $model->className;
@@ -61,11 +62,27 @@
                                 href="javascript:;"
                                 class="control icon btn-primary oc-icon-plus" 
                                 data-builder-command="modelList:cmdCreateList"
+                                data-model-class="<?= e($model->className) ?>"
                                 title="<?= e(trans('rainlab.builder::lang.model.add_form')) ?>"
                             ><?= e(trans('rainlab.builder::lang.model.add_form')) ?></a>
                         </div>
 
-                        <ul></ul>
+                        <ul>
+                            <?php foreach ($modelLists as $modelList):
+                                $formDataId = 'modelList-'.$model->className.'-'.$modelList;
+                            ?>
+                                <li class="item"
+                                    data-id="<?= e($formDataId) ?>" 
+                                >
+                                    <a 
+                                        href="javascript:;"
+                                        data-builder-command="modelList:cmdOpenList"
+                                        data-model-class="<?= e($model->className) ?>"
+                                        data-list="<?= e($modelList) ?>"
+                                        ><span class="title"><?= e($modelList) ?></span></a>
+                                </li>
+                            <?php endforeach?>
+                        </ul>
                     </li>
                 </ul>
                 
