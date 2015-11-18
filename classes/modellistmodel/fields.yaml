@@ -27,6 +27,8 @@ tabs:
             columns:
                 field: 
                     title: rainlab.builder::lang.list.column_dbfield_label
+                    type: autocomplete
+                    fillFrom: model-fields
                     validation: 
                         required: 
                             message: rainlab.builder::lang.list.column_dbfield_required

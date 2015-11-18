@@ -13,11 +13,17 @@
         BaseProto = Base.prototype
 
     var ModelList = function(indexController) {
+        this.cachedModelFieldsPromises = {}
+
         Base.call(this, 'modelList', indexController)
     }
 
     ModelList.prototype = Object.create(BaseProto)
     ModelList.prototype.constructor = ModelList
+
+    ModelList.prototype.registerHandlers = function() {
+        $(document).on('autocompleteitems.oc.table', 'form[data-sub-entity="model-list"] [data-control=table]', this.proxy(this.onAutocompleteItems))
+    }
 
     // PUBLIC METHODS
     // ============================
@@ -127,6 +133,49 @@
         var tableObj = this.getTableControlObject($target)
 
         return tableObj.dataSource.getAllData()
+    }
+
+    ModelList.prototype.loadModelFields = function(table, callback) {
+        var $form = $(table).closest('form'),
+            modelClass = $form.find('input[name=model_class]').val(),
+            cachedFields = $form.data('oc.model-field-cache')
+
+        if (cachedFields !== undefined) {
+            callback(cachedFields)
+
+            return
+        }
+
+        if (this.cachedModelFieldsPromises[modelClass] === undefined) {
+            this.cachedModelFieldsPromises[modelClass] = $form.request('onModelFormGetModelFields', {
+                data: {
+                    'as_plain_list': 1
+                }
+            })
+        }
+
+        if (callback === undefined) {
+            return
+        }
+
+        this.cachedModelFieldsPromises[modelClass].done(function(data){
+            $form.data('oc.model-field-cache', data.responseData.options)
+
+            callback(data.responseData.options)
+        })
+    }
+
+    // EVENT HANDLERS
+    // ============================
+
+    ModelList.prototype.onAutocompleteItems = function(ev, data) {
+        if (data.columnConfiguration.fillFrom === 'model-fields') {
+            ev.preventDefault()
+
+            this.loadModelFields(ev.target, data.callback)
+
+            return false
+        }
     }
 
     // REGISTRATION

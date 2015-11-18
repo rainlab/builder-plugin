@@ -38,7 +38,7 @@ class IndexModelListOperations extends IndexOperationsBehaviorBase
 
         $result = [
             'tabTitle' => $widget->model->getDisplayName(Lang::get('rainlab.builder::lang.list.tab_new_list')),
-            'tabIcon' => 'oc-icon-check-square',
+            'tabIcon' => 'oc-icon-list',
             'tabId' => $this->getTabId($modelClass, $fileName),
             'tab' => $this->makePartial('tab', [
                 'form'  => $widget,

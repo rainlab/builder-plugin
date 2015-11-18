@@ -98,13 +98,19 @@ class IndexModelFormOperations extends IndexOperationsBehaviorBase
     public function onModelFormGetModelFields()
     {
         $columnNames = ModelModel::getModelFields($this->getPluginCode(), Input::get('model_class'));
+        $asPlainList = Input::get('as_plain_list');
 
         $result = [];
         foreach ($columnNames as $columnName) {
-            $result[] = [
-                'title' => $columnName,
-                'value' => $columnName
-            ];
+            if (!$asPlainList) {
+                $result[] = [
+                    'title' => $columnName,
+                    'value' => $columnName
+                ];
+            }
+            else {
+                $result[$columnName] = $columnName;
+            }
         }
 
         return [

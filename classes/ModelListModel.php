@@ -65,8 +65,25 @@ class ModelListModel extends ModelYamlModel
     {
         parent::validate();
 
+        $this->validateDupicateColumns();
+
         if (!$this->columns) {
             throw new ValidationException(['columns' => 'Please create at least one column.']);
+        }
+    }
+
+    protected function validateDupicateColumns()
+    {
+        foreach ($this->columns as $outerIndex=>$outerColumn) {
+            foreach ($this->columns as $innerIndex=>$innerColumn) {
+                if ($innerIndex != $outerIndex && $innerColumn['field'] == $outerColumn['field']) {
+                    throw new ValidationException([
+                        'columns' => Lang::get('rainlab.builder::lang.list.error_duplicate_column', 
+                            ['column' => $outerColumn['field']]
+                        )
+                    ]);
+                }
+            }
         }
     }
 
@@ -89,6 +106,8 @@ class ModelListModel extends ModelYamlModel
             if (array_key_exists('id', $column)) {
                 unset($column['id']);
             }
+
+            $column = $this->preprocessColumnDataBeforeSave($column);
 
             $fileColumns[$columnName]  = $column;
         }
@@ -118,5 +137,38 @@ class ModelListModel extends ModelYamlModel
         }
 
         $this->columns = $columns;
+    }
+
+    protected function preprocessColumnDataBeforeSave($column)
+    {
+        $booleanFields = [
+            'searchable',
+            'invisible',
+            'sortable'
+        ];
+
+        $column = array_filter($column, function($value) 
+        {
+            return strlen($value) > 0;
+        });
+
+        foreach ($booleanFields as $booleanField) {
+            if (!array_key_exists($booleanField, $column)) {
+                continue;
+            }
+
+            $value = $column[$booleanField];
+            if ($value == '1' || $value == 'true') {
+                $value = true;
+            }
+            else {
+                $value = false;
+            }
+
+
+            $column[$booleanField] = $value;
+        }
+
+        return $column;
     }
 }

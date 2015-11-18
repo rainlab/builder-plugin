@@ -3,7 +3,8 @@
     'data-change-monitor' => 'true',
     'data-window-close-confirm' => e(trans('backend::lang.form.confirm_tab_close')),
     'data-entity' => 'models',
-    'onsubmit' => 'return false'
+    'onsubmit' => 'return false',
+    'data-sub-entity' => 'model-list'
 ]) ?>
     <?= $form->render() ?>
     <input type="hidden" name="plugin_code" value="<?= e($pluginCode) ?>">

@@ -348,6 +348,7 @@ return [
         'column_label_path' => 'Path',
         'column_label_format' => 'Format',
         'column_label_value_from' => 'Value from',
+        'error_duplicate_column' => "Duplicate column field name: ':column'."
     ],
     'controller' => [
         'menu_label' => 'Controllers'
