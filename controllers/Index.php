@@ -25,7 +25,8 @@ class Index extends Controller
         'RainLab.Builder.Behaviors.IndexDatabaseTableOperations',
         'RainLab.Builder.Behaviors.IndexModelOperations',
         'RainLab.Builder.Behaviors.IndexModelFormOperations',
-        'RainLab.Builder.Behaviors.IndexModelListOperations'
+        'RainLab.Builder.Behaviors.IndexModelListOperations',
+        'RainLab.Builder.Behaviors.IndexPermissionsOperations'
     ];
 
     public $requiredPermissions = ['rainlab.buileder.*'];
@@ -58,6 +59,7 @@ class Index extends Controller
         $this->addJs('/plugins/rainlab/builder/assets/js/builder.index.entity.model.js', 'RainLab.Builder');
         $this->addJs('/plugins/rainlab/builder/assets/js/builder.index.entity.modelform.js', 'RainLab.Builder');
         $this->addJs('/plugins/rainlab/builder/assets/js/builder.index.entity.modellist.js', 'RainLab.Builder');
+        $this->addJs('/plugins/rainlab/builder/assets/js/builder.index.entity.permission.js', 'RainLab.Builder');
         $this->addJs('/plugins/rainlab/builder/assets/js/builder.index.js', 'RainLab.Builder');
 
         $this->pageTitleTemplate = '%s Builder';

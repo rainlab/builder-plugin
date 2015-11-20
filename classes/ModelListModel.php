@@ -128,6 +128,14 @@ class ModelListModel extends ModelYamlModel
         $index = 0;
 
         foreach ($fileColumns as $columnName=>$column) {
+            if (!is_array($column)) {
+                // Handle the case when a column is defined as
+                // column: Title
+                $column = [
+                    'label' => $column 
+                ];
+            }
+
             $column['id'] = $index;
             $column['field'] = $columnName;
 

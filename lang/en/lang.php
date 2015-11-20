@@ -363,7 +363,17 @@ return [
         'menu_label' => 'Localization'
     ],
     'permission' => [
-        'menu_label' => 'Permissions'
+        'menu_label' => 'Permissions',
+        'tab' => 'Permissions',
+        'form_tab_permissions' => 'Permissions',
+        'btn_add_permission' => 'Add permission',
+        'btn_delete_permission' => 'Delete permission',
+        'column_permission_label' => 'Permission code',
+        'column_permission_required' => 'Please enter the permission code',
+        'column_tab_label' => 'Tab title',
+        'column_tab_required' => 'Please enter the permission tab title',
+        'column_label_label' => 'Label',
+        'column_label_required' => 'Please enter the permission label'
     ],
     'yaml' => [
         'save_error' => "Error saving file ':name'. Please check write permissions."

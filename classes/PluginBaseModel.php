@@ -15,7 +15,7 @@ use File;
  * @package rainlab\builder
  * @author Alexey Bobkov, Samuel Georges
  */
-class PluginBaseModel extends YamlModel
+class PluginBaseModel extends PluginYamlModel
 {
     public $name;
 
@@ -68,29 +68,10 @@ class PluginBaseModel extends YamlModel
         return $this->author_namespace.'.'.$this->namespace;
     }
 
-    public function loadPlugin($pluginCode)
+    protected function initPropertiesFromPluginCodeObject($pluginCodeObj)
     {
-        $pluginCodeObj = new PluginCode($pluginCode);
-
-        $filePath = self::pluginSettingsFileExists($pluginCodeObj);
-        if ($filePath === false) {
-            throw new ApplicationException(Lang::get('rainlab.builder::lang.plugin.error_settings_not_editable'));
-        }
-
         $this->author_namespace = $pluginCodeObj->getAuthorCode();
         $this->namespace = $pluginCodeObj->getPluginCode();
-
-        return parent::load($filePath);
-    }
-
-    public static function pluginSettingsFileExists($pluginCodeObj)
-    {
-        $filePath = File::symbolizePath($pluginCodeObj->toPluginFilePath());
-        if (File::isFile($filePath)) {
-            return $filePath;
-        }
-
-        return false;
     }
 
     /**
@@ -167,24 +148,5 @@ class PluginBaseModel extends YamlModel
         if (basename($basePath) == strtolower($this->namespace)) {
             File::deleteDirectory($basePath);
         }
-    }
-
-    /**
-     * Returns a file path to save the model to.
-     * @return string Returns a path.
-     */
-    protected function getFilePath()
-    {
-        return $this->getPluginPathObj()->toPluginFilePath();
-    }
-
-    protected function getPluginPath()
-    {
-        return $this->getPluginPathObj()->toFilesystemPath();
-    }
-
-    protected function getPluginPathObj()
-    {
-        return new PluginCode($this->getPluginCode());
     }
 }
