@@ -373,7 +373,9 @@ return [
         'column_tab_label' => 'Tab title',
         'column_tab_required' => 'Please enter the permission tab title',
         'column_label_label' => 'Label',
-        'column_label_required' => 'Please enter the permission label'
+        'column_label_required' => 'Please enter the permission label',
+        'saved' => 'The permissions have been successfully saved.',
+        'error_duplicate_code' => "Duplicate permission code: ':code'."
     ],
     'yaml' => [
         'save_error' => "Error saving file ':name'. Please check write permissions."

@@ -67,23 +67,4 @@ abstract class PluginYamlModel extends YamlModel
 
         return false;
     }
-
-    /**
-     * Returns a file path to save the model to.
-     * @return string Returns a path.
-     */
-    protected function getFilePath()
-    {
-        return $this->getPluginPathObj()->toPluginFilePath();
-    }
-
-    protected function getPluginPath()
-    {
-        return $this->getPluginPathObj()->toFilesystemPath();
-    }
-
-    protected function getPluginPathObj()
-    {
-        return new PluginCode($this->getPluginCode());
-    }
 }

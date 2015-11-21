@@ -30,7 +30,7 @@ class IndexPermissionsOperations extends IndexOperationsBehaviorBase
         $result = [
             'tabTitle' => $widget->model->getPluginName().'/'.Lang::get('rainlab.builder::lang.permission.tab'),
             'tabIcon' => 'icon-unlock-alt',
-            'tabId' => $this->getTabId($pluginCodeObj->toCode()),
+            'tabId' => $this->getTabId($pluginCode),
             'tab' => $this->makePartial('tab', [
                 'form'  => $widget,
                 'pluginCode' => $pluginCodeObj->toCode()
@@ -42,27 +42,22 @@ class IndexPermissionsOperations extends IndexOperationsBehaviorBase
 
     public function onPermissionsSave()
     {
-        // $model = $this->loadPermissions();
-        // $model->fill($_POST);
-        // $model->save();
+        $pluginCodeObj = new PluginCode(Request::input('plugin_code'));
 
-        // $result = $this->controller->widget->modelList->updateList();
+        $pluginCode = $pluginCodeObj->toCode();
+        $model = $this->loadOrCreateBaseModel($pluginCodeObj->toCode());
+        $model->setPluginCodeObj($pluginCodeObj);
+        $model->fill($_POST);
+        $model->save();
 
-        // Flash::success(Lang::get('rainlab.builder::lang.list.saved'));
+        Flash::success(Lang::get('rainlab.builder::lang.permission.saved'));
 
-        // $modelClass = Input::get('model_class');
-        // $result['builderRepsonseData'] = [
-        //     'builderObjectName' => $model->fileName,
-        //     'tabId' => $this->getTabId($modelClass, $model->fileName),
-        //     'tabTitle' => $model->getDisplayName(Lang::get('rainlab.builder::lang.list.tab_new_list'))
-        // ];
+        $result['builderRepsonseData'] = [
+            'tabId' => $this->getTabId($pluginCode),
+            'tabTitle' => $model->getPluginName().'/'.Lang::get('rainlab.builder::lang.permission.tab'),
+        ];
 
-        // return $result;
-    }
-
-    protected function loadPermissions()
-    {
-        return $this->loadOrCreateBaseModel(null, null);
+        return $result;
     }
 
     protected function getTabId($pluginCode)

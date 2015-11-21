@@ -19,11 +19,91 @@
     Permission.prototype = Object.create(BaseProto)
     Permission.prototype.constructor = Permission
 
+    Permission.prototype.registerHandlers = function() {
+        this.indexController.$masterTabs.on('oc.tableNewRow', this.proxy(this.onTableRowCreated))
+    }
+
     // PUBLIC METHODS
     // ============================
 
     Permission.prototype.cmdOpenPermissions = function(ev) {
         this.indexController.openOrLoadMasterTab($(ev.target), 'onPermissionsOpen', this.makeTabId('plugin-permissions'))
+    }
+
+    Permission.prototype.cmdSavePermissions = function(ev) {
+        var $target = $(ev.currentTarget),
+            $form = $target.closest('form')
+
+        if (!this.validateTable($target)) {
+            return
+        }
+
+        $target.request('onPermissionsSave', {
+            data: {
+                permissions: this.getTableData($target)
+            }
+        }).done(
+            this.proxy(this.saveListDone)
+        )
+    }
+
+    // INTERNAL METHODS
+    // ============================
+
+    Permission.prototype.getTableControlObject = function($target) {
+        var $form = $target.closest('form'),
+            $table = $form.find('[data-control=table]'),
+            tableObj = $table.data('oc.table')
+
+        if (!tableObj) {
+            throw new Error('Table object is not found on the model list tab')
+        }
+
+        return tableObj
+    }
+
+    Permission.prototype.validateTable = function($target) {
+        var tableObj = this.getTableControlObject($target)
+
+        tableObj.unfocusTable()
+        return tableObj.validate()
+    }
+
+    Permission.prototype.getTableData = function($target) {
+        var tableObj = this.getTableControlObject($target)
+
+        return tableObj.dataSource.getAllData()
+    }
+
+    Permission.prototype.saveListDone = function(data) {
+        if (data['builderRepsonseData'] === undefined) {
+            throw new Error('Invalid response data')
+        }
+
+        var $masterTabPane = this.getMasterTabsActivePane()
+
+        this.getIndexController().unchangeTab($masterTabPane)
+    }
+
+    // EVENT HANDLERS
+    // ============================
+
+    Permission.prototype.onTableRowCreated = function(ev, recordData) {
+        var $target = $(ev.target)
+
+        if ($target.data('alias') != 'permissions') {
+            return
+        }
+
+        var $form = $target.closest('form')
+
+        if ($form.data('entity') != 'permissions') {
+            return
+        }
+
+        var pluginCode = $form.find('input[name=plugin_code]').val()
+        
+        recordData.permission = pluginCode.toLowerCase() + '.';
     }
 
     // REGISTRATION

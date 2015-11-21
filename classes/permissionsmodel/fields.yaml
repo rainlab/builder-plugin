@@ -19,19 +19,12 @@ tabs:
             btnAddRowLabel: rainlab.builder::lang.permission.btn_add_permission
             btnDeleteRowLabel: rainlab.builder::lang.permission.btn_delete_permission
             columns:
-                field: 
+                permission: 
                     title: rainlab.builder::lang.permission.column_permission_label
                     type: string
-                    validation: 
-                        required: 
-                            message: rainlab.builder::lang.permission.column_permission_required
                 tab:
                     title: rainlab.builder::lang.permission.column_tab_label
-                    validation: 
-                        required: 
-                            message: rainlab.builder::lang.list.column_tab_required
+                    type: string
                 label:
                     title: rainlab.builder::lang.permission.column_label_label
-                    validation: 
-                        required: 
-                            message: rainlab.builder::lang.list.column_label_required
+                    type: string

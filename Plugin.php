@@ -84,7 +84,7 @@ class Plugin extends PluginBase
                         'label'       => 'rainlab.builder::lang.permission.menu_label',
                         'icon'        => 'icon-unlock-alt',
                         'url'         => '#',
-                        'attributes'  => ['data-no-side-panel'=>'true', 'data-builder-command'=>'permission:cmdOpenPermissions'],
+                        'attributes'  => ['data-no-side-panel'=>'true', 'data-builder-command'=>'permission:cmdOpenPermissions', 'data-menu-item'=>'permissions'],
                         'permissions' => ['rainlab.builder.*']
                     ]
                 ]

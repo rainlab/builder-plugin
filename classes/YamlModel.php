@@ -33,7 +33,16 @@ abstract class YamlModel extends BaseModel
 
         if ($this->yamlSection) {
             $fileData = $this->originalFileData;
-            $fileData[$this->yamlSection] = $data;
+
+            if ($data) {
+                // Save the section data only if the section 
+                // is not empty.
+                $fileData[$this->yamlSection] = $data;
+            } else {
+                if (array_key_exists($this->yamlSection, $fileData)) {
+                    unset($fileData[$this->yamlSection]);
+                }
+            }
             $data = $fileData;
         }
 
