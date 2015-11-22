@@ -8,7 +8,7 @@ use Input;
 use Lang;
 
 /**
- * Menu items widget.
+ * Form builder widget.
  *
  * @package october\backend
  * @author Alexey Bobkov, Samuel Georges

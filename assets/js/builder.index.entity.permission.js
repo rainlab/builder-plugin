@@ -43,7 +43,7 @@
                 permissions: this.getTableData($target)
             }
         }).done(
-            this.proxy(this.saveListDone)
+            this.proxy(this.savePermissionsDone)
         )
     }
 
@@ -56,7 +56,7 @@
             tableObj = $table.data('oc.table')
 
         if (!tableObj) {
-            throw new Error('Table object is not found on the model list tab')
+            throw new Error('Table object is not found on permissions tab')
         }
 
         return tableObj
@@ -75,7 +75,7 @@
         return tableObj.dataSource.getAllData()
     }
 
-    Permission.prototype.saveListDone = function(data) {
+    Permission.prototype.savePermissionsDone = function(data) {
         if (data['builderRepsonseData'] === undefined) {
             throw new Error('Invalid response data')
         }

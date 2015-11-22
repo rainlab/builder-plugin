@@ -1,0 +1,120 @@
+.builder-menu-editor {
+    background: white;
+    
+    .builder-menu-editor-workspace {
+        padding: 30px;
+    }
+
+    ul.builder-menu {
+        font-size: 0;
+        padding: 0;
+        cursor: pointer;
+
+        > li {
+            .border-radius(4px);
+
+            div.item-container {
+                &:hover {
+                    background: @builder-hover-color!important;
+                    color: white!important;
+
+                    a {
+                        color: white!important;
+                    }
+                }
+            }
+
+            &.add {
+                font-size: 16px;
+                text-align: center;
+                border: 2px dotted #dde0e2;
+
+                a {
+                    text-decoration: none;
+                    color: #dfe2e4;
+                }
+
+                &:hover {
+                    border: 2px dotted @builder-hover-color;
+                    background: @builder-hover-color!important;
+
+                    a {
+                        color: white;
+                    }
+                }
+            }
+        }
+
+        &.builder-main-menu {
+            > li {
+                display: inline-block;
+                vertical-align: top;
+                white-space: nowrap;
+
+                &.item {
+                    margin: 0 20px 20px 0;
+                }
+
+                > div.item-container {
+                    background: #ecf0f1;
+                    color: #708080;
+                    padding: 20px 25px;
+                    height: 64px;
+
+                    i {
+                        font-size: 24px;
+                        margin-right: 10px;
+                    }
+
+                    span.title {
+                        font-size: 14px;
+                        line-height: 100%;
+                        position: relative;
+                        top: -3px;
+                    }
+                }
+
+                &.add {
+                    padding: 20px 15px;
+                    height: 64px;
+                }
+            }
+        }
+
+        &.builder-submenu {
+            margin-top: 1px;
+
+            > li {
+                display: block;
+                width: 120px;
+
+                &.item {
+                    margin: 0 0 1px 0;
+                }
+
+                > div.item-container {
+                    background: #f3f5f5;
+                    color: #94a5a6;
+                    padding: 18px 13px;
+                    text-align: center;
+
+                    i {
+                        font-size: 24px;
+                        margin-bottom: 7px;
+                        display: block;
+                    }
+
+                    span.title {
+                        display: block;
+                        font-size: 12px;
+                    }
+                }
+
+                &.add {
+                    margin-top: 20px;
+                    padding: 10px 20px;
+                }
+            }
+        }
+    }
+}

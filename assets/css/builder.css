@@ -687,6 +687,102 @@ html.gecko .builder-tabs.primary > .tabs > ul.tabs > li {
 html.gecko .builder-tabs.primary > .tabs > ul.tabs > li > div.tab-container > div {
   padding-top: 5px;
 }
+.builder-menu-editor {
+  background: white;
+}
+.builder-menu-editor .builder-menu-editor-workspace {
+  padding: 30px;
+}
+.builder-menu-editor ul.builder-menu {
+  font-size: 0;
+  padding: 0;
+  cursor: pointer;
+}
+.builder-menu-editor ul.builder-menu > li {
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+.builder-menu-editor ul.builder-menu > li div.item-container:hover {
+  background: #2581b8 !important;
+  color: white!important;
+}
+.builder-menu-editor ul.builder-menu > li div.item-container:hover a {
+  color: white!important;
+}
+.builder-menu-editor ul.builder-menu > li.add {
+  font-size: 16px;
+  text-align: center;
+  border: 2px dotted #dde0e2;
+}
+.builder-menu-editor ul.builder-menu > li.add a {
+  text-decoration: none;
+  color: #dfe2e4;
+}
+.builder-menu-editor ul.builder-menu > li.add:hover {
+  border: 2px dotted #2581b8;
+  background: #2581b8 !important;
+}
+.builder-menu-editor ul.builder-menu > li.add:hover a {
+  color: white;
+}
+.builder-menu-editor ul.builder-menu.builder-main-menu > li {
+  display: inline-block;
+  vertical-align: top;
+  white-space: nowrap;
+}
+.builder-menu-editor ul.builder-menu.builder-main-menu > li.item {
+  margin: 0 20px 20px 0;
+}
+.builder-menu-editor ul.builder-menu.builder-main-menu > li > div.item-container {
+  background: #ecf0f1;
+  color: #708080;
+  padding: 20px 25px;
+  height: 64px;
+}
+.builder-menu-editor ul.builder-menu.builder-main-menu > li > div.item-container i {
+  font-size: 24px;
+  margin-right: 10px;
+}
+.builder-menu-editor ul.builder-menu.builder-main-menu > li > div.item-container span.title {
+  font-size: 14px;
+  line-height: 100%;
+  position: relative;
+  top: -3px;
+}
+.builder-menu-editor ul.builder-menu.builder-main-menu > li.add {
+  padding: 20px 15px;
+  height: 64px;
+}
+.builder-menu-editor ul.builder-menu.builder-submenu {
+  margin-top: 1px;
+}
+.builder-menu-editor ul.builder-menu.builder-submenu > li {
+  display: block;
+  width: 120px;
+}
+.builder-menu-editor ul.builder-menu.builder-submenu > li.item {
+  margin: 0 0 1px 0;
+}
+.builder-menu-editor ul.builder-menu.builder-submenu > li > div.item-container {
+  background: #f3f5f5;
+  color: #94a5a6;
+  padding: 18px 13px;
+  text-align: center;
+}
+.builder-menu-editor ul.builder-menu.builder-submenu > li > div.item-container i {
+  font-size: 24px;
+  margin-bottom: 7px;
+  display: block;
+}
+.builder-menu-editor ul.builder-menu.builder-submenu > li > div.item-container span.title {
+  display: block;
+  font-size: 12px;
+}
+.builder-menu-editor ul.builder-menu.builder-submenu > li.add {
+  margin-top: 20px;
+  padding: 10px 20px;
+}
 .control-filelist ul li.group.model > h4 a:after {
   content: "\f074";
   top: 10px;

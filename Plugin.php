@@ -52,6 +52,13 @@ class Plugin extends PluginBase
                         'attributes'  => ['data-menu-item'=>'models'],
                         'permissions' => ['rainlab.builder.*']
                     ],
+                    'permissions' => [
+                        'label'       => 'rainlab.builder::lang.permission.menu_label',
+                        'icon'        => 'icon-unlock-alt',
+                        'url'         => '#',
+                        'attributes'  => ['data-no-side-panel'=>'true', 'data-builder-command'=>'permission:cmdOpenPermissions', 'data-menu-item'=>'permissions'],
+                        'permissions' => ['rainlab.builder.*']
+                    ],
                     'controllers' => [
                         'label'       => 'rainlab.builder::lang.controller.menu_label',
                         'icon'        => 'icon-asterisk',
@@ -63,7 +70,7 @@ class Plugin extends PluginBase
                         'label'       => 'rainlab.builder::lang.menu.menu_label',
                         'icon'        => 'icon-location-arrow',
                         'url'         => 'javascript:;',
-                        'attributes'  => ['data-menu-item'=>'menu'],
+                        'attributes'  => ['data-no-side-panel'=>'true', 'data-builder-command'=>'menus:cmdOpenMenus', 'data-menu-item'=>'menus'],
                         'permissions' => ['rainlab.builder.*']
                     ],
                     'versions' => [
@@ -78,13 +85,6 @@ class Plugin extends PluginBase
                         'icon'        => 'icon-globe',
                         'url'         => 'javascript:;',
                         'attributes'  => ['data-menu-item'=>'localization'],
-                        'permissions' => ['rainlab.builder.*']
-                    ],
-                    'permissions' => [
-                        'label'       => 'rainlab.builder::lang.permission.menu_label',
-                        'icon'        => 'icon-unlock-alt',
-                        'url'         => '#',
-                        'attributes'  => ['data-no-side-panel'=>'true', 'data-builder-command'=>'permission:cmdOpenPermissions', 'data-menu-item'=>'permissions'],
                         'permissions' => ['rainlab.builder.*']
                     ]
                 ]

@@ -1,0 +1,20 @@
+<div class="layout-absolute builder-menu-editor">
+    <div class="control-scrollpad" data-control="scrollpad">
+        <div class="scroll-wrapper">
+            <div class="builder-menu-editor-workspace">
+                <?= $this->makePartial('mainmenuitems', ['items' => $items]) ?>
+            </div>
+        </div>
+    </div>
+
+    <?php /*
+    <script type="text/template" data-main-menu-template>
+        <?= $this->makePartial('item', ['item' => $emptyItem]) ?>
+    </script>
+
+    <script type="text/template" data-sub-menu-template>
+        <?= $this->makePartial('item', ['item' => $emptyItem]) ?>
+    </script>
+    */
+    ?>
+</div>

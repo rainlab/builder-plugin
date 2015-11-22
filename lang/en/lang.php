@@ -357,7 +357,10 @@ return [
         'menu_label' => 'Versions'
     ],
     'menu' => [
-        'menu_label' => 'Backend Menu'
+        'menu_label' => 'Backend Menu',
+        'tab' => 'Menus',
+        'saved' => 'The menus have been successfully saved.',
+        'add_main_menu_item' => 'Add main menu item'
     ],
     'localization' => [
         'menu_label' => 'Localization'
