@@ -703,11 +703,13 @@ html.gecko .builder-tabs.primary > .tabs > ul.tabs > li > div.tab-container > di
   -moz-border-radius: 4px;
   border-radius: 4px;
 }
-.builder-menu-editor ul.builder-menu > li div.item-container:hover {
+.builder-menu-editor ul.builder-menu > li div.item-container:hover,
+.builder-menu-editor ul.builder-menu > li.inspector-open > div.item-container {
   background: #2581b8 !important;
   color: white!important;
 }
-.builder-menu-editor ul.builder-menu > li div.item-container:hover a {
+.builder-menu-editor ul.builder-menu > li div.item-container:hover a,
+.builder-menu-editor ul.builder-menu > li.inspector-open > div.item-container a {
   color: white!important;
 }
 .builder-menu-editor ul.builder-menu > li.add {
@@ -717,7 +719,10 @@ html.gecko .builder-tabs.primary > .tabs > ul.tabs > li > div.tab-container > di
 }
 .builder-menu-editor ul.builder-menu > li.add a {
   text-decoration: none;
-  color: #dfe2e4;
+  color: #bdc3c7;
+}
+.builder-menu-editor ul.builder-menu > li.add span.title {
+  font-size: 14px;
 }
 .builder-menu-editor ul.builder-menu > li.add:hover {
   border: 2px dotted #2581b8;
@@ -751,8 +756,15 @@ html.gecko .builder-tabs.primary > .tabs > ul.tabs > li > div.tab-container > di
   top: -3px;
 }
 .builder-menu-editor ul.builder-menu.builder-main-menu > li.add {
-  padding: 20px 15px;
   height: 64px;
+}
+.builder-menu-editor ul.builder-menu.builder-main-menu > li.add a {
+  padding: 20px 15px;
+  height: 60px;
+  display: block;
+}
+.builder-menu-editor ul.builder-menu.builder-main-menu > li.add a i {
+  margin-right: 5px;
 }
 .builder-menu-editor ul.builder-menu.builder-submenu {
   margin-top: 1px;
@@ -760,6 +772,14 @@ html.gecko .builder-tabs.primary > .tabs > ul.tabs > li > div.tab-container > di
 .builder-menu-editor ul.builder-menu.builder-submenu > li {
   display: block;
   width: 120px;
+}
+.builder-menu-editor ul.builder-menu.builder-submenu > li i {
+  display: block;
+  margin-bottom: 7px;
+}
+.builder-menu-editor ul.builder-menu.builder-submenu > li span.title {
+  display: block;
+  font-size: 12px;
 }
 .builder-menu-editor ul.builder-menu.builder-submenu > li.item {
   margin: 0 0 1px 0;
@@ -772,16 +792,13 @@ html.gecko .builder-tabs.primary > .tabs > ul.tabs > li > div.tab-container > di
 }
 .builder-menu-editor ul.builder-menu.builder-submenu > li > div.item-container i {
   font-size: 24px;
-  margin-bottom: 7px;
-  display: block;
-}
-.builder-menu-editor ul.builder-menu.builder-submenu > li > div.item-container span.title {
-  display: block;
-  font-size: 12px;
 }
 .builder-menu-editor ul.builder-menu.builder-submenu > li.add {
   margin-top: 20px;
+}
+.builder-menu-editor ul.builder-menu.builder-submenu > li.add a {
   padding: 10px 20px;
+  display: block;
 }
 .control-filelist ul li.group.model > h4 a:after {
   content: "\f074";

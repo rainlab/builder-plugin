@@ -3,6 +3,7 @@
 use Request;
 use Backend\Classes\FormWidgetBase;
 use RainLab\Builder\Classes\ControlLibrary;
+use RainLab\Builder\Classes\IconList;
 use ApplicationException;
 use Input;
 use Lang;
@@ -15,6 +16,8 @@ use Lang;
  */
 class MenuEditor extends FormWidgetBase
 {
+    protected $iconList = null;
+
     /**
      * {@inheritDoc}
      */
@@ -43,6 +46,20 @@ class MenuEditor extends FormWidgetBase
     {
         $this->vars['model'] = $this->model;
         $this->vars['items'] = $this->model->menus;
+
+        $this->vars['emptyItem'] = [
+            'label' => Lang::get('rainlab.builder::lang.menu.new_menu_item'),
+            'icon' => 'icon-life-ring',
+            'code' => 'newitemcode',
+            'url' => '/'
+        ];
+
+        $this->vars['emptySubItem'] = [
+            'label' => Lang::get('rainlab.builder::lang.menu.new_menu_item'),
+            'icon' => 'icon-sitemap',
+            'code' => 'newitemcode',
+            'url' => '/'
+        ];
     }
 
     /**
@@ -50,6 +67,7 @@ class MenuEditor extends FormWidgetBase
      */
     public function loadAssets()
     {
+        $this->addJs('js/menubuilder.js', 'builder');
     }
 
     //
@@ -67,5 +85,125 @@ class MenuEditor extends FormWidgetBase
         }
 
         return null;
+    }
+
+    protected function getIconList()
+    {
+        if ($this->iconList !== null) {
+            return $this->iconList;
+        }
+
+        $icons = IconList::getList();
+        $this->iconList = [];
+
+        foreach ($icons as $iconCode=>$iconInfo) {
+            $iconCode = preg_replace('/^oc\-/', '', $iconCode);
+
+            $this->iconList[$iconCode] = $iconInfo;
+        }
+
+        return $this->iconList;
+    }
+
+    protected function getCommonMenuItemConfigurationSchema()
+    {
+        $result = [
+            [
+                'title' => Lang::get('rainlab.builder::lang.menu.property_code'),
+                'property' => 'code',
+                'validation' => [
+                    'required' => [
+                        'message' => Lang::get('rainlab.builder::lang.menu.property_code_required')
+                    ]
+                ]
+            ],
+            [
+                'title' => Lang::get('rainlab.builder::lang.menu.property_label'),
+                'property' => 'label',
+                'validation' => [
+                    'required' => [
+                        'message' => Lang::get('rainlab.builder::lang.menu.property_label_required')
+                    ]
+                ]
+            ],
+            [
+                'title' => Lang::get('rainlab.builder::lang.menu.property_url'),
+                'property' => 'url',
+                'validation' => [
+                    'required' => [
+                        'message' => Lang::get('rainlab.builder::lang.menu.property_url_required')
+                    ]
+                ]
+            ],
+            [
+                'title' => Lang::get('rainlab.builder::lang.menu.property_icon'),
+                'property' => 'icon',
+                'type' => 'dropdown',
+                'options' => $this->getIconList(),
+                'validation' => [
+                    'required' => [
+                        'message' => Lang::get('rainlab.builder::lang.menu.property_icon_required')
+                    ]
+                ],
+            ],
+            [
+                'title' => Lang::get('rainlab.builder::lang.menu.property_permissions'),
+                'property' => 'permissions',
+                'type' => 'stringList'
+            ]
+        ];
+
+        return $result;
+    }
+
+    protected function getSideMenuConfigurationSchema()
+    {
+        $result = $this->getCommonMenuItemConfigurationSchema();
+
+        $result[] = [
+                'title' => Lang::get('rainlab.builder::lang.menu.property_attributes'),
+                'property' => 'attributes',
+                'type' => 'stringList'
+        ];
+
+        return json_encode($result);
+    }
+
+    protected function getSideMenuConfiguration($item)
+    {
+        if (!count($item)) {
+            return '{}';
+        }
+
+        return json_encode($item);
+    }
+
+
+    protected function getMainMenuConfigurationSchema()
+    {
+        $result = $this->getCommonMenuItemConfigurationSchema();
+
+        $result[] = [
+            'title' => Lang::get('rainlab.builder::lang.menu.property_order'),
+            'description' => Lang::get('rainlab.builder::lang.menu.property_order_description'),
+            'property' => 'order',
+            'validation' => [
+                'regex' => [
+                    'pattern' => '^[0-9]+$',
+                    'message' => Lang::get('rainlab.builder::lang.menu.property_order_invalid')
+                ]
+            ]
+        ];
+
+        return json_encode($result);
+    }
+
+    protected function getMainMenuConfiguration($item)
+    {
+        if (!count($item)) {
+            return '{}';
+        }
+
+        return json_encode($item);
     }
 }

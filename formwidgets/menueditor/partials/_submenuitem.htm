@@ -1,0 +1,13 @@
+<li 
+    class="item"
+    data-inspectable
+    data-inspector-title="<?= e(trans('rainlab.builder::lang.menu.side_menu_item')) ?>"
+>
+    <div class="item-container">
+        <i class="<?= e($this->getItemArrayProperty($item, 'icon')) ?>"></i>
+        <span class="title"><?= e($this->getItemArrayProperty($item, 'label')) ?></span>
+    </div>
+
+    <input type="hidden" value="<?= e($this->getSideMenuConfigurationSchema()) ?>" data-inspector-config>
+    <input type="hidden" value="<?= e($this->getSideMenuConfiguration($item)) ?>" data-inspector-values>
+</li>

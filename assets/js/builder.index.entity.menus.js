@@ -40,6 +40,14 @@
         )
     }
 
+    Menus.prototype.cmdAddMainMenuItem = function(ev) {
+        $.oc.builder.menubuilder.controller.addMainMenuItem(ev)
+    }
+
+    Menus.prototype.cmdAddSideMenuItem = function(ev) {
+        $.oc.builder.menubuilder.controller.addSideMenuItem(ev)
+    }
+
     // INTERNAL METHODS
     // ============================
 

@@ -1,62 +1,7 @@
 <ul class="builder-menu builder-main-menu">
     <?php foreach ($items as $item): ?>
-    <li class="item">
-        <div class="item-container">
-            <i class="icon-credit-card"></i>
-            <span class="title"><?= e($this->getItemArrayProperty($item, 'label')) ?></span>
-        </div>
-    </li>
+        <?= $this->makePartial('mainmenuitem', ['item' => $item]) ?>
     <?php endforeach ?>
-
-    <li class="item">
-        <div class="item-container">
-            <i class="icon-credit-card"></i>
-            <span class="title">Orders</span>
-        </div>
-
-        <ul class="builder-menu builder-submenu">
-            <li class="item">
-                <div class="item-container">
-                    <i class="icon-recycle"></i>
-                    <span class="title">All orders</span>
-                </div>
-            </li>
-
-            <li class="item">
-                <div class="item-container">
-                    <i class=" icon-check-square"></i>
-                    <span class="title">Processed</span>
-                </div>
-            </li>
-
-            <li class="add">
-                <a href="javascript:;"
-                    data-hotkey="ctrl+i, cmd+i"
-                    data-builder-command="menus:cmdAddMainMenuItem"
-                >
-                    <i class="icon-plus-circle"></i>
-                </a>
-            </li>
-        </ul>
-    </li>
-
-    <li class="item">
-        <div class="item-container">
-            <i class="icon-shopping-cart"></i>
-            <span class="title">Products</span>
-        </div>
-
-        <ul class="builder-menu builder-submenu">
-            <li class="add">
-                <a href="javascript:;"
-                    data-hotkey="ctrl+i, cmd+i"
-                    data-builder-command="menus:cmdAddMainMenuItem"
-                >
-                    <i class="icon-plus-circle"></i>
-                </a>
-            </li>
-        </ul>
-    </li>
 
     <li class="add">
         <a href="javascript:;"
@@ -64,6 +9,7 @@
             data-builder-command="menus:cmdAddMainMenuItem"
         >
             <i class="icon-plus-circle"></i>
+            <span class="title"><?= e(trans('rainlab.builder::lang.menu.add_main_menu_item')) ?></span>
         </a>
     </li>
 </ul>

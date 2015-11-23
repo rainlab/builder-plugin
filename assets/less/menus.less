@@ -13,14 +13,12 @@
         > li {
             .border-radius(4px);
 
-            div.item-container {
-                &:hover {
-                    background: @builder-hover-color!important;
-                    color: white!important;
+            div.item-container:hover, &.inspector-open > div.item-container {
+                background: @builder-hover-color!important;
+                color: white!important;
 
-                    a {
-                        color: white!important;
-                    }
+                a {
+                    color: white!important;
                 }
             }
 
@@ -31,7 +29,11 @@
 
                 a {
                     text-decoration: none;
-                    color: #dfe2e4;
+                    color: #bdc3c7;
+                }
+
+                span.title {
+                    font-size: 14px;
                 }
 
                 &:hover {
@@ -75,8 +77,17 @@
                 }
 
                 &.add {
-                    padding: 20px 15px;
                     height: 64px;
+
+                    a {
+                        padding: 20px 15px;
+                        height: 60px;
+                        display: block;
+
+                        i {
+                            margin-right: 5px;
+                        }
+                    }
                 }
             }
         }
@@ -87,6 +98,16 @@
             > li {
                 display: block;
                 width: 120px;
+
+                i {
+                    display: block;
+                    margin-bottom: 7px;
+                }
+
+                span.title {
+                    display: block;
+                    font-size: 12px;
+                }
 
                 &.item {
                     margin: 0 0 1px 0;
@@ -100,19 +121,17 @@
 
                     i {
                         font-size: 24px;
-                        margin-bottom: 7px;
-                        display: block;
-                    }
-
-                    span.title {
-                        display: block;
-                        font-size: 12px;
                     }
                 }
 
                 &.add {
                     margin-top: 20px;
-                    padding: 10px 20px;
+
+                    a {
+                        padding: 10px 20px;
+                        display: block;
+                    }
+
                 }
             }
         }

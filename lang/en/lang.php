@@ -360,7 +360,24 @@ return [
         'menu_label' => 'Backend Menu',
         'tab' => 'Menus',
         'saved' => 'The menus have been successfully saved.',
-        'add_main_menu_item' => 'Add main menu item'
+        'add_main_menu_item' => 'Add main menu item',
+        'new_menu_item' => 'Menu Item',
+        'add_side_menu_item' => 'Add sub-item',
+        'side_menu_item' => 'Side menu item',
+        'property_label' => 'Label',
+        'property_label_required' => 'Please enter the menu item labels.',
+        'property_url_required' => 'Please enter the menu item URL',
+        'property_url' => 'URL',
+        'property_icon' => 'Icon',
+        'property_icon_required' => 'Please select an icon',
+        'property_permissions' => 'Permissions',
+        'property_order' => 'Order',
+        'property_order_invalid' => 'Please enter the menu item order as integer value.',
+        'property_order_description' => 'Menu item order manages its position in the menu. If the order is not provided, the item will be placed to the end of the menu. The default order values have the increment of 100.',
+        'property_attributes' => 'HTML attributes',
+        'property_code' => 'Code',
+        'property_code_invalid' => 'The code should contain only Latin letter and digits',
+        'property_code_required' => 'Please enter the menu item code.'
     ],
     'localization' => [
         'menu_label' => 'Localization'
