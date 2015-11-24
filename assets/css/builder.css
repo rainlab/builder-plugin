@@ -712,6 +712,31 @@ html.gecko .builder-tabs.primary > .tabs > ul.tabs > li > div.tab-container > di
 .builder-menu-editor ul.builder-menu > li.inspector-open > div.item-container a {
   color: white!important;
 }
+.builder-menu-editor ul.builder-menu > li div.item-container {
+  position: relative;
+}
+.builder-menu-editor ul.builder-menu > li div.item-container .close-btn {
+  color: white;
+  position: absolute;
+  display: none;
+  width: 15px;
+  height: 15px;
+  right: 5px;
+  top: 5px;
+  font-size: 14px;
+  text-align: center;
+  line-height: 14px;
+}
+.builder-menu-editor ul.builder-menu > li div.item-container:hover .close-btn {
+  display: block;
+  text-decoration: none;
+  opacity: 0.5;
+  filter: alpha(opacity=50);
+}
+.builder-menu-editor ul.builder-menu > li div.item-container:hover .close-btn:hover {
+  opacity: 1;
+  filter: alpha(opacity=100);
+}
 .builder-menu-editor ul.builder-menu > li.add {
   font-size: 16px;
   text-align: center;
@@ -734,7 +759,6 @@ html.gecko .builder-tabs.primary > .tabs > ul.tabs > li > div.tab-container > di
 .builder-menu-editor ul.builder-menu.builder-main-menu > li {
   display: inline-block;
   vertical-align: top;
-  white-space: nowrap;
 }
 .builder-menu-editor ul.builder-menu.builder-main-menu > li.item {
   margin: 0 20px 20px 0;
@@ -744,6 +768,7 @@ html.gecko .builder-tabs.primary > .tabs > ul.tabs > li > div.tab-container > di
   color: #708080;
   padding: 20px 25px;
   height: 64px;
+  white-space: nowrap;
 }
 .builder-menu-editor ul.builder-menu.builder-main-menu > li > div.item-container i {
   font-size: 24px;
@@ -765,6 +790,10 @@ html.gecko .builder-tabs.primary > .tabs > ul.tabs > li > div.tab-container > di
 }
 .builder-menu-editor ul.builder-menu.builder-main-menu > li.add a i {
   margin-right: 5px;
+}
+.builder-menu-editor ul.builder-menu.builder-main-menu > li.add a span {
+  position: relative;
+  top: -1px;
 }
 .builder-menu-editor ul.builder-menu.builder-submenu {
   margin-top: 1px;

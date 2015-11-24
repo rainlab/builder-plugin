@@ -377,7 +377,9 @@ return [
         'property_attributes' => 'HTML attributes',
         'property_code' => 'Code',
         'property_code_invalid' => 'The code should contain only Latin letter and digits',
-        'property_code_required' => 'Please enter the menu item code.'
+        'property_code_required' => 'Please enter the menu item code.',
+        'error_duplicate_main_menu_code' => "Duplicate main menu item code: ':code'.",
+        'error_duplicate_side_menu_code' => "Duplicate side menu item code: ':code'."
     ],
     'localization' => [
         'menu_label' => 'Localization'

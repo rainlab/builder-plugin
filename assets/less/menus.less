@@ -22,6 +22,33 @@
                 }
             }
 
+            div.item-container {
+                position: relative;
+
+                .close-btn {
+                    color: white;
+                    position: absolute;
+                    display: none;
+                    width: 15px;
+                    height: 15px;
+                    right: 5px;
+                    top: 5px;
+                    font-size: 14px;
+                    text-align: center;
+                    line-height: 14px;
+                }
+
+                &:hover .close-btn {
+                    display: block;
+                    text-decoration: none;
+                    .opacity(0.5);
+
+                    &:hover {
+                        .opacity(1);
+                    }
+                }
+            }
+
             &.add {
                 font-size: 16px;
                 text-align: center;
@@ -51,7 +78,6 @@
             > li {
                 display: inline-block;
                 vertical-align: top;
-                white-space: nowrap;
 
                 &.item {
                     margin: 0 20px 20px 0;
@@ -62,6 +88,7 @@
                     color: #708080;
                     padding: 20px 25px;
                     height: 64px;
+                    white-space: nowrap;
 
                     i {
                         font-size: 24px;
@@ -86,6 +113,11 @@
 
                         i {
                             margin-right: 5px;
+                        }
+
+                        span {
+                            position: relative;
+                            top: -1px;
                         }
                     }
                 }

@@ -28,13 +28,19 @@
 
     Menus.prototype.cmdSaveMenus = function(ev) {
         var $target = $(ev.currentTarget),
-            $form = $target.closest('form')
+            $form = $target.closest('form'),
+            $inspectorContainer = $form.find('.inspector-container')
 
-        if (!this.validateTable($target)) {
+        if (!$.oc.inspector.manager.applyValuesFromContainer($inspectorContainer)) {
             return
         }
 
+        var menus = $.oc.builder.menubuilder.controller.getJson($form.get(0))
+
         $target.request('onMenusSave', {
+            data: {
+                menus: menus
+            }
         }).done(
             this.proxy(this.saveMenusDone)
         )
@@ -46,6 +52,10 @@
 
     Menus.prototype.cmdAddSideMenuItem = function(ev) {
         $.oc.builder.menubuilder.controller.addSideMenuItem(ev)
+    }
+
+    Menus.prototype.cmdDeleteMenuItem = function(ev) {
+        $.oc.builder.menubuilder.controller.deleteMenuItem(ev)
     }
 
     // INTERNAL METHODS

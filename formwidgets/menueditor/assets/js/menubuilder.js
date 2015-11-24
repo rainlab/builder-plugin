@@ -120,6 +120,7 @@
         this.replacePropertyValue($item, 'code', newCode)
 
         this.getElementListItem(ev.currentTarget).before($item)
+        $(this.findForm(ev.currentTarget)).trigger('change')
     }
 
     MenuBulder.prototype.addSideMenuItem = function(ev) {
@@ -131,6 +132,45 @@
         this.replacePropertyValue($item, 'code', newCode)
 
         this.getElementListItem(ev.currentTarget).before($item)
+        $(this.findForm(ev.currentTarget)).trigger('change')
+    }
+
+    MenuBulder.prototype.getJson = function(form) {
+        var mainMenuItems = form.querySelectorAll('ul.builder-main-menu > li.item'),
+            result = []
+
+        for (var i=0,lenOuter=mainMenuItems.length; i < lenOuter; i++) {
+            var mainMenuItem = mainMenuItems[i],
+                mainMenuItemConfig = this.getItemProperties(mainMenuItem)
+
+            if (mainMenuItemConfig['sideMenu'] !== undefined) {
+                delete mainMenuItemConfig['sideMenu']
+            }
+
+            var sideMenuItems = mainMenuItem.querySelectorAll('ul.builder-submenu > li.item')
+            for (var j=0,lenInner=sideMenuItems.length; j < lenInner; j++) {
+                var sideMenuItem = sideMenuItems[j],
+                    sideMenuItemConfig = this.getItemProperties(sideMenuItem)
+
+                if (mainMenuItemConfig['sideMenu'] === undefined) {
+                    mainMenuItemConfig['sideMenu'] = []
+                }
+
+                mainMenuItemConfig['sideMenu'].push(sideMenuItemConfig)
+            }
+
+            result.push(mainMenuItemConfig)
+        }
+
+        return JSON.stringify(result)
+    }
+
+    MenuBulder.prototype.deleteMenuItem = function(ev) {
+        var item = this.getElementListItem(ev.currentTarget)
+
+        $(this.findForm(ev.currentTarget)).trigger('change')
+
+        $(item).remove()
     }
 
     // EVENT HANDLERS

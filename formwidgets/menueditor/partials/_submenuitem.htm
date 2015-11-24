@@ -6,6 +6,7 @@
     <div class="item-container">
         <i class="<?= e($this->getItemArrayProperty($item, 'icon')) ?>"></i>
         <span class="title"><?= e($this->getItemArrayProperty($item, 'label')) ?></span>
+        <a href="#" class="close-btn" data-builder-command="menus:cmdDeleteMenuItem">&times;</a>
     </div>
 
     <input type="hidden" value="<?= e($this->getSideMenuConfigurationSchema()) ?>" data-inspector-config>
