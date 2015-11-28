@@ -1,4 +1,4 @@
-<ul class="builder-menu builder-submenu">
+<ul class="builder-menu builder-submenu" data-control="list-sortable">
     <?php if ($items): ?>
         <?php foreach ($items as $item): ?>
             <?= $this->makePartial('submenuitem', ['item' => $item]) ?>

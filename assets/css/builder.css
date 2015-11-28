@@ -756,6 +756,11 @@ html.gecko .builder-tabs.primary > .tabs > ul.tabs > li > div.tab-container > di
 .builder-menu-editor ul.builder-menu > li.add:hover a {
   color: white;
 }
+.builder-menu-editor ul.builder-menu > li.list-sortable-placeholder {
+  border: 2px dotted #2581b8;
+  height: 10px;
+  background: transparent;
+}
 .builder-menu-editor ul.builder-menu.builder-main-menu > li {
   display: inline-block;
   vertical-align: top;

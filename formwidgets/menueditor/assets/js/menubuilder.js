@@ -31,6 +31,7 @@
 
     MenuBulder.prototype.registerHandlers = function() {
         $(document).on('change', '.builder-menu-editor li.item', this.proxy(this.onItemChange))
+        $(document).on('dragged.list.sortable', '.builder-menu-editor li.item', this.proxy(this.onItemDragged))
         $(document).on('livechange', '.builder-menu-editor li.item', this.proxy(this.onItemLiveChange))
     }
 
@@ -108,6 +109,12 @@
         $item.find('> .item-container > span.title').text(properties.label)
     }
 
+    MenuBulder.prototype.findInspectorContainer = function($element) {
+        var $containerRoot = $element.closest('[data-inspector-container]')
+
+        return $containerRoot.find('.inspector-container')
+    }
+
     // BUILDER API METHODS
     // ============================
 
@@ -168,6 +175,11 @@
     MenuBulder.prototype.deleteMenuItem = function(ev) {
         var item = this.getElementListItem(ev.currentTarget)
 
+        if ($(item).hasClass('inspector-open')) {
+            var $inspectorContainer = this.findInspectorContainer($(item))
+            $.oc.foundation.controlUtils.disposeControls($inspectorContainer.get(0))
+        }
+
         $(this.findForm(ev.currentTarget)).trigger('change')
 
         $(item).remove()
@@ -190,6 +202,10 @@
 
         ev.stopPropagation()
         return false
+    }
+
+    MenuBulder.prototype.onItemDragged = function(ev) {
+         $(this.findForm(ev.target)).trigger('change')
     }
 
     $(document).ready(function(){

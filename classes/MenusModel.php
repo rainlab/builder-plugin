@@ -154,7 +154,6 @@ class MenusModel extends PluginYamlModel
 
     protected function validateDupicateMenus()
     {
-traceLog($this->menus);
         foreach ($this->menus as $outerIndex=>$mainMenuItem) {
             $mainMenuItem = $this->trimMenuProperties($mainMenuItem);
 
@@ -179,8 +178,6 @@ traceLog($this->menus);
                     }
 
                     if ($this->codeExistsInList($innerIndex, $sideMenuItem['code'], $mainMenuItem['sideMenu'])) {
-// traceLog($sideMenuItem);
-// traceLog($mainMenuItem);
                         throw new ValidationException([
                             'permissions' => Lang::get('rainlab.builder::lang.menu.error_duplicate_side_menu_code', 
                                 ['code' => $sideMenuItem['code']]
