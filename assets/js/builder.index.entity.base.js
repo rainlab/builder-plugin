@@ -67,6 +67,12 @@
         return this.indexController.masterTabsObj
     }
 
+    EntityBase.prototype.getSelectedPlugin = function() {
+        var activeItem = $('#PluginList-pluginList-plugin-list > ul > li.active')
+
+        return activeItem.data('id')
+    }
+
     EntityBase.prototype.getIndexController = function() {
         return this.indexController
     }

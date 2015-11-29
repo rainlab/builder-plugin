@@ -13,7 +13,7 @@
         BaseProto = Base.prototype
 
     var Permission = function(indexController) {
-        Base.call(this, 'permission', indexController)
+        Base.call(this, 'permissions', indexController)
     }
 
     Permission.prototype = Object.create(BaseProto)
@@ -27,7 +27,14 @@
     // ============================
 
     Permission.prototype.cmdOpenPermissions = function(ev) {
-        this.indexController.openOrLoadMasterTab($(ev.target), 'onPermissionsOpen', this.makeTabId('plugin-permissions'))
+        var currentPlugin = this.getSelectedPlugin()
+
+        if (!currentPlugin) {
+            alert('Please select a plugin first')
+            return
+        }
+
+        this.indexController.openOrLoadMasterTab($(ev.target), 'onPermissionsOpen', this.makeTabId(currentPlugin))
     }
 
     Permission.prototype.cmdSavePermissions = function(ev) {

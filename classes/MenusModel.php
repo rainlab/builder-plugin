@@ -20,7 +20,7 @@ class MenusModel extends PluginYamlModel
 {
     public $menus = [];
 
-    protected $yamlSection = 'menus';
+    protected $yamlSection = 'navigation';
 
     protected $pluginCodeObj;
 

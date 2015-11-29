@@ -13,7 +13,7 @@
         BaseProto = Base.prototype
 
     var Menus = function(indexController) {
-        Base.call(this, 'menu', indexController)
+        Base.call(this, 'menus', indexController)
     }
 
     Menus.prototype = Object.create(BaseProto)
@@ -23,7 +23,14 @@
     // ============================
 
     Menus.prototype.cmdOpenMenus = function(ev) {
-        this.indexController.openOrLoadMasterTab($(ev.target), 'onMenusOpen', this.makeTabId('plugin-menus'))
+        var currentPlugin = this.getSelectedPlugin()
+
+        if (!currentPlugin) {
+            alert('Please select a plugin first')
+            return
+        }
+
+        this.indexController.openOrLoadMasterTab($(ev.target), 'onMenusOpen', this.makeTabId(currentPlugin))
     }
 
     Menus.prototype.cmdSaveMenus = function(ev) {
