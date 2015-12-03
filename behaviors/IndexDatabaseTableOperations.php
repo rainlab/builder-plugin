@@ -96,6 +96,12 @@ class IndexDatabaseTableOperations extends IndexOperationsBehaviorBase
         }
 
         $result = $this->controller->widget->databaseTabelList->updateList();
+
+        $result = array_merge(
+            $result,
+            $this->controller->widget->versionList->refreshActivePlugin()
+        );
+
         $result['builderRepsonseData'] = [
             'builderObjectName'=>$table,
             'tabId' => $this->getTabId($table),

@@ -1,0 +1,31 @@
+# ===================================
+#  Form Field Definitions
+# ===================================
+
+fields:
+    version:
+        span: left
+        label: rainlab.builder::lang.migration.field_version
+        attributes:
+            default-focus: 1
+            spellcheck: 'false'
+        cssClass: size-quarter
+
+    description:
+        span: right
+        label: rainlab.builder::lang.migration.field_description
+        cssClass: size-three-quarter
+
+    toolbar:
+        type: partial
+        path: $/rainlab/builder/behaviors/indexversionsoperations/partials/_toolbar.htm
+        cssClass: collapse-visible
+
+secondaryTabs:
+    stretch: true
+    fields:
+        code:
+            tab: rainlab.builder::lang.migration.field_code
+            stretch: true
+            type: codeeditor
+            language: php

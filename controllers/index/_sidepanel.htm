@@ -20,6 +20,16 @@
                 onsubmit="return false">
                 <?= $this->widget->modelList->render() ?>
             </form>
+
+            <!-- Versions -->
+            <form
+                class="layout hide"
+                data-content-id="version"
+                data-template-type="version"
+                data-type-icon="oc-icon-code-fork"
+                onsubmit="return false">
+                <?= $this->widget->versionList->render() ?>
+            </form>
         </div>
     </div>
 </div>

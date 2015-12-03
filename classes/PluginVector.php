@@ -1,6 +1,7 @@
 <?php namespace RainLab\Builder\Classes;
 
 use System\Classes\PluginBase;
+use System\Classes\PluginManager;
 
 /**
  * Holds a plugin code object and a plugin information class instancd.
@@ -24,6 +25,21 @@ class PluginVector
     {
         $this->plugin = $plugin;
         $this->pluginCodeObj = $pluginCodeObj;
+    }
+
+    public static function createFromPluginCode($pluginCode)
+    {
+        $pluginCodeObj = new PluginCode($pluginCode);
+
+        $plugins = PluginManager::instance()->getPlugins();
+
+        foreach ($plugins as $code=>$plugin) {
+            if ($code == $pluginCode) {
+                return new PluginVector($plugin, $pluginCodeObj);
+            }
+        }
+
+        return null;
     }
 
     public function getPluginName()

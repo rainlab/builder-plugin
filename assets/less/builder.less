@@ -28,6 +28,23 @@
     margin-left: -20px;
 }
 
+.control-filelist ul li.with-icon {
+    span.title, span.description {
+        padding-left: 22px;
+    }
+
+    i.list-icon {
+        position: absolute;
+        left: 20px;
+        top: 12px;
+        color: #405261;
+
+        &.mute {
+            color: #8f8f8f;
+        }
+    }
+}
+
 html.gecko .control-filelist ul li.group {
     margin-right: 10px;
 }
@@ -40,6 +57,25 @@ html.gecko .control-filelist ul li.group {
         display: none!important;
     }
 }
+
+form.hide-secondary-tabs {
+    div.control-tabs.secondary-tabs {
+        ul.nav.nav-tabs {
+            display: none;
+        }
+    }
+}
+
+.form-group {
+    &.size-quarter {
+        width: 23.5%;
+    }
+
+    &.size-three-quarter {
+        width: 73.5%;
+    }
+}
+
 
 // TODO: Move the aux tab styles to the tab.less
 

@@ -2,14 +2,18 @@
 
 use RainLab\Builder\Models\Settings as PluginSettings;
 use Symfony\Component\Yaml\Dumper as YamlDumper;
+use October\Rain\Parse\Template as TextParser;
+use System\Classes\VersionManager;
 use System\Classes\UpdateManager;
 use ApplicationException;
+use ValidationException;
 use SystemException;
 use Exception;
 use Validator;
 use Lang;
 use File;
 use Yaml;
+use Str;
 
 /**
  * Manages plugin migrations
@@ -34,6 +38,8 @@ class MigrationModel extends BaseModel
      */
     public $code;
 
+    protected $originalVersion;
+
     /**
      * @var string The migration script file name.
      * Currently only migrations with a single (or none) script file are supported
@@ -56,6 +62,8 @@ class MigrationModel extends BaseModel
 
     public function validate()
     {
+        $isNewModel = $this->isNewModel();
+
         $this->validationMessages = [
             'version.regex' => Lang::get('rainlab.builder::lang.migration.error_version_invalid'),
             'version.unique_version' => Lang::get('rainlab.builder::lang.migration.error_version_exists'),
@@ -64,9 +72,18 @@ class MigrationModel extends BaseModel
 
         $versionInformation = $this->getPluginVersionInformation();
 
-        Validator::extend('uniqueVersion', function($attribute, $value, $parameters) use ($versionInformation) {
-            return !array_key_exists($value, $versionInformation);
+        Validator::extend('uniqueVersion', function($attribute, $value, $parameters) use ($versionInformation, $isNewModel) {
+            if ($isNewModel || $this->version != $this->originalVersion) {
+                return !array_key_exists($value, $versionInformation);
+            }
+            return true;
         });
+
+        if (!$isNewModel && $this->version != $this->originalVersion && $this->isApplied()) {
+            throw new ValidationException([
+                'version' => Lang::get('rainlab.builder::lang.migration.error_cannot_change_version_number')
+            ]);
+        }
 
         return parent::validate();
     }
@@ -93,7 +110,7 @@ class MigrationModel extends BaseModel
     /**
      * Saves the migration and applies all outstanding migrations for the plugin.
      */
-    public function save()
+    public function save($executeOnSave = true)
     {
         $this->validate();
 
@@ -101,42 +118,132 @@ class MigrationModel extends BaseModel
             $this->makeScriptFileNameUnique();
         }
 
-        $this->saveScriptFile();
+        $originalFileContents = $this->saveScriptFile();
 
         try {
-            if ($this->isNewModel()) {
-                $originalVersionData = $this->insertVersion();
-            } else {
-                $originalVersionData = $this->updateVersion();
-            }
+            $originalVersionData = $this->insertOrUpdateVersion();
         } catch (Exception $ex) {
             // Remove the script file, but don't rollback 
             // the version.yaml.
-            $this->rollbackSaving(null);
+            $this->rollbackSaving(null, $originalFileContents);
 
             throw $ex;
         }
 
         try {
-            UpdateManager::instance()->update();
+            if ($executeOnSave) {
+// TODO: stop updating the plugin on this exactly version - don't run all pending migrations here
+                UpdateManager::instance()->updatePlugin($this->getPluginCodeObj()->toCode());
+            }
         } catch (Exception $ex) {
             // Remove the script file, but and rollback 
             // the version.yaml.
-            $this->rollbackSaving($originalVersionData);
+            $this->rollbackSaving($originalVersionData, $originalFileContents);
 
             throw $ex;
         }
+
+        $this->originalVersion = $this->version;
+        $this->exists = true;
+    }
+
+    public function load($versionNumber)
+    {
+        $versionNumber = trim($versionNumber);
+
+        if (!strlen($versionNumber)) {
+            throw new ApplicationException('Cannot load the the version model - the version number should not be empty.');
+        }
+
+        $pluginVersions = $this->getPluginVersionInformation();
+        if (!array_key_exists($versionNumber, $pluginVersions)) {
+            throw new ApplicationException('The requested version does not exist in the version information file.');
+        }
+
+        $this->version = $versionNumber;
+        $this->originalVersion = $this->version;
+        $this->exists = true;
+
+        $versionInformation = $pluginVersions[$versionNumber];
+        if (!is_array($versionInformation)) {
+            $this->description = $versionInformation;
+        } 
+        else {
+            $cnt = count($versionInformation);
+
+            if ($cnt > 2) {
+                throw new ApplicationException('The requested version cannot be edited with Builder as it refers to multiple PHP files.');
+            }
+
+            if ($cnt > 0) {
+                $this->description = $versionInformation[0];
+            }
+
+            if ($cnt > 1) {
+                $this->scriptFileName = pathinfo(trim($versionInformation[1]), PATHINFO_FILENAME);
+                $this->code = $this->loadScriptFile();
+            }
+        }
+    }
+
+    public function initVersion($versionType)
+    {
+        $versionTypes = ['migration', 'seeder', 'custom'];
+
+        if (!in_array($versionType, $versionTypes)) {
+            throw new SystemException('Unknown version type.');
+        }
+
+        $this->version = $this->getNextVersion();
+
+        $templateFiles = [
+            'migration' => 'migration.php.tpl',
+            'seeder' => 'seeder.php.tpl',
+            'custom' => 'custom.php.tpl'
+        ];
+
+        $templatePath = '$/rainlab/builder/classes/migrationmodel/templates/'.$templateFiles[$versionType];
+        $templatePath = File::symbolizePath($templatePath);
+
+        $fileContents = File::get($templatePath);
+        $scriptFileName = $versionType.str_replace('.', '-', $this->version);
+
+        $pluginCodeObj = $this->getPluginCodeObj();
+        $this->code = TextParser::parse($fileContents, [
+            'className' => Str::studly($scriptFileName),
+            'namespace' => $pluginCodeObj->toPluginNamespace()
+        ]);
+
+        $this->scriptFileName = $scriptFileName;
     }
 
     protected function saveScriptFile()
     {
         $scriptFilePath = $this->getPluginUpdatesPath($this->scriptFileName.'.php');
 
+        $originalFileContents = null;
+        if (File::isFile($scriptFilePath)) {
+            $originalFileContents = File::get($scriptFilePath);
+        }
+
         if (!File::put($scriptFilePath, $this->code)) {
             throw new SystemException(sprintf('Error saving file %s', $scriptFilePath));
         }
 
         @File::chmod($scriptFilePath);
+
+        return $originalFileContents;
+    }
+
+    protected function loadScriptFile()
+    {
+        $scriptFilePath = $this->getPluginUpdatesPath($this->scriptFileName.'.php');
+
+        if (!File::isFile($scriptFilePath)) {
+            throw new ApplicationException(sprintf('Version file %s is not found.', $scriptFilePath));
+        }
+
+        return File::get($scriptFilePath);
     }
 
     protected function removeScriptFile()
@@ -148,7 +255,14 @@ class MigrationModel extends BaseModel
         @unlink($scriptFilePath);
     }
 
-    protected function rollbackSaving($originalVersionData)
+    protected function rollbackScriptFile($fileContents)
+    {
+        $scriptFilePath = $this->getPluginUpdatesPath($this->scriptFileName.'.php');
+
+        @File::put($scriptFilePath, $fileContents);
+    }
+
+    protected function rollbackSaving($originalVersionData, $originalScriptFileContents)
     {
         if ($originalVersionData) {
             $this->rollbackVersionFile($originalVersionData);
@@ -157,9 +271,12 @@ class MigrationModel extends BaseModel
         if ($this->isNewModel()) {
             $this->removeScriptFile();
         }
+        else {
+            $this->rollbackScriptFile($originalScriptFileContents);
+        }
     }
 
-    protected function insertVersion()
+    protected function insertOrUpdateVersion()
     {
         $versionFilePath = $this->getPluginUpdatesPath('version.yaml');
 
@@ -177,6 +294,12 @@ class MigrationModel extends BaseModel
             $this->description,
             $this->scriptFileName.'.php'
         ];
+
+        if (!$this->isNewModel() && $this->version != $this->originalVersion) {
+            if (array_key_exists($this->originalVersion, $versionInformation)) {
+                unset($versionInformation[$this->originalVersion]);
+            }
+        }
 
         $dumper = new YamlDumper();
         $yamlData = $dumper->dump($versionInformation, 20, 0, false, true);
@@ -226,24 +349,19 @@ class MigrationModel extends BaseModel
 
     protected function getPluginVersionInformation()
     {
-        $filePath = $this->getPluginUpdatesPath('version.yaml');
+        $versionObj = new PluginVersion();
+        return $versionObj->getPluginVersionInformation($this->getPluginCodeObj());
+    }
 
-        if (!File::isFile($filePath)) {
-            throw new SystemException('Plugin version.yaml file is not found.');
+    protected function isApplied()
+    {
+        if ($this->isNewModel()) {
+            return false;
         }
 
-        $versionInfo = Yaml::parseFile($filePath);
+        $versionManager = VersionManager::instance();
+        $unappliedVersions = $versionManager->listNewVersions($this->pluginCodeObj->toCode());
 
-        if (!is_array($versionInfo)) {
-            $versionInfo = [];
-        }
-
-        if ($versionInfo) {
-            uksort($versionInfo, function ($a, $b) {
-                return version_compare($a, $b);
-            });
-        }
-
-        return $versionInfo;
+        return !array_key_exists($this->originalVersion, $unappliedVersions);
     }
 }

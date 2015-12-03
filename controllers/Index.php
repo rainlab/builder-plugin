@@ -5,6 +5,7 @@ use Backend\Traits\InspectableContainer;
 use RainLab\Builder\Widgets\PluginList;
 use RainLab\Builder\Widgets\DatabaseTableList;
 use RainLab\Builder\Widgets\ModelList;
+use RainLab\Builder\Widgets\VersionList;
 use RainLab\Builder\Traits\IndexPluginOperations;
 use ApplicationException;
 use Exception;
@@ -27,7 +28,8 @@ class Index extends Controller
         'RainLab.Builder.Behaviors.IndexModelFormOperations',
         'RainLab.Builder.Behaviors.IndexModelListOperations',
         'RainLab.Builder.Behaviors.IndexPermissionsOperations',
-        'RainLab.Builder.Behaviors.IndexMenusOperations'
+        'RainLab.Builder.Behaviors.IndexMenusOperations',
+        'RainLab.Builder.Behaviors.IndexVersionsOperations',
     ];
 
     public $requiredPermissions = ['rainlab.buileder.*'];
@@ -47,6 +49,7 @@ class Index extends Controller
         new PluginList($this, 'pluginList');
         new DatabaseTableList($this, 'databaseTabelList');
         new ModelList($this, 'modelList');
+        new VersionList($this, 'versionList');
     }
 
     public function index()
@@ -62,6 +65,7 @@ class Index extends Controller
         $this->addJs('/plugins/rainlab/builder/assets/js/builder.index.entity.modellist.js', 'RainLab.Builder');
         $this->addJs('/plugins/rainlab/builder/assets/js/builder.index.entity.permission.js', 'RainLab.Builder');
         $this->addJs('/plugins/rainlab/builder/assets/js/builder.index.entity.menus.js', 'RainLab.Builder');
+        $this->addJs('/plugins/rainlab/builder/assets/js/builder.index.entity.version.js', 'RainLab.Builder');
         $this->addJs('/plugins/rainlab/builder/assets/js/builder.index.js', 'RainLab.Builder');
 
         $this->pageTitleTemplate = '%s Builder';
@@ -79,7 +83,8 @@ class Index extends Controller
         $result = array_merge(
             $result,
             $this->widget->databaseTabelList->refreshActivePlugin(),
-            $this->widget->modelList->refreshActivePlugin()
+            $this->widget->modelList->refreshActivePlugin(),
+            $this->widget->versionList->refreshActivePlugin()
         );
 
         return $result;

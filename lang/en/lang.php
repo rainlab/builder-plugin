@@ -354,7 +354,16 @@ return [
         'menu_label' => 'Controllers'
     ],
     'version' => [
-        'menu_label' => 'Versions'
+        'menu_label' => 'Versions',
+        'no_records' => 'No plugin versions found',
+        'search' => 'Search...',
+        'tab' => 'Versions',
+        'saved' => 'The version has been successfully saved.',
+        'confirm_delete' => 'Do you really want to delete the version?',
+        'tab_new_version' => 'New version',
+        'migration' => 'Migration',
+        'seeder' => 'Seeder',
+        'custom' => 'Custom'
     ],
     'menu' => [
         'menu_label' => 'Backend Menu',
@@ -425,6 +434,7 @@ return [
         'save_and_apply' => 'Save & Apply',
         'error_version_exists' => 'The migration version already exists.',
         'error_script_filename_invalid' => 'The migration script file name can contain only Latin letters, digits and underscores. The name should start with a Latin letter and could not contain spaces.',
+        'error_cannot_change_version_number' => 'Cannot change version number for an applied version.',
         'no_changes_to_save' => 'There are no changes to save.',
     ]
 ];

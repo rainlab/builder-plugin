@@ -1,0 +1,28 @@
+<div class="layout-row min-size panel-contents">
+    <div class="sidepanel-content-header">
+        <?php if ($pluginVector): ?>
+            <?= e(trans($pluginVector->getPluginName())) ?>
+        <?php else: ?>
+            <?= e(trans('rainlab.builder::lang.common.plugin_not_selected')) ?>
+        <?php endif ?>
+    </div>
+</div>
+
+<?php if ($pluginVector): ?>
+    <?= $this->makePartial('toolbar') ?>
+    <div class="layout-row">
+        <div class="layout-cell">
+            <div class="layout-relative">
+                <?= $this->makePartial('version-list', ['items'=>$items, 'unappliedVersions'=>$unappliedVersions, 'pluginVector'=>$pluginVector]) ?>
+            </div>
+        </div>
+    </div>
+<?php else: ?>
+    <div class="layout-row">
+        <div class="layout-cell">
+            <div class="panel">
+                <p class="no-data"><?= e(trans('rainlab.builder::lang.common.select_plugin_first')) ?></p>
+            </div>
+        </div>
+    </div>
+<?php endif ?>

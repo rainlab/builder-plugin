@@ -107,6 +107,19 @@ abstract class BaseModel
     {
     }
 
+    public function getModelPluginName()
+    {
+        $pluginCodeObj = $this->getPluginCodeObj();
+        $pluginCode = $pluginCodeObj->toCode();
+
+        $vector = PluginVector::createFromPluginCode($pluginCode);
+        if ($vector) {
+            return $vector->getPluginName();
+        }
+
+        return null;
+    }
+
     protected function getPluginCodeObj()
     {
         if (!$this->pluginCodeObj) {

@@ -849,6 +849,19 @@ html.gecko .builder-tabs.primary > .tabs > ul.tabs > li > div.tab-container > di
   padding-left: 73px;
   margin-left: -20px;
 }
+.control-filelist ul li.with-icon span.title,
+.control-filelist ul li.with-icon span.description {
+  padding-left: 22px;
+}
+.control-filelist ul li.with-icon i.list-icon {
+  position: absolute;
+  left: 20px;
+  top: 12px;
+  color: #405261;
+}
+.control-filelist ul li.with-icon i.list-icon.mute {
+  color: #8f8f8f;
+}
 html.gecko .control-filelist ul li.group {
   margin-right: 10px;
 }
@@ -858,6 +871,15 @@ html.gecko .control-filelist ul li.group {
 }
 .builder-inspector-container:empty {
   display: none!important;
+}
+form.hide-secondary-tabs div.control-tabs.secondary-tabs ul.nav.nav-tabs {
+  display: none;
+}
+.form-group.size-quarter {
+  width: 23.5%;
+}
+.form-group.size-three-quarter {
+  width: 73.5%;
 }
 .control-tabs.auxiliary-tabs {
   background: white;
