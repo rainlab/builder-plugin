@@ -58,6 +58,10 @@
         $pane.find('form').trigger('unchange.oc.changeMonitor')
     }
 
+    Builder.prototype.changeTab = function($pane) {
+        $pane.find('form').trigger('change')
+    }
+
     Builder.prototype.triggerCommand = function(command, ev) {
         var commandParts = command.split(':')
 
@@ -121,6 +125,17 @@
 
     Builder.prototype.addMasterTab = function(data) {
         this.masterTabsObj.addTab(data.tabTitle, data.tab, data.tabId, data.tabIcon)
+
+        if (data.isNewRecord) {
+            var self = this,
+                $masterTabPane = self.getMasterTabActivePane()
+// Refactor this code = move the closure to another method (masterTabPane can be determined there),
+// unbind ready.oc.changeMonitor from the work in onTabClosed
+            $masterTabPane.find('form').one('ready.oc.changeMonitor', function(){
+                self.changeTab($masterTabPane)
+            })
+
+        }
     }
 
     Builder.prototype.updateModifiedCounter = function() {

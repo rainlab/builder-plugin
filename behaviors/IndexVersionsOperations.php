@@ -41,6 +41,7 @@ class IndexVersionsOperations extends IndexOperationsBehaviorBase
             'tabTitle' => $this->getTabName($versionNumber, $widget->model),
             'tabIcon' => 'icon-code-fork',
             'tabId' => $this->getTabId($pluginCodeObj->toCode(), $versionNumber),
+            'isNewRecord' => $widget->model->isNewModel(),
             'tab' => $this->makePartial('tab', [
                 'form'  => $widget,
                 'pluginCode' => $pluginCodeObj->toCode(),

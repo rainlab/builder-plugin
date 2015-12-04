@@ -47,6 +47,8 @@ class MigrationModel extends BaseModel
      */
     public $scriptFileName;
 
+    public $originalScriptFileName;
+
     protected static $fillable = [
         'version',
         'description',
@@ -114,8 +116,8 @@ class MigrationModel extends BaseModel
     {
         $this->validate();
 
-        if ($this->isNewModel()) {
-            $this->makeScriptFileNameUnique();
+        if (!strlen($this->scriptFileName) || !$this->isNewModel()) {
+            $this->assignFileName();
         }
 
         $originalFileContents = $this->saveScriptFile();
@@ -136,7 +138,7 @@ class MigrationModel extends BaseModel
                 UpdateManager::instance()->updatePlugin($this->getPluginCodeObj()->toCode());
             }
         } catch (Exception $ex) {
-            // Remove the script file, but and rollback 
+            // Remove the script file, and rollback 
             // the version.yaml.
             $this->rollbackSaving($originalVersionData, $originalFileContents);
 
@@ -184,6 +186,8 @@ class MigrationModel extends BaseModel
                 $this->code = $this->loadScriptFile();
             }
         }
+
+        $this->originalScriptFileName = $this->scriptFileName;
     }
 
     public function initVersion($versionType)
@@ -198,8 +202,7 @@ class MigrationModel extends BaseModel
 
         $templateFiles = [
             'migration' => 'migration.php.tpl',
-            'seeder' => 'seeder.php.tpl',
-            'custom' => 'custom.php.tpl'
+            'seeder' => 'seeder.php.tpl'
         ];
 
         $templatePath = '$/rainlab/builder/classes/migrationmodel/templates/'.$templateFiles[$versionType];
@@ -217,14 +220,76 @@ class MigrationModel extends BaseModel
         $this->scriptFileName = $scriptFileName;
     }
 
+    public function makeScriptFileNameUnique()
+    {
+        $updatesPath = $this->getPluginUpdatesPath();
+        $baseFileName = $fileName = $this->scriptFileName;
+
+        $counter = 2;
+        while (File::isFile($updatesPath.'/'.$fileName.'.php')) {
+            $fileName = $baseFileName.'_'.$counter;
+            $counter++;
+        }
+
+        return $this->scriptFileName = $fileName;
+    }
+
+    protected function assignFileName()
+    {
+        $code = trim($this->code);
+
+        if (!strlen($code)) {
+            $this->scriptFileName = null;
+            return;
+        }
+
+        // The file name is based on the migration class name. 
+        //
+        $parser = new MigrationFileParser();
+        $migrationInfo = $parser->extractMigrationInfoFromSource($code);
+
+        if (!$migrationInfo || !array_key_exists('class', $migrationInfo)) {
+            throw new ValidationException([
+                'code' => Lang::get('rainlab.builder::lang.migration.error_file_must_define_class')
+            ]);
+        }
+
+        if (!array_key_exists('namespace', $migrationInfo)) {
+            throw new ValidationException([
+                'code' => Lang::get('rainlab.builder::lang.migration.error_file_must_define_namespace')
+            ]);
+        }
+
+        $pluginCodeObj = $this->getPluginCodeObj();
+        $pluginNamespace = $pluginCodeObj->toPluginNamespace();
+
+        if ($migrationInfo['namespace'] != $pluginNamespace) {
+            throw new ValidationException([
+                'code' => Lang::get('rainlab.builder::lang.migration.error_namespace_mismatch', ['namespace'=>$pluginNamespace])
+            ]);
+        }
+
+        $this->scriptFileName = Str::snake($migrationInfo['class']);
+
+        // Validate that a file with the generated name does not exist yet.
+        //
+        if ($this->scriptFileName != $this->originalScriptFileName) {
+            $fileName = $this->scriptFileName.'.php';
+            $filePath = $this->getPluginUpdatesPath($fileName);
+
+            if (File::isFile($filePath)) {
+                throw new ValidationException([
+                    'code' => Lang::get('rainlab.builder::lang.migration.error_migration_file_exists', ['file'=>$fileName])
+                ]);
+            }
+        }
+    }
+
     protected function saveScriptFile()
     {
         $scriptFilePath = $this->getPluginUpdatesPath($this->scriptFileName.'.php');
 
-        $originalFileContents = null;
-        if (File::isFile($scriptFilePath)) {
-            $originalFileContents = File::get($scriptFilePath);
-        }
+        $originalFileContents = $this->getOriginalFileContents();
 
         if (!File::put($scriptFilePath, $this->code)) {
             throw new SystemException(sprintf('Error saving file %s', $scriptFilePath));
@@ -232,7 +297,26 @@ class MigrationModel extends BaseModel
 
         @File::chmod($scriptFilePath);
 
+        if (strlen($this->originalScriptFileName) && $this->scriptFileName != $this->originalScriptFileName) {
+            $originalScriptFilePath = $this->getPluginUpdatesPath($this->originalScriptFileName.'.php');
+            if (File::isFile($originalScriptFilePath)) {
+                @unlink($originalScriptFilePath);
+            }
+        }
+
         return $originalFileContents;
+    }
+
+    protected function getOriginalFileContents()
+    {
+        if (!strlen($this->originalScriptFileName)) {
+            return null;
+        }
+
+        $scriptFilePath = $this->getPluginUpdatesPath($this->originalScriptFileName.'.php');
+        if (File::isFile($scriptFilePath)) {
+            return File::get($scriptFilePath);
+        }
     }
 
     protected function loadScriptFile()
@@ -257,9 +341,14 @@ class MigrationModel extends BaseModel
 
     protected function rollbackScriptFile($fileContents)
     {
-        $scriptFilePath = $this->getPluginUpdatesPath($this->scriptFileName.'.php');
+        $scriptFilePath = $this->getPluginUpdatesPath($this->originalScriptFileName.'.php');
 
         @File::put($scriptFilePath, $fileContents);
+
+        if ($this->scriptFileName != $this->originalScriptFileName) {
+            $scriptFilePath = $this->getPluginUpdatesPath($this->scriptFileName.'.php');
+            @unlink($scriptFilePath);
+        }
     }
 
     protected function rollbackSaving($originalVersionData, $originalScriptFileContents)
@@ -317,20 +406,6 @@ class MigrationModel extends BaseModel
     {
         $versionFilePath = $this->getPluginUpdatesPath('version.yaml');
         File::put($versionFilePath, $fileData);
-    }
-
-    protected function makeScriptFileNameUnique()
-    {
-        $updatesPath = $this->getPluginUpdatesPath();
-        $baseFileName = $fileName = $this->scriptFileName.'_'.date('YmdHis');
-
-        $counter = 2;
-        while (File::isFile($updatesPath.'/'.$fileName.'.php')) {
-            $fileName = $baseFileName.'_'.$counter;
-            $counter++;
-        }
-
-        return $this->scriptFileName = $fileName;
     }
 
     protected function getPluginUpdatesPath($fileName = null)

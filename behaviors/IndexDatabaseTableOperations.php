@@ -84,6 +84,7 @@ class IndexDatabaseTableOperations extends IndexOperationsBehaviorBase
         $table = Input::get('table');
 
         $model->scriptFileName = 'builder_table_'.$operation.'_'.$table;
+        $model->makeScriptFileNameUnique();
 
         $codeGenerator = new TableMigrationCodeGenerator();
         $model->code = $codeGenerator->wrapMigrationCode($model->scriptFileName, $model->code, $pluginCode);

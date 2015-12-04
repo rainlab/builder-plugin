@@ -435,6 +435,10 @@ return [
         'error_version_exists' => 'The migration version already exists.',
         'error_script_filename_invalid' => 'The migration script file name can contain only Latin letters, digits and underscores. The name should start with a Latin letter and could not contain spaces.',
         'error_cannot_change_version_number' => 'Cannot change version number for an applied version.',
+        'error_file_must_define_class' => 'Migration code should define a migration or seeder class. Leave the code field blank if you only want to update the version number.',
+        'error_file_must_define_namespace' => 'Migration code should define a namespace. Leave the code field blank if you only want to update the version number.',
         'no_changes_to_save' => 'There are no changes to save.',
+        'error_namespace_mismatch' => "The migration code should use the plugin namespace: :namespace",
+        'error_migration_file_exists' => "Migration file :file already exists. Please use another class name."
     ]
 ];
