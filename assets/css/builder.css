@@ -862,6 +862,9 @@ html.gecko .builder-tabs.primary > .tabs > ul.tabs > li > div.tab-container > di
 .control-filelist ul li.with-icon i.list-icon.mute {
   color: #8f8f8f;
 }
+.control-filelist ul li.with-icon i.list-icon.icon-check-square {
+  color: #8da85e;
+}
 html.gecko .control-filelist ul li.group {
   margin-right: 10px;
 }

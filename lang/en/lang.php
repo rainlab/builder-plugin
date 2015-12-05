@@ -363,7 +363,7 @@ return [
         'tab_new_version' => 'New version',
         'migration' => 'Migration',
         'seeder' => 'Seeder',
-        'custom' => 'Custom',
+        'custom' => 'Increase the verison number',
         'apply_version' => 'Apply version',
         'applying' => 'Applying...',
         'rollback_version' => 'Rollback version',

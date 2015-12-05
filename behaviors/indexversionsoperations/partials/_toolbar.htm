@@ -12,8 +12,7 @@
         href="javascript:;"
         class="btn btn-primary oc-icon-bolt <?php if ($model->isApplied()): ?>hide<?php endif ?>"
         data-builder-command="version:cmdApplyVersion"
-        data-load-indicator="<?= e(trans('rainlab.builder::lang.version.applying')) ?>"
-        data-hotkey="ctrl+s, cmd+s">
+        data-load-indicator="<?= e(trans('rainlab.builder::lang.version.applying')) ?>">
         <?= e(trans('rainlab.builder::lang.version.apply_version')) ?>
     </a>
 
@@ -21,8 +20,7 @@
         href="javascript:;"
         class="btn btn-primary oc-icon-undo <?php if (!$model->isApplied()): ?>hide<?php endif ?>"
         data-builder-command="version:cmdRollbackVersion"
-        data-load-indicator="<?= e(trans('rainlab.builder::lang.version.rolling_back')) ?>"
-        data-hotkey="ctrl+s, cmd+s">
+        data-load-indicator="<?= e(trans('rainlab.builder::lang.version.rolling_back')) ?>">
         <?= e(trans('rainlab.builder::lang.version.rollback_version')) ?>
     </a>
     
