@@ -54,16 +54,7 @@ class IndexVersionsOperations extends IndexOperationsBehaviorBase
 
     public function onVersionSave()
     {
-        $pluginCodeObj = new PluginCode(Request::input('plugin_code'));
-        $pluginCode = $pluginCodeObj->toCode();
-
-        $versionNumber = Input::get('original_version');
-
-        $options = [
-            'pluginCode' => $pluginCode
-        ];
-
-        $model = $this->loadOrCreateBaseModel($versionNumber, $options);
+        $model = $this->loadOrCreateListFromPost();
         $model->fill($_POST);
         $model->save(false);
 
@@ -71,12 +62,57 @@ class IndexVersionsOperations extends IndexOperationsBehaviorBase
         $result = $this->controller->widget->versionList->updateList();
 
         $result['builderRepsonseData'] = [
-            'tabId' => $this->getTabId($pluginCode, $model->version),
+            'tabId' => $this->getTabId($model->getPluginCodeObj()->toCode(), $model->version),
             'tabTitle' => $model->getModelPluginName().'/'.Lang::get('rainlab.builder::lang.version.tab'),
             'savedVersion' => $model->version
         ];
 
         return $result;
+    }
+
+    public function onVersionDelete()
+    {
+        $model = $this->loadOrCreateListFromPost();
+
+        $model->deleteModel();
+
+        return $this->controller->widget->versionList->updateList();
+    }
+
+    public function onVersionApply()
+    {
+        // Save the version before applying it
+        //
+        $model = $this->loadOrCreateListFromPost();
+        $model->fill($_POST);
+        $model->save(false);
+
+        // Apply the version
+        //
+        $model->apply();
+
+        Flash::success(Lang::get('rainlab.builder::lang.version.applied'));
+        $result = $this->controller->widget->versionList->updateList();
+
+        $result['builderRepsonseData'] = [
+            'tabId' => $this->getTabId($model->getPluginCodeObj()->toCode(), $model->version),
+            'tabTitle' => $model->getModelPluginName().'/'.Lang::get('rainlab.builder::lang.version.tab'),
+            'savedVersion' => $model->version
+        ];
+
+        return $result;
+    }
+
+    protected function loadOrCreateListFromPost()
+    {
+        $pluginCodeObj = new PluginCode(Request::input('plugin_code'));
+        $options = [
+            'pluginCode' => $pluginCodeObj->toCode()
+        ];
+
+        $versionNumber = Input::get('original_version');
+
+        return $this->loadOrCreateBaseModel($versionNumber, $options);
     }
 
     protected function getTabName($version, $model)

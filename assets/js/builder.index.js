@@ -58,10 +58,6 @@
         $pane.find('form').trigger('unchange.oc.changeMonitor')
     }
 
-    Builder.prototype.changeTab = function($pane) {
-        $pane.find('form').trigger('change')
-    }
-
     Builder.prototype.triggerCommand = function(command, ev) {
         var commandParts = command.split(':')
 
@@ -127,14 +123,9 @@
         this.masterTabsObj.addTab(data.tabTitle, data.tab, data.tabId, data.tabIcon)
 
         if (data.isNewRecord) {
-            var self = this,
-                $masterTabPane = self.getMasterTabActivePane()
-// Refactor this code = move the closure to another method (masterTabPane can be determined there),
-// unbind ready.oc.changeMonitor from the work in onTabClosed
-            $masterTabPane.find('form').one('ready.oc.changeMonitor', function(){
-                self.changeTab($masterTabPane)
-            })
+            var $masterTabPane = this.getMasterTabActivePane()
 
+            $masterTabPane.find('form').one('ready.oc.changeMonitor', this.proxy(this.onChangeMonitorReady))
         }
     }
 
@@ -178,6 +169,14 @@
 
         var command = $(ev.currentTarget).data('builderCommand')
         this.triggerCommand(command, ev)
+
+        // Prevent default for everything except drop-down menu items
+        //
+        var $target = $(ev.currentTarget)
+        if (ev.currentTarget.tagName === 'A' && $target.attr('role') == 'menuitem' && $target.attr('href') == 'javascript:;') {
+            return
+        }
+
         ev.preventDefault()
         return false
     }
@@ -216,8 +215,14 @@
         this.getFileLists().fileList('markActive', null)
     }
 
-    Builder.prototype.onTabClosed = function(ev) {
+    Builder.prototype.onTabClosed = function(ev, tab, pane) {
+        $(pane).find('form').off('ready.oc.changeMonitor', this.proxy(this.onChangeMonitorReady))
+
         this.updateModifiedCounter()
+    }
+
+    Builder.prototype.onChangeMonitorReady = function(ev) {
+        $(ev.target).trigger('change')
     }
 
     // INITIALIZATION

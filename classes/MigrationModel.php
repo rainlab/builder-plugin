@@ -58,7 +58,6 @@ class MigrationModel extends BaseModel
     protected $validationRules = [
         'version' => ['required', 'regex:/^[0-9]+\.[0-9]+\.[0-9]+$/', 'uniqueVersion'],
         'description' => ['required'],
-        'code' => ['required'],
         'scriptFileName' => ['regex:/^[a-z]+[a-z0-9_]+$/']
     ];
 
@@ -134,8 +133,7 @@ class MigrationModel extends BaseModel
 
         try {
             if ($executeOnSave) {
-// TODO: stop updating the plugin on this exactly version - don't run all pending migrations here
-                UpdateManager::instance()->updatePlugin($this->getPluginCodeObj()->toCode());
+                VersionManager::instance()->updatePlugin($this->getPluginCodeObj()->toCode(), $this->version);
             }
         } catch (Exception $ex) {
             // Remove the script file, and rollback 
@@ -200,6 +198,11 @@ class MigrationModel extends BaseModel
 
         $this->version = $this->getNextVersion();
 
+        if ($versionType == 'custom') {
+            $this->scriptFileName = null;
+            return;
+        }
+
         $templateFiles = [
             'migration' => 'migration.php.tpl',
             'seeder' => 'seeder.php.tpl'
@@ -214,7 +217,8 @@ class MigrationModel extends BaseModel
         $pluginCodeObj = $this->getPluginCodeObj();
         $this->code = TextParser::parse($fileContents, [
             'className' => Str::studly($scriptFileName),
-            'namespace' => $pluginCodeObj->toPluginNamespace()
+            'namespace' => $pluginCodeObj->toUpdatesNamespace(),
+            'tableNamePrefix' => $pluginCodeObj->toDatabasePrefix()
         ]);
 
         $this->scriptFileName = $scriptFileName;
@@ -232,6 +236,34 @@ class MigrationModel extends BaseModel
         }
 
         return $this->scriptFileName = $fileName;
+    }
+
+    public function deleteModel()
+    {
+        if ($this->isApplied()) {
+            throw new ApplicationException(Lang::get('rainlab.builder::lang.migration.error_cant_delete_applied'));
+        }
+
+        $this->deleteVersion();
+        $this->removeScriptFile();
+    }
+
+    public function isApplied()
+    {
+        if ($this->isNewModel()) {
+            return false;
+        }
+
+        $versionManager = VersionManager::instance();
+        $unappliedVersions = $versionManager->listNewVersions($this->pluginCodeObj->toCode());
+
+        return !array_key_exists($this->originalVersion, $unappliedVersions);
+    }
+
+    public function apply()
+    {
+        $versionManager = VersionManager::instance();
+        $versionManager->updatePlugin($this->pluginCodeObj->toCode(), $this->version);
     }
 
     protected function assignFileName()
@@ -261,7 +293,7 @@ class MigrationModel extends BaseModel
         }
 
         $pluginCodeObj = $this->getPluginCodeObj();
-        $pluginNamespace = $pluginCodeObj->toPluginNamespace();
+        $pluginNamespace = $pluginCodeObj->toUpdatesNamespace();
 
         if ($migrationInfo['namespace'] != $pluginNamespace) {
             throw new ValidationException([
@@ -287,15 +319,17 @@ class MigrationModel extends BaseModel
 
     protected function saveScriptFile()
     {
-        $scriptFilePath = $this->getPluginUpdatesPath($this->scriptFileName.'.php');
-
         $originalFileContents = $this->getOriginalFileContents();
 
-        if (!File::put($scriptFilePath, $this->code)) {
-            throw new SystemException(sprintf('Error saving file %s', $scriptFilePath));
-        }
+        if (strlen($this->scriptFileName)) {
+            $scriptFilePath = $this->getPluginUpdatesPath($this->scriptFileName.'.php');
 
-        @File::chmod($scriptFilePath);
+            if (!File::put($scriptFilePath, $this->code)) {
+                throw new SystemException(sprintf('Error saving file %s', $scriptFilePath));
+            }
+
+            @File::chmod($scriptFilePath);
+        }
 
         if (strlen($this->originalScriptFileName) && $this->scriptFileName != $this->originalScriptFileName) {
             $originalScriptFilePath = $this->getPluginUpdatesPath($this->originalScriptFileName.'.php');
@@ -380,9 +414,12 @@ class MigrationModel extends BaseModel
         }
 
         $versionInformation[$this->version] = [
-            $this->description,
-            $this->scriptFileName.'.php'
+            $this->description
         ];
+
+        if (strlen($this->scriptFileName)) {
+            $versionInformation[$this->version][] = $this->scriptFileName.'.php';
+        }
 
         if (!$this->isNewModel() && $this->version != $this->originalVersion) {
             if (array_key_exists($this->originalVersion, $versionInformation)) {
@@ -400,6 +437,29 @@ class MigrationModel extends BaseModel
         @File::chmod($versionFilePath);
 
         return $originalFileContents;
+    }
+
+    protected function deleteVersion()
+    {
+        $versionInformation = $this->getPluginVersionInformation();
+        if (!$versionInformation) {
+            $versionInformation = [];
+        }
+
+        if (array_key_exists($this->version, $versionInformation)) {
+            unset($versionInformation[$this->version]);
+        }
+
+        $versionFilePath = $this->getPluginUpdatesPath('version.yaml');
+
+        $dumper = new YamlDumper();
+        $yamlData = $dumper->dump($versionInformation, 20, 0, false, true);
+
+        if (!File::put($versionFilePath, $yamlData)) {
+            throw new SystemException(sprintf('Error saving file %s', $versionFilePath));
+        }
+
+        @File::chmod($versionFilePath);
     }
 
     protected function rollbackVersionFile($fileData)
@@ -426,17 +486,5 @@ class MigrationModel extends BaseModel
     {
         $versionObj = new PluginVersion();
         return $versionObj->getPluginVersionInformation($this->getPluginCodeObj());
-    }
-
-    protected function isApplied()
-    {
-        if ($this->isNewModel()) {
-            return false;
-        }
-
-        $versionManager = VersionManager::instance();
-        $unappliedVersions = $versionManager->listNewVersions($this->pluginCodeObj->toCode());
-
-        return !array_key_exists($this->originalVersion, $unappliedVersions);
     }
 }

@@ -50,6 +50,17 @@
     }
 
     Version.prototype.cmdDeleteVersion = function(ev) {
+        var $target = $(ev.currentTarget)
+        $.oc.confirm($target.data('confirm'), this.proxy(this.deleteConfirmed))
+    }
+
+    Version.prototype.cmdApplyVersion = function(ev) {
+        var $target = $(ev.currentTarget),
+            $form = $target.closest('form')
+
+        $target.request('onVersionApply').done(
+            this.proxy(this.applyVersionDone)
+        )
     }
 
     // INTERNAL METHODS
@@ -61,7 +72,10 @@
         }
 
         var $masterTabPane = this.getMasterTabsActivePane()
+        this.updateUiAfterSave($masterTabPane, data)
+    }
 
+    Version.prototype.updateUiAfterSave = function($masterTabPane, data) {
         $masterTabPane.find('input[name=original_version]').val(data.builderRepsonseData.savedVersion)
         this.updateMasterTabIdAndTitle($masterTabPane, data.builderRepsonseData)
         this.unhideFormDeleteButton($masterTabPane)
@@ -70,12 +84,37 @@
         this.getIndexController().unchangeTab($masterTabPane)
     }
 
-    // Version.prototype.deleteDone = function() {
-    //     var $masterTabPane = this.getMasterTabsActivePane()
+    Version.prototype.deleteConfirmed = function() {
+        var $masterTabPane = this.getMasterTabsActivePane(),
+            $form = $masterTabPane.find('form')
 
-    //     this.getIndexController().unchangeTab($masterTabPane)
-    //     this.forceCloseTab($masterTabPane)
-    // }
+        $.oc.stripeLoadIndicator.show()
+        $form.request('onVersionDelete').always(
+            $.oc.builder.indexController.hideStripeIndicatorProxy
+        ).done(
+            this.proxy(this.deleteDone)
+        )
+    }
+
+    Version.prototype.deleteDone = function() {
+        var $masterTabPane = this.getMasterTabsActivePane()
+
+        this.getIndexController().unchangeTab($masterTabPane)
+        this.forceCloseTab($masterTabPane)
+    }
+
+    Version.prototype.applyVersionDone = function(data) {
+        if (data['builderRepsonseData'] === undefined) {
+            throw new Error('Invalid response data')
+        }
+
+        var $masterTabPane = this.getMasterTabsActivePane()
+
+        this.updateUiAfterSave($masterTabPane, data)
+
+        $masterTabPane.find('[data-builder-command="version:cmdApplyVersion"]').addClass('hide')
+        $masterTabPane.find('[data-builder-command="version:cmdRollbackVersion"]').removeClass('hide')
+    }
 
     Version.prototype.getVersionList = function() {
         return $('#layout-side-panel form[data-content-id=version] [data-control=filelist]')

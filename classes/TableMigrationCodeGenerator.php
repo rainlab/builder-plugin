@@ -90,7 +90,7 @@ class TableMigrationCodeGenerator extends BaseModel
         return TextParser::parse($fileContents, [
             'className' => Str::studly($scriptFilename),
             'migrationCode' => $this->indent($code),
-            'namespace' => $pluginCodeObj->toPluginNamespace()
+            'namespace' => $pluginCodeObj->toUpdatesNamespace()
         ]);
     }
 

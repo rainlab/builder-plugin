@@ -363,7 +363,12 @@ return [
         'tab_new_version' => 'New version',
         'migration' => 'Migration',
         'seeder' => 'Seeder',
-        'custom' => 'Custom'
+        'custom' => 'Custom',
+        'apply_version' => 'Apply version',
+        'applying' => 'Applying...',
+        'rollback_version' => 'Rollback version',
+        'rolling_back' => 'Rolling back...',
+        'applied' => 'The version has been successfully applied.'
     ],
     'menu' => [
         'menu_label' => 'Backend Menu',
@@ -439,6 +444,7 @@ return [
         'error_file_must_define_namespace' => 'Migration code should define a namespace. Leave the code field blank if you only want to update the version number.',
         'no_changes_to_save' => 'There are no changes to save.',
         'error_namespace_mismatch' => "The migration code should use the plugin namespace: :namespace",
-        'error_migration_file_exists' => "Migration file :file already exists. Please use another class name."
+        'error_migration_file_exists' => "Migration file :file already exists. Please use another class name.",
+        'error_cant_delete_applied' => 'This version has already been applied and cannot be deleted. Please rollback the version first.'
     ]
 ];

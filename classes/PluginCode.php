@@ -37,6 +37,11 @@ class PluginCode
         return $this->authorCode.'\\'.$this->pluginCode;
     }
 
+    public function toUpdatesNamespace()
+    {
+        return $this->toPluginNamespace().'\\Updates';
+    }
+
     public function toFilesystemPath()
     {
         return strtolower($this->authorCode.'/'.$this->pluginCode);
