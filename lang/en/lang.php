@@ -368,7 +368,13 @@ return [
         'applying' => 'Applying...',
         'rollback_version' => 'Rollback version',
         'rolling_back' => 'Rolling back...',
-        'applied' => 'The version has been successfully applied.'
+        'applied' => 'The version has been successfully applied.',
+        'rolled_back' => 'The version has been successfully rolled back.',
+        'hint_save_unapplied' => 'You saved an unapplied version. Unapplied versions could be automatically applied when you or another user logs into the back-end or when a database table is saved in the Database section of the Builder.',
+        'hint_rollback' => 'Rolling back a version will also roll back all versions newer than this version. Please note that unapplied versions could be automatically applied by the system when you or another user logs into the back-end or when a database table is saved in the Database section of the Builder.',
+        'hint_apply' => 'Applying a version will also apply all older unapplied versions of the plugin.',
+        'dont_show_again' => 'Don\'t show again',
+        'save_unapplied_version' => 'Save unapplied version'
     ],
     'menu' => [
         'menu_label' => 'Backend Menu',

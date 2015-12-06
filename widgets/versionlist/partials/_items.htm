@@ -9,7 +9,8 @@
             $applied = !array_key_exists($versionNumber, $unappliedVersions);
         ?>
             <li class="item with-icon" 
-                data-id="<?= e($dataId) ?>" 
+                data-id="<?= e($dataId) ?>"
+                data-applied="<?= $applied ? 'true' : 'false' ?>" 
             >
                 <a href="#" data-builder-command="version:cmdOpenVersion" data-plugin-code=<?= e($pluginCode) ?> data-id="<?= e($versionNumber) ?>">
                     <?php if ($applied): ?>

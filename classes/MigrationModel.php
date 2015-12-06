@@ -262,8 +262,22 @@ class MigrationModel extends BaseModel
 
     public function apply()
     {
+        if ($this->isApplied()) {
+            return;
+        }
+
         $versionManager = VersionManager::instance();
         $versionManager->updatePlugin($this->pluginCodeObj->toCode(), $this->version);
+    }
+
+    public function rollback()
+    {
+        if (!$this->isApplied()) {
+            return;
+        }
+
+        $versionManager = VersionManager::instance();
+        $versionManager->removePlugin($this->pluginCodeObj->toCode(), $this->version);
     }
 
     protected function assignFileName()
