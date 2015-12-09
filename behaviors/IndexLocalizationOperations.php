@@ -32,6 +32,10 @@ class IndexLocalizationOperations extends IndexOperationsBehaviorBase
         $widget = $this->makeBaseFormWidget($language, $options);
         $this->vars['originalLanguage'] = $language;
 
+        if ($widget->model->isNewModel()) {
+            $widget->model->initContent();
+        }
+
         $result = [
             'tabTitle' => $this->getTabName($widget->model),
             'tabIcon' => 'icon-globe',
@@ -71,7 +75,7 @@ class IndexLocalizationOperations extends IndexOperationsBehaviorBase
 
         $model->deleteModel();
 
-        return $this->controller->widget->localizationList->updateList();
+        return $this->controller->widget->languageList->updateList();
     }
 
     protected function loadOrCreateLocalizationFromPost()

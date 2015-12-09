@@ -54,9 +54,13 @@ class LocalizationModel extends BaseModel
             throw new ApplicationException(Lang::get('rainlab.builder::lang.localization.error_file_not_array'));
         }
 
-        $dumper = new YamlDumper();
-
-        $this->strings = $dumper->dump($strings, 20, 0, false, true);
+        if (count($strings) > 0) {
+            $dumper = new YamlDumper();
+            $this->strings = $dumper->dump($strings, 20, 0, false, true);
+        }
+        else {
+            $this->strings = '';
+        }
         
         $this->exists = true;
     }
@@ -71,7 +75,7 @@ class LocalizationModel extends BaseModel
 
         if (File::isFile($filePath)) {
             if ($isNew || $this->originalLanguage != $this->language) {
-                throw new ValidationException(['fileName' => Lang::get('rainlab.builder::lang.common.error_file_exists', ['path'=>basename($filePath)])]);
+                throw new ValidationException(['fileName' => Lang::get('rainlab.builder::lang.common.error_file_exists', ['path'=>$this->language.'/'.basename($filePath)])]);
             }
         }
 
@@ -88,8 +92,37 @@ class LocalizationModel extends BaseModel
 
         @File::chmod($filePath);
 
+        if (!$this->isNewModel() && strlen($this->originalLanguage) > 0 && $this->originalLanguage != $this->language) {
+            $this->originalFilePath = $this->getFilePath($this->originalLanguage);
+            @File::delete($this->originalFilePath);
+        }
+
         $this->originalLanguage = $this->language;
         $this->exists = true;
+    }
+
+    public function deleteModel()
+    {
+        if ($this->isNewModel()) {
+            throw new ApplicationException('Cannot delete language file which is not saved yet.');
+        }
+
+        $filePath = File::symbolizePath($this->getFilePath());
+        if (File::isFile($filePath)) {
+            if (!@unlink($filePath)) {
+                throw new ApplicationException(Lang::get('rainlab.builder::lang.localization.error_delete_file'));
+            }
+        }
+    }
+
+    public function initContent()
+    {
+        $templatePath = '$/rainlab/builder/classes/localizationmodel/templates/lang.php';
+        $templatePath = File::symbolizePath($templatePath);
+
+        $strings = include($templatePath);
+        $dumper = new YamlDumper();
+        $this->strings = $dumper->dump($strings, 20, 0, false, true);
     }
 
     public static function listPluginLanguages($pluginCodeObj)
@@ -123,18 +156,23 @@ class LocalizationModel extends BaseModel
         return preg_match('/^[a-z0-9\.\-]+$/i', $language);
     }
 
-    protected function getFilePath()
+    protected function getFilePath($language = null)
     {
-        $language = trim($this->language);
+        if ($language === null) {
+            $language = $this->language;
+        }
+
+        $language = trim($language);
+
         if (!strlen($language)) {
             throw new SystemException('The form model language is not set.');
         }
 
-        if (!$this->validateLanguage($this->language)) {
-            throw new SystemException('Invalid language file name: '.$this->language);
+        if (!$this->validateLanguage($language)) {
+            throw new SystemException('Invalid language file name: '.$language);
         }
 
-        $path = $this->getPluginCodeObj()->toPluginDirectoryPath().'/lang/'.$this->language.'/lang.php';
+        $path = $this->getPluginCodeObj()->toPluginDirectoryPath().'/lang/'.$language.'/lang.php';
         return File::symbolizePath($path);
     }
 

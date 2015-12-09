@@ -75,6 +75,25 @@
         return $('#layout-side-panel form[data-content-id=localization] [data-control=filelist]')
     }
 
+    Localization.prototype.deleteConfirmed = function() {
+        var $masterTabPane = this.getMasterTabsActivePane(),
+            $form = $masterTabPane.find('form')
+
+        $.oc.stripeLoadIndicator.show()
+        $form.request('onLanguageDelete').always(
+            $.oc.builder.indexController.hideStripeIndicatorProxy
+        ).done(
+            this.proxy(this.deleteDone)
+        )
+    }
+
+    Localization.prototype.deleteDone = function() {
+        var $masterTabPane = this.getMasterTabsActivePane()
+
+        this.getIndexController().unchangeTab($masterTabPane)
+        this.forceCloseTab($masterTabPane)
+    }
+
     // REGISTRATION
     // ============================
 

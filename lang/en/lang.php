@@ -412,7 +412,8 @@ return [
         'error_cant_load_file' => 'Cannot load the requested language file - file not found.',
         'error_bad_localization_file_contents' => 'Cannot load the requested language file. Language files can only contain array definitions and strings.',
         'error_file_not_array' => 'Cannot load the requested language file. Language files should return an array.',
-        'save_error' => "Error saving file ':name'. Please check write permissions."
+        'save_error' => "Error saving file ':name'. Please check write permissions.",
+        'error_delete_file' => 'Error deleting localization file.'
     ],
     'permission' => [
         'menu_label' => 'Permissions',
