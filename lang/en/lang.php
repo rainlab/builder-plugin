@@ -402,7 +402,17 @@ return [
         'error_duplicate_side_menu_code' => "Duplicate side menu item code: ':code'."
     ],
     'localization' => [
-        'menu_label' => 'Localization'
+        'menu_label' => 'Localization',
+        'language' => 'Language',
+        'strings' => 'Strings',
+        'confirm_delete' => 'Do you really want to delete the language?',
+        'tab_new_language' => 'New language',
+        'no_records' => 'No languages found',
+        'saved' => 'The language file has been successfully saved.',
+        'error_cant_load_file' => 'Cannot load the requested language file - file not found.',
+        'error_bad_localization_file_contents' => 'Cannot load the requested language file. Language files can only contain array definitions and strings.',
+        'error_file_not_array' => 'Cannot load the requested language file. Language files should return an array.',
+        'save_error' => "Error saving file ':name'. Please check write permissions."
     ],
     'permission' => [
         'menu_label' => 'Permissions',

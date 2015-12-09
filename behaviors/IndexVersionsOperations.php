@@ -63,7 +63,7 @@ class IndexVersionsOperations extends IndexOperationsBehaviorBase
 
         $result['builderRepsonseData'] = [
             'tabId' => $this->getTabId($model->getPluginCodeObj()->toCode(), $model->version),
-            'tabTitle' => $model->getModelPluginName().'/'.Lang::get('rainlab.builder::lang.version.tab'),
+            'tabTitle' => $this->getTabName($model->version, $model),
             'savedVersion' => $model->version,
             'isApplied' => $model->isApplied()
         ];
@@ -97,7 +97,7 @@ class IndexVersionsOperations extends IndexOperationsBehaviorBase
 
         $result['builderRepsonseData'] = [
             'tabId' => $this->getTabId($model->getPluginCodeObj()->toCode(), $model->version),
-            'tabTitle' => $model->getModelPluginName().'/'.Lang::get('rainlab.builder::lang.version.tab'),
+            'tabTitle' => $this->getTabName($model->version, $model),
             'savedVersion' => $model->version
         ];
 
@@ -121,7 +121,7 @@ class IndexVersionsOperations extends IndexOperationsBehaviorBase
 
         $result['builderRepsonseData'] = [
             'tabId' => $this->getTabId($model->getPluginCodeObj()->toCode(), $model->version),
-            'tabTitle' => $model->getModelPluginName().'/'.Lang::get('rainlab.builder::lang.version.tab'),
+            'tabTitle' => $this->getTabName($model->version, $model),
             'savedVersion' => $model->version
         ];
 

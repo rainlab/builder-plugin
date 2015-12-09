@@ -1,7 +1,7 @@
 <?php namespace RainLab\Builder\Widgets;
 
 use Backend\Classes\WidgetBase;
-use RainLab\Builder\Classes\MigrationModel;
+use RainLab\Builder\Classes\LocalizationModel;
 use RainLab\Builder\Classes\PluginVersion;
 use System\Classes\VersionManager;
 use Input;
@@ -11,16 +11,16 @@ use Str;
 use Lang;
 
 /**
- * Plugin version list widget.
+ * Plugin language list widget.
  *
  * @package rainlab\builder
  * @author Alexey Bobkov, Samuel Georges
  */
-class VersionList extends WidgetBase
+class LanguageList extends WidgetBase
 {
     use \Backend\Traits\SearchableWidget;
 
-    public $noRecordsMessage = 'rainlab.builder::lang.version.no_records';
+    public $noRecordsMessage = 'rainlab.builder::lang.localization.no_records';
 
     public function __construct($controller, $alias)
     {
@@ -46,7 +46,7 @@ class VersionList extends WidgetBase
 
     public function updateList()
     {
-        return ['#'.$this->getId('plugin-version-list') => $this->makePartial('items', $this->getRenderData())];
+        return ['#'.$this->getId('plugin-language-list') => $this->makePartial('items', $this->getRenderData())];
     }
 
     public function refreshActivePlugin()
@@ -73,57 +73,42 @@ class VersionList extends WidgetBase
      * Methods for the internal use
      */
 
+    protected function getLanguageList($pluginCode)
+    {
+        $result = LocalizationModel::listPluginLanguages($pluginCode);
+
+        return $result;
+    }
+
     protected function getRenderData()
     {
         $activePluginVector = $this->controller->getBuilderActivePluginVector();
         if (!$activePluginVector) {
             return [
                 'pluginVector'=>null,
-                'items' => [],
-                'unappliedVersions' => []
+                'items' => []
             ];
         }
 
-        $versionObj = new PluginVersion();
-        $items = $versionObj->getPluginVersionInformation($activePluginVector->pluginCodeObj);
+        $items = $this->getLanguageList($activePluginVector->pluginCodeObj);
 
         $searchTerm = Str::lower($this->getSearchTerm());
         if (strlen($searchTerm)) {
             $words = explode(' ', $searchTerm);
             $result = [];
 
-            foreach ($items as $version=>$versionInfo) {
-                $description = $this->getVersionDescription($versionInfo);
-
-                if ($this->textMatchesSearch($words, $version) || (strlen($description) && $this->textMatchesSearch($words, $description))) {
-                    $result[$version] = $versionInfo;
+            foreach ($items as $language) {
+                if ($this->textMatchesSearch($words, $language)) {
+                    $result[] = $language;
                 }
             }
 
             $items = $result;
         }
 
-        $versionManager = VersionManager::instance();
-        $unappliedVersions = $versionManager->listNewVersions($activePluginVector->pluginCodeObj->toCode());
         return [
             'pluginVector'=>$activePluginVector,
-            'items'=>$items,
-            'unappliedVersions'=>$unappliedVersions
+            'items'=>$items
         ];
-    }
-
-    protected function getVersionDescription($versionInfo)
-    {
-        if (is_array($versionInfo)) {
-            if (array_key_exists(0, $versionInfo)) {
-                return $versionInfo[0];
-            }
-        }
-
-        if (is_scalar($versionInfo)) {
-            return $versionInfo;
-        }
-
-        return null;
     }
 }

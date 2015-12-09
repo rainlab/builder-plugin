@@ -30,6 +30,16 @@
                 onsubmit="return false">
                 <?= $this->widget->versionList->render() ?>
             </form>
+
+            <!-- Languages -->
+            <form
+                class="layout hide"
+                data-content-id="localization"
+                data-template-type="localization"
+                data-type-icon="oc-icon-glove"
+                onsubmit="return false">
+                <?= $this->widget->languageList->render() ?>
+            </form>
         </div>
     </div>
 </div>

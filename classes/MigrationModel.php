@@ -172,7 +172,7 @@ class MigrationModel extends BaseModel
             $cnt = count($versionInformation);
 
             if ($cnt > 2) {
-                throw new ApplicationException('The requested version cannot be edited with Builder as it refers to multiple PHP files.');
+                throw new ApplicationException('The requested version cannot be edited with Builder as it refers to multiple PHP scripts.');
             }
 
             if ($cnt > 0) {

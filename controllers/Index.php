@@ -6,6 +6,7 @@ use RainLab\Builder\Widgets\PluginList;
 use RainLab\Builder\Widgets\DatabaseTableList;
 use RainLab\Builder\Widgets\ModelList;
 use RainLab\Builder\Widgets\VersionList;
+use RainLab\Builder\Widgets\LanguageList;
 use RainLab\Builder\Traits\IndexPluginOperations;
 use ApplicationException;
 use Exception;
@@ -30,6 +31,7 @@ class Index extends Controller
         'RainLab.Builder.Behaviors.IndexPermissionsOperations',
         'RainLab.Builder.Behaviors.IndexMenusOperations',
         'RainLab.Builder.Behaviors.IndexVersionsOperations',
+        'RainLab.Builder.Behaviors.IndexLocalizationOperations',
     ];
 
     public $requiredPermissions = ['rainlab.buileder.*'];
@@ -50,6 +52,7 @@ class Index extends Controller
         new DatabaseTableList($this, 'databaseTabelList');
         new ModelList($this, 'modelList');
         new VersionList($this, 'versionList');
+        new LanguageList($this, 'languageList');
     }
 
     public function index()
@@ -66,6 +69,7 @@ class Index extends Controller
         $this->addJs('/plugins/rainlab/builder/assets/js/builder.index.entity.permission.js', 'RainLab.Builder');
         $this->addJs('/plugins/rainlab/builder/assets/js/builder.index.entity.menus.js', 'RainLab.Builder');
         $this->addJs('/plugins/rainlab/builder/assets/js/builder.index.entity.version.js', 'RainLab.Builder');
+        $this->addJs('/plugins/rainlab/builder/assets/js/builder.index.entity.localization.js', 'RainLab.Builder');
         $this->addJs('/plugins/rainlab/builder/assets/js/builder.index.js', 'RainLab.Builder');
 
         $this->pageTitleTemplate = '%s Builder';

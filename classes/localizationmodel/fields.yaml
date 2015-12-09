@@ -1,0 +1,25 @@
+# ===================================
+#  Form Field Definitions
+# ===================================
+
+fields:
+    language:
+        label: rainlab.builder::lang.localization.language
+        attributes:
+            default-focus: 1
+            spellcheck: 'false'
+
+    toolbar:
+        type: partial
+        path: $/rainlab/builder/behaviors/indexlocalizationoperations/partials/_toolbar.htm
+        cssClass: collapse-visible
+
+secondaryTabs:
+    stretch: true
+    fields:
+        strings:
+            tab: rainlab.builder::lang.localization.strings
+            stretch: true
+            type: codeeditor
+            language: yaml
+            showGutter: true
