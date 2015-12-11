@@ -49,6 +49,25 @@
         $.oc.confirm($target.data('confirm'), this.proxy(this.deleteConfirmed))
     }
 
+    Localization.prototype.cmdCopyMissingStrings = function(ev) {
+        var $form = $(ev.currentTarget),
+            language = $form.find('select[name=language]').val(),
+            $masterTabPane = this.getMasterTabsActivePane()
+
+        $form.trigger('close.oc.popup')
+
+        $.oc.stripeLoadIndicator.show()
+        $masterTabPane.find('form').request('onLanguageCopyStringsFrom', {
+            data: {
+                copy_from: language
+            }
+        }).always(
+            $.oc.builder.indexController.hideStripeIndicatorProxy
+        ).done(
+            this.proxy(this.copyStringsFromDone)
+        )
+    }
+
     // EVENT HANDLERS
     // ============================
 
@@ -75,6 +94,10 @@
         return $('#layout-side-panel form[data-content-id=localization] [data-control=filelist]')
     }
 
+    Localization.prototype.getCodeEditor = function($tab) {
+        return $tab.find('div[data-field-name=strings] div[data-control=codeeditor]').data('oc.codeEditor').editor
+    }
+
     Localization.prototype.deleteConfirmed = function() {
         var $masterTabPane = this.getMasterTabsActivePane(),
             $form = $masterTabPane.find('form')
@@ -92,6 +115,39 @@
 
         this.getIndexController().unchangeTab($masterTabPane)
         this.forceCloseTab($masterTabPane)
+    }
+
+    Localization.prototype.copyStringsFromDone = function(data) {
+        if (data['builderRepsonseData'] === undefined) {
+            throw new Error('Invalid response data')
+        }
+
+        var responseData = data.builderRepsonseData,
+            $masterTabPane = this.getMasterTabsActivePane(),
+            $form = $masterTabPane.find('form'),
+            codeEditor = this.getCodeEditor($masterTabPane),
+            newStringMessage = $form.data('newStringMessage'),
+            mismatchMessage = $form.data('structureMismatch')
+
+        codeEditor.getSession().setValue(responseData.strings)
+
+        var annotations = []
+        for (var i=responseData.updatedLines.length-1; i>=0; i--) {
+            var line = responseData.updatedLines[i]
+
+            annotations.push({
+                row: line, 
+                column: 0,
+                text: newStringMessage,
+                type: 'warning'
+            })
+        }
+
+        codeEditor.getSession().setAnnotations(annotations)
+
+        if (responseData.mismatch) {
+            $.oc.alert(mismatchMessage)
+        }
     }
 
     // REGISTRATION

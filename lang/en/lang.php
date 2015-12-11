@@ -413,7 +413,13 @@ return [
         'error_bad_localization_file_contents' => 'Cannot load the requested language file. Language files can only contain array definitions and strings.',
         'error_file_not_array' => 'Cannot load the requested language file. Language files should return an array.',
         'save_error' => "Error saving file ':name'. Please check write permissions.",
-        'error_delete_file' => 'Error deleting localization file.'
+        'error_delete_file' => 'Error deleting localization file.',
+        'add_missing_strings' => 'Add missing strings',
+        'copy' => 'Copy',
+        'add_missing_strings_label' => 'Select language to copy missing strings from',
+        'no_languages_to_copy_from' => 'There are no other languages to copy strings from.',
+        'new_string_warning' => 'New string or section',
+        'structure_mismatch' => 'The structure of the source language file doesn\'t match the structure of the file being edited. Some individual strings in the edited file correspond to sections in the source file (or vice versa) and cannot be merged automatically.'
     ],
     'permission' => [
         'menu_label' => 'Permissions',

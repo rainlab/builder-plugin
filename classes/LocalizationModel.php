@@ -22,6 +22,8 @@ class LocalizationModel extends BaseModel
 
     public $language;
 
+    public $originalLanguage;
+
     protected static $fillable = [
         'strings',
         'language'
@@ -31,7 +33,7 @@ class LocalizationModel extends BaseModel
         'language' => ['required', 'regex:/^[a-z0-9\.\-]+$/i']
     ];
 
-    public $originalLanguage;
+    protected $originalStringArray = [];
 
     public function load($language)
     {
@@ -53,6 +55,8 @@ class LocalizationModel extends BaseModel
         if (!is_array($strings)) {
             throw new ApplicationException(Lang::get('rainlab.builder::lang.localization.error_file_not_array'));
         }
+
+        $this->originalStringArray = $strings;
 
         if (count($strings) > 0) {
             $dumper = new YamlDumper();
@@ -149,6 +153,24 @@ class LocalizationModel extends BaseModel
         }
 
         return $result;
+    }
+
+    public function copyStringsFrom($destinationText, $sourceLanguageCode)
+    {
+        $sourceLanguageModel = new self();
+        $sourceLanguageModel->setPluginCodeObj($this->getPluginCodeObj());
+        $sourceLanguageModel->load($sourceLanguageCode);
+
+        $srcArray = $sourceLanguageModel->getOriginalStringsArray();
+
+        $languageMixer = new LanguageMixer();
+        
+        return $languageMixer->addStringsFromAnotherLanguage($destinationText, $srcArray);
+    }
+
+    public function getOriginalStringsArray()
+    {
+        return $this->originalStringArray;
     }
 
     protected function validateLanguage($language)

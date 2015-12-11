@@ -7,6 +7,16 @@
         data-hotkey="ctrl+s, cmd+s">
         <?= e(trans('backend::lang.form.save')) ?>
     </a>
+
+    <a
+        href="javascript:;"
+        class="btn btn-primary oc-icon-eyedropper"
+        data-control="popup"
+        data-handler="onLanguageShowCopyStringsPopup"
+        data-stripe-load-indicator
+    >
+        <?= e(trans('rainlab.builder::lang.localization.add_missing_strings')) ?>
+    </a>
     
     <button
         type="button"

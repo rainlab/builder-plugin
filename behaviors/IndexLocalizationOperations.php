@@ -78,6 +78,33 @@ class IndexLocalizationOperations extends IndexOperationsBehaviorBase
         return $this->controller->widget->languageList->updateList();
     }
 
+    public function onLanguageShowCopyStringsPopup()
+    {
+        $pluginCodeObj = new PluginCode(Request::input('plugin_code'));
+        $language = trim(Input::get('original_language'));
+
+        $languages = LocalizationModel::listPluginLanguages($pluginCodeObj);
+
+        if (strlen($language)) {
+            $languages = array_diff($languages, [$language]);
+        }
+
+        return $this->makePartial('copy-strings-popup-form', ['languages'=>$languages]);
+    }
+
+    public function onLanguageCopyStringsFrom()
+    {
+        $sourceLanguage = Request::input('copy_from');
+        $destinationText = Request::input('strings');
+
+        $model = new LocalizationModel();
+        $model->setPluginCode(Request::input('plugin_code'));
+
+        $responseData = $model->copyStringsFrom($destinationText, $sourceLanguage);
+
+        return ['builderRepsonseData' => $responseData];
+    }
+
     protected function loadOrCreateLocalizationFromPost()
     {
         $pluginCodeObj = new PluginCode(Request::input('plugin_code'));

@@ -88,7 +88,8 @@ class Index extends Controller
             $result,
             $this->widget->databaseTabelList->refreshActivePlugin(),
             $this->widget->modelList->refreshActivePlugin(),
-            $this->widget->versionList->refreshActivePlugin()
+            $this->widget->versionList->refreshActivePlugin(),
+            $this->widget->languageList->refreshActivePlugin()
         );
 
         return $result;
