@@ -10,7 +10,7 @@ use Lang;
 use File;
 
 /**
- * Database table list widget.
+ * Default control design-time provider.
  *
  * @package rainlab\builder
  * @author Alexey Bobkov, Samuel Georges

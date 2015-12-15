@@ -351,7 +351,8 @@ return [
         'error_duplicate_column' => "Duplicate column field name: ':column'."
     ],
     'controller' => [
-        'menu_label' => 'Controllers'
+        'menu_label' => 'Controllers',
+        'no_records' => 'No plugin controllers found',
     ],
     'version' => [
         'menu_label' => 'Versions',

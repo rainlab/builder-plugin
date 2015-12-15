@@ -201,6 +201,17 @@ class PhpSourceStream
     }
 
     /**
+     * Moves the head backward.
+     * @return boolean Returns true if the head was successfully moved.
+     * Returns false if the head can't be moved because it has reached the beginning of the steam.
+     */
+    public function back()
+    {
+        return $this->setHead($this->getHead()-1);
+    }
+
+
+    /**
      * Returns the stream text from the head position to the next semicolon and updates the head.
      * If the method succeeds, the head is positioned on the semicolon.
      */
@@ -218,5 +229,15 @@ class PhpSourceStream
 
         // The semicolon wasn't found.
         return null;
+    }
+
+    public function unquotePhpString($string)
+    {
+        if ((substr($string, 0, 1) === '\'' && substr($string, -1) === '\'') || 
+            (substr($string, 0, 1) === '"' && substr($string, -1) === '"')) {
+            return substr($string, 1, -1);
+        }
+
+        return false;
     }
 }

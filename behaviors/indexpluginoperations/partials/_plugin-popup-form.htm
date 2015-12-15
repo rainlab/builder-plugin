@@ -1,6 +1,5 @@
-<?= Form::ajax('onPluginSave', [
-    'success' => "\$el.trigger('close.oc.popup');",
-    'data-stripe-load-indicator' => 1
+<?= Form::open([
+    'data-builder-command'=>'plugin:cmdApplyPluginSettings'
 ]) ?>
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="popup">&times;</button>

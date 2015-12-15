@@ -41,7 +41,12 @@ class IndexPluginOperations extends IndexOperationsBehaviorBase
         $model->save();
 
         if (!$pluginCode) {
-            return $this->controller->setBuilderActivePlugin($model->getPluginCode(), true);
+            $result = $this->controller->setBuilderActivePlugin($model->getPluginCode(), true);
+            $result['responseData'] = [
+                'pluginCode' => $model->getPluginCode()
+            ];
+
+            return $result;
         } else {
             return $this->controller->updatePluginList();
         }

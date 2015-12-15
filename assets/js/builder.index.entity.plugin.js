@@ -51,6 +51,19 @@
         })
     }
 
+    Plugin.prototype.cmdApplyPluginSettings = function(ev) {
+        var $form = $(ev.currentTarget),
+            self = this
+
+        $.oc.stripeLoadIndicator.show()
+        $form.request('onPluginSave').always(
+            $.oc.builder.indexController.hideStripeIndicatorProxy
+        ).done(function(data){
+            $form.trigger('close.oc.popup')
+            self.makePluginActiveDone(data)
+        })
+    }
+
     Plugin.prototype.cmdEditPluginSettings = function(ev) {
         var $target = $(ev.currentTarget)
 

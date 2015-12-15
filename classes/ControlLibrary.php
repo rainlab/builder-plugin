@@ -92,7 +92,7 @@ class ControlLibrary
      * to the Component properties: http://octobercms.com/docs/plugin/components#component-properties
      * Use the getStandardProperties() of the ControlLibrary to get the standard control properties.
      * @param string $designTimeProviderClass Specifies the control design-time provider class name.
-     * The class should extend RainLab\Builder\Classes\ControlDesignTimeProvider. If the class is not provided,
+     * The class should extend RainLab\Builder\Classes\ControlDesignTimeProviderBase. If the class is not provided,
      * the default control design and design settings will be used.
      */
     public function registerControl($code, $name, $description, $controlGroup, $icon, $properties, $designTimeProviderClass)
