@@ -20,7 +20,7 @@ class ControllerBehaviorLibrary
 
     protected $behaviors = null;
 
-    public function getBehaviorInformation($behaviorClassName)
+    public function getBehaviorInfo($behaviorClassName)
     {
         $behaviors = $this->listBehaviors();
 

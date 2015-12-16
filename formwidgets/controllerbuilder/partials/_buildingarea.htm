@@ -1,0 +1,11 @@
+<div class="layout-absolute builder-controllers-builder-area">
+    <div class="control-scrollpad" data-control="scrollpad">
+        <div class="scroll-wrapper">
+            <ul class="controller-behavior-list">
+                <?php foreach ($model->behaviors as $behavior): ?>
+                    <?= $this->makePartial('behavior', ['behavior'=>$behavior]) ?>
+                <?php endforeach ?>
+            </ul>
+        </div>
+    </div>
+</div>

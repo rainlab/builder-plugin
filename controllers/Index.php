@@ -7,6 +7,7 @@ use RainLab\Builder\Widgets\DatabaseTableList;
 use RainLab\Builder\Widgets\ModelList;
 use RainLab\Builder\Widgets\VersionList;
 use RainLab\Builder\Widgets\LanguageList;
+use RainLab\Builder\Widgets\ControllerList;
 use RainLab\Builder\Traits\IndexPluginOperations;
 use ApplicationException;
 use Exception;
@@ -32,6 +33,7 @@ class Index extends Controller
         'RainLab.Builder.Behaviors.IndexMenusOperations',
         'RainLab.Builder.Behaviors.IndexVersionsOperations',
         'RainLab.Builder.Behaviors.IndexLocalizationOperations',
+        'RainLab.Builder.Behaviors.IndexControllerOperations',
     ];
 
     public $requiredPermissions = ['rainlab.buileder.*'];
@@ -53,6 +55,7 @@ class Index extends Controller
         new ModelList($this, 'modelList');
         new VersionList($this, 'versionList');
         new LanguageList($this, 'languageList');
+        new ControllerList($this, 'controllerList');
     }
 
     public function index()
@@ -70,6 +73,7 @@ class Index extends Controller
         $this->addJs('/plugins/rainlab/builder/assets/js/builder.index.entity.menus.js', 'RainLab.Builder');
         $this->addJs('/plugins/rainlab/builder/assets/js/builder.index.entity.version.js', 'RainLab.Builder');
         $this->addJs('/plugins/rainlab/builder/assets/js/builder.index.entity.localization.js', 'RainLab.Builder');
+        $this->addJs('/plugins/rainlab/builder/assets/js/builder.index.entity.controller.js', 'RainLab.Builder');
         $this->addJs('/plugins/rainlab/builder/assets/js/builder.index.js', 'RainLab.Builder');
 
         $this->pageTitleTemplate = '%s Builder';
@@ -89,7 +93,8 @@ class Index extends Controller
             $this->widget->databaseTabelList->refreshActivePlugin(),
             $this->widget->modelList->refreshActivePlugin(),
             $this->widget->versionList->refreshActivePlugin(),
-            $this->widget->languageList->refreshActivePlugin()
+            $this->widget->languageList->refreshActivePlugin(),
+            $this->widget->controllerList->refreshActivePlugin()
         );
 
         return $result;

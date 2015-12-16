@@ -1,0 +1,23 @@
+# ===================================
+#  Field Definitions
+# ===================================
+
+fields:
+    controller:
+        label: rainlab.builder::lang.controller.controller
+        attributes:
+            readonly: true
+
+    toolbar:
+        type: partial
+        path: $/rainlab/builder/behaviors/indexcontrolleroperations/partials/_toolbar.htm
+        cssClass: collapse-visible
+
+secondaryTabs:
+    stretch: true
+    fields:
+        formBuilder: 
+            type: RainLab\Builder\FormWidgets\ControllerBuilder
+            stretch: true
+            cssClass: layout
+            tab: rainlab.builder::lang.controller.behaviors

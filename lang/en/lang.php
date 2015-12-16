@@ -353,6 +353,10 @@ return [
     'controller' => [
         'menu_label' => 'Controllers',
         'no_records' => 'No plugin controllers found',
+        'controller' => 'Controller',
+        'behaviors' => 'Behaviors',
+        'error_controller_has_no_behaviors' => 'The controller doesn\'t have configurable behaviors.',
+        'error_invalid_yaml_configuration' => 'Error loading behavior configuration file: :file',
     ],
     'version' => [
         'menu_label' => 'Versions',

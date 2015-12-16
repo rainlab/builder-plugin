@@ -5,6 +5,7 @@ use System\Classes\PluginBase;
 use Event;
 use Lang;
 use RainLab\Builder\Classes\StandardControlsRegistry;
+use RainLab\Builder\Classes\StandardBehaviorRegistry;
 
 class Plugin extends PluginBase
 {
@@ -63,7 +64,7 @@ class Plugin extends PluginBase
                         'label'       => 'rainlab.builder::lang.controller.menu_label',
                         'icon'        => 'icon-asterisk',
                         'url'         => 'javascript:;',
-                        'attributes'  => ['data-menu-item'=>'controller'],
+                        'attributes'  => ['data-menu-item'=>'controllers'],
                         'permissions' => ['rainlab.builder.*']
                     ],
                     'menus' => [
@@ -111,5 +112,10 @@ class Plugin extends PluginBase
         Event::listen('pages.builder.registerControls', function($controlLibrary) {
             new StandardControlsRegistry($controlLibrary);
         });
+
+        Event::listen('pages.builder.registerControllerBehaviors', function($behaviorLibrary) {
+            new StandardBehaviorRegistry($behaviorLibrary);
+        });
+
     }
 }

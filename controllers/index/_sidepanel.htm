@@ -21,6 +21,16 @@
                 <?= $this->widget->modelList->render() ?>
             </form>
 
+            <!-- Controllerss -->
+            <form
+                class="layout hide"
+                data-content-id="controllers"
+                data-template-type="controller"
+                data-type-icon="oc-icon-asterisk"
+                onsubmit="return false">
+                <?= $this->widget->controllerList->render() ?>
+            </form>
+
             <!-- Versions -->
             <form
                 class="layout hide"

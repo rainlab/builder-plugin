@@ -448,6 +448,22 @@ html.gecko.mac .builder-building-area div[data-root-control-wrapper] {
   line-height: 77px;
   margin-right: 0;
 }
+.builder-controllers-builder-area {
+  background: white;
+}
+.builder-controllers-builder-area ul.controller-behavior-list {
+  padding: 20px;
+  margin-bottom: 0;
+  list-style: none;
+}
+.builder-controllers-builder-area ul.controller-behavior-list:before,
+.builder-controllers-builder-area ul.controller-behavior-list:after {
+  content: " ";
+  display: table;
+}
+.builder-controllers-builder-area ul.controller-behavior-list:after {
+  clear: both;
+}
 .builder-tabs > .tabs {
   position: relative;
 }
