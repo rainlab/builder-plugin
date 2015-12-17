@@ -36,7 +36,6 @@ class ControllerModel extends BaseModel
         
         $this->controller = $this->trimExtension($controller);
         $this->loadControllerBehaviors();
-traceLog($this->behaviors);
     }
 
     public function save()
@@ -84,24 +83,20 @@ traceLog($this->behaviors);
         $library = ControllerBehaviorLibrary::instance();
         $this->behaviors = [];
         foreach ($behaviors as $behaviorClass) {
-traceLog($behaviorClass);
             $behaviorInfo = $library->getBehaviorInfo($behaviorClass);
 
             if (!$behaviorInfo) {
-traceLog('Skip 1');
                 continue;
             }
 
             $propertyName = $behaviorInfo['configPropertyName'];
             $propertyValue = $parser->getStringPropertyValue($propertyName);
             if (!strlen($propertyValue)) {
-traceLog('Skip 2');
                 continue;
             }
 
             $configuration = $this->loadBehaviorConfiguration($propertyValue);
             if ($configuration === false) {
-traceLog('Skip 3');
                 continue;
             }
 
@@ -111,7 +106,7 @@ traceLog('Skip 3');
 
     protected function loadBehaviorConfiguration($fileName)
     {
-        if (!preg_match('/^[a-z0-9\.]+$/i', $fileName)) {
+        if (!preg_match('/^[a-z0-9\.\-_]+$/i', $fileName)) {
             return false;
         }
 
@@ -120,8 +115,9 @@ traceLog('Skip 3');
             return false;
         }
 
-        $controllerPath = $this->getControllerFilePath();
-        $filePath = $controllerPath.'/'.strtolower($this->controller).'/'.$fileName;
+        $controllerPath = $this->getControllerFilePath(true);
+        $filePath = $controllerPath.'/'.$fileName;
+
         if (!File::isFile($filePath)) {
             return false;
         }
@@ -134,12 +130,16 @@ traceLog('Skip 3');
         }
     }
 
-    protected function getControllerFilePath()
+    protected function getControllerFilePath($controllerFilesDirectory = false)
     {
         $pluginCodeObj = $this->getPluginCodeObj();
         $controllersDirectoryPath = File::symbolizePath($pluginCodeObj->toPluginDirectoryPath().'/controllers');
 
-        return $controllersDirectoryPath.'/'.$this->controller.'.php';
+        if (!$controllerFilesDirectory) {
+            return $controllersDirectoryPath.'/'.$this->controller.'.php';
+        }
+
+        return $controllersDirectoryPath.'/'.strtolower($this->controller);
     }
 
     protected function trimExtension($fileName)
@@ -153,7 +153,7 @@ traceLog('Skip 3');
 
     protected function validateFileName($fileName)
     {
-        if (!preg_match('/^[a-z0-9\.]+$/i', $fileName)) {
+        if (!preg_match('/^[a-z0-9\.\-_]+$/i', $fileName)) {
             return false;
         }
 

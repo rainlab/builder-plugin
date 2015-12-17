@@ -5,7 +5,7 @@ use System\Classes\PluginBase;
 use Event;
 use Lang;
 use RainLab\Builder\Classes\StandardControlsRegistry;
-use RainLab\Builder\Classes\StandardBehaviorRegistry;
+use RainLab\Builder\Classes\StandardBehaviorsRegistry;
 
 class Plugin extends PluginBase
 {
@@ -114,7 +114,7 @@ class Plugin extends PluginBase
         });
 
         Event::listen('pages.builder.registerControllerBehaviors', function($behaviorLibrary) {
-            new StandardBehaviorRegistry($behaviorLibrary);
+            new StandardBehaviorsRegistry($behaviorLibrary);
         });
 
     }

@@ -2,8 +2,8 @@
     <div class="control-scrollpad" data-control="scrollpad">
         <div class="scroll-wrapper">
             <ul class="controller-behavior-list">
-                <?php foreach ($model->behaviors as $behavior): ?>
-                    <?= $this->makePartial('behavior', ['behavior'=>$behavior]) ?>
+                <?php foreach ($model->behaviors as $behaviorClass=>$behaviorConfig): ?>
+                    <?= $this->makePartial('behavior', ['behaviorClass'=>$behaviorClass, 'behaviorConfig'=>$behaviorConfig]) ?>
                 <?php endforeach ?>
             </ul>
         </div>

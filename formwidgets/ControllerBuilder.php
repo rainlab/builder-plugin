@@ -22,7 +22,7 @@ class ControllerBuilder extends FormWidgetBase
 
     protected $designTimeProviders = [];
 
-    protected $behaviorInfoCache;
+    protected $behaviorInfoCache = [];
 
     /**
      * {@inheritDoc}
@@ -84,7 +84,7 @@ class ControllerBuilder extends FormWidgetBase
 
     protected function getBehaviorInfo($class)
     {
-        if (array_key_exists($type, $this->behaviorInfoCache)) {
+        if (array_key_exists($class, $this->behaviorInfoCache)) {
             return $this->behaviorInfoCache[$class];
         }
 
@@ -95,6 +95,6 @@ class ControllerBuilder extends FormWidgetBase
             throw new ApplicationException('The requested behavior class information is not found.');
         }
 
-        return $this->behaviorInfoCache[$type] = $behaviorInfo;
+        return $this->behaviorInfoCache[$class] = $behaviorInfo;
     }
 }

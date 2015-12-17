@@ -464,6 +464,16 @@ html.gecko.mac .builder-building-area div[data-root-control-wrapper] {
 .builder-controllers-builder-area ul.controller-behavior-list:after {
   clear: both;
 }
+.builder-controllers-builder-area ul.controller-behavior-list li h4 span {
+  display: inline-block;
+  color: white;
+  margin: 0 auto;
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  border-radius: 20px;
+  background: #bdc3c7;
+  padding: 20px;
+}
 .builder-tabs > .tabs {
   position: relative;
 }
