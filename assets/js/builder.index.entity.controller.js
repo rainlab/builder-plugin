@@ -37,7 +37,12 @@
 
     Controller.prototype.cmdSaveController = function(ev) {
         var $target = $(ev.currentTarget),
-            $form = $target.closest('form')
+            $form = $target.closest('form'),
+            $inspectorContainer = $form.find('.inspector-container')
+
+        if (!$.oc.inspector.manager.applyValuesFromContainer($inspectorContainer)) {
+            return
+        }
 
         $target.request('onControllerSave').done(
             this.proxy(this.saveControllerDone)

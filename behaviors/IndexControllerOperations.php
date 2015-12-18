@@ -47,6 +47,7 @@ class IndexControllerOperations extends IndexOperationsBehaviorBase
 
     public function onControllerSave()
     {
+traceLog($_POST);
         // $model = $this->loadOrCreateLocalizationFromPost();
         // $model->fill($_POST);
         // $model->save(false);

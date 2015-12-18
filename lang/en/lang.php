@@ -393,7 +393,7 @@ return [
         'property_behavior_list_file_description' => 'Reference to a list definition file',
         'property_behavior_list_file_required' => 'Please enter a path to the list configuration file',
         'property_behavior_list_record_url' => 'Record URL',
-        'property_behavior_list_record_description' => 'Link each list record to another page. Eg: users/update:id. The :id part is replaced with the record identifier.',
+        'property_behavior_list_record_url_description' => 'Link each list record to another page. Eg: users/update:id. The :id part is replaced with the record identifier.',
         'property_behavior_list_no_records_message' => 'No records message',
         'property_behavior_list_no_records_message_description' => 'A message to display when no records are found',
         'property_behavior_list_recs_per_page' => 'Records per page',

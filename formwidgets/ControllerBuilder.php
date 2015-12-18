@@ -82,6 +82,19 @@ class ControllerBuilder extends FormWidgetBase
         return null;
     }
 
+    protected function propertiesToInspectorSchema($propertyConfiguration)
+    {
+        $result = [];
+
+        foreach ($propertyConfiguration as $property=>$propertyData) {
+            $propertyData['property'] = $property;
+
+            $result[] = $propertyData;
+        }
+
+        return $result;
+    }
+
     protected function getBehaviorInfo($class)
     {
         if (array_key_exists($class, $this->behaviorInfoCache)) {
@@ -96,5 +109,12 @@ class ControllerBuilder extends FormWidgetBase
         }
 
         return $this->behaviorInfoCache[$class] = $behaviorInfo;
+    }
+
+    protected function renderBehaviorBody($behaviorClass, $behaviorInfo, $behaviorConfig)
+    {
+       $provider = $this->getBehaviorDesignTimeProvider($behaviorInfo['designTimeProvider']);
+
+       return $provider->renderBehaviorBody($behaviorClass, $behaviorConfig, $this);
     }
 }

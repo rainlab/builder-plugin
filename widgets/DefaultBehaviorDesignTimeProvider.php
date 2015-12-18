@@ -1,6 +1,6 @@
 <?php namespace RainLab\Builder\Widgets;
 
-use RainLab\Builder\Classes\ControlDesignTimeProviderBase;
+use RainLab\Builder\Classes\BehaviorDesignTimeProviderBase;
 use SystemException;
 use Input;
 use Response;

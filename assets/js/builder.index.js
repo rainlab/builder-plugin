@@ -136,7 +136,8 @@
             permissions: { menu: 'permissions', count: 0 },
             menus: { menu: 'menus', count: 0 },
             versions: { menu: 'versions', count: 0 },
-            localization: { menu: 'localization', count: 0 }
+            localization: { menu: 'localization', count: 0 },
+            controller: { menu: 'controllers', count: 0 }
         }
 
         $('> div.tab-content > div.tab-pane[data-modified] > form', this.$masterTabs).each(function(){

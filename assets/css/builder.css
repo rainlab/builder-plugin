@@ -464,15 +464,125 @@ html.gecko.mac .builder-building-area div[data-root-control-wrapper] {
 .builder-controllers-builder-area ul.controller-behavior-list:after {
   clear: both;
 }
+.builder-controllers-builder-area ul.controller-behavior-list li h4 {
+  text-align: center;
+  border-bottom: 1px dotted #bdc3c7;
+  margin: 0 -20px 40px;
+}
 .builder-controllers-builder-area ul.controller-behavior-list li h4 span {
   display: inline-block;
   color: white;
   margin: 0 auto;
-  -webkit-border-radius: 20px;
-  -moz-border-radius: 20px;
-  border-radius: 20px;
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+  border-radius: 8px;
   background: #bdc3c7;
-  padding: 20px;
+  padding: 7px 10px;
+  font-size: 13px;
+  line-height: 100%;
+  position: relative;
+  top: 14px;
+}
+.builder-controllers-builder-area ul.controller-behavior-list .behavior-container {
+  margin-bottom: 40px;
+  cursor: pointer;
+}
+.builder-controllers-builder-area ul.controller-behavior-list .behavior-container:before,
+.builder-controllers-builder-area ul.controller-behavior-list .behavior-container:after {
+  content: " ";
+  display: table;
+}
+.builder-controllers-builder-area ul.controller-behavior-list .behavior-container:after {
+  clear: both;
+}
+.builder-controllers-builder-area ul.controller-behavior-list .behavior-container .list-behavior {
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  border: 2px solid #bdc3c7;
+  padding: 25px 10px 25px 10px;
+}
+.builder-controllers-builder-area ul.controller-behavior-list .behavior-container .list-behavior table {
+  border-collapse: collapse;
+  width: 100%;
+}
+.builder-controllers-builder-area ul.controller-behavior-list .behavior-container .list-behavior table td {
+  padding: 0 15px 15px 15px;
+  border-right: 1px solid #bdc3c7;
+}
+.builder-controllers-builder-area ul.controller-behavior-list .behavior-container .list-behavior table td:last-child {
+  border-right: none;
+}
+.builder-controllers-builder-area ul.controller-behavior-list .behavior-container .list-behavior table .placeholder {
+  background: #EEF2F4;
+  height: 25px;
+}
+.builder-controllers-builder-area ul.controller-behavior-list .behavior-container .list-behavior table tbody tr:last-child td {
+  padding-bottom: 0;
+}
+.builder-controllers-builder-area ul.controller-behavior-list .behavior-container .form-behavior div.form {
+  padding: 25px 25px 0 25px;
+  border: 2px solid #bdc3c7;
+  margin-bottom: 20px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+.builder-controllers-builder-area ul.controller-behavior-list .behavior-container .form-behavior div.form:before,
+.builder-controllers-builder-area ul.controller-behavior-list .behavior-container .form-behavior div.form:after {
+  content: " ";
+  display: table;
+}
+.builder-controllers-builder-area ul.controller-behavior-list .behavior-container .form-behavior div.form:after {
+  clear: both;
+}
+.builder-controllers-builder-area ul.controller-behavior-list .behavior-container .form-behavior div.field.left {
+  float: left;
+  width: 48%;
+}
+.builder-controllers-builder-area ul.controller-behavior-list .behavior-container .form-behavior div.field.right {
+  float: right;
+  width: 45%;
+}
+.builder-controllers-builder-area ul.controller-behavior-list .behavior-container .form-behavior div.field div.label {
+  background: #EEF2F4;
+  height: 25px;
+  margin-bottom: 10px;
+}
+.builder-controllers-builder-area ul.controller-behavior-list .behavior-container .form-behavior div.field div.label.size-3 {
+  width: 100px;
+}
+.builder-controllers-builder-area ul.controller-behavior-list .behavior-container .form-behavior div.field div.label.size-5 {
+  width: 150px;
+}
+.builder-controllers-builder-area ul.controller-behavior-list .behavior-container .form-behavior div.field div.label.size-2 {
+  width: 60px;
+}
+.builder-controllers-builder-area ul.controller-behavior-list .behavior-container .form-behavior div.field div.control {
+  background: #EEF2F4;
+  height: 35px;
+  margin-bottom: 25px;
+}
+.builder-controllers-builder-area ul.controller-behavior-list .behavior-container .form-behavior div.button {
+  background: #EEF2F4;
+  height: 35px;
+  margin-right: 20px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+.builder-controllers-builder-area ul.controller-behavior-list .behavior-container .form-behavior div.button.size-5 {
+  width: 100px;
+}
+.builder-controllers-builder-area ul.controller-behavior-list .behavior-container .form-behavior div.button.size-3 {
+  width: 60px;
+}
+.builder-controllers-builder-area ul.controller-behavior-list .behavior-container .form-behavior div.button:first-child {
+  margin-right: 0;
+}
+.builder-controllers-builder-area ul.controller-behavior-list .behavior-container:hover *,
+.builder-controllers-builder-area ul.controller-behavior-list .behavior-container.inspector-open * {
+  border-color: #2581b8 !important;
 }
 .builder-tabs > .tabs {
   position: relative;
