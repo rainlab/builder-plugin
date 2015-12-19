@@ -47,21 +47,34 @@ class IndexControllerOperations extends IndexOperationsBehaviorBase
 
     public function onControllerSave()
     {
-traceLog($_POST);
-        // $model = $this->loadOrCreateLocalizationFromPost();
-        // $model->fill($_POST);
-        // $model->save(false);
+        $controller = Input::get('controller');
 
-        // Flash::success(Lang::get('rainlab.builder::lang.localization.saved'));
-        // $result = $this->controller->widget->languageList->updateList();
+        $model = $this->loadModelFromPost();
+        $model->fill($_POST);
+        $model->save();
 
-        // $result['builderRepsonseData'] = [
-        //     'tabId' => $this->getTabId($model->getPluginCodeObj()->toCode(), $model->language),
-        //     'tabTitle' => $this->getTabName($model),
-        //     'language' => $model->language
-        // ];
+        Flash::success(Lang::get('rainlab.builder::lang.controller.saved'));
 
-        // return $result;
+        $result['builderRepsonseData'] = [];
+
+        return $result;
+    }
+
+    public function onControllerShowCreatePopup()
+    {
+        $pluginCodeObj = $this->getPluginCode();
+
+        $options = [
+            'pluginCode' => $pluginCodeObj->toCode()
+        ];
+
+        $this->baseFormConfigFile = '~/plugins/rainlab/builder/classes/controllermodel/new-controller-fields.yaml';
+        $widget = $this->makeBaseFormWidget(null, $options);
+
+        return $this->makePartial('create-controller-popup-form', [
+            'form'=>$widget,
+            'pluginCode' =>  $pluginCodeObj->toCode()
+        ]);
     }
 
     protected function getTabName($model)
@@ -74,6 +87,18 @@ traceLog($_POST);
     protected function getTabId($pluginCode, $controller)
     {
         return 'controller-'.$pluginCode.'-'.$controller;
+    }
+
+    protected function loadModelFromPost()
+    {
+        $pluginCodeObj = new PluginCode(Request::input('plugin_code'));
+        $options = [
+            'pluginCode' => $pluginCodeObj->toCode()
+        ];
+
+        $controller = Input::get('controller');
+
+        return $this->loadOrCreateBaseModel($controller, $options);
     }
 
     protected function loadOrCreateBaseModel($controller, $options = [])

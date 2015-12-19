@@ -63,7 +63,6 @@
 
         var $masterTabPane = this.getMasterTabsActivePane()
         
-        this.getControllerList().fileList('markActive', data.builderRepsonseData.tabId)
         this.getIndexController().unchangeTab($masterTabPane)
     }
 

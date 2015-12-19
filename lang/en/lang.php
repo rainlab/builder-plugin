@@ -355,6 +355,7 @@ return [
         'no_records' => 'No plugin controllers found',
         'controller' => 'Controller',
         'behaviors' => 'Behaviors',
+        'new_controller' => 'New controller',
         'error_controller_has_no_behaviors' => 'The controller doesn\'t have configurable behaviors.',
         'error_invalid_yaml_configuration' => 'Error loading behavior configuration file: :file',
         'behavior_form_controller' => 'Form controller behavior',
@@ -418,9 +419,17 @@ return [
         'property_behavior_list_toolbar_buttons_description' => 'Reference to a controller partial file with the toolbar buttons. Eg: list_toolbar',
         'property_behavior_list_search' => 'Search',
         'property_behavior_list_search_prompt' => 'Search prompt',
-        'property_behavior_list_filter' => 'Filter configuration'
-
-        
+        'property_behavior_list_filter' => 'Filter configuration',
+        'error_controller_not_found' => 'Original controller file is not found.',
+        'error_invalid_config_file_name' => 'The behavior :class configuration file name (:file) contains invalid characters and cannot be loaded.',
+        'error_file_not_yaml' => 'The behavior :class configuration file (:file) is not a YAML file. Only YAML configuration files are supported.',
+        'saved' => 'The controller has been successfully saved.',
+        'controller_name' => 'Controller name',
+        'controller_name_description' => 'Controller name defines the class name and URL of the controller back-end pages. Standard PHP variable naming conventions apply. The first symbol should be a capital Latin letter. Examples: Categories, Posts, Products.',
+        'base_model_class' => 'Base model class',
+        'base_model_class_description' => 'Select a model class to use as a base class in behaviors that require or support models. You can configure the behaviors later.',
+        'controller_behaviors' => 'Behaviors',
+        'controller_behaviors_description' => 'Select behaviors the controller should implement. Builder will create view files required for the behaviors automatically.'
     ],
     'version' => [
         'menu_label' => 'Versions',

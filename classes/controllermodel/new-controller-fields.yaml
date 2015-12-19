@@ -1,0 +1,18 @@
+# ===================================
+#  Field Definitions
+# ===================================
+
+fields:
+    controller:
+        label: rainlab.builder::lang.controller.controller_name
+        commentAbove: rainlab.builder::lang.controller.controller_name_description
+
+    baseModelClassName:
+        label: rainlab.builder::lang.controller.base_model_class
+        commentAbove: rainlab.builder::lang.controller.base_model_class_description
+        type: dropdown
+
+    behaviors:
+        label: rainlab.builder::lang.controller.controller_behaviors
+        commentAbove: rainlab.builder::lang.controller.controller_behaviors_description
+        type: checkboxlist
