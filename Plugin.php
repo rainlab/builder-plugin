@@ -60,18 +60,18 @@ class Plugin extends PluginBase
                         'attributes'  => ['data-no-side-panel'=>'true', 'data-builder-command'=>'permission:cmdOpenPermissions', 'data-menu-item'=>'permissions'],
                         'permissions' => ['rainlab.builder.*']
                     ],
-                    'controllers' => [
-                        'label'       => 'rainlab.builder::lang.controller.menu_label',
-                        'icon'        => 'icon-asterisk',
-                        'url'         => 'javascript:;',
-                        'attributes'  => ['data-menu-item'=>'controllers'],
-                        'permissions' => ['rainlab.builder.*']
-                    ],
                     'menus' => [
                         'label'       => 'rainlab.builder::lang.menu.menu_label',
                         'icon'        => 'icon-location-arrow',
                         'url'         => 'javascript:;',
                         'attributes'  => ['data-no-side-panel'=>'true', 'data-builder-command'=>'menus:cmdOpenMenus', 'data-menu-item'=>'menus'],
+                        'permissions' => ['rainlab.builder.*']
+                    ],
+                    'controllers' => [
+                        'label'       => 'rainlab.builder::lang.controller.menu_label',
+                        'icon'        => 'icon-asterisk',
+                        'url'         => 'javascript:;',
+                        'attributes'  => ['data-menu-item'=>'controllers'],
                         'permissions' => ['rainlab.builder.*']
                     ],
                     'versions' => [

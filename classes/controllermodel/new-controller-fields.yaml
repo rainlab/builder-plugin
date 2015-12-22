@@ -6,13 +6,32 @@ fields:
     controller:
         label: rainlab.builder::lang.controller.controller_name
         commentAbove: rainlab.builder::lang.controller.controller_name_description
+        required: true
+        attributes:
+            default-focus: 1
 
     baseModelClassName:
         label: rainlab.builder::lang.controller.base_model_class
         commentAbove: rainlab.builder::lang.controller.base_model_class_description
+        placeholder: rainlab.builder::lang.controller.base_model_class_placeholder
+        span: left
         type: dropdown
 
-    behaviors:
-        label: rainlab.builder::lang.controller.controller_behaviors
-        commentAbove: rainlab.builder::lang.controller.controller_behaviors_description
-        type: checkboxlist
+    menuItem:
+        label: rainlab.builder::lang.controller.menu_item
+        commentAbove: rainlab.builder::lang.controller.menu_item_description
+        placeholder: rainlab.builder::lang.controller.menu_item_placeholder
+        span: right
+        type: dropdown
+
+tabs:
+    fields:
+        behaviors:
+            commentAbove: rainlab.builder::lang.controller.controller_behaviors_description
+            tab: rainlab.builder::lang.controller.controller_behaviors
+            type: checkboxlist
+        permissions:
+            commentAbove: rainlab.builder::lang.controller.controller_permissions_description
+            tab: rainlab.builder::lang.controller.controller_permissions
+            type: checkboxlist
+            placeholder: rainlab.builder::lang.controller.controller_permissions_no_permissions

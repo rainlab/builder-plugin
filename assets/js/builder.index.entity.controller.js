@@ -23,7 +23,17 @@
     // ============================
 
     Controller.prototype.cmdCreateController = function(ev) {
-        this.indexController.openOrLoadMasterTab($(ev.target), 'onControllerCreate', this.newTabId())
+        var $form = $(ev.currentTarget),
+            pluginCode = $form.data('pluginCode')
+
+        this.indexController.openOrLoadMasterTab(
+            $form, 
+            'onControllerCreate', 
+            this.makeTabId(pluginCode+'-new-controller'), 
+            {}
+        ).done(function(){
+            $form.trigger('close.oc.popup')
+        }).always($.oc.builder.indexController.hideStripeIndicatorProxy)
     }
 
     Controller.prototype.cmdOpenController = function(ev) {

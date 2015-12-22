@@ -35,6 +35,7 @@ class ControllerBehaviorLibrary
      * Registers a controller behavior.
      * @param string $class Specifies the behavior class name.
      * @param string $name Specifies the behavior name, for example "Form behavior".
+     * @param string $description Specifies the behavior description.
      * @param array $properties Specifies the behavior properties.
      * The property definitions should be compatible with Inspector properties, similarly
      * to the Component properties: http://octobercms.com/docs/plugin/components#component-properties
@@ -42,10 +43,14 @@ class ControllerBehaviorLibrary
      * @param string $designTimeProviderClass Specifies the behavior design-time provider class name.
      * The class should extend RainLab\Builder\Classes\BehaviorDesignTimeProviderBase. If the class is not provided,
      * the default control design and design settings will be used.
+     * @param $configTemplate A path to the configuration template file.
+     * The template is used when a new controller is created. The path should refer to a
+     * Twig file in the format: '~/plugins/author/plugin/behaviors/behaviorname/templates/config_form.yaml.tpl'.
      * @param $viewTemplates An array of view templates that are required for the behavior.
-     * The templates are used when a new controller is created.
+     * The templates are used when a new controller is created. The templates should be specified as paths 
+     * to Twig files in the format ['~/plugins/author/plugin/behaviors/behaviorname/templates/view.htm.tpl'].
      */
-    public function registerBehavior($class, $name, $properties, $configFilePropertyName, $designTimeProviderClass, $viewTemplates = [])
+    public function registerBehavior($class, $name, $description, $properties, $configFilePropertyName, $designTimeProviderClass, $configTemplate, $viewTemplates = [])
     {
         if (!$designTimeProviderClass) {
             $designTimeProviderClass = self::DEFAULT_DESIGN_TIME_PROVIDER;
@@ -53,15 +58,17 @@ class ControllerBehaviorLibrary
 
         $this->behaviors[$class] = [
             'class' => $class,
-            'name' => $name,
+            'name' => Lang::get($name),
+            'description' => Lang::get($description),
             'properties' => $properties,
             'designTimeProvider' => $designTimeProviderClass,
             'viewTemplates' => $viewTemplates,
+            'configTemplate' => $configTemplate,
             'configPropertyName' => $configFilePropertyName
         ];
     }
 
-    protected function listBehaviors()
+    public function listBehaviors()
     {
         if ($this->behaviors !== null) {
             return $this->behaviors;

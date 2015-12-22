@@ -151,14 +151,20 @@ class StandardBehaviorsRegistry
             ]
         ];
 
-        $templates = [];
+        $templates = [
+            '~/plugins/rainlab/builder/classes/standardbehaviorsregistry/formcontroller/templates/create.htm.tpl',
+            '~/plugins/rainlab/builder/classes/standardbehaviorsregistry/formcontroller/templates/update.htm.tpl',
+            '~/plugins/rainlab/builder/classes/standardbehaviorsregistry/formcontroller/templates/preview.htm.tpl'
+        ];
 
         $this->behaviorLibrary->registerBehavior(
             'Backend\Behaviors\FormController',
             'rainlab.builder::lang.controller.behavior_form_controller',
+            'rainlab.builder::lang.controller.behavior_form_controller_description',
             $properties,
             'formConfig',
             null,
+            '~/plugins/rainlab/builder/classes/standardbehaviorsregistry/formcontroller/templates/config_form.yaml.tpl',
             $templates);
     }
 
@@ -302,14 +308,18 @@ class StandardBehaviorsRegistry
             ]
         ];
 
-        $templates = [];
+        $templates = [
+            '~/plugins/rainlab/builder/classes/standardbehaviorsregistry/listcontroller/templates/index.htm.tpl'
+        ];
 
         $this->behaviorLibrary->registerBehavior(
             'Backend\Behaviors\ListController',
             'rainlab.builder::lang.controller.behavior_list_controller',
+            'rainlab.builder::lang.controller.behavior_list_controller_description',
             $properties,
             'listConfig',
             null,
+            '~/plugins/rainlab/builder/classes/standardbehaviorsregistry/listcontroller/templates/config_list.yaml.tpl',
             $templates);
     }
 }

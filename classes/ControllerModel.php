@@ -24,14 +24,20 @@ class ControllerModel extends BaseModel
 
     public $baseModelClassName;
 
+    public $permissions = [];
+
+    public $menuItem;
+
     protected static $fillable = [
         'controller',
         'behaviors',
-        'baseModelClassName'
+        'baseModelClassName',
+        'permissions',
+        'menuItem'
     ];
 
     protected $validationRules = [
-        'controller' => ['regex:/^[a-zA-Z]+[a-zA-Z0-9_]+$/']
+        'controller' => ['regex:/^[A-Z]+[a-zA-Z0-9_]+$/']
     ];
 
     public function load($controller)
@@ -42,9 +48,152 @@ class ControllerModel extends BaseModel
         
         $this->controller = $this->trimExtension($controller);
         $this->loadControllerBehaviors();
+        $this->exists = true;
     }
 
     public function save()
+    {
+        if ($this->isNewModel()) {
+            $this->generateController();
+        }
+        else {
+            $this->saveController();
+        }
+    }
+
+    public function fill(array $attributes)
+    {
+        parent::fill($attributes);
+
+        if (!$this->isNewModel() && is_array($this->behaviors)) {
+            foreach ($this->behaviors as $class=>&$configuration) {
+                if (is_scalar($configuration)) {
+                    $configuration = json_decode($configuration, true);
+                }
+            }
+        }
+    }
+
+    public static function listPluginControllers($pluginCodeObj)
+    {
+        $controllersDirectoryPath = $pluginCodeObj->toPluginDirectoryPath().'/controllers';
+
+        $controllersDirectoryPath = File::symbolizePath($controllersDirectoryPath);
+
+        if (!File::isDirectory($controllersDirectoryPath)) {
+            return [];
+        }
+
+        $result = [];
+        foreach (new DirectoryIterator($controllersDirectoryPath) as $fileInfo) {
+            if ($fileInfo->isDir()) {
+                continue;
+            }
+
+            if ($fileInfo->getExtension() !== 'php') {
+                continue;
+            }
+
+            $result[] =  $fileInfo->getBasename('.php');
+        }
+
+        return $result;
+    }
+
+    public function getBaseModelClassNameOptions($keyValue = null)
+    {
+        $models = ModelModel::listPluginModels($this->getPluginCodeObj());
+
+        $result = [];
+        foreach ($models as $model) {
+            $result[$model->className] = $model->className;
+        }
+
+        return $result;
+    }
+
+    public function getBehaviorsOptions()
+    {
+        $library = ControllerBehaviorLibrary::instance();
+        $behaviors = $library->listBehaviors();
+
+        $result = [];
+        foreach ($behaviors as $behaviorClass=>$behaviorInfo) {
+            $result[$behaviorClass] = [
+                $behaviorInfo['name'], 
+                $behaviorInfo['description']
+            ];
+        }
+
+        return $result;
+    }
+
+    public function getPermissionsOptions()
+    {
+        $model = new PermissionsModel();
+
+        $model->loadPlugin($this->getPluginCodeObj()->toCode());
+
+        $result = [];
+
+        foreach ($model->permissions as $permissionInfo) {
+            if (!isset($permissionInfo['label']) || !isset($permissionInfo['permission'])) {
+                continue;
+            }
+
+            $result[$permissionInfo['permission']] = Lang::get($permissionInfo['label']);
+        }
+
+        return $result;
+    }
+
+    public function getMenuItemOptions()
+    {
+        $model = new MenusModel();
+
+        $model->loadPlugin($this->getPluginCodeObj()->toCode());
+
+        $result = [];
+
+        foreach ($model->menus as $itemInfo) {
+            if (!isset($itemInfo['label']) || !isset($itemInfo['code'])) {
+                continue;
+            }
+
+            $itemCode = $itemInfo['code'];
+            $result[$itemCode] = Lang::get($itemInfo['label']);
+
+            if (!isset($itemInfo['sideMenu'])) {
+                continue;
+            }
+
+            foreach ($itemInfo['sideMenu'] as $itemInfo) {
+                if (!isset($itemInfo['label']) || !isset($itemInfo['code'])) {
+                    continue;
+                }
+
+                $subItemCode = $itemInfo['code'];
+
+                $result[$itemCode.'||'.$subItemCode] = str_repeat('&nbsp;', 4).Lang::get($itemInfo['label']);
+            }
+        }
+
+        return $result;
+    }
+
+    public function getControllerFilePath($controllerFilesDirectory = false)
+    {
+        $pluginCodeObj = $this->getPluginCodeObj();
+        $controllersDirectoryPath = File::symbolizePath($pluginCodeObj->toPluginDirectoryPath().'/controllers');
+
+        if (!$controllerFilesDirectory) {
+            return $controllersDirectoryPath.'/'.$this->controller.'.php';
+        }
+
+        return $controllersDirectoryPath.'/'.strtolower($this->controller);
+    }
+
+    protected function saveController()
     {
         $this->validate();
 
@@ -86,43 +235,18 @@ class ControllerModel extends BaseModel
         }
     }
 
-    public function fill(array $attributes)
+    protected function generateController()
     {
-        parent::fill($attributes);
+        $this->validationMessages = [
+            'controller.regex' => Lang::get('rainlab.builder::lang.controller.error_controller_name_invalid')
+        ];
 
-        if (is_array($this->behaviors)) {
-            foreach ($this->behaviors as $class=>&$configuration) {
-                if (is_scalar($configuration)) {
-                    $configuration = json_decode($configuration, true);
-                }
-            }
-        }
-    }
+        $this->validationRules['controller'][] = 'required';
 
-    public static function listPluginControllers($pluginCodeObj)
-    {
-        $controllersDirectoryPath = $pluginCodeObj->toPluginDirectoryPath().'/controllers';
+        $this->validate();
 
-        $controllersDirectoryPath = File::symbolizePath($controllersDirectoryPath);
-
-        if (!File::isDirectory($controllersDirectoryPath)) {
-            return [];
-        }
-
-        $result = [];
-        foreach (new DirectoryIterator($controllersDirectoryPath) as $fileInfo) {
-            if ($fileInfo->isDir()) {
-                continue;
-            }
-
-            if ($fileInfo->getExtension() !== 'php') {
-                continue;
-            }
-
-            $result[] =  $fileInfo->getBasename('.php');
-        }
-
-        return $result;
+        $generator = new ControllerGenerator($this);
+        $generator->generate();
     }
 
     protected function loadControllerBehaviors()
@@ -225,18 +349,6 @@ class ControllerModel extends BaseModel
         }
 
         @File::chmod($filePath);
-    }
-
-    protected function getControllerFilePath($controllerFilesDirectory = false)
-    {
-        $pluginCodeObj = $this->getPluginCodeObj();
-        $controllersDirectoryPath = File::symbolizePath($pluginCodeObj->toPluginDirectoryPath().'/controllers');
-
-        if (!$controllerFilesDirectory) {
-            return $controllersDirectoryPath.'/'.$this->controller.'.php';
-        }
-
-        return $controllersDirectoryPath.'/'.strtolower($this->controller);
     }
 
     protected function trimExtension($fileName)

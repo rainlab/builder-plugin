@@ -1,5 +1,6 @@
 <?= Form::open([
-    'data-builder-command'=>'controller:cmdCreateController'
+    'data-builder-command'=>'controller:cmdCreateController',
+    'data-plugin-code' => $pluginCode
 ]) ?>
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="popup">&times;</button>
@@ -21,7 +22,5 @@
             <?= e(trans('backend::lang.form.cancel')) ?>
         </button>
     </div>
-    <?php if (isset($pluginCode)): ?>
-        <input type="hidden" name="pluginCode" value="<?= e($pluginCode) ?>">
-    <?php endif ?>
+    <input type="hidden" name="plugin_code" value="<?= e($pluginCode) ?>">
 <?= Form::close() ?>

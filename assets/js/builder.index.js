@@ -37,17 +37,21 @@
         if (this.masterTabsObj.goTo(tabId))
             return false
 
-        var requestData = data === undefined ? {} : data
+        var requestData = data === undefined ? {} : data,
+            self = this
 
         $.oc.stripeLoadIndicator.show()
-        $form.request(
-            serverHandlerName, 
-            { data: requestData }
-        ).done(
-            this.proxy(this.addMasterTab)
-        ).always(
-            this.hideStripeIndicatorProxy
-        )
+        var promise = $form.request(
+                serverHandlerName, 
+                { data: requestData }
+            ).done(function(data) {
+                self.addMasterTab(data)
+            }
+            ).always(
+                this.hideStripeIndicatorProxy
+            )
+
+        return promise
     }
 
     Builder.prototype.getMasterTabActivePane = function() {

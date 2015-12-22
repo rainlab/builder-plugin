@@ -45,6 +45,34 @@ class IndexControllerOperations extends IndexOperationsBehaviorBase
         return $result;
     }
 
+    public function onControllerCreate()
+    {
+        $pluginCodeObj = new PluginCode(Request::input('plugin_code'));
+
+        $options = [
+            'pluginCode' => $pluginCodeObj->toCode()
+        ];
+
+        $model = $this->loadOrCreateBaseModel(null, $options);
+        $model->fill($_POST);
+        $model->save();
+return "test";
+        $widget = $this->makeBaseFormWidget($model->controller, $options);
+        $this->vars['controller'] = $model->controller;
+
+        $result = [
+            'tabTitle' => $this->getTabName($widget->model),
+            'tabIcon' => 'icon-asterisk',
+            'tabId' => $this->getTabId($pluginCodeObj->toCode(), $controller),
+            'tab' => $this->makePartial('tab', [
+                'form'  => $widget,
+                'pluginCode' => $pluginCodeObj->toCode()
+            ])
+        ];
+
+        return $result;
+    }
+
     public function onControllerSave()
     {
         $controller = Input::get('controller');
