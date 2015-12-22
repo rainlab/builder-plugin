@@ -124,7 +124,7 @@
     }
 
     Builder.prototype.addMasterTab = function(data) {
-        this.masterTabsObj.addTab(data.tabTitle, data.tab, data.tabId, data.tabIcon)
+        this.masterTabsObj.addTab(data.tabTitle, data.tab, data.tabId, 'oc-' + data.tabIcon)
 
         if (data.isNewRecord) {
             var $masterTabPane = this.getMasterTabActivePane()
