@@ -72,6 +72,11 @@ class ModelFormModel extends ModelYamlModel
         }
     }
 
+    public function initDefaults()
+    {
+        $this->fileName = 'form.yaml';
+    }
+
     /**
      * Converts the model's data to an array before it's saved to a YAML file.
      * @return array

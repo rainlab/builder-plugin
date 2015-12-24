@@ -43,14 +43,12 @@ class ControllerBehaviorLibrary
      * @param string $designTimeProviderClass Specifies the behavior design-time provider class name.
      * The class should extend RainLab\Builder\Classes\BehaviorDesignTimeProviderBase. If the class is not provided,
      * the default control design and design settings will be used.
-     * @param $configTemplate A path to the configuration template file.
-     * The template is used when a new controller is created. The path should refer to a
-     * Twig file in the format: '~/plugins/author/plugin/behaviors/behaviorname/templates/config_form.yaml.tpl'.
+     * @param $configFileName Default behavior configuration file name, for example config_form.yaml.
      * @param $viewTemplates An array of view templates that are required for the behavior.
      * The templates are used when a new controller is created. The templates should be specified as paths 
      * to Twig files in the format ['~/plugins/author/plugin/behaviors/behaviorname/templates/view.htm.tpl'].
      */
-    public function registerBehavior($class, $name, $description, $properties, $configFilePropertyName, $designTimeProviderClass, $configTemplate, $viewTemplates = [])
+    public function registerBehavior($class, $name, $description, $properties, $configFilePropertyName, $designTimeProviderClass, $configFileName, $viewTemplates = [])
     {
         if (!$designTimeProviderClass) {
             $designTimeProviderClass = self::DEFAULT_DESIGN_TIME_PROVIDER;
@@ -63,7 +61,7 @@ class ControllerBehaviorLibrary
             'properties' => $properties,
             'designTimeProvider' => $designTimeProviderClass,
             'viewTemplates' => $viewTemplates,
-            'configTemplate' => $configTemplate,
+            'configFileName' => $configFileName,
             'configPropertyName' => $configFilePropertyName
         ];
     }

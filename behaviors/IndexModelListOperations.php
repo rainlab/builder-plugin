@@ -132,6 +132,8 @@ class IndexModelListOperations extends IndexOperationsBehaviorBase
         }
 
         if (!$fileName) {
+            $model->initDefaults();
+
             return $model;
         }
 

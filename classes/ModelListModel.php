@@ -72,6 +72,11 @@ class ModelListModel extends ModelYamlModel
         }
     }
 
+    public function initDefaults()
+    {
+        $this->fileName = 'list.yaml';
+    }
+
     protected function validateDupicateColumns()
     {
         foreach ($this->columns as $outerIndex=>$outerColumn) {

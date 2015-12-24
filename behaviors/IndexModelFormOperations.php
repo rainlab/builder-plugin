@@ -153,6 +153,8 @@ class IndexModelFormOperations extends IndexOperationsBehaviorBase
         }
 
         if (!$fileName) {
+            $model->initDefaults();
+
             return $model;
         }
 

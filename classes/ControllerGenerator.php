@@ -25,7 +25,11 @@ class ControllerGenerator
 
     protected $configTemplateProperties = [];
 
+    protected $templateFiles = [];
+
     protected $filesGenerated;
+
+    protected $designTimeProviders = [];
 
     public function __construct($source)
     {
@@ -35,15 +39,17 @@ class ControllerGenerator
     public function generate()
     {
         $this->filesGenerated = [];
+        $this->templateVars = [];
 
         try {
             $this->validateBehaviorViewTemplates();
-            $this->validateBehaviorConfigTemplates();
+            $this->validateBehaviorConfigSettings();
             $this->validateControllerUnique();
 
             $this->setTemplateVars();
             $this->generateControllerFile();
-            $this->generatConfigFiles();
+            $this->generateConfigFiles();
+            $this->generateViews();
         } catch (Exception $ex) {
             $this->rollback();
 
@@ -51,11 +57,18 @@ class ControllerGenerator
         }
     }
 
+    public function setTemplateVariable($var, $value)
+    {
+        $this->templateVars[$var] = $value;
+    }
+
     protected function validateBehaviorViewTemplates()
     {
         if (!$this->sourceModel->behaviors) {
             return;
         }
+
+        $this->templateFiles = [];
 
         $controllerPath = $this->sourceModel->getControllerFilePath(true);
         $behaviorLibrary = ControllerBehaviorLibrary::instance();
@@ -103,11 +116,13 @@ class ControllerGenerator
                         ])
                     ]);
                 }
+
+                $this->templateFiles[$filePath] = $destFilePath;
             }
         }
     }
 
-    protected function validateBehaviorConfigTemplates()
+    protected function validateBehaviorConfigSettings()
     {
         if (!$this->sourceModel->behaviors) {
             return;
@@ -118,41 +133,28 @@ class ControllerGenerator
         $controllerPath = $this->sourceModel->getControllerFilePath(true);
         $behaviorLibrary = ControllerBehaviorLibrary::instance();
 
-        $knownTemplates = [];
+        $knownConfgFiles = [];
         foreach ($this->sourceModel->behaviors as $behaviorClass) {
             $behaviorInfo = $behaviorLibrary->getBehaviorInfo($behaviorClass);
-            $configTemplate = $behaviorInfo['configTemplate'];
+            $configFileName = $behaviorInfo['configFileName'];
 
-            if (!strlen($configTemplate)) {
+            if (!strlen($configFileName)) {
                 continue;
             }
 
-            $templateFileName = basename($configTemplate);
-            $templateBaseName = pathinfo($templateFileName, PATHINFO_FILENAME);
-
-            if (in_array($templateFileName, $knownTemplates)) {
+            if (in_array($configFileName, $knownConfgFiles)) {
                 throw new ValidationException([
                     'behaviors' => Lang::get('rainlab.builder::lang.controller.error_behavior_config_conflict', [
-                        'file'=> $templateBaseName
+                        'file'=> $configFileName
                     ])
                 ]);
 
                 throw new ApplicationException();
             }
 
-            $knownTemplates[] = $templateFileName;
+            $knownConfgFiles[] = $configFileName;
 
-            $filePath = File::symbolizePath($configTemplate);
-            if (!File::isFile($filePath)) {
-                throw new ValidationException([
-                    'behaviors' => Lang::get('rainlab.builder::lang.controller.error_behavior_config_file_not_found', [
-                        'class'=>$behaviorClass,
-                        'file'=>$templateFileName
-                    ])
-                ]);
-            }
-
-            $destFilePath = $controllerPath.'/'.$templateBaseName;
+            $destFilePath = $controllerPath.'/'.$configFileName;
             if (File::isFile($destFilePath)) {
                 throw new ValidationException([
                     'behaviors' => Lang::get('rainlab.builder::lang.controller.error_behavior_config_file_exists', [
@@ -162,7 +164,7 @@ class ControllerGenerator
             }
 
             $configPropertyName = $behaviorInfo['configPropertyName'];
-            $this->configTemplateProperties[$configPropertyName] = $templateBaseName;
+            $this->configTemplateProperties[$configPropertyName] = $configFileName;
         }
     }
 
@@ -179,8 +181,6 @@ class ControllerGenerator
 
     protected function setTemplateVars()
     {
-        $this->templateVars = [];
-
         $pluginCodeObj = $this->sourceModel->getPluginCodeObj();
 
         $this->templateVars['pluginNamespace'] = $pluginCodeObj->toPluginNamespace();
@@ -188,6 +188,8 @@ class ControllerGenerator
         $this->templateVars['permissions'] = $this->sourceModel->permissions;
         $this->templateVars['controller'] = $this->sourceModel->controller;
         $this->templateVars['baseModelClassName'] = $this->sourceModel->baseModelClassName;
+
+        $this->templateVars['controllerUrl'] = $pluginCodeObj->toUrl().'/'.strtolower($this->sourceModel->controller);
 
         $menuItem = $this->sourceModel->menuItem;
         if ($menuItem) {
@@ -278,27 +280,51 @@ class ControllerGenerator
         $this->writeFile($controlerFilePath, $code);
     }
 
-    protected function generatConfigFiles()
+    protected function getBehaviorDesignTimeProvider($providerClass)
+    {
+        if (array_key_exists($providerClass, $this->designTimeProviders)) {
+            return $this->designTimeProviders[$providerClass];
+        }
+
+        return $this->designTimeProviders[$providerClass] = new $providerClass(null, []);
+    }
+
+    protected function generateConfigFiles()
     {
         $controllerPath = $this->sourceModel->getControllerFilePath(true);
         $behaviorLibrary = ControllerBehaviorLibrary::instance();
+        $dumper = new YamlDumper();
 
         foreach ($this->sourceModel->behaviors as $behaviorClass) {
             $behaviorInfo = $behaviorLibrary->getBehaviorInfo($behaviorClass);
-            $configTemplate = $behaviorInfo['configTemplate'];
+            $configFileName = $behaviorInfo['configFileName'];
 
-            if (!strlen($configTemplate)) {
+            if (!strlen($configFileName)) {
                 continue;
             }
 
-            $filePath = File::symbolizePath($configTemplate);
-            $code = $this->parseTemplate($filePath);
+            $provider = $this->getBehaviorDesignTimeProvider($behaviorInfo['designTimeProvider']);
 
-            $templateBaseName = pathinfo($configTemplate, PATHINFO_FILENAME);
-            $destFilePath = $controllerPath.'/'.$templateBaseName;
+            $destFilePath = $controllerPath.'/'.$configFileName;
+
+            try {
+                $configArray = $provider->getDefaultConfiguration($behaviorClass, $this->sourceModel, $this);
+            } catch (Exception $ex) {
+                throw new ValidationException(['baseModelClassName'=>$ex->getMessage()]);
+            }
+
+            $code = $dumper->dump($configArray, 20, 0, false, true);
 
             $this->writeFile($destFilePath, $code);
         }
     }
 
+    protected function generateViews()
+    {
+        foreach ($this->templateFiles as $templatePath=>$destPath) {
+            $code = $this->parseTemplate($templatePath);
+
+            $this->writeFile($destPath, $code);
+        }
+    }
 }

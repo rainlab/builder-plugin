@@ -164,7 +164,7 @@ class StandardBehaviorsRegistry
             $properties,
             'formConfig',
             null,
-            '~/plugins/rainlab/builder/classes/standardbehaviorsregistry/formcontroller/templates/config_form.yaml.tpl',
+            'config_form.yaml',
             $templates);
     }
 
@@ -226,15 +226,18 @@ class StandardBehaviorsRegistry
             ],
             'showSetup' => [
                 'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_show_setup'),
-                'type' => 'checkbox'
+                'type' => 'checkbox',
+                'ignoreIfEmpty' => true,
             ],
             'showCheckboxes' => [
                 'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_show_checkboxes'),
-                'type' => 'checkbox'
+                'type' => 'checkbox',
+                'ignoreIfEmpty' => true,
             ],
             'showSorting' => [
                 'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_show_sorting'),
-                'type' => 'checkbox'
+                'type' => 'checkbox',
+                'ignoreIfEmpty' => true,
             ],
             'defaultSort' => [
                 'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_default_sort'),
@@ -273,7 +276,6 @@ class StandardBehaviorsRegistry
                     [
                         'property' => 'search',
                         'type' => 'object',
-                        'ignoreIfPropertyEmpty' => 'prompt',
                         'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_search'),
                         'properties' => [
                             [
@@ -294,12 +296,14 @@ class StandardBehaviorsRegistry
             'showTree' => [
                 'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_show_tree'),
                 'description' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_show_tree_description'),
-                'type' => 'checkbox'
+                'type' => 'checkbox',
+                'ignoreIfEmpty' => true
             ],
             'treeExpanded' => [
                 'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_tree_expanded'),
                 'description' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_tree_expanded_description'),
-                'type' => 'checkbox'
+                'type' => 'checkbox',
+                'ignoreIfEmpty' => true
             ],
             'filter' => [
                 'type' => 'string', // Should be configurable in place later
@@ -309,7 +313,8 @@ class StandardBehaviorsRegistry
         ];
 
         $templates = [
-            '~/plugins/rainlab/builder/classes/standardbehaviorsregistry/listcontroller/templates/index.htm.tpl'
+            '~/plugins/rainlab/builder/classes/standardbehaviorsregistry/listcontroller/templates/index.htm.tpl',
+            '~/plugins/rainlab/builder/classes/standardbehaviorsregistry/listcontroller/templates/_list_toolbar.htm.tpl'
         ];
 
         $this->behaviorLibrary->registerBehavior(
@@ -319,7 +324,7 @@ class StandardBehaviorsRegistry
             $properties,
             'listConfig',
             null,
-            '~/plugins/rainlab/builder/classes/standardbehaviorsregistry/listcontroller/templates/config_list.yaml.tpl',
+            'config_list.yaml',
             $templates);
     }
 }

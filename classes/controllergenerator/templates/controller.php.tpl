@@ -1,6 +1,7 @@
 <?php namespace {{ pluginNamespace }}\Controllers;
 
 use Backend\Classes\Controller;
+use BackendMenu;
 
 class {{ controller }} extends Controller
 {

@@ -13,6 +13,15 @@ abstract class BehaviorDesignTimeProviderBase extends WidgetBase
      */
     abstract public function renderBehaviorBody($class, $properties, $controllerBuilder);
 
+    /**
+     * Returns default behavior configuration as an array.
+     * @param string $class Specifies the behavior class name.
+     * @param string $controllerModel Controller model.
+     * @param mixed $controllerGenerator Controller generator object.
+     * @return array Returns the behavior configuration array.
+     */
+    abstract public function getDefaultConfiguration($class, $controllerModel, $controllerGenerator);
+
     protected function getPropertyValue($properties, $property)
     {
         if (array_key_exists($property, $properties)) {
@@ -21,4 +30,5 @@ abstract class BehaviorDesignTimeProviderBase extends WidgetBase
 
         return null;
     }
+
 }

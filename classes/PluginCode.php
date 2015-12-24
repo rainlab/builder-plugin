@@ -37,6 +37,11 @@ class PluginCode
         return $this->authorCode.'\\'.$this->pluginCode;
     }
 
+    public function toUrl()
+    {
+        return strtolower($this->authorCode).'/'.strtolower($this->pluginCode);
+    }
+
     public function toUpdatesNamespace()
     {
         return $this->toPluginNamespace().'\\Updates';

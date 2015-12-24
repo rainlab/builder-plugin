@@ -56,21 +56,22 @@ class IndexControllerOperations extends IndexOperationsBehaviorBase
         $model = $this->loadOrCreateBaseModel(null, $options);
         $model->fill($_POST);
         $model->save();
-return "test";
+
         $widget = $this->makeBaseFormWidget($model->controller, $options);
         $this->vars['controller'] = $model->controller;
 
-        $result = [
+        $result = $this->controller->widget->controllerList->updateList();
+        $tab = [
             'tabTitle' => $this->getTabName($widget->model),
             'tabIcon' => 'icon-asterisk',
-            'tabId' => $this->getTabId($pluginCodeObj->toCode(), $controller),
+            'tabId' => $this->getTabId($pluginCodeObj->toCode(), $model->controller),
             'tab' => $this->makePartial('tab', [
                 'form'  => $widget,
                 'pluginCode' => $pluginCodeObj->toCode()
             ])
         ];
 
-        return $result;
+        return array_merge($result, $tab);
     }
 
     public function onControllerSave()

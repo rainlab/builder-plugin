@@ -37,17 +37,15 @@
         if (this.masterTabsObj.goTo(tabId))
             return false
 
-        var requestData = data === undefined ? {} : data,
-            self = this
+        var requestData = data === undefined ? {} : data
 
         $.oc.stripeLoadIndicator.show()
         var promise = $form.request(
                 serverHandlerName, 
                 { data: requestData }
-            ).done(function(data) {
-                self.addMasterTab(data)
-            }
-            ).always(
+            )
+            .done(this.proxy(this.addMasterTab))
+            .always(
                 this.hideStripeIndicatorProxy
             )
 
