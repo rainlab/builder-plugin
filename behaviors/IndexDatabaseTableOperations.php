@@ -33,7 +33,7 @@ class IndexDatabaseTableOperations extends IndexOperationsBehaviorBase
 
         $result = [
             'tabTitle' => $this->getTabTitle($tableName),
-            'tabIcon' => 'oc-icon-hdd-o',
+            'tabIcon' => 'icon-hdd-o',
             'tabId' => $this->getTabId($tableName),
             'tab' => $this->makePartial('tab', [
                 'form'  => $widget,

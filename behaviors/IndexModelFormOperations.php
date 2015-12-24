@@ -52,7 +52,7 @@ class IndexModelFormOperations extends IndexOperationsBehaviorBase
 
         $result = [
             'tabTitle' => $widget->model->getDisplayName(Lang::get('rainlab.builder::lang.form.tab_new_form')),
-            'tabIcon' => 'oc-icon-check-square',
+            'tabIcon' => 'icon-check-square',
             'tabId' => $this->getTabId($modelClass, $fileName),
             'tab' => $this->makePartial('tab', [
                 'form'  => $widget,
