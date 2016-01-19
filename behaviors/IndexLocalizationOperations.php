@@ -105,6 +105,47 @@ class IndexLocalizationOperations extends IndexOperationsBehaviorBase
         return ['builderRepsonseData' => $responseData];
     }
 
+    public function onLanguageLoadAddStringForm()
+    {
+        return [
+            'markup' => $this->makePartial('new-string-popup')
+        ];
+    }
+
+    public function onLanguageCreateString()
+    {
+        $stringKey = trim(Request::input('key'));
+        $stringValue = trim(Request::input('value'));
+
+        $pluginCodeObj = new PluginCode(Request::input('plugin_code'));
+        $pluginCode = $pluginCodeObj->toCode();
+        $options = [
+            'pluginCode' => $pluginCode
+        ];
+
+        $defaultLanguage = LocalizationModel::getDefaultLanguage();
+        if (LocalizationModel::languageFileExists($pluginCode, $defaultLanguage)) {
+            $model = $this->loadOrCreateBaseModel($defaultLanguage, $options);
+        } 
+        else {
+            $model = LocalizationModel::initModel($pluginCode, $defaultLanguage);
+        }
+
+        $newStringKey = $model->createStringAndSave($stringKey, $stringValue);
+        $pluginCode = $pluginCodeObj->toCode();
+
+        return [
+            'localizationData' => [
+                'key' => $newStringKey,
+                'value' => $stringValue
+            ],
+            'registryData' => [
+                'strings' => LocalizationModel::getPluginRegistryData($pluginCode, null),
+                'sections' => LocalizationModel::getPluginRegistryData($pluginCode, 'sections')
+            ]
+        ];
+    }
+
     protected function loadOrCreateLocalizationFromPost()
     {
         $pluginCodeObj = new PluginCode(Request::input('plugin_code'));

@@ -116,7 +116,7 @@ class ControlLibrary
         $result = [
             'label' => [
                 'title' => Lang::get('rainlab.builder::lang.form.property_label_title'),
-                'type' => 'string',
+                'type' => 'builderLocalization',
                 'validation' => [
                     'required' => [
                         'message' => Lang::get('rainlab.builder::lang.form.property_label_required')
@@ -125,7 +125,7 @@ class ControlLibrary
             ],
             'oc.comment' => [
                 'title' => Lang::get('rainlab.builder::lang.form.property_comment_title'),
-                'type' => 'string'
+                'type' => 'builderLocalization',
             ],
             'oc.commentPosition' => [
                 'title' => Lang::get('rainlab.builder::lang.form.property_comment_position'),
@@ -148,11 +148,11 @@ class ControlLibrary
             ],
             'placeholder' => [
                 'title' => Lang::get('rainlab.builder::lang.form.property_placeholder_title'),
-                'type' => 'string'
+                'type' => 'builderLocalization',
             ],
             'default' => [
                 'title' => Lang::get('rainlab.builder::lang.form.property_default_title'),
-                'type' => 'string'
+                'type' => 'builderLocalization',
             ],
             'cssClass' => [
                 'title' => Lang::get('rainlab.builder::lang.form.property_css_class_title'),

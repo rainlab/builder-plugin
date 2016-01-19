@@ -34,6 +34,7 @@ class Index extends Controller
         'RainLab.Builder.Behaviors.IndexVersionsOperations',
         'RainLab.Builder.Behaviors.IndexLocalizationOperations',
         'RainLab.Builder.Behaviors.IndexControllerOperations',
+        'RainLab.Builder.Behaviors.IndexDataRegistry'
     ];
 
     public $requiredPermissions = ['rainlab.buileder.*'];
@@ -63,6 +64,7 @@ class Index extends Controller
         $this->addCss('/plugins/rainlab/builder/assets/css/builder.css', 'RainLab.Builder');
 
         // TODO: combine the scripts
+        $this->addJs('/plugins/rainlab/builder/assets/js/builder.dataregistry.js', 'RainLab.Builder');
         $this->addJs('/plugins/rainlab/builder/assets/js/builder.index.entity.base.js', 'RainLab.Builder');
         $this->addJs('/plugins/rainlab/builder/assets/js/builder.index.entity.plugin.js', 'RainLab.Builder');
         $this->addJs('/plugins/rainlab/builder/assets/js/builder.index.entity.databasetable.js', 'RainLab.Builder');
@@ -75,6 +77,8 @@ class Index extends Controller
         $this->addJs('/plugins/rainlab/builder/assets/js/builder.index.entity.localization.js', 'RainLab.Builder');
         $this->addJs('/plugins/rainlab/builder/assets/js/builder.index.entity.controller.js', 'RainLab.Builder');
         $this->addJs('/plugins/rainlab/builder/assets/js/builder.index.js', 'RainLab.Builder');
+        $this->addJs('/plugins/rainlab/builder/assets/js/builder.localizationinput.js', 'RainLab.Builder');
+        $this->addJs('/plugins/rainlab/builder/assets/js/builder.inspector.editor.localization.js', 'RainLab.Builder');
 
         $this->pageTitleTemplate = '%s Builder';
     }

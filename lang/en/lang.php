@@ -519,7 +519,14 @@ return [
         'add_missing_strings_label' => 'Select language to copy missing strings from',
         'no_languages_to_copy_from' => 'There are no other languages to copy strings from.',
         'new_string_warning' => 'New string or section',
-        'structure_mismatch' => 'The structure of the source language file doesn\'t match the structure of the file being edited. Some individual strings in the edited file correspond to sections in the source file (or vice versa) and cannot be merged automatically.'
+        'structure_mismatch' => 'The structure of the source language file doesn\'t match the structure of the file being edited. Some individual strings in the edited file correspond to sections in the source file (or vice versa) and cannot be merged automatically.',
+        'create_string' => 'Create new string',
+        'string_key_label' => 'String key',
+        'string_key_comment' => 'Enter the string key using period as a section separator. For example: plugin.search. The string will be created in the plugin\'s default language localization file.',
+        'string_value' => 'String value',
+        'string_key_is_empty' => 'String key should not be empty',
+        'string_value_is_empty' => 'String value should not be empty',
+        'string_key_exists' => 'The string key already exists'
     ],
     'permission' => [
         'menu_label' => 'Permissions',

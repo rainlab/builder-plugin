@@ -39,7 +39,7 @@ class LanguageMixer
 
         $mismatch = false;
         $missingPaths = $this->findMissingPaths($destArray, $srcArray, $mismatch);
-        $mergedArray = $this->array_merge_recursive($srcArray, $destArray);
+        $mergedArray = self::arrayMergeRecursive($srcArray, $destArray);
 
         $destStrings = $this->arrayToYaml($mergedArray);
         $addedLines = $this->getAddedLines($destStrings, $missingPaths);
@@ -47,6 +47,29 @@ class LanguageMixer
         $result['strings'] = $destStrings;
         $result['updatedLines'] = $addedLines['lines'];
         $result['mismatch'] = $mismatch || $addedLines['mismatch'];
+
+        return $result;
+    }
+
+    public static function arrayMergeRecursive(&$array1, &$array2)
+    {
+        // The native PHP implementation of array_merge_recursive
+        // generates unexpected results when two scalar elements with a 
+        // same key is found, so we use a custom one.
+
+        $result = $array1;
+
+        foreach ($array2 as $key=>&$value)
+        {
+            if (is_array ($value) && isset($result[$key]) && is_array($result[$key]))
+            {
+                $result[$key] = self::arrayMergeRecursive($result[$key], $value);
+            }
+            else
+            {
+                $result[$key] = $value;
+            }
+        }
 
         return $result;
     }
@@ -110,29 +133,6 @@ class LanguageMixer
     {
         $dumper = new YamlDumper();
         return $dumper->dump($array, 20, 0, false, true);
-    }
-
-    protected function array_merge_recursive(&$array1, &$array2)
-    {
-        // The native PHP implementation of array_merge_recursive
-        // generates unexpected results when two scalar elements with a 
-        // same key is found, so we use a custom one.
-
-        $result = $array1;
-
-        foreach ($array2 as $key=>&$value)
-        {
-            if (is_array ($value) && isset($result[$key]) && is_array($result[$key]))
-            {
-                $result[$key] = $this->array_merge_recursive($result[$key], $value);
-            }
-            else
-            {
-                $result[$key] = $value;
-            }
-        }
-
-        return $result;
     }
 
     protected function getAddedLines($strings, $paths)

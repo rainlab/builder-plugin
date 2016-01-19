@@ -119,6 +119,7 @@ class MenuEditor extends FormWidgetBase
             ],
             [
                 'title' => Lang::get('rainlab.builder::lang.menu.property_label'),
+                'type' => 'builderLocalization',
                 'property' => 'label',
                 'validation' => [
                     'required' => [

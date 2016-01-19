@@ -5,8 +5,10 @@ use Symfony\Component\Yaml\Dumper as YamlDumper;
 use SystemException;
 use DirectoryIterator;
 use ValidationException;
+use RainLab\Builder\Models\Settings as PluginSettings;
 use Yaml;
 use Exception;
+use Config;
 use Lang;
 use File;
 
@@ -67,6 +69,15 @@ class LocalizationModel extends BaseModel
         }
         
         $this->exists = true;
+    }
+
+    public static function initModel($pluginCode, $language)
+    {
+        $model = new self();
+        $model->setPluginCode($pluginCode);
+        $model->language = $language;
+
+        return $model;
     }
 
     public function save()
@@ -171,6 +182,136 @@ class LocalizationModel extends BaseModel
     public function getOriginalStringsArray()
     {
         return $this->originalStringArray;
+    }
+
+    public function createStringAndSave($stringKey, $stringValue)
+    {
+        $stringKey = trim($stringKey, '.');
+
+        if (!strlen($stringKey)) {
+            throw new ValidationException(['key' => Lang::get('rainlab.builder::lang.localization.string_key_is_empty')]);
+        }
+
+        if (!strlen($stringValue)) {
+            throw new ValidationException(['value' => Lang::get('rainlab.builder::lang.localization.string_value_is_empty')]);
+        }
+
+        $originalStringArray = $this->getOriginalStringsArray();
+        $languagePrefix = strtolower($this->getPluginCodeObj()->toCode()).'::lang.';
+
+        $existingStrings = self::convertToStringsArray($originalStringArray, $languagePrefix);
+        if (array_key_exists($languagePrefix.$stringKey, $existingStrings)) {
+            throw new ValidationException(['key' => Lang::get('rainlab.builder::lang.localization.string_key_exists')]);
+        }
+
+        $existingSections = self::convertToSectionsArray($originalStringArray);
+        if (array_key_exists($stringKey.'.', $existingSections)) {
+            throw new ValidationException(['key' => Lang::get('rainlab.builder::lang.localization.string_key_exists')]);
+        }
+
+        $sectionArray = [];
+        self::createStringSections($sectionArray, $stringKey, $stringValue) ;
+
+        $newStrings = LanguageMixer::arrayMergeRecursive($originalStringArray, $sectionArray);
+
+        $dumper = new YamlDumper();
+        $this->strings = $dumper->dump($newStrings, 20, 0, false, true);
+
+        $this->save();
+
+        return $languagePrefix.$stringKey;
+    }
+
+    public static function getDefaultLanguage()
+    {
+        $language = Config::get('app.locale');
+
+        if (!$language) {
+            throw new ApplicationException('The default language is not defined in the application configuration (app.locale).');
+        }
+
+        return $language;
+    }
+
+    public static function getPluginRegistryData($pluginCode, $subtype)
+    {
+        $defaultLanguage = self::getDefaultLanguage();
+
+        $model = new self();
+        $model->setPluginCode($pluginCode);
+        $model->language = $defaultLanguage;
+
+        $filePath = $model->getFilePath();
+        if (!File::isFile($filePath)) {
+            return [];
+        }
+
+        $model->load($defaultLanguage);
+
+        $array = $model->getOriginalStringsArray();
+        $languagePrefix = strtolower($model->getPluginCodeObj()->toCode()).'::lang.';
+
+        if ($subtype !== 'sections') {
+            return self::convertToStringsArray($array, $languagePrefix);
+        }
+
+        return self::convertToSectionsArray($array);
+    }
+
+    public static function languageFileExists($pluginCode, $language)
+    {
+        $model = new self();
+        $model->setPluginCode($pluginCode);
+        $model->language = $language;
+
+        $filePath = $model->getFilePath();
+        return File::isFile($filePath);
+    }
+
+    protected static function createStringSections(&$arr, $path, $value) {
+        $keys = explode('.', $path);
+
+        while ($key = array_shift($keys)) {
+            $arr = &$arr[$key];
+        }
+
+        $arr = $value;
+    }
+
+    protected static function convertToStringsArray($stringsArray, $prefix, $currentKey = '')
+    {
+        $result = [];
+
+        foreach ($stringsArray as $key=>$value) {
+            $newKey = strlen($currentKey) ? $currentKey.'.'.$key : $key;
+
+            if (is_scalar($value)) {
+                $result[$prefix.$newKey] = $newKey.' - '.$value;
+            }
+            else {
+                $result = array_merge($result, self::convertToStringsArray($value, $prefix, $newKey));
+            }
+        }
+
+        return $result;
+    }
+
+    protected static function convertToSectionsArray($stringsArray, $currentKey = '')
+    {
+        $result = [];
+
+        foreach ($stringsArray as $key=>$value) {
+            $newKey = strlen($currentKey) ? $currentKey.'.'.$key : $key;
+
+            if (is_scalar($value)) {
+                $result[$currentKey.'.'] = $currentKey.'.';
+            }
+            else {
+                $result = array_merge($result, self::convertToSectionsArray($value, $newKey));
+            }
+        }
+
+        return $result;
     }
 
     protected function validateLanguage($language)

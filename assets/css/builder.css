@@ -970,6 +970,27 @@ html.gecko .builder-tabs.primary > .tabs > ul.tabs > li > div.tab-container > di
   padding: 10px 20px;
   display: block;
 }
+.localization-input-container input[type=text].string-editor {
+  padding-right: 20px!important;
+}
+.localization-input-container .localization-trigger {
+  position: absolute;
+  display: none;
+  width: 10px;
+  height: 10px;
+  font-size: 14px;
+  color: #95a5a6;
+  outline: none;
+}
+.localization-input-container .localization-trigger:hover,
+.localization-input-container .localization-trigger:active,
+.localization-input-container .localization-trigger:focus {
+  color: #2581b8;
+  text-decoration: none;
+}
+table.inspector-fields td.active .localization-input-container .localization-trigger {
+  display: block;
+}
 .control-filelist ul li.group.model > h4 a:after {
   content: "\f074";
   top: 10px;
