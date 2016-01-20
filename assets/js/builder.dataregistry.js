@@ -22,8 +22,12 @@
      * $.oc.builder.dataRegistry.set('rainlab.blog', 'model.forms', 'Categories', formsArray)
      * $.oc.builder.dataRegistry.set('rainlab.blog', 'localization', null, stringsArray) // The registry contains only default language
      */
-    DataRegistry.prototype.set = function(plugin, type, subtype, data) {
+    DataRegistry.prototype.set = function(plugin, type, subtype, data, params) {
         this.storeData(plugin, type, subtype, data)
+
+        if (type == 'localization' && !subtype) {
+            this.localizationUpdated(plugin, params)
+        }
     }
 
     /* 
@@ -124,6 +128,28 @@
         }
 
         this.data[plugin][type][subtype] = dataItem
+    }
+
+    // LOCALIZATION-SPECIFIC METHODS
+    // ============================
+
+    DataRegistry.prototype.getLocalizationString = function($formElement, plugin, key, callback) {
+        this.get($formElement, plugin, 'localization', null, function(data){
+            if (data[key] !== undefined) {
+                callback(data[key])
+                return
+            }
+
+            callback(key)
+        })
+    }
+
+    DataRegistry.prototype.localizationUpdated = function(plugin, params) {
+        $.oc.builder.localizationInput.updatePluginInputs(plugin)
+
+        if (params === undefined || !params.suppressLanguageEditorUpdate) {
+            $.oc.builder.indexController.entityControllers.localization.languageUpdated(plugin)
+        }
     }
 
     $.oc.builder.dataRegistry = new DataRegistry()

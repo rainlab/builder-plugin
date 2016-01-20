@@ -103,10 +103,15 @@
 
     MenuBulder.prototype.updateItemVisualProperties = function(item) {
         var properties = this.getItemProperties(item),
-            $item = $(item)
+            $item = $(item),
+            $form = this.findForm(item),
+            pluginCode = $form.find('input[name=plugin_code]').val()
+
+        $.oc.builder.dataRegistry.getLocalizationString($item, pluginCode, properties.label, function(label){
+            $item.find('> .item-container > span.title').text(label)
+        })
 
         $item.find('> .item-container > i').attr('class', properties.icon)
-        $item.find('> .item-container > span.title').text(properties.label)
     }
 
     MenuBulder.prototype.findInspectorContainer = function($element) {

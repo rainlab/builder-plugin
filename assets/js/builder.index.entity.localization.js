@@ -71,6 +71,30 @@
     // EVENT HANDLERS
     // ============================
 
+    // INTERNAL BUILDER API
+    // ============================
+
+    Localization.prototype.languageUpdated = function(plugin) {
+        var languageForm = this.findDefaultLanguageForm(plugin)
+
+        if (!languageForm) {
+            return
+        }
+
+        var $languageForm = $(languageForm)
+
+        if (!$languageForm.hasClass('oc-data-changed')) {
+            this.updateLanguageFromServer($languageForm)
+        }
+        else {
+            // If there are changes - merge language from server
+            // in the background. As this operation is not 100% 
+            // reliable, it could be a good idea to display a
+            // warning when the user navigates to the tab.
+
+            this.mergeLanguageFromServer($languageForm)
+        }
+    }
 
     // INTERNAL METHODS
     // ============================
@@ -88,6 +112,13 @@
 
         this.getLanguageList().fileList('markActive', data.builderRepsonseData.tabId)
         this.getIndexController().unchangeTab($masterTabPane)
+
+        if (data.builderRepsonseData.registryData !== undefined) {
+            var registryData = data.builderRepsonseData.registryData
+
+            $.oc.builder.dataRegistry.set(registryData.pluginCode, 'localization', null, registryData.strings, {suppressLanguageEditorUpdate: true})
+            $.oc.builder.dataRegistry.set(registryData.pluginCode, 'localization', 'sections', registryData.sections)
+        }
     }
 
     Localization.prototype.getLanguageList = function() {
@@ -148,6 +179,81 @@
         if (responseData.mismatch) {
             $.oc.alert(mismatchMessage)
         }
+    }
+
+    Localization.prototype.findDefaultLanguageForm = function(plugin) {
+        var forms = document.body.querySelectorAll('form[data-entity=localization]')
+
+        for (var i=forms.length-1; i>=0; i--) {
+            var form = forms[i],
+                pluginInput = form.querySelector('input[name=plugin_code]'),
+                languageInput = form.querySelector('input[name=original_language]')
+
+            if (!pluginInput || pluginInput.value != plugin) {
+                continue
+            }
+
+            if (!languageInput) {
+                continue
+            }
+
+            if (form.getAttribute('data-default-language') == languageInput.value) {
+                return form
+            }
+        }
+
+        return null
+    }
+
+    Localization.prototype.updateLanguageFromServer = function($languageForm) {
+        var self = this
+
+        $languageForm.request('onLanguageGetStrings').done(function(data) {
+            self.updateLanguageFromServerDone($languageForm, data)
+        })
+    }
+
+    Localization.prototype.updateLanguageFromServerDone = function($languageForm, data) {
+        if (data['builderRepsonseData'] === undefined) {
+            throw new Error('Invalid response data')
+        }
+
+        var responseData = data.builderRepsonseData,
+            $tabPane = $languageForm.closest('.tab-pane'),
+            codeEditor = this.getCodeEditor($tabPane)
+
+        if (!responseData.strings) {
+            return
+        }
+
+        codeEditor.getSession().setValue(responseData.strings)
+        this.unmodifyTab($tabPane)
+    }
+
+    Localization.prototype.mergeLanguageFromServer = function($languageForm) {
+        var language = $languageForm.find('input[name=original_language]').val(),
+            self = this
+
+        $languageForm.request('onLanguageCopyStringsFrom', {
+            data: {
+                copy_from: language
+            }
+        }).done(function(data) {
+            self.mergeLanguageFromServerDone($languageForm, data)
+        })
+    }
+
+    Localization.prototype.mergeLanguageFromServerDone = function($languageForm, data) {
+        if (data['builderRepsonseData'] === undefined) {
+            throw new Error('Invalid response data')
+        }
+
+        var responseData = data.builderRepsonseData,
+            $tabPane = $languageForm.closest('.tab-pane'),
+            codeEditor = this.getCodeEditor($tabPane)
+
+        codeEditor.getSession().setValue(responseData.strings)
+        codeEditor.getSession().setAnnotations([])
     }
 
     // REGISTRATION

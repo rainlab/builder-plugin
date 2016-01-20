@@ -37,6 +37,8 @@
             $(this.input).autocomplete('destroy')
         }
 
+        $(this.input).removeData('localization-input')
+
         this.input = null
 
         BaseProto.dispose.call(this)
@@ -46,6 +48,12 @@
         if (!this.options.plugin) {
             throw new Error('The options.plugin value should be set in the localization input object.')
         }
+
+        var $input = $(this.input)
+
+        $input.data('localization-input', this)
+        $input.attr('data-builder-localization-input', 'true')
+        $input.attr('data-builder-localization-plugin', this.options.plugin)
 
         this.getContainer().addClass('localization-input-container')
 
@@ -87,19 +95,41 @@
         }
     }
 
+    LocalizationInput.prototype.reload = function() {
+        $.oc.builder.dataRegistry.get(this.form, this.options.plugin, 'localization', null, this.proxy(this.dataLoaded))
+    }
+
     LocalizationInput.prototype.dataLoaded = function(data) {
         if (this.disposed) {
             return
         }
 
-        this.hideLoadingIndicator()
+        var $input = $(this.input),
+            autocomplete = $input.data('autocomplete')
 
-        $(this.input).autocomplete({
-            source: data,
-            matchWidth: true
-        })
+        if (!autocomplete) {
+            this.hideLoadingIndicator()
 
-        this.initialized = true
+            $(this.input).autocomplete({
+                source: this.preprocessData(data),
+                matchWidth: true
+            })
+
+            this.initialized = true
+        }
+        else {
+            autocomplete.source = this.preprocessData(data)
+        }
+    }
+
+    LocalizationInput.prototype.preprocessData = function(data) {
+        var dataClone = $.extend({}, data)
+
+        for (var key in dataClone) {
+            dataClone[key] = key + ' - ' + dataClone[key]
+        }
+
+        return dataClone
     }
 
     LocalizationInput.prototype.getContainer = function() {
@@ -205,6 +235,14 @@
     LocalizationInput.prototype.onPopupHidden = function(ev, link, popup) {
         $(popup).find('#language_string_key').autocomplete('destroy')
         $(popup).find('form').on('submit', this.proxy(this.onSubmitPopupForm))
+    }
+
+    LocalizationInput.updatePluginInputs = function(plugin) {
+        var inputs = document.body.querySelectorAll('input[data-builder-localization-input][data-builder-localization-plugin="'+plugin+'"]')
+
+        for (var i=inputs.length-1; i>=0; i--) {
+            $(inputs[i]).data('localization-input').reload()
+        }
     }
 
     // EVENT HANDLERS

@@ -286,7 +286,7 @@ class LocalizationModel extends BaseModel
             $newKey = strlen($currentKey) ? $currentKey.'.'.$key : $key;
 
             if (is_scalar($value)) {
-                $result[$prefix.$newKey] = $newKey.' - '.$value;
+                $result[$prefix.$newKey] = $value;
             }
             else {
                 $result = array_merge($result, self::convertToStringsArray($value, $prefix, $newKey));

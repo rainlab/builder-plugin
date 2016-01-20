@@ -58,6 +58,17 @@
         return this.getTabList($tabControl).find(' > li').eq(tabIndex)
     }
 
+    TabManager.prototype.findTabPanel = function($tab) {
+        var $tabControl = this.findTabControl($tab),
+            tabIndex = $tab.index()
+
+        return this.getPanelList($tabControl).find(' > li').eq(tabIndex)
+    }
+
+    TabManager.prototype.findTabForm = function(tab) {
+        return $(tab).closest('form')
+    }
+
     TabManager.prototype.getGlobalTabsProperties = function(tabsContainer) {
         var properties = $(tabsContainer).find('.inspector-trigger.tab-control.global [data-inspector-values]').val()
 
@@ -199,9 +210,13 @@
 
     TabManager.prototype.updateTabProperties = function($tab) {
         var properties = $tab.find('[data-inspector-values]').val(),
-            propertiesParsed = $.parseJSON(properties)
+            propertiesParsed = $.parseJSON(properties),
+            $form = this.findTabForm($tab),
+            pluginCode = $form.find('input[name=plugin_code]').val()
 
-        $tab.find('[data-tab-title]').text(propertiesParsed.title)
+        $.oc.builder.dataRegistry.getLocalizationString($form, pluginCode, propertiesParsed.title, function(title){
+            $tab.find('[data-tab-title]').text(title)
+        })
     }
 
     // EVENT HANDLERS

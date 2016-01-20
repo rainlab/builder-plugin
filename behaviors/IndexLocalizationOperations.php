@@ -44,7 +44,8 @@ class IndexLocalizationOperations extends IndexOperationsBehaviorBase
             'tab' => $this->makePartial('tab', [
                 'form'  => $widget,
                 'pluginCode' => $pluginCodeObj->toCode(),
-                'language' => $language
+                'language' => $language,
+                'defaultLanguage' => LocalizationModel::getDefaultLanguage()
             ])
         ];
 
@@ -65,6 +66,18 @@ class IndexLocalizationOperations extends IndexOperationsBehaviorBase
             'tabTitle' => $this->getTabName($model),
             'language' => $model->language
         ];
+
+        if ($model->language === LocalizationModel::getDefaultLanguage()) {
+            $pluginCode = $model->getPluginCodeObj()->toCode();
+
+            $registryData = [
+                'strings' => LocalizationModel::getPluginRegistryData($pluginCode, null),
+                'sections' => LocalizationModel::getPluginRegistryData($pluginCode, 'sections'),
+                'pluginCode' => $pluginCode
+            ];
+
+            $result['builderRepsonseData']['registryData'] = $registryData;
+        }
 
         return $result;
     }
@@ -144,6 +157,15 @@ class IndexLocalizationOperations extends IndexOperationsBehaviorBase
                 'sections' => LocalizationModel::getPluginRegistryData($pluginCode, 'sections')
             ]
         ];
+    }
+
+    public function onLanguageGetStrings()
+    {
+        $model = $this->loadOrCreateLocalizationFromPost();
+
+        return ['builderRepsonseData' => [
+            'strings' => $model ? $model->strings : null
+        ]];
     }
 
     protected function loadOrCreateLocalizationFromPost()

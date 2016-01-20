@@ -313,6 +313,7 @@ class FormBuilder extends FormWidgetBase
             [
                 'title' => Lang::get('rainlab.builder::lang.form.tab_title'),
                 'property' => 'title',
+                'type' => 'builderLocalization',
                 'validation' => [
                     'required' => [
                         'message' => Lang::get('rainlab.builder::lang.form.property_tab_title_required')    
