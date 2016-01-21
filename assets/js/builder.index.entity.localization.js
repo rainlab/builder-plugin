@@ -96,6 +96,24 @@
         }
     }
 
+    Localization.prototype.updateOnScreenStrings = function(plugin) {
+        var stringElements = document.body.querySelectorAll('span[data-localization-key][data-plugin="'+plugin+'"]')
+
+        $.oc.builder.dataRegistry.get($('#builder-plugin-selector-panel form'), plugin, 'localization', null, function(data){
+            for (var i=stringElements.length-1; i>=0; i--) {
+                var stringElement = stringElements[i],
+                    stringKey = stringElement.getAttribute('data-localization-key')
+
+                if (data[stringKey] !== undefined) {
+                    stringElement.textContent = data[stringKey]
+                }
+                else {
+                    stringElement.textContent = stringKey
+                }
+            }
+        })
+    }
+
     // INTERNAL METHODS
     // ============================
 

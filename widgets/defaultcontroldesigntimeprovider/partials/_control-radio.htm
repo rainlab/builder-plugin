@@ -10,7 +10,7 @@
 
             foreach ($options as $option):
         ?>
-            <li><i class="icon-circle-o"></i> <?= e($option) ?></li>
+            <li><i class="icon-circle-o"></i> <span data-localization-key="<?= e($option) ?>" data-plugin="<?= e($formBuilder->getPluginCode()) ?>"><?= e(trans($option)) ?></span></li>
         <?php endforeach ?>
     </ul>
 </div>

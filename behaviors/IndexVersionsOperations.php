@@ -142,7 +142,7 @@ class IndexVersionsOperations extends IndexOperationsBehaviorBase
 
     protected function getTabName($version, $model)
     {
-        $pluginName = $model->getModelPluginName();
+        $pluginName = Lang::get($model->getModelPluginName());
 
         if (!strlen($version)) {
             return $pluginName.'/'.Lang::get('rainlab.builder::lang.version.tab_new_version');

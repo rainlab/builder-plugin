@@ -182,7 +182,7 @@ class IndexLocalizationOperations extends IndexOperationsBehaviorBase
 
     protected function getTabName($model)
     {
-        $pluginName = $model->getModelPluginName();
+        $pluginName = Lang::get($model->getModelPluginName());
 
         if (!strlen($model->language)) {
             return $pluginName.'/'.Lang::get('rainlab.builder::lang.localization.tab_new_language');

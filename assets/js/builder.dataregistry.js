@@ -150,6 +150,8 @@
         if (params === undefined || !params.suppressLanguageEditorUpdate) {
             $.oc.builder.indexController.entityControllers.localization.languageUpdated(plugin)
         }
+
+        $.oc.builder.indexController.entityControllers.localization.updateOnScreenStrings(plugin)
     }
 
     $.oc.builder.dataRegistry = new DataRegistry()

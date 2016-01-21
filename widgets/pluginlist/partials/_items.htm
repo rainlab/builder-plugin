@@ -6,10 +6,10 @@
                 <a href="#" data-builder-command="plugin:cmdMakePluginActive" data-plugin-code="<?= e($code) ?>">
                     <i class="list-icon <?= e($plugin['icon'] )?>"></i>
 
-                    <span class="title"><?= e(trans($plugin['name'])) ?></span>
+                    <span class="title"><span data-localization-key="<?= e($plugin['name']) ?>" data-plugin="<?= e($code) ?>"><?= e(trans($plugin['name'])) ?></span></span>
                     <span class="description">
                         <?php if (strlen($plugin['description'])): ?>
-                            <?= e(trans($plugin['description'])) ?>
+                            <span data-localization-key="<?= e($plugin['description']) ?>" data-plugin="<?= e($code) ?>"><?= e(trans($plugin['description'])) ?></span>
                         <?php else: ?>
                             <?= e(trans('rainlab.builder::lang.plugin.no_description')) ?>
                         <?php endif ?>

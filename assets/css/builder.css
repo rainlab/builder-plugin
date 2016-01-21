@@ -386,6 +386,10 @@ html.gecko.mac .builder-building-area div[data-root-control-wrapper] {
   background: #2581b8;
   color: white!important;
 }
+.builder-building-area ul.builder-control-list > li.control:hover > .control-wrapper > .control-body .builder-blueprint-control-repeater-body > .repeater-button span,
+.builder-building-area ul.builder-control-list > li.inspector-open > .control-wrapper > .control-body .builder-blueprint-control-repeater-body > .repeater-button span {
+  color: white!important;
+}
 .builder-building-area .builder-blueprint-control-repeater {
   position: relative;
 }

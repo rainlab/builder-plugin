@@ -119,6 +119,16 @@ class FormBuilder extends FormWidgetBase
         ];
     }
 
+    public function getPluginCode()
+    {
+        $pluginCode = Input::get('plugin_code');
+        if (strlen($pluginCode)) {
+            return $pluginCode;
+        }
+
+        return $this->model->getPluginCodeObj()->toCode();
+    }
+
     //
     // Methods for the internal use
     //

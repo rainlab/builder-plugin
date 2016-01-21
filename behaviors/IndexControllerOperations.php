@@ -108,7 +108,7 @@ class IndexControllerOperations extends IndexOperationsBehaviorBase
 
     protected function getTabName($model)
     {
-        $pluginName = $model->getModelPluginName();
+        $pluginName = Lang::get($model->getModelPluginName());
 
         return $pluginName.'/'.$model->controller;
     }

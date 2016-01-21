@@ -28,7 +28,7 @@ class IndexPermissionsOperations extends IndexOperationsBehaviorBase
         $widget = $this->makeBaseFormWidget($pluginCode);
 
         $result = [
-            'tabTitle' => $widget->model->getPluginName().'/'.Lang::get('rainlab.builder::lang.permission.tab'),
+            'tabTitle' => Lang::get($widget->model->getPluginName()).'/'.Lang::get('rainlab.builder::lang.permission.tab'),
             'tabIcon' => 'icon-unlock-alt',
             'tabId' => $this->getTabId($pluginCode),
             'tab' => $this->makePartial('tab', [

@@ -1,7 +1,7 @@
 <div class="layout-row min-size panel-contents">
     <div class="sidepanel-content-header">
         <?php if ($pluginVector): ?>
-            <?= e(trans($pluginVector->getPluginName())) ?>
+            <span data-localization-key="<?= e($pluginVector->getPluginName()) ?>" data-plugin="<?= e($pluginVector->pluginCodeObj->toCode()) ?>"><?= e(trans($pluginVector->getPluginName())) ?></span>
         <?php else: ?>
             <?= e(trans('rainlab.builder::lang.common.plugin_not_selected')) ?>
         <?php endif ?>
