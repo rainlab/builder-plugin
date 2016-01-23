@@ -992,8 +992,35 @@ html.gecko .builder-tabs.primary > .tabs > ul.tabs > li > div.tab-container > di
   color: #2581b8;
   text-decoration: none;
 }
-table.inspector-fields td.active .localization-input-container .localization-trigger {
+table.inspector-fields td.active .localization-input-container .localization-trigger,
+table.data td.active .localization-input-container .localization-trigger {
   display: block;
+}
+table.data td.active .localization-input-container .localization-trigger {
+  top: 5px!important;
+  right: 7px!important;
+}
+.control-table td[data-column-type=builderLocalization] input[type=text] {
+  padding-right: 20px!important;
+}
+.control-table td[data-column-type=builderLocalization] input[type=text] {
+  width: 100%;
+  height: 100%;
+  display: block;
+  outline: none;
+  border: none;
+  padding: 5px 10px;
+}
+.autocomplete.dropdown-menu.table-widget-autocomplete.localization li a {
+  white-space: normal;
+  word-wrap: break-word;
+}
+table.data td[data-column-type=builderLocalization] .loading-indicator-container.size-small .loading-indicator {
+  padding-bottom: 0!important;
+}
+table.data td[data-column-type=builderLocalization] .loading-indicator-container.size-small .loading-indicator span {
+  left: auto;
+  right: 6px;
 }
 .control-filelist ul li.group.model > h4 a:after {
   content: "\f074";

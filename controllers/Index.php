@@ -63,6 +63,9 @@ class Index extends Controller
     {
         $this->addCss('/plugins/rainlab/builder/assets/css/builder.css', 'RainLab.Builder');
 
+        // The table widget scripts should be preloaded
+        $this->addJs('/modules/backend/widgets/table/assets/js/build-min.js', 'core');
+
         // TODO: combine the scripts
         $this->addJs('/plugins/rainlab/builder/assets/js/builder.dataregistry.js', 'RainLab.Builder');
         $this->addJs('/plugins/rainlab/builder/assets/js/builder.index.entity.base.js', 'RainLab.Builder');
@@ -79,6 +82,7 @@ class Index extends Controller
         $this->addJs('/plugins/rainlab/builder/assets/js/builder.index.js', 'RainLab.Builder');
         $this->addJs('/plugins/rainlab/builder/assets/js/builder.localizationinput.js', 'RainLab.Builder');
         $this->addJs('/plugins/rainlab/builder/assets/js/builder.inspector.editor.localization.js', 'RainLab.Builder');
+        $this->addJs('/plugins/rainlab/builder/assets/js/builder.table.processor.localization.js', 'RainLab.Builder');
 
         $this->pageTitleTemplate = '%s Builder';
     }

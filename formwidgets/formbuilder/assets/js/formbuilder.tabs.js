@@ -214,6 +214,8 @@
             $form = this.findTabForm($tab),
             pluginCode = $form.find('input[name=plugin_code]').val()
 
+        $tab.find('[data-tab-title]').attr('data-localization-key', propertiesParsed.title)
+
         $.oc.builder.dataRegistry.getLocalizationString($form, pluginCode, propertiesParsed.title, function(title){
             $tab.find('[data-tab-title]').text(title)
         })

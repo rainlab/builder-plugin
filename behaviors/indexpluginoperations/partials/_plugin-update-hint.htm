@@ -1,0 +1,1 @@
+<?= e(trans('rainlab.builder::lang.plugin.update_hint')) ?>

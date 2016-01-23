@@ -9,7 +9,7 @@ use File;
 use Yaml;
 
 /**
- * A base class for models that keep date in the plugin.yaml file.
+ * A base class for models that keep data in the plugin.yaml file.
  *
  * @package rainlab\builder
  * @author Alexey Bobkov, Samuel Georges

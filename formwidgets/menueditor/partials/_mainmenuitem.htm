@@ -5,7 +5,7 @@
 >
     <div class="item-container">
         <i class="<?= e($this->getItemArrayProperty($item, 'icon')) ?>"></i>
-        <span class="title"><?= e($this->getItemArrayProperty($item, 'label')) ?></span>
+         <span data-localization-key="<?= e($this->getItemArrayProperty($item, 'label')) ?>" data-plugin="<?= e($this->getPluginCode()) ?>" class="title"><?= e(trans($this->getItemArrayProperty($item, 'label'))) ?></span>
 
         <a href="#" class="close-btn" data-builder-command="menus:cmdDeleteMenuItem">&times;</a>
     </div>

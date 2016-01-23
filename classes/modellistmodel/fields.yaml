@@ -34,6 +34,7 @@ tabs:
                             message: rainlab.builder::lang.list.column_dbfield_required
                 label:
                     title: rainlab.builder::lang.list.column_name_label
+                    type: builderLocalization
                     validation: 
                         required: 
                             message: rainlab.builder::lang.list.column_label_required
@@ -56,6 +57,7 @@ tabs:
                         partial: rainlab.builder::lang.list.column_type_partial
                 default:
                     title: rainlab.builder::lang.list.column_label_default
+                    type: builderLocalization
                 searchable:
                     title: rainlab.builder::lang.list.column_label_searchable
                     type: checkbox

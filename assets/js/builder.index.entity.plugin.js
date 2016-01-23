@@ -28,16 +28,7 @@
         var $target = $(ev.currentTarget),
             selectedPluginCode = $target.data('pluginCode')
 
-        $.oc.stripeLoadIndicator.show()
-        $target.request('onPluginSetActive', {
-            data: {
-                pluginCode: selectedPluginCode
-            }
-        }).always(
-            $.oc.builder.indexController.hideStripeIndicatorProxy
-        ).done(
-            this.proxy(this.makePluginActiveDone)
-        )
+        this.makePluginActive(selectedPluginCode)
     }
 
     Plugin.prototype.cmdCreatePlugin = function(ev) {
@@ -60,7 +51,8 @@
             $.oc.builder.indexController.hideStripeIndicatorProxy
         ).done(function(data){
             $form.trigger('close.oc.popup')
-            self.makePluginActiveDone(data)
+
+            self.applyPluginSettingsDone(data)
         })
     }
 
@@ -87,6 +79,28 @@
 
     // INTERNAL METHODS
     // ============================
+
+    Plugin.prototype.applyPluginSettingsDone = function(data) {
+        if (data.responseData !== undefined && data.responseData.isNewPlugin !== undefined) {
+            this.makePluginActive(data.responseData.pluginCode, true)
+        }
+    }
+
+    Plugin.prototype.makePluginActive = function(pluginCode, updatePluginList) {
+        var $form = $('#builder-plugin-selector-panel form').first()
+
+        $.oc.stripeLoadIndicator.show()
+        $form.request('onPluginSetActive', {
+            data: {
+                pluginCode: pluginCode,
+                updatePluginList: (updatePluginList ? 1 : 0)
+            }
+        }).always(
+            $.oc.builder.indexController.hideStripeIndicatorProxy
+        ).done(
+            this.proxy(this.makePluginActiveDone)
+        )
+    }
 
     Plugin.prototype.makePluginActiveDone = function(data) {
         var pluginCode = data.responseData.pluginCode

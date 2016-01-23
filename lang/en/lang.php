@@ -18,13 +18,14 @@ return [
         'field_icon' => 'Plugin icon',
         'field_plugin_namespace' => 'Plugin namespace',
         'field_author_namespace' => 'Author namespace',
-        'field_namespace_description' => 'Namespace can contain only Latin letters and digits and should start with a Latin letter.',
-        'field_author_namespace_description' => 'You cannot change the namespaces with Builder after you create the plugin.',
+        'field_namespace_description' => 'Namespace can contain only Latin letters and digits and should start with a Latin letter. Example plugin namespace: Blog',
+        'field_author_namespace_description' => 'You cannot change the namespaces with Builder after you create the plugin. Example author namespace: JohnSmith',
         'tab_general' => 'General parameters',
         'tab_description' => 'Description',
         'field_homepage' => 'Plugin homepage URL',
         'no_description' => 'No description provided for this plugin',
-        'error_settings_not_editable' => 'Settings of this plugin cannot be edited with Builder.'
+        'error_settings_not_editable' => 'Settings of this plugin cannot be edited with Builder.',
+        'update_hint' => 'You can edit localized plugin\'s name and description on the Localization tab.'
     ],
     'author_name' => [
         'title' => 'Author name',

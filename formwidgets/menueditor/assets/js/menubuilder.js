@@ -107,6 +107,8 @@
             $form = this.findForm(item),
             pluginCode = $form.find('input[name=plugin_code]').val()
 
+        $item.find('> .item-container > span.title').attr('data-localization-key', properties.label)
+
         $.oc.builder.dataRegistry.getLocalizationString($item, pluginCode, properties.label, function(label){
             $item.find('> .item-container > span.title').text(label)
         })

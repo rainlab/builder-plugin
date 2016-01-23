@@ -28,8 +28,13 @@ abstract class YamlModel extends BaseModel
 
     public function save()
     {
-        $data = $this->modelToYamlArray();
         $this->validate();
+
+        if ($this->isNewModel()) {
+            $this->beforeCreate();
+        }
+
+        $data = $this->modelToYamlArray();
 
         if ($this->yamlSection) {
             $fileData = $this->originalFileData;
@@ -146,6 +151,10 @@ abstract class YamlModel extends BaseModel
     public function isNewModel()
     {
         return !strlen($this->originalFilePath);
+    }
+
+    protected function beforeCreate()
+    {
     }
 
     protected function afterCreate()

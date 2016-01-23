@@ -31,6 +31,10 @@ class PluginBaseModel extends PluginYamlModel
 
     public $homepage;
 
+    protected $localizedName;
+
+    protected $localizedDescription;
+
     protected $yamlSection = "plugin";
 
     protected static $fillable = [
@@ -102,6 +106,17 @@ class PluginBaseModel extends PluginYamlModel
         $this->homepage = $this->getArrayKeySafe($array, 'homepage');
     }
 
+    protected function beforeCreate()
+    {
+        $this->localizedName = $this->name;
+        $this->localizedDescription = $this->description;
+
+        $pluginCode = strtolower($this->author_namespace.'.'.$this->namespace);
+
+        $this->name = $pluginCode.'::lang.plugin.name';
+        $this->description = $pluginCode.'::lang.plugin.description';
+    }
+
     protected function afterCreate()
     {
         try {
@@ -118,15 +133,20 @@ class PluginBaseModel extends PluginYamlModel
     {
         $basePath = $this->getPluginPath();
 
+        $defaultLanguage = LocalizationModel::getDefaultLanguage();
+
         $structure = [
             $basePath.'/Plugin.php' => 'plugin.php.tpl',
             $basePath.'/updates/version.yaml' => 'version.yaml.tpl',
-            $basePath.'/classes'
+            $basePath.'/classes',
+            $basePath.'/lang/'.$defaultLanguage.'/lang.php' => 'lang.php.tpl'
         ];
 
         $variables = [
             'authorNamespace' => $this->author_namespace,
-            'pluginNamespace' => $this->namespace
+            'pluginNamespace' => $this->namespace,
+            'pluginName' => $this->localizedName,
+            'pluginDescription' => $this->localizedDescription
         ];
 
         $generator = new FilesystemGenerator('$', $structure, '$/rainlab/builder/classes/pluginbasemodel/templates');

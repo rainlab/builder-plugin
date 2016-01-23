@@ -15,7 +15,7 @@
                     foreach ($controls as $tabName=>$tabControls): 
                         $tabIndex++;
                 ?>
-                    <?= $this->makePartial('tab', ['active'=>$tabIndex == 1, 'title'=>trans($tabName)]) ?>
+                    <?= $this->makePartial('tab', ['active'=>$tabIndex == 1, 'title'=>$tabName]) ?>
                 <?php endforeach ?>
 
             <?php endif ?>

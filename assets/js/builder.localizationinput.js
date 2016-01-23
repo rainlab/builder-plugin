@@ -29,6 +29,8 @@
         this.unregisterHandlers()
 
         this.form = null
+        this.options.beforePopupShowCallback = null
+        this.options.afterPopupHideCallback = null
         this.options = null
         this.disposed = true
         this.newStringPopupMarkup = null
@@ -110,10 +112,14 @@
         if (!autocomplete) {
             this.hideLoadingIndicator()
 
-            $(this.input).autocomplete({
+            var autocompleteOptions = {
                 source: this.preprocessData(data),
                 matchWidth: true
-            })
+            }
+
+            autocompleteOptions = $.extend(autocompleteOptions, this.options.autocompleteOptions)
+
+            $(this.input).autocomplete(autocompleteOptions)
 
             this.initialized = true
         }
@@ -235,6 +241,10 @@
     LocalizationInput.prototype.onPopupHidden = function(ev, link, popup) {
         $(popup).find('#language_string_key').autocomplete('destroy')
         $(popup).find('form').on('submit', this.proxy(this.onSubmitPopupForm))
+
+        if (this.options.afterPopupHideCallback) {
+            this.options.afterPopupHideCallback()
+        }
     }
 
     LocalizationInput.updatePluginInputs = function(plugin) {
@@ -267,6 +277,10 @@
     }
 
     LocalizationInput.prototype.onTriggerClick = function(ev) {
+        if (this.options.beforePopupShowCallback) {
+            this.options.beforePopupShowCallback()
+        }
+
         this.loadAndShowPopup()
 
         ev.preventDefault()
@@ -274,7 +288,10 @@
     }
 
     LocalizationInput.DEFAULTS = {
-        plugin: null
+        plugin: null,
+        autocompleteOptions: {},
+        beforePopupShowCallback: null,
+        afterPopupHideCallback: null
     }
 
     $.oc.builder.localizationInput = LocalizationInput

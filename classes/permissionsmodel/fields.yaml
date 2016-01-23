@@ -24,7 +24,7 @@ tabs:
                     type: string
                 tab:
                     title: rainlab.builder::lang.permission.column_tab_label
-                    type: string
+                    type: builderLocalization
                 label:
                     title: rainlab.builder::lang.permission.column_label_label
-                    type: string
+                    type: builderLocalization

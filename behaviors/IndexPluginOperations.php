@@ -41,21 +41,35 @@ class IndexPluginOperations extends IndexOperationsBehaviorBase
         $model->save();
 
         if (!$pluginCode) {
-            $result = $this->controller->setBuilderActivePlugin($model->getPluginCode(), true);
+            $result = [];
+
             $result['responseData'] = [
-                'pluginCode' => $model->getPluginCode()
+                'pluginCode' => $model->getPluginCode(),
+                'isNewPlugin' => 1
             ];
 
             return $result;
         } else {
-            return $this->controller->updatePluginList();
+            $result = [];
+
+            $result['responseData'] = [
+                'pluginCode' => $model->getPluginCode()
+            ];
+
+            return array_merge($result, $this->controller->updatePluginList()); 
         }
     }
 
     public function onPluginSetActive()
     {
         $pluginCode = Input::get('pluginCode');
+        $updatePluginList = Input::get('updatePluginList');
+
         $result = $this->controller->setBuilderActivePlugin($pluginCode, false);
+
+        if ($updatePluginList) {
+            $result = array_merge($result, $this->controller->updatePluginList());
+        }
 
         $result['responseData'] = ['pluginCode'=>$pluginCode];
 

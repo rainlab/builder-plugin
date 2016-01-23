@@ -1,5 +1,11 @@
 tabs:
     fields:
+        content:
+            type: hint
+            path: $/rainlab/builder/behaviors/indexpluginoperations/partials/_plugin-update-hint.htm
+            tab: rainlab.builder::lang.plugin.tab_general
+            context: [update]
+
         name:
             span: left
             label: rainlab.builder::lang.plugin.field_name

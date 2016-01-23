@@ -8,10 +8,10 @@
 
                     <span class="title"><span data-localization-key="<?= e($plugin['name']) ?>" data-plugin="<?= e($code) ?>"><?= e(trans($plugin['name'])) ?></span></span>
                     <span class="description">
-                        <?php if (strlen($plugin['description'])): ?>
+                        <?php if (strlen(trans($plugin['description']))): ?>
                             <span data-localization-key="<?= e($plugin['description']) ?>" data-plugin="<?= e($code) ?>"><?= e(trans($plugin['description'])) ?></span>
                         <?php else: ?>
-                            <?= e(trans('rainlab.builder::lang.plugin.no_description')) ?>
+                            <span data-localization-key="<?= e($plugin['description']) ?>" data-plugin="<?= e($code) ?>"><?= e(trans('rainlab.builder::lang.plugin.no_description')) ?></span>
                         <?php endif ?>
                     </span>
 

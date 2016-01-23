@@ -71,6 +71,7 @@ class StandardBehaviorsRegistry
                 'properties' => [
                     [
                         'property' => 'title',
+                        'type' => 'builderLocalization',
                         'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_form_page_title'),
                         'ignoreIfEmpty' => true
                     ],
@@ -90,7 +91,7 @@ class StandardBehaviorsRegistry
                     ],
                     [
                         'property' => 'flashSave',
-                        'type' => 'string', // Should be a localization autocomplete
+                        'type' => 'builderLocalization',
                         'ignoreIfEmpty' => true,
                         'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_form_flash_save'),
                         'description' => Lang::get('rainlab.builder::lang.controller.property_behavior_form_flash_save_description'),
@@ -104,6 +105,7 @@ class StandardBehaviorsRegistry
                 'properties' => [
                     [
                         'property' => 'title',
+                        'type' => 'builderLocalization',
                         'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_form_page_title'),
                         'ignoreIfEmpty' => true
                     ],
@@ -123,14 +125,14 @@ class StandardBehaviorsRegistry
                     ],
                     [
                         'property' => 'flashSave',
-                        'type' => 'string', // Should be a localization autocomplete
+                        'type' => 'builderLocalization',
                         'ignoreIfEmpty' => true,
                         'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_form_flash_save'),
                         'description' => Lang::get('rainlab.builder::lang.controller.property_behavior_form_flash_save_description'),
                     ],
                     [
                         'property' => 'flashDelete',
-                        'type' => 'string', // Should be a localization autocomplete
+                        'type' => 'builderLocalization',
                         'ignoreIfEmpty' => true,
                         'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_form_flash_delete'),
                         'description' => Lang::get('rainlab.builder::lang.controller.property_behavior_form_flash_delete_description'),
@@ -144,6 +146,7 @@ class StandardBehaviorsRegistry
                 'properties' => [
                     [
                         'property' => 'title',
+                        'type' => 'builderLocalization',
                         'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_form_page_title'),
                         'ignoreIfEmpty' => true
                     ]
@@ -173,7 +176,7 @@ class StandardBehaviorsRegistry
         $properties = [
             'title' => [
                 'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_title'),
-                'type' => 'string',
+                'type' => 'builderLocalization',
                 'validation' => [
                     'required' => [
                         'message' => Lang::get('rainlab.builder::lang.property_behavior_form_name.property_behavior_list_title_required')
@@ -210,7 +213,7 @@ class StandardBehaviorsRegistry
                 'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_no_records_message'),
                 'description' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_no_records_message_description'),
                 'ignoreIfEmpty' => true,
-                'type' => 'string', // Should be a localization autocomplete
+                'type' => 'builderLocalization',
             ],
             'recordsPerPage' => [
                 'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_recs_per_page'),
@@ -280,7 +283,7 @@ class StandardBehaviorsRegistry
                         'properties' => [
                             [
                                 'property' => 'prompt',
-                                'type' => 'string',
+                                'type' => 'builderLocalization',
                                 'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_search_prompt'),
                             ]
                         ]

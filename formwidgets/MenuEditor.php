@@ -70,6 +70,18 @@ class MenuEditor extends FormWidgetBase
         $this->addJs('js/menubuilder.js', 'builder');
     }
 
+    public function getPluginCode()
+    {
+        $pluginCode = Input::get('plugin_code');
+        if (strlen($pluginCode)) {
+            return $pluginCode;
+        }
+
+        $pluginVector = $this->controller->getBuilderActivePluginVector();
+
+        return $pluginVector->pluginCodeObj->toCode();
+    }
+
     //
     // Event handlers
     //
