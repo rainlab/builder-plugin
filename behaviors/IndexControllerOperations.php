@@ -71,7 +71,11 @@ class IndexControllerOperations extends IndexOperationsBehaviorBase
             ])
         ];
 
-        return array_merge($result, $tab);
+        $result = array_merge($result, $tab);
+
+        $this->mergeRegistryDataIntoResult($result, $pluginCodeObj);
+
+        return $result;
     }
 
     public function onControllerSave()
@@ -84,7 +88,7 @@ class IndexControllerOperations extends IndexOperationsBehaviorBase
 
         Flash::success(Lang::get('rainlab.builder::lang.controller.saved'));
 
-        $result['builderRepsonseData'] = [];
+        $result['builderResponseData'] = [];
 
         return $result;
     }
@@ -144,5 +148,18 @@ class IndexControllerOperations extends IndexOperationsBehaviorBase
 
         $model->load($controller);
         return $model;
+    }
+
+    protected function mergeRegistryDataIntoResult(&$result, $pluginCodeObj)
+    {
+        if (!array_key_exists('builderResponseData', $result)) {
+            $result['builderResponseData'] = [];
+        }
+
+        $pluginCode = $pluginCodeObj->toCode();
+        $result['builderResponseData']['registryData'] = [
+            'urls' => ControllerModel::getPluginRegistryData($pluginCode, null),
+            'pluginCode' => $pluginCode
+        ];
     }
 }

@@ -45,7 +45,18 @@ class IndexModelOperations extends IndexOperationsBehaviorBase
         $model->fill($_POST);
         $model->save();
 
-        return $this->controller->widget->modelList->updateList();
+        $result = $this->controller->widget->modelList->updateList();
+
+        $builderResponseData = [
+            'registryData' => [
+                'models' => ModelModel::getPluginRegistryData($pluginCode, null),
+                'pluginCode' => $pluginCode
+            ]
+        ];
+
+        $result['builderResponseData'] = $builderResponseData;
+
+        return $result;
     }
 
     protected function loadOrCreateBaseModel($className, $options = [])

@@ -24,6 +24,7 @@
 
     Controller.prototype.cmdCreateController = function(ev) {
         var $form = $(ev.currentTarget),
+            self = this,
             pluginCode = $form.data('pluginCode')
 
         this.indexController.openOrLoadMasterTab(
@@ -31,8 +32,9 @@
             'onControllerCreate', 
             this.makeTabId(pluginCode+'-new-controller'), 
             {}
-        ).done(function(){
+        ).done(function(data){
             $form.trigger('close.oc.popup')
+            self.updateDataRegistry(data)
         }).always($.oc.builder.indexController.hideStripeIndicatorProxy)
     }
 
@@ -62,18 +64,25 @@
     // EVENT HANDLERS
     // ============================
 
-
     // INTERNAL METHODS
     // ============================
 
     Controller.prototype.saveControllerDone = function(data) {
-        if (data['builderRepsonseData'] === undefined) {
+        if (data['builderResponseData'] === undefined) {
             throw new Error('Invalid response data')
         }
 
         var $masterTabPane = this.getMasterTabsActivePane()
         
         this.getIndexController().unchangeTab($masterTabPane)
+    }
+
+    Controller.prototype.updateDataRegistry = function(data) {
+        if (data.builderResponseData.registryData !== undefined) {
+            var registryData = data.builderResponseData.registryData
+
+            $.oc.builder.dataRegistry.set(registryData.pluginCode, 'controller-urls', null, registryData.urls)
+        }
     }
 
     Controller.prototype.getControllerList = function() {

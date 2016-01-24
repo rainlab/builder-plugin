@@ -61,7 +61,7 @@ class IndexLocalizationOperations extends IndexOperationsBehaviorBase
         Flash::success(Lang::get('rainlab.builder::lang.localization.saved'));
         $result = $this->controller->widget->languageList->updateList();
 
-        $result['builderRepsonseData'] = [
+        $result['builderResponseData'] = [
             'tabId' => $this->getTabId($model->getPluginCodeObj()->toCode(), $model->language),
             'tabTitle' => $this->getTabName($model),
             'language' => $model->language
@@ -76,7 +76,7 @@ class IndexLocalizationOperations extends IndexOperationsBehaviorBase
                 'pluginCode' => $pluginCode
             ];
 
-            $result['builderRepsonseData']['registryData'] = $registryData;
+            $result['builderResponseData']['registryData'] = $registryData;
         }
 
         return $result;
@@ -115,7 +115,7 @@ class IndexLocalizationOperations extends IndexOperationsBehaviorBase
 
         $responseData = $model->copyStringsFrom($destinationText, $sourceLanguage);
 
-        return ['builderRepsonseData' => $responseData];
+        return ['builderResponseData' => $responseData];
     }
 
     public function onLanguageLoadAddStringForm()
@@ -163,7 +163,7 @@ class IndexLocalizationOperations extends IndexOperationsBehaviorBase
     {
         $model = $this->loadOrCreateLocalizationFromPost();
 
-        return ['builderRepsonseData' => [
+        return ['builderResponseData' => [
             'strings' => $model ? $model->strings : null
         ]];
     }

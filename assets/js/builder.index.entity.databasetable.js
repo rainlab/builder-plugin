@@ -161,7 +161,7 @@
     }
 
     DatabaseTable.prototype.saveMigrationDone = function(data) {
-        if (data['builderRepsonseData'] === undefined) {
+        if (data['builderResponseData'] === undefined) {
             throw new Error('Invalid response data')
         }
 
@@ -170,17 +170,19 @@
         var $masterTabPane = this.getMasterTabsActivePane(),
             tabsObject = this.getMasterTabsObject()
 
-        if (data.builderRepsonseData.operation != 'delete') {
-            $masterTabPane.find('input[name=table_name]').val(data.builderRepsonseData.builderObjectName)
-            this.updateMasterTabIdAndTitle($masterTabPane, data.builderRepsonseData)
+        if (data.builderResponseData.operation != 'delete') {
+            $masterTabPane.find('input[name=table_name]').val(data.builderResponseData.builderObjectName)
+            this.updateMasterTabIdAndTitle($masterTabPane, data.builderResponseData)
             this.unhideFormDeleteButton($masterTabPane)
 
-            this.getTableList().fileList('markActive', data.builderRepsonseData.tabId)
+            this.getTableList().fileList('markActive', data.builderResponseData.tabId)
             this.getIndexController().unchangeTab($masterTabPane)
         }
         else {
             this.forceCloseTab($masterTabPane)
         }
+
+        $.oc.builder.dataRegistry.clearCache(data.builderResponseData.pluginCode, 'model-columns')
     }
 
     DatabaseTable.prototype.getTableList = function() {

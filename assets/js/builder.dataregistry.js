@@ -70,9 +70,9 @@
         if (this.requestCache[cacheKey] === undefined) {
             this.requestCache[cacheKey] = $formElement.request('onPluginDataRegistryGetData', {
                 data: {
-                    plugin_code: plugin,
-                    type: type,
-                    subtype: subtype
+                    registry_plugin_code: plugin,
+                    registry_data_type: type,
+                    registry_data_subtype: subtype
                 }
             }).done(
                 function(data) {
@@ -128,6 +128,18 @@
         }
 
         this.data[plugin][type][subtype] = dataItem
+    }
+
+    DataRegistry.prototype.clearCache = function(plugin, type) {
+        if (this.data[plugin] === undefined) {
+            return
+        }
+
+        if (this.data[plugin][type] === undefined) {
+            return
+        }
+
+        this.data[plugin][type] = undefined
     }
 
     // LOCALIZATION-SPECIFIC METHODS

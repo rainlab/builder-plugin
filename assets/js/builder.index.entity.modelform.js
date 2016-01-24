@@ -82,18 +82,28 @@
     // ============================
 
     ModelForm.prototype.saveFormDone = function(data) {
-        if (data['builderRepsonseData'] === undefined) {
+        if (data['builderResponseData'] === undefined) {
             throw new Error('Invalid response data')
         }
 
         var $masterTabPane = this.getMasterTabsActivePane()
 
-        $masterTabPane.find('input[name=file_name]').val(data.builderRepsonseData.builderObjectName)
-        this.updateMasterTabIdAndTitle($masterTabPane, data.builderRepsonseData)
+        $masterTabPane.find('input[name=file_name]').val(data.builderResponseData.builderObjectName)
+        this.updateMasterTabIdAndTitle($masterTabPane, data.builderResponseData)
         this.unhideFormDeleteButton($masterTabPane)
 
-        this.getModelList().fileList('markActive', data.builderRepsonseData.tabId)
+        this.getModelList().fileList('markActive', data.builderResponseData.tabId)
         this.getIndexController().unchangeTab($masterTabPane)
+
+        this.updateDataRegistry(data)
+    }
+
+    ModelForm.prototype.updateDataRegistry = function(data) {
+        if (data.builderResponseData.registryData !== undefined) {
+            var registryData = data.builderResponseData.registryData
+
+            $.oc.builder.dataRegistry.set(registryData.pluginCode, 'model-forms', registryData.modelClass, registryData.forms)
+        }
     }
 
     ModelForm.prototype.deleteConfirmed = function() {
@@ -108,11 +118,13 @@
         )
     }
 
-    ModelForm.prototype.deleteDone = function() {
+    ModelForm.prototype.deleteDone = function(data) {
         var $masterTabPane = this.getMasterTabsActivePane()
 
         this.getIndexController().unchangeTab($masterTabPane)
         this.forceCloseTab($masterTabPane)
+
+        this.updateDataRegistry(data)
     }
 
     ModelForm.prototype.getModelList = function() {

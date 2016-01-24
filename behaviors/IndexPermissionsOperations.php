@@ -52,7 +52,7 @@ class IndexPermissionsOperations extends IndexOperationsBehaviorBase
 
         Flash::success(Lang::get('rainlab.builder::lang.permission.saved'));
 
-        $result['builderRepsonseData'] = [
+        $result['builderResponseData'] = [
             'tabId' => $this->getTabId($pluginCode),
             'tabTitle' => $model->getPluginName().'/'.Lang::get('rainlab.builder::lang.permission.tab'),
         ];

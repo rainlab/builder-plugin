@@ -118,21 +118,21 @@
     // ============================
 
     Localization.prototype.saveLanguageDone = function(data) {
-        if (data['builderRepsonseData'] === undefined) {
+        if (data['builderResponseData'] === undefined) {
             throw new Error('Invalid response data')
         }
 
         var $masterTabPane = this.getMasterTabsActivePane()
         
-        $masterTabPane.find('input[name=original_language]').val(data.builderRepsonseData.language)
-        this.updateMasterTabIdAndTitle($masterTabPane, data.builderRepsonseData)
+        $masterTabPane.find('input[name=original_language]').val(data.builderResponseData.language)
+        this.updateMasterTabIdAndTitle($masterTabPane, data.builderResponseData)
         this.unhideFormDeleteButton($masterTabPane)
 
-        this.getLanguageList().fileList('markActive', data.builderRepsonseData.tabId)
+        this.getLanguageList().fileList('markActive', data.builderResponseData.tabId)
         this.getIndexController().unchangeTab($masterTabPane)
 
-        if (data.builderRepsonseData.registryData !== undefined) {
-            var registryData = data.builderRepsonseData.registryData
+        if (data.builderResponseData.registryData !== undefined) {
+            var registryData = data.builderResponseData.registryData
 
             $.oc.builder.dataRegistry.set(registryData.pluginCode, 'localization', null, registryData.strings, {suppressLanguageEditorUpdate: true})
             $.oc.builder.dataRegistry.set(registryData.pluginCode, 'localization', 'sections', registryData.sections)
@@ -167,11 +167,11 @@
     }
 
     Localization.prototype.copyStringsFromDone = function(data) {
-        if (data['builderRepsonseData'] === undefined) {
+        if (data['builderResponseData'] === undefined) {
             throw new Error('Invalid response data')
         }
 
-        var responseData = data.builderRepsonseData,
+        var responseData = data.builderResponseData,
             $masterTabPane = this.getMasterTabsActivePane(),
             $form = $masterTabPane.find('form'),
             codeEditor = this.getCodeEditor($masterTabPane),
@@ -232,11 +232,11 @@
     }
 
     Localization.prototype.updateLanguageFromServerDone = function($languageForm, data) {
-        if (data['builderRepsonseData'] === undefined) {
+        if (data['builderResponseData'] === undefined) {
             throw new Error('Invalid response data')
         }
 
-        var responseData = data.builderRepsonseData,
+        var responseData = data.builderResponseData,
             $tabPane = $languageForm.closest('.tab-pane'),
             codeEditor = this.getCodeEditor($tabPane)
 
@@ -262,11 +262,11 @@
     }
 
     Localization.prototype.mergeLanguageFromServerDone = function($languageForm, data) {
-        if (data['builderRepsonseData'] === undefined) {
+        if (data['builderResponseData'] === undefined) {
             throw new Error('Invalid response data')
         }
 
-        var responseData = data.builderRepsonseData,
+        var responseData = data.builderResponseData,
             $tabPane = $languageForm.closest('.tab-pane'),
             codeEditor = this.getCodeEditor($tabPane)
 

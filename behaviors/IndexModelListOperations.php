@@ -62,11 +62,13 @@ class IndexModelListOperations extends IndexOperationsBehaviorBase
         Flash::success(Lang::get('rainlab.builder::lang.list.saved'));
 
         $modelClass = Input::get('model_class');
-        $result['builderRepsonseData'] = [
+        $result['builderResponseData'] = [
             'builderObjectName' => $model->fileName,
             'tabId' => $this->getTabId($modelClass, $model->fileName),
             'tabTitle' => $model->getDisplayName(Lang::get('rainlab.builder::lang.list.tab_new_list'))
         ];
+
+        $this->mergeRegistryDataIntoResult($result, $model, $modelClass);
 
         return $result;
     }
@@ -77,7 +79,12 @@ class IndexModelListOperations extends IndexOperationsBehaviorBase
 
         $model->deleteModel();
 
-        return $this->controller->widget->modelList->updateList();
+        $result = $this->controller->widget->modelList->updateList();
+
+        $modelClass = Input::get('model_class');
+        $this->mergeRegistryDataIntoResult($result, $model, $modelClass);
+
+        return $result;
     }
 
     public function onModelListGetModelFields()
@@ -139,5 +146,20 @@ class IndexModelListOperations extends IndexOperationsBehaviorBase
 
         $model->loadForm($fileName);
         return $model;
+    }
+
+    protected function mergeRegistryDataIntoResult(&$result, $model, $modelClass)
+    {
+        if (!array_key_exists('builderResponseData', $result)) {
+            $result['builderResponseData'] = [];
+        }
+
+        $fullClassName = $model->getPluginCodeObj()->toPluginNamespace().'\\Models\\'.$modelClass;
+        $pluginCode = $model->getPluginCodeObj()->toCode();
+        $result['builderResponseData']['registryData'] = [
+            'lists' => ModelListModel::getPluginRegistryData($pluginCode, $modelClass),
+            'pluginCode' => $pluginCode,
+            'modelClass' => $fullClassName
+        ];
     }
 }

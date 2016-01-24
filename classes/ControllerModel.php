@@ -193,6 +193,25 @@ class ControllerModel extends BaseModel
         return $controllersDirectoryPath.'/'.strtolower($this->controller);
     }
 
+    public static function getPluginRegistryData($pluginCode, $subtype)
+    {
+        $pluginCodeObj = new PluginCode($pluginCode);
+        $urlBase = $pluginCodeObj->toUrl().'/';
+
+        $controllers = self::listPluginControllers($pluginCodeObj);
+        $result = [];
+
+        foreach ($controllers as $controler) {
+            $controllerPath = strtolower(basename($controler));
+
+            $url = $urlBase.$controllerPath;
+
+            $result[$url] = $url;
+        }
+
+        return $result;
+    }
+
     protected function saveController()
     {
         $this->validate();

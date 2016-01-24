@@ -69,7 +69,7 @@
     // ============================
 
     Menus.prototype.saveMenusDone = function(data) {
-        if (data['builderRepsonseData'] === undefined) {
+        if (data['builderResponseData'] === undefined) {
             throw new Error('Invalid response data')
         }
 

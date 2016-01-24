@@ -41,7 +41,8 @@ class StandardBehaviorsRegistry
             'modelClass' => [
                 'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_form_model_class'),
                 'description' => Lang::get('rainlab.builder::lang.controller.property_behavior_form_model_class_description'),
-                'type' => 'string', // Should be a dropdown 
+                'type' => 'dropdown',
+                'fillFrom' => 'model-classes',
                 'validation' => [
                     'required' => [
                         'message' => Lang::get('rainlab.builder::lang.property_behavior_form_name.property_behavior_form_model_class_required')
@@ -51,7 +52,11 @@ class StandardBehaviorsRegistry
             'form' => [
                 'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_form_file'),
                 'description' => Lang::get('rainlab.builder::lang.controller.property_behavior_form_file_description'),
-                'type' => 'string', // Should be a dropdown dependent on the model class
+                'placeholder' => Lang::get('rainlab.builder::lang.controller.property_behavior_form_placeholder'),
+                'type' => 'dropdown',
+                'fillFrom' => 'model-forms',
+                'subtypeFrom' => 'modelClass',
+                'depends' => ['modelClass'],
                 'validation' => [
                     'required' => [
                         'message' => Lang::get('rainlab.builder::lang.property_behavior_form_name.property_behavior_form_file_required')
@@ -61,7 +66,8 @@ class StandardBehaviorsRegistry
             'defaultRedirect' => [
                 'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_form_default_redirect'),
                 'description' => Lang::get('rainlab.builder::lang.controller.property_behavior_form_default_redirect_description'),
-                'type' => 'string', // Should be an autocomplete
+                'type' => 'autocomplete',
+                'fillFrom' => 'controller-urls',
                 'ignoreIfEmpty' => true
             ],
             'create' => [
@@ -77,14 +83,16 @@ class StandardBehaviorsRegistry
                     ],
                     [
                         'property' => 'redirect',
-                        'type' => 'string', // Should be an autocomplete
+                        'type' => 'autocomplete',
+                        'fillFrom' => 'controller-urls',
                         'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_form_redirect'),
                         'description' => Lang::get('rainlab.builder::lang.controller.property_behavior_form_redirect_description'),
                         'ignoreIfEmpty' => true
                     ],
                     [
                         'property' => 'redirectClose',
-                        'type' => 'string', // Should be an autocomplete
+                        'type' => 'autocomplete',
+                        'fillFrom' => 'controller-urls',
                         'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_form_redirect_close'),
                         'description' => Lang::get('rainlab.builder::lang.controller.property_behavior_form_redirect_close_description'),
                         'ignoreIfEmpty' => true
@@ -111,14 +119,16 @@ class StandardBehaviorsRegistry
                     ],
                     [
                         'property' => 'redirect',
-                        'type' => 'string', // Should be an autocomplete
+                        'type' => 'autocomplete',
+                        'fillFrom' => 'controller-urls',
                         'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_form_redirect'),
                         'description' => Lang::get('rainlab.builder::lang.controller.property_behavior_form_redirect_description'),
                         'ignoreIfEmpty' => true
                     ],
                     [
                         'property' => 'redirectClose',
-                        'type' => 'string', // Should be an autocomplete
+                        'type' => 'autocomplete',
+                        'fillFrom' => 'controller-urls',
                         'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_form_redirect_close'),
                         'description' => Lang::get('rainlab.builder::lang.controller.property_behavior_form_redirect_close_description'),
                         'ignoreIfEmpty' => true
@@ -186,7 +196,8 @@ class StandardBehaviorsRegistry
             'modelClass' => [
                 'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_model_class'),
                 'description' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_model_class_description'),
-                'type' => 'string', // Should be a dropdown 
+                'type' => 'dropdown',
+                'fillFrom' => 'model-classes',
                 'validation' => [
                     'required' => [
                         'message' => Lang::get('rainlab.builder::lang.property_behavior_form_name.property_behavior_list_model_class_required')
@@ -195,8 +206,12 @@ class StandardBehaviorsRegistry
             ],
             'list' => [
                 'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_file'),
+                'placeholder' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_placeholder'),
                 'description' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_file_description'),
-                'type' => 'string', // Should be a dropdown dependent on the model class
+                'type' => 'dropdown',
+                'fillFrom' => 'model-lists',
+                'subtypeFrom' => 'modelClass',
+                'depends' => ['modelClass'],
                 'validation' => [
                     'required' => [
                         'message' => Lang::get('rainlab.builder::lang.property_behavior_form_name.property_behavior_list_file_required')
@@ -207,7 +222,8 @@ class StandardBehaviorsRegistry
                 'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_record_url'),
                 'description' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_record_url_description'),
                 'ignoreIfEmpty' => true,
-                'type' => 'string'
+                'type' => 'autocomplete',
+                'fillFrom' => 'controller-urls',
             ],
             'noRecordsMessage' => [
                 'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_no_records_message'),
@@ -251,7 +267,10 @@ class StandardBehaviorsRegistry
                     [
                         'property' => 'column',
                         'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_form_ds_column'),
-                        'type' => 'string'
+                        'type' => 'autocomplete',
+                        'fillFrom' => 'model-columns',
+                        'subtypeFrom' => 'modelClass',
+                        'depends' => ['modelClass']
                     ],
                     [
                         'property' => 'direction',

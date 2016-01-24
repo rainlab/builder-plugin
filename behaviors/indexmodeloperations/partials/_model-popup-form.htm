@@ -1,6 +1,5 @@
-<?= Form::ajax('onModelSave', [
-    'success' => "\$el.trigger('close.oc.popup');",
-    'data-stripe-load-indicator' => 1
+<?= Form::open([
+    'data-builder-command'=>'model:cmdApplyModelSettings'
 ]) ?>
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="popup">&times;</button>

@@ -32,11 +32,36 @@
         })
     }
 
+    Model.prototype.cmdApplyModelSettings = function(ev) {
+        var $form = $(ev.currentTarget),
+            self = this
+
+        $.oc.stripeLoadIndicator.show()
+        $form.request('onModelSave').always(
+            $.oc.builder.indexController.hideStripeIndicatorProxy
+        ).done(function(data){
+            $form.trigger('close.oc.popup')
+
+            self.applyModelSettingsDone(data)
+        })
+    }
+
     // EVENT HANDLERS
     // ============================
 
     Model.prototype.onModelPopupShown = function(ev, button, popup) {
         $(popup).find('input[name=className]').focus()
+    }
+
+    // INTERNAL METHODS
+    // ============================
+
+    Model.prototype.applyModelSettingsDone = function(data) {
+        if (data.builderResponseData.registryData !== undefined) {
+            var registryData = data.builderResponseData.registryData
+
+            $.oc.builder.dataRegistry.set(registryData.pluginCode, 'model-classes', null, registryData.models)
+        }
     }
 
     // REGISTRATION

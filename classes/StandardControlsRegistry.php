@@ -866,7 +866,7 @@ class StandardControlsRegistry
                 'title' => Lang::get('rainlab.builder::lang.form.property_recordfinder_prompt'),
                 'description' => Lang::get('rainlab.builder::lang.form.property_recordfinder_prompt_description'),
                 'group' => Lang::get('rainlab.builder::lang.form.property_group_recordfinder'),
-                'type' => 'string',
+                'type' => 'builderLocalization',
                 'ignoreIfEmpty' => true,
                 'sortOrder' => 83
             ],
@@ -874,7 +874,8 @@ class StandardControlsRegistry
                 'title' => Lang::get('rainlab.builder::lang.form.property_recordfinder_list'),
                 'description' => Lang::get('rainlab.builder::lang.form.property_recordfinder_list_description'),
                 'group' => Lang::get('rainlab.builder::lang.form.property_group_recordfinder'),
-                'type' => 'string',
+                'type' => 'autocomplete',
+                'fillFrom' => 'plugin-lists',
                 'validation' => [
                     'required' => [
                         'message' => Lang::get('rainlab.builder::lang.form.property_recordfinder_list_required'),

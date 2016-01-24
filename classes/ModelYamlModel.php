@@ -68,7 +68,7 @@ abstract class ModelYamlModel extends YamlModel
 
     public static function listModelFiles($pluginCodeObj, $modelClassName)
     {
-        if (!preg_match('/^[A-Z]+[a-zA-Z0-9_]+$/i', $modelClassName)) {
+        if (!self::validateModelClassName($modelClassName)) {
             throw new SystemException('Invalid model class name: '.$modelClassName);
         }
 
@@ -107,9 +107,64 @@ abstract class ModelYamlModel extends YamlModel
         return $result;
     }
 
+    public static function getPluginRegistryData($pluginCode, $modelClassName)
+    {
+        $pluginCodeObj = new PluginCode($pluginCode);
+
+        $classParts = explode('\\', $modelClassName);
+        if (!$classParts) {
+            return [];
+        }
+
+        $modelClassName = array_pop($classParts);
+
+        if (!self::validateModelClassName($modelClassName)) {
+            return [];
+        }
+
+        $models = self::listModelFiles($pluginCodeObj, $modelClassName);
+        $modelDirectoryPath = $pluginCodeObj->toPluginDirectoryPath().'/models/'.strtolower($modelClassName).'/';
+
+        $result = [];
+        foreach ($models as $fileName) {
+            $fullFilePath = $modelDirectoryPath.$fileName;
+
+            $result[$fullFilePath] = $fileName;
+        }
+
+        return $result;
+    }
+
+    public static function getPluginRegistryDataAllRecords($pluginCode)
+    {
+        $pluginCodeObj = new PluginCode($pluginCode);
+        $pluginDirectoryPath = $pluginCodeObj->toPluginDirectoryPath();
+
+        $models = ModelModel::listPluginModels($pluginCodeObj);
+        $result = [];
+        foreach ($models as $model) {
+            $modelRecords = self::listModelFiles($pluginCodeObj, $model->className);
+            $modelDirectoryPath = $pluginDirectoryPath.'/models/'.strtolower($model->className).'/';
+
+            foreach ($modelRecords as $fileName) {
+                $label = $model->className.'/'.$fileName;
+                $key = $modelDirectoryPath.$fileName;
+
+                $result[$key] = $label;
+            }
+        }
+
+        return $result;
+    }
+
     public static function validateFileIsModelType($fileContentsArray)
     {
         return false;
+    }
+
+    protected static function validateModelClassName($modelClassName)
+    {
+        return preg_match('/^[A-Z]+[a-zA-Z0-9_]+$/i', $modelClassName);
     }
 
     protected function getModelClassName()

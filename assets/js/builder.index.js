@@ -109,6 +109,8 @@
         this.$masterTabs.on('shown.bs.tab', this.proxy(this.onTabShown))
         this.$masterTabs.on('afterAllClosed.oc.tab', this.proxy(this.onAllTabsClosed))
         this.$masterTabs.on('closed.oc.tab', this.proxy(this.onTabClosed))
+        this.$masterTabs.on('autocompleteitems.oc.inspector', this.proxy(this.onDataRegistryItems))
+        this.$masterTabs.on('dropdownoptions.oc.inspector', this.proxy(this.onDataRegistryItems))
 
         for (var controller in this.entityControllers) {
             if (this.entityControllers[controller].registerHandlers !== undefined) {
@@ -152,12 +154,38 @@
         })
     }
 
+    Builder.prototype.getFormPluginCode = function(formElement) {
+        var $form = $(formElement).closest('form'),
+            $input = $form.find('input[name="plugin_code"]'),
+            code = $input.val()
+
+        if (!code) {
+            throw new Error('Plugin code input is not found in the form.')
+        }
+
+        return code
+    }
+
     Builder.prototype.setPageTitle = function(title) {
         $.oc.layout.setPageTitle(title.length ? (title + ' | ') : title)
     }
 
     Builder.prototype.getFileLists = function() {
         return $('[data-control=filelist]', this.$sidePanel)
+    }
+
+    Builder.prototype.dataToInspectorArray = function(data) {
+        var result = []
+
+        for (var key in data) {
+            var item = {
+                title: data[key],
+                value: key
+            }
+            result.push(item)
+        }
+
+        return result
     }
 
     // EVENT HANDLERS
@@ -227,6 +255,32 @@
 
     Builder.prototype.onChangeMonitorReady = function(ev) {
         $(ev.target).trigger('change')
+    }
+
+    Builder.prototype.onDataRegistryItems = function(ev, data) {
+        var self = this
+
+        if (data.propertyDefinition.fillFrom == 'model-classes' || 
+            data.propertyDefinition.fillFrom == 'model-forms' || 
+            data.propertyDefinition.fillFrom == 'model-lists' || 
+            data.propertyDefinition.fillFrom == 'controller-urls' ||
+            data.propertyDefinition.fillFrom == 'model-columns' || 
+            data.propertyDefinition.fillFrom == 'plugin-lists') {
+            ev.preventDefault()
+
+            var subtype = null,
+                subtypeProperty = data.propertyDefinition.subtypeFrom
+
+            if (subtypeProperty !== undefined) {
+                subtype = data.values[subtypeProperty]
+            }
+
+            $.oc.builder.dataRegistry.get($(ev.target), this.getFormPluginCode(ev.target), data.propertyDefinition.fillFrom, subtype, function(response){
+                data.callback({
+                    options: self.dataToInspectorArray(response)
+                })
+            })
+        }
     }
 
     // INITIALIZATION

@@ -61,7 +61,7 @@ class IndexVersionsOperations extends IndexOperationsBehaviorBase
         Flash::success(Lang::get('rainlab.builder::lang.version.saved'));
         $result = $this->controller->widget->versionList->updateList();
 
-        $result['builderRepsonseData'] = [
+        $result['builderResponseData'] = [
             'tabId' => $this->getTabId($model->getPluginCodeObj()->toCode(), $model->version),
             'tabTitle' => $this->getTabName($model->version, $model),
             'savedVersion' => $model->version,
@@ -95,7 +95,7 @@ class IndexVersionsOperations extends IndexOperationsBehaviorBase
         Flash::success(Lang::get('rainlab.builder::lang.version.applied'));
         $result = $this->controller->widget->versionList->updateList();
 
-        $result['builderRepsonseData'] = [
+        $result['builderResponseData'] = [
             'tabId' => $this->getTabId($model->getPluginCodeObj()->toCode(), $model->version),
             'tabTitle' => $this->getTabName($model->version, $model),
             'savedVersion' => $model->version
@@ -119,7 +119,7 @@ class IndexVersionsOperations extends IndexOperationsBehaviorBase
         Flash::success(Lang::get('rainlab.builder::lang.version.rolled_back'));
         $result = $this->controller->widget->versionList->updateList();
 
-        $result['builderRepsonseData'] = [
+        $result['builderResponseData'] = [
             'tabId' => $this->getTabId($model->getPluginCodeObj()->toCode(), $model->version),
             'tabTitle' => $this->getTabName($model->version, $model),
             'savedVersion' => $model->version

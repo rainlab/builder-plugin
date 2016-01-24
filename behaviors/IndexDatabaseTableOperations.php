@@ -103,12 +103,13 @@ class IndexDatabaseTableOperations extends IndexOperationsBehaviorBase
             $this->controller->widget->versionList->refreshActivePlugin()
         );
 
-        $result['builderRepsonseData'] = [
+        $result['builderResponseData'] = [
             'builderObjectName'=>$table,
             'tabId' => $this->getTabId($table),
             'tabTitle' => $table,
             'tableName' => $table,
-            'operation' => $operation
+            'operation' => $operation,
+            'pluginCode' => $pluginCode
         ];
 
         return $result;

@@ -52,7 +52,7 @@ class IndexMenusOperations extends IndexOperationsBehaviorBase
 
         Flash::success(Lang::get('rainlab.builder::lang.menu.saved'));
 
-        $result['builderRepsonseData'] = [
+        $result['builderResponseData'] = [
             'tabId' => $this->getTabId($pluginCode),
             'tabTitle' => $model->getPluginName().'/'.Lang::get('rainlab.builder::lang.menu.tab'),
         ];

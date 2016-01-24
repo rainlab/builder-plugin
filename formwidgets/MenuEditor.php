@@ -142,6 +142,8 @@ class MenuEditor extends FormWidgetBase
             [
                 'title' => Lang::get('rainlab.builder::lang.menu.property_url'),
                 'property' => 'url',
+                'type' => 'autocomplete',
+                'fillFrom' => 'controller-urls',
                 'validation' => [
                     'required' => [
                         'message' => Lang::get('rainlab.builder::lang.menu.property_url_required')

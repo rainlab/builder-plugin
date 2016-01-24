@@ -132,7 +132,7 @@ class ModelModel extends BaseModel
 
     public static function getModelFields($pluginCodeObj, $modelClassName)
     {
-        if (!preg_match('/^[A-Z]+[a-zA-Z0-9_]+$/', $modelClassName)) {
+        if (!self::validateModelClassName($modelClassName)) {
             throw new SystemException('Invalid model class name: '.$modelClassName);
         }
 
@@ -158,6 +158,50 @@ class ModelModel extends BaseModel
         // but eventually we might want to return relations as well.
 
         return Schema::getColumnListing($tableName);
+    }
+
+    public static function getPluginRegistryData($pluginCode, $subtype)
+    {
+        $pluginCodeObj = new PluginCode($pluginCode);
+
+        $models = self::listPluginModels($pluginCodeObj);
+        $result = [];
+        foreach ($models as $model) {
+            $fullClassName = $pluginCodeObj->toPluginNamespace().'\\Models\\'.$model->className;
+
+            $result[$fullClassName] = $model->className;
+        }
+
+        return $result;
+    }
+
+    public static function getPluginRegistryDataColumns($pluginCode, $modelClassName)
+    {
+        $classParts = explode('\\', $modelClassName);
+        if (!$classParts) {
+            return [];
+        }
+
+        $modelClassName = array_pop($classParts);
+
+        if (!self::validateModelClassName($modelClassName)) {
+            return [];
+        }
+
+        $pluginCodeObj = new PluginCode($pluginCode);
+        $columnNames = self::getModelFields($pluginCodeObj, $modelClassName);
+        
+        $result = [];
+        foreach ($columnNames as $columnName) {
+            $result[$columnName] = $columnName;
+        }
+
+        return $result;
+    }
+
+    protected static function validateModelClassName($modelClassName)
+    {
+        return preg_match('/^[A-Z]+[a-zA-Z0-9_]+$/', $modelClassName);
     }
 
     protected function getFilePath()

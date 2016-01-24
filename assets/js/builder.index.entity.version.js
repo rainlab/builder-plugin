@@ -85,14 +85,14 @@
     // ============================
 
     Version.prototype.saveVersionDone = function(data) {
-        if (data['builderRepsonseData'] === undefined) {
+        if (data['builderResponseData'] === undefined) {
             throw new Error('Invalid response data')
         }
 
         var $masterTabPane = this.getMasterTabsActivePane()
         this.updateUiAfterSave($masterTabPane, data)
 
-        if (!data.builderRepsonseData.isApplied) {
+        if (!data.builderResponseData.isApplied) {
             this.showSavedNotAppliedHint($masterTabPane)
         }
     }
@@ -174,11 +174,11 @@
     }
 
     Version.prototype.updateUiAfterSave = function($masterTabPane, data) {
-        $masterTabPane.find('input[name=original_version]').val(data.builderRepsonseData.savedVersion)
-        this.updateMasterTabIdAndTitle($masterTabPane, data.builderRepsonseData)
+        $masterTabPane.find('input[name=original_version]').val(data.builderResponseData.savedVersion)
+        this.updateMasterTabIdAndTitle($masterTabPane, data.builderResponseData)
         this.unhideFormDeleteButton($masterTabPane)
 
-        this.getVersionList().fileList('markActive', data.builderRepsonseData.tabId)
+        this.getVersionList().fileList('markActive', data.builderResponseData.tabId)
         this.getIndexController().unchangeTab($masterTabPane)
     }
 
@@ -202,7 +202,7 @@
     }
 
     Version.prototype.applyVersionDone = function(data) {
-        if (data['builderRepsonseData'] === undefined) {
+        if (data['builderResponseData'] === undefined) {
             throw new Error('Invalid response data')
         }
 
@@ -214,7 +214,7 @@
     }
 
     Version.prototype.rollbackVersionDone = function(data) {
-        if (data['builderRepsonseData'] === undefined) {
+        if (data['builderResponseData'] === undefined) {
             throw new Error('Invalid response data')
         }
 
