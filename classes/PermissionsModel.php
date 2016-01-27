@@ -73,6 +73,26 @@ class PermissionsModel extends PluginYamlModel
         $this->validateRequiredProperties();
     }
 
+    public static function getPluginRegistryData($pluginCode)
+    {
+        $model = new PermissionsModel();
+
+        $model->loadPlugin($pluginCode);
+
+        $result = [];
+
+        foreach ($model->permissions as $permissionInfo) {
+            if (!isset($permissionInfo['permission']) || !isset($permissionInfo['label'])) {
+                continue;
+            }
+
+            $key = $permissionInfo['permission'];
+            $result[$key] = $key.' - '.Lang::get($permissionInfo['label']);
+        }
+
+        return $result;
+    }
+
     protected function validateDupicatePermissions()
     {
         foreach ($this->permissions as $outerIndex=>$outerPermission) {

@@ -90,6 +90,7 @@
         var $masterTabPane = this.getMasterTabsActivePane()
 
         this.getIndexController().unchangeTab($masterTabPane)
+        $.oc.builder.dataRegistry.clearCache(data.builderResponseData.pluginCode, 'permissions')
     }
 
     // EVENT HANDLERS

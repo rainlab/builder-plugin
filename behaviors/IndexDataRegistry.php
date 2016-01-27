@@ -7,6 +7,7 @@ use RainLab\Builder\Classes\ModelModel;
 use RainLab\Builder\Classes\ModelFormModel;
 use RainLab\Builder\Classes\ModelListModel;
 use RainLab\Builder\Classes\ControllerModel;
+use RainLab\Builder\Classes\PermissionsModel;
 use ApplicationException;
 use SystemException;
 use Exception;
@@ -52,6 +53,9 @@ class IndexDataRegistry extends ControllerBehavior
                 break;
             case 'plugin-lists' :
                 $result = ModelListModel::getPluginRegistryDataAllRecords($code);
+                break;
+            case 'permissions' :
+                $result = PermissionsModel::getPluginRegistryData($code);
                 break;
             default: 
                 throw new SystemException('Unknown plugin registry data type requested.');

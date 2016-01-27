@@ -164,7 +164,8 @@ class MenuEditor extends FormWidgetBase
             [
                 'title' => Lang::get('rainlab.builder::lang.menu.property_permissions'),
                 'property' => 'permissions',
-                'type' => 'stringList'
+                'type' => 'stringListAutocomplete',
+                'fillFrom' => 'permissions'
             ]
         ];
 

@@ -265,7 +265,8 @@
             data.propertyDefinition.fillFrom == 'model-lists' || 
             data.propertyDefinition.fillFrom == 'controller-urls' ||
             data.propertyDefinition.fillFrom == 'model-columns' || 
-            data.propertyDefinition.fillFrom == 'plugin-lists') {
+            data.propertyDefinition.fillFrom == 'plugin-lists' || 
+            data.propertyDefinition.fillFrom == 'permissions') {
             ev.preventDefault()
 
             var subtype = null,
