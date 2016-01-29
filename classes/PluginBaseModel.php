@@ -72,6 +72,13 @@ class PluginBaseModel extends PluginYamlModel
         return $this->author_namespace.'.'.$this->namespace;
     }
 
+    public static function listAllPluginCodes()
+    {
+        $plugins = PluginManager::instance()->getPlugins();
+
+        return array_keys($plugins);
+    }
+
     protected function initPropertiesFromPluginCodeObject($pluginCodeObj)
     {
         $this->author_namespace = $pluginCodeObj->getAuthorCode();

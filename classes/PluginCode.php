@@ -32,6 +32,19 @@ class PluginCode
         $this->pluginCode = trim($pluginCode);
     }
 
+    public static function createFromNamespace($namespace)
+    {
+        $namespaceParts = explode('\\', $namespace);
+        if (count($namespaceParts) < 2) {
+            throw new ApplicationException('Invalid plugin namespace value.');
+        }
+
+        $authorCode = $namespaceParts[0];
+        $pluginCode = $namespaceParts[1];
+
+        return new self($authorCode.'.'.$pluginCode);
+    }
+
     public function toPluginNamespace()
     {
         return $this->authorCode.'\\'.$this->pluginCode;

@@ -22,6 +22,10 @@ class Plugin extends PluginBase
 
     public function registerComponents()
     {
+        return [
+            'RainLab\Builder\Components\RecordList'       => 'builderList',
+            'RainLab\Builder\Components\RecordDetails'    => 'builderDetails'
+        ];
     }
 
     public function registerPermissions()

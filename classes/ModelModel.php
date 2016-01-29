@@ -199,9 +199,13 @@ class ModelModel extends BaseModel
         return $result;
     }
 
-    protected static function validateModelClassName($modelClassName)
+    public static function validateModelClassName($modelClassName, $allowNamespaces = false)
     {
-        return preg_match('/^[A-Z]+[a-zA-Z0-9_]+$/', $modelClassName);
+        if (!$allowNamespaces) {
+            return preg_match('/^[A-Z]+[a-zA-Z0-9_]+$/', $modelClassName);
+        }
+
+        return preg_match('/^[A-Z]+[a-zA-Z0-9_\\\\]+$/', $modelClassName);
     }
 
     protected function getFilePath()
