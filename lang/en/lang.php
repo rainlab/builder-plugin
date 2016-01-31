@@ -138,7 +138,7 @@ return [
         'property_container_attributes_title' => 'Container attributes',
         'property_container_attributes_description' => 'Custom HTML attributes to add to the form field container element.',
         'property_group_advanced' => 'Advanced',
-        'property_dependson_description' => 'A list of other field names this field depends on, when the other fields are modified, this field will update.',
+        'property_dependson_description' => 'A list of other field names this field depends on, when the other fields are modified, this field will update. One field per line.',
         'property_trigger_title' => 'Trigger',
         'property_trigger_description' => 'Allows to change elements attributes such as visibility or value, based on another elements\' state.',
         'property_default_from_description' => 'Takes the default value from the value of another field.',

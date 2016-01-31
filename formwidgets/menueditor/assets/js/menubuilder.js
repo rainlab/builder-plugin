@@ -187,6 +187,12 @@
             $.oc.foundation.controlUtils.disposeControls($inspectorContainer.get(0))
         }
 
+        var subitems = item.get(0).querySelectorAll('li.inspector-open')
+        for (var i=subitems.length-1; i>=0; i--) {
+            var $inspectorContainer = this.findInspectorContainer($(subitems[i]))
+            $.oc.foundation.controlUtils.disposeControls($inspectorContainer.get(0))
+        }
+
         $(this.findForm(ev.currentTarget)).trigger('change')
 
         $(item).remove()
