@@ -410,6 +410,7 @@
             var newPlaceholder = $(placeholder.outerHTML)
 
             newPlaceholder.removeAttr('data-builder-control-id')
+            newPlaceholder.removeClass('control-palette-open')
 
             placeholder.insertAdjacentHTML('afterend', newPlaceholder.get(0).outerHTML)
         }
@@ -421,6 +422,7 @@
         // loading indicator
         $.oc.foundation.element.removeClass(placeholder, 'placeholder')
         $.oc.foundation.element.addClass(placeholder, 'loading-control')
+        $.oc.foundation.element.removeClass(placeholder, 'control-palette-open')
         placeholder.innerHTML = ''
         placeholder.removeAttribute('data-builder-placeholder')
 
@@ -437,11 +439,11 @@
                 'oc.fieldName': fieldName
             }
         }
-        $(placeholder).request('onModelFormRenderControlWrapper', {
+        this.reflow(placeholder)
+
+        return $(placeholder).request('onModelFormRenderControlWrapper', {
             data: data
         }).done(this.proxy(this.controlWrapperMarkupLoaded))
-
-        this.reflow(placeholder)
     }
 
     FormBuilder.prototype.controlWrapperMarkupLoaded = function(responseData) {
@@ -471,7 +473,7 @@
             return
         }
 
-        this.addControlToPlaceholder(placeholder, controlType, controlName)
+        return this.addControlToPlaceholder(placeholder, controlType, controlName)
     }
 
     // REMOVING CONTROLS

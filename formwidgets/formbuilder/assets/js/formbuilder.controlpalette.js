@@ -10,7 +10,8 @@
         Base.call(this)
 
         this.controlPaletteMarkup = null
-        this.controlId = null
+        this.popoverMarkup = null
+        this.containerMarkup = null
         this.$popoverContainer = null
     }
 
@@ -51,18 +52,83 @@
     }
 
     ControlPalette.prototype.showControlPalette = function(controlId, initControls) {
+        if (this.getContainerPreference()) {
+            this.showControlPalletteInContainer(controlId, initControls)
+        }
+        else {
+            this.showControlPalletteInPopup(controlId, initControls)
+        }
+    }
+
+    ControlPalette.prototype.assignControlIdToTemplate = function(template, controlId) {
+        return template.replace('%c', controlId)
+    }
+
+    ControlPalette.prototype.markPlaceholderPaletteOpen = function(control) {
+        $(control).addClass('control-palette-open')
+    }
+
+    ControlPalette.prototype.markPlaceholderPaletteNotOpen = function(control) {
+        $(control).removeClass('control-palette-open')
+    }
+
+    ControlPalette.prototype.getContainerPreference = function() {
+return true
+        if (!Modernizr.localstorage) {
+            return false
+        }
+
+        return localStorage.getItem('oc.builder.controlPaletteUseContainer') === "true"
+    }
+
+    ControlPalette.prototype.addControl = function(ev) {
+        var $target = $(ev.currentTarget),
+            controlId = $target.closest('[data-control-palette-controlid]').attr('data-control-palette-controlid')
+
+        ev.preventDefault()
+        ev.stopPropagation()
+
+        if (!controlId) {
+            return false;
+        }
+
+        var control = this.getControlById(controlId)
+        if (!control) {
+            return false
+        }
+
+        if ($(control).hasClass('loading-control')) {
+            return false
+        }
+
+        $target.trigger('close.oc.popover')
+
+        var promise = $.oc.builder.formbuilder.controller.addControlFromControlPalette(controlId, 
+            $target.data('builderControlType'), 
+            $target.data('builderControlName'))
+
+        promise.done(function() {
+            $.oc.inspector.manager.createInspector(control)
+        })
+
+        return false
+    }
+
+    //
+    // Popover wrapper
+    //
+
+    ControlPalette.prototype.showControlPalletteInPopup = function(controlId, initControls) {
         var control = this.getControlById(controlId)
 
         if (!control) {
             return
         }
 
-        this.controlId = controlId
-
         var $control = $(control)
 
         $control.ocPopover({
-            content: this.controlPaletteMarkup,
+            content: this.assignControlIdToTemplate(this.getPopoverMarkup(), controlId),
             highlightModalTarget: true,
             modal: true,
             placement: 'below',
@@ -71,40 +137,85 @@
             width: 400
         })
 
-        this.$popoverContainer = $control.data('oc.popover').$container
+        var $popoverContainer = $control.data('oc.popover').$container
 
         if (initControls) {
             // Initialize the scrollpad control in the popup only when the
             // popup is created from the cached markup string
-            this.$popoverContainer.trigger('render')
+            $popoverContainer.trigger('render')
+        }
+    }
+
+    ControlPalette.prototype.getPopoverMarkup = function() {
+        if (this.popoverMarkup !== null) {
+            return this.popoverMarkup
         }
 
-        $control.one('hide.oc.popover', this.proxy(this.onHide))
-        this.$popoverContainer.on('click', 'a[data-builder-control-palette-control]', this.proxy(this.onControlClick))
+        var outerMarkup = $('script[data-template=control-palette-popover]').html()
+
+        this.popoverMarkup = outerMarkup.replace('%s', this.controlPaletteMarkup)
+
+        return this.popoverMarkup
     }
 
-    ControlPalette.prototype.onHide = function(ev) {
-        this.$popoverContainer.off('click', 'a[data-builder-control-palette-control]', this.proxy(this.onControlClick))
-        this.$popoverContainer = null
+    //
+    // Container wrapper
+    //
+
+    ControlPalette.prototype.showControlPalletteInContainer = function(controlId, initControls) {
+        var control = this.getControlById(controlId)
+
+        if (!control) {
+            return
+        }
+
+        var inspectorManager = $.oc.inspector.manager,
+            $container = inspectorManager.getContainerElement($(control))
+
+        // If the container is already in use, apply values to the inspectable elements
+        if (!inspectorManager.applyValuesFromContainer($container) || !inspectorManager.containerHidingAllowed($container)) {
+            return
+        }
+
+        // Dispose existing Inspector
+        $.oc.foundation.controlUtils.disposeControls($container.get(0))
+
+        this.markPlaceholderPaletteOpen(control)
+
+        var template = this.assignControlIdToTemplate(this.getContainerMarkup(), controlId)
+        $container.append(template)
+
+        $container.find('[data-control-palette-controlid]').one('dispose-control', this.proxy(this.onRemovePaletteFromContainer))
+
+        if (initControls) {
+            // Initialize the scrollpad control in the container only when the
+            // palette is created from the cached markup string
+            $container.trigger('render')
+        }
+    }
+ 
+    ControlPalette.prototype.onRemovePaletteFromContainer = function(ev) {
+        var $container = $(ev.target),
+            controlId = $container.attr('data-control-palette-controlid'),
+            control = this.getControlById(controlId)
+
+        if (control) {
+            this.markPlaceholderPaletteNotOpen(control)
+        }
+
+        $container.remove()
     }
 
-    ControlPalette.prototype.onControlClick = function(ev) {
-        var $target = $(ev.currentTarget)
+    ControlPalette.prototype.getContainerMarkup = function() {
+        if (this.containerMarkup !== null) {
+            return this.containerMarkup
+        }
 
-        // control = this.getControlById(controlId)
+        var outerMarkup = $('script[data-template=control-palette-container]').html()
 
-        // if (control) {
-        //     $(control).removeClass('popover-highlight')
-        // }
+        this.containerMarkup = outerMarkup.replace('%s', this.controlPaletteMarkup)
 
-        $target.trigger('close.oc.popover')
-
-        $.oc.builder.formbuilder.controller.addControlFromControlPalette(this.controlId, $target.data('builderControlType'), $target.data('builderControlName'))
-
-        ev.preventDefault()
-        ev.stopPropagation()
-
-        return false
+        return this.containerMarkup
     }
 
     $(document).ready(function(){

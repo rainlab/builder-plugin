@@ -78,6 +78,10 @@
         $.oc.confirm($target.data('confirm'), this.proxy(this.deleteConfirmed))
     }
 
+    ModelForm.prototype.cmdAddControl = function(ev) {
+        $.oc.builder.formbuilder.controlPalette.addControl(ev)
+    }
+
     // INTERNAL METHODS
     // ============================
 

@@ -155,7 +155,8 @@
   transition: margin 0.1s;
 }
 .builder-building-area ul.builder-control-list > li.placeholder:hover,
-.builder-building-area ul.builder-control-list > li.placeholder.popover-highlight {
+.builder-building-area ul.builder-control-list > li.placeholder.popover-highlight,
+.builder-building-area ul.builder-control-list > li.placeholder.control-palette-open {
   background-color: #2581b8 !important;
   color: white!important;
   border-style: solid;
