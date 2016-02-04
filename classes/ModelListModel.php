@@ -74,7 +74,7 @@ class ModelListModel extends ModelYamlModel
 
     public function initDefaults()
     {
-        $this->fileName = 'list.yaml';
+        $this->fileName = 'columns.yaml';
     }
 
     protected function validateDupicateColumns()

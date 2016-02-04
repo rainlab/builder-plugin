@@ -57,21 +57,28 @@ class IndexControllerOperations extends IndexOperationsBehaviorBase
         $model->fill($_POST);
         $model->save();
 
-        $widget = $this->makeBaseFormWidget($model->controller, $options);
         $this->vars['controller'] = $model->controller;
 
         $result = $this->controller->widget->controllerList->updateList();
-        $tab = [
-            'tabTitle' => $this->getTabName($widget->model),
-            'tabIcon' => 'icon-asterisk',
-            'tabId' => $this->getTabId($pluginCodeObj->toCode(), $model->controller),
-            'tab' => $this->makePartial('tab', [
-                'form'  => $widget,
-                'pluginCode' => $pluginCodeObj->toCode()
-            ])
-        ];
 
-        $result = array_merge($result, $tab);
+        if ($model->behaviors) {
+            // Create a new tab only for controllers 
+            // with behaviors.
+
+            $widget = $this->makeBaseFormWidget($model->controller, $options);
+
+            $tab = [
+                'tabTitle' => $this->getTabName($widget->model),
+                'tabIcon' => 'icon-asterisk',
+                'tabId' => $this->getTabId($pluginCodeObj->toCode(), $model->controller),
+                'tab' => $this->makePartial('tab', [
+                    'form'  => $widget,
+                    'pluginCode' => $pluginCodeObj->toCode()
+                ])
+            ];
+
+            $result = array_merge($result, $tab);
+        }
 
         $this->mergeRegistryDataIntoResult($result, $pluginCodeObj);
 

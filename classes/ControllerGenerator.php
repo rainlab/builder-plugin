@@ -291,6 +291,10 @@ class ControllerGenerator
 
     protected function generateConfigFiles()
     {
+        if (!$this->sourceModel->behaviors) {
+            return;
+        }
+
         $controllerPath = $this->sourceModel->getControllerFilePath(true);
         $behaviorLibrary = ControllerBehaviorLibrary::instance();
         $dumper = new YamlDumper();

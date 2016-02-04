@@ -25,14 +25,26 @@
     Controller.prototype.cmdCreateController = function(ev) {
         var $form = $(ev.currentTarget),
             self = this,
-            pluginCode = $form.data('pluginCode')
+            pluginCode = $form.data('pluginCode'),
+            behaviorsSelected = $form.find('input[name="behaviors[]"]:checked').length,
+            promise = null
 
-        this.indexController.openOrLoadMasterTab(
-            $form, 
-            'onControllerCreate', 
-            this.makeTabId(pluginCode+'-new-controller'), 
-            {}
-        ).done(function(data){
+        // If behaviors were selected, open a new tab after the 
+        // controller is saved. Otherwise just update the controller
+        // list.
+        if (behaviorsSelected) {
+            promise = this.indexController.openOrLoadMasterTab(
+                $form, 
+                'onControllerCreate', 
+                this.makeTabId(pluginCode+'-new-controller'), 
+                {}
+            )
+        }
+        else {
+            promise = $form.request('onControllerCreate')
+        }
+
+        promise.done(function(data){
             $form.trigger('close.oc.popup')
             self.updateDataRegistry(data)
         }).always($.oc.builder.indexController.hideStripeIndicatorProxy)

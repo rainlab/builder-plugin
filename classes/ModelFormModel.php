@@ -74,7 +74,7 @@ class ModelFormModel extends ModelYamlModel
 
     public function initDefaults()
     {
-        $this->fileName = 'form.yaml';
+        $this->fileName = 'fields.yaml';
     }
 
     /**
