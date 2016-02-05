@@ -102,6 +102,13 @@ class RecordList extends ComponentBase
                     ]
                 ]
             ],
+            'noRecordsMessage' => [
+                'title'        => 'rainlab.builder::lang.components.list_no_records',
+                'description'  => 'rainlab.builder::lang.components.list_no_records_description',
+                'type'         => 'string',
+                'default'      => Lang::get('rainlab.builder::lang.components.list_no_records_default'),
+                'showExternalParam' => false,
+            ],
             'detailsPage' => [
                 'title'       => 'rainlab.builder::lang.components.list_details_page',
                 'description' => 'rainlab.builder::lang.components.list_details_page_description',
@@ -138,14 +145,6 @@ class RecordList extends ComponentBase
                 'description' => 'rainlab.builder::lang.components.list_page_number_description',
                 'type'        => 'string',
                 'default'     => '{{ :page }}',
-                'group'       => 'rainlab.builder::lang.components.list_pagination'
-            ],
-            'noRecordsMessage' => [
-                'title'        => 'rainlab.builder::lang.components.list_no_records',
-                'description'  => 'rainlab.builder::lang.components.list_no_records_description',
-                'type'         => 'string',
-                'default'      => Lang::get('rainlab.builder::lang.components.list_no_records_default'),
-                'showExternalParam' => false,
                 'group'       => 'rainlab.builder::lang.components.list_pagination'
             ],
             'sortColumn' => [
