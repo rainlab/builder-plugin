@@ -175,6 +175,16 @@
         $.oc.foundation.controlUtils.disposeControls($inspectorContainer.get(0))
     }
 
+    TabManager.prototype.closeTabControlPalette = function($tab, $tabPanel) {
+        if ($tabPanel.find('.control-palette-open').length === 0) {
+            return
+        }
+
+        var $inspectorContainer = this.findInspectorContainer($tab)
+
+        $.oc.foundation.controlUtils.disposeControls($inspectorContainer.get(0))
+    }
+
     TabManager.prototype.closeTab = function($tab) {
         var $tabControl = this.findTabControl($tab)
 
@@ -191,6 +201,7 @@
             $tabPanel = this.findTabPanel($tab)
 
         this.closeTabInspectors($tab, $tabPanel)
+        this.closeTabControlPalette($tab, $tabPanel)
 
         $tab.remove()
         $tabPanel.remove()

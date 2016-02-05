@@ -15,7 +15,7 @@
         <button type="button" class="close"
             data-dismiss="popover"
             aria-hidden="true">&times;</button>
-        <span class="inspector-move-to-container oc-icon-download">
+        <a href="javascript:;" class="inspector-move-to-container oc-icon-download" data-builder-command="modelForm:cmdDockControlPalette"></a>
     </div>
     <div class="popover-fixed-height" data-control-palette-controlid="%c">%s</div>
 </script>
@@ -25,8 +25,8 @@
         <div class="flex-layout-item fix">
             <div class="inspector-header">
                 <h3><?= e(trans('rainlab.builder::lang.form.click_to_add_control')) ?>
-                <span class="oc-icon-external-link-square detach"></span>
-                <span class="close">&times;</span>
+                <a href="javascript:;" class="oc-icon-external-link-square detach" data-builder-command="modelForm:cmdUndockControlPalette"></a>
+                <a href="javascript:;" class="close" data-builder-command="modelForm:cmdCloseControlPalette">&times;</a>
             </div>
         </div>
         <div class="flex-layout-item stretch relative">%s</div>

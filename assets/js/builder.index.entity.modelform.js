@@ -82,6 +82,18 @@
         $.oc.builder.formbuilder.controlPalette.addControl(ev)
     }
 
+    ModelForm.prototype.cmdUndockControlPalette = function(ev) {
+        $.oc.builder.formbuilder.controlPalette.undockFromContainer(ev)
+    }
+
+    ModelForm.prototype.cmdDockControlPalette = function(ev) {
+        $.oc.builder.formbuilder.controlPalette.dockToContainer(ev)
+    }
+
+    ModelForm.prototype.cmdCloseControlPalette = function(ev) {
+        $.oc.builder.formbuilder.controlPalette.closeInContainer(ev)
+    }
+
     // INTERNAL METHODS
     // ============================
 

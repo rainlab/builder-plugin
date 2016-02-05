@@ -73,12 +73,11 @@
     }
 
     ControlPalette.prototype.getContainerPreference = function() {
-return true
-        if (!Modernizr.localstorage) {
-            return false
-        }
+        return $.oc.inspector.manager.getContainerPreference()
+    }
 
-        return localStorage.getItem('oc.builder.controlPaletteUseContainer') === "true"
+    ControlPalette.prototype.setContainerPreference = function(value) {
+        return $.oc.inspector.manager.setContainerPreference(value)
     }
 
     ControlPalette.prototype.addControl = function(ev) {
@@ -109,6 +108,7 @@ return true
 
         promise.done(function() {
             $.oc.inspector.manager.createInspector(control)
+            $(control).trigger('change')  // Set modified state for the form
         })
 
         return false
@@ -158,6 +158,21 @@ return true
         return this.popoverMarkup
     }
 
+    ControlPalette.prototype.dockToContainer = function(ev) {
+        var $popoverBody = $(ev.target).closest('.control-popover'),
+            $controlIdContainer = $popoverBody.find('[data-control-palette-controlid]'),
+            controlId = $controlIdContainer.attr('data-control-palette-controlid'),
+            control = this.getControlById(controlId)
+
+        $popoverBody.trigger('close.oc.popover')
+
+        this.setContainerPreference(true)
+
+        if (control) {
+            this.loadControlPalette($(control), controlId)
+        }
+    }
+
     //
     // Container wrapper
     //
@@ -195,15 +210,20 @@ return true
     }
  
     ControlPalette.prototype.onRemovePaletteFromContainer = function(ev) {
-        var $container = $(ev.target),
-            controlId = $container.attr('data-control-palette-controlid'),
+        this.removePaletteFromContainer($(ev.target))
+    }
+
+    ControlPalette.prototype.removePaletteFromContainer = function($container) {
+        var controlId = $container.attr('data-control-palette-controlid'),
             control = this.getControlById(controlId)
 
         if (control) {
             this.markPlaceholderPaletteNotOpen(control)
         }
 
+        var $parent = $container.parent()
         $container.remove()
+        $parent.html('')
     }
 
     ControlPalette.prototype.getContainerMarkup = function() {
@@ -216,6 +236,23 @@ return true
         this.containerMarkup = outerMarkup.replace('%s', this.controlPaletteMarkup)
 
         return this.containerMarkup
+    }
+
+    ControlPalette.prototype.closeInContainer = function(ev) {
+        this.removePaletteFromContainer($(ev.target).closest('[data-control-palette-controlid]'))
+    }
+
+    ControlPalette.prototype.undockFromContainer = function(ev) {
+        var $container = $(ev.target).closest('[data-control-palette-controlid]'),
+            controlId = $container.attr('data-control-palette-controlid'),
+            control = this.getControlById(controlId)
+
+        this.removePaletteFromContainer($container)
+        this.setContainerPreference(false)
+
+        if (control) {
+            this.loadControlPalette($(control), controlId)
+        }
     }
 
     $(document).ready(function(){
