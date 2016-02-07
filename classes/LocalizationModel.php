@@ -348,7 +348,7 @@ class LocalizationModel extends BaseModel
         }
 
         try {
-            $data = Yaml::parse($this->strings);
+            $data = $this->getSanitizedPHPStrings(Yaml::parse($this->strings));
 
             $phpData = var_export($data, true);
             $phpData = preg_replace('/^(\s+)\),/m', '$1],', $phpData);
@@ -396,5 +396,20 @@ class LocalizationModel extends BaseModel
         }
 
         return true;
+    }
+
+    protected function getSanitizedPHPStrings($strings)
+    {
+        array_walk_recursive($strings, function(&$item, $key){
+            if (!is_scalar($item)) {
+                return;
+            }
+
+            // In YAML single quotes are escaped with two single quotes
+            // http://yaml.org/spec/current.html#id2534365
+            $item = str_replace("''", "'", $item); 
+        });
+
+        return $strings;
     }
 }

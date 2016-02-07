@@ -13,5 +13,5 @@ secondaryTabs:
     fields:
         menus:
             stretch: true
-            tab: rainlab.pages::lang.menu.items
+            tab: rainlab.builder::lang.menu.items
             type: RainLab\Builder\FormWidgets\MenuEditor

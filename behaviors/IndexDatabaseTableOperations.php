@@ -109,7 +109,7 @@ class IndexDatabaseTableOperations extends IndexOperationsBehaviorBase
             'tabTitle' => $table,
             'tableName' => $table,
             'operation' => $operation,
-            'pluginCode' => $pluginCode
+            'pluginCode' => $pluginCode->toCode()
         ];
 
         return $result;

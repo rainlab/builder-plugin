@@ -482,6 +482,7 @@ return [
     'menu' => [
         'menu_label' => 'Backend Menu',
         'tab' => 'Menus',
+        'items' => 'Menu items',
         'saved' => 'The menus have been successfully saved.',
         'add_main_menu_item' => 'Add main menu item',
         'new_menu_item' => 'Menu Item',

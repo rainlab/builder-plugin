@@ -129,6 +129,7 @@ class PluginBaseModel extends PluginYamlModel
         try {
             $this->initPluginStructure();
             $this->forcePluginRegistration();
+            $this->initBuilderSettings();
         }
         catch (Exception $ex) {
             $this->rollbackPluginCreation();
@@ -152,8 +153,8 @@ class PluginBaseModel extends PluginYamlModel
         $variables = [
             'authorNamespace' => $this->author_namespace,
             'pluginNamespace' => $this->namespace,
-            'pluginName' => $this->localizedName,
-            'pluginDescription' => $this->localizedDescription
+            'pluginNameSanitized' => $this->sanitizePHPString($this->localizedName),
+            'pluginDescriptionSanitized' => $this->sanitizePHPString($this->localizedDescription),
         ];
 
         $generator = new FilesystemGenerator('$', $structure, '$/rainlab/builder/classes/pluginbasemodel/templates');
@@ -177,6 +178,11 @@ class PluginBaseModel extends PluginYamlModel
         }
     }
 
+    protected function sanitizePHPString($str)
+    {
+        return str_replace("'", "\'", $str);
+    }
+
     /**
      * Returns a file path to save the model to.
      * @return string Returns a path.
@@ -194,5 +200,21 @@ class PluginBaseModel extends PluginYamlModel
     protected function getPluginPathObj()
     {
         return new PluginCode($this->getPluginCode());
-    }    
+    }
+
+    protected function initBuilderSettings()
+    {
+        // Initialize Builder configuration - author name and namespace
+        // if it was not set yet.
+
+        $settings =  PluginSettings::instance();
+        if (strlen($settings->author_name) || strlen($settings->author_namespace)) {
+            return;
+        }
+
+        $settings->author_name = $this->author;
+        $settings->author_namespace = $this->author_namespace;
+
+        $settings->save();
+    }
 }

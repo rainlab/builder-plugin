@@ -1,8 +1,6 @@
-<?php
-
-return [
+<?php return [
     'plugin' => [
-        'name' => '{pluginName}',
-        'description' => '{pluginDescription}'
+        'name' => '{pluginNameSanitized}',
+        'description' => '{pluginDescriptionSanitized}'
     ]
 ];

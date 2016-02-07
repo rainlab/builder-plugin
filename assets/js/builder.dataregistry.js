@@ -60,7 +60,7 @@
     }
 
     DataRegistry.prototype.isCacheObsolete = function(timestamp) {
-        return (Date.now() - timestamp) > 60000
+        return (Date.now() - timestamp) > 60000*5 // 5 minutes cache TTL
     }
 
     DataRegistry.prototype.loadDataFromServer = function($formElement, plugin, type, subtype, callback) {

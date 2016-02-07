@@ -82,23 +82,14 @@
 
     FormBuilder.prototype.loadModelFields = function(control, callback) {
         var $form = $(this.findForm(control)),
-            cachedFields = $form.data('oc.model-field-cache')
+            pluginCode = $.oc.builder.indexController.getFormPluginCode($form),
+            modelClass = $form.find('input[name=model_class]').val()
 
-        if (cachedFields !== undefined) {
+        $.oc.builder.dataRegistry.get($form, pluginCode, 'model-columns', modelClass, function(response){
             callback({
-                options: cachedFields
+                options: $.oc.builder.indexController.dataToInspectorArray(response)
             })
-
-            return
-        }
-
-        $form.request('onModelFormGetModelFields')
-            .done(function(data){
-                $form.data('oc.model-field-cache', data.responseData.options)
-                callback({
-                    options: data.responseData.options
-                })
-            })
+        })
     }
 
     FormBuilder.prototype.getContainerFieldNames = function(control, callback) {
