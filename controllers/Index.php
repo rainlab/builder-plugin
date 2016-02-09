@@ -65,24 +65,7 @@ class Index extends Controller
 
         // The table widget scripts should be preloaded
         $this->addJs('/modules/backend/widgets/table/assets/js/build-min.js', 'core');
-
-        // TODO: combine the scripts
-        $this->addJs('/plugins/rainlab/builder/assets/js/builder.dataregistry.js', 'RainLab.Builder');
-        $this->addJs('/plugins/rainlab/builder/assets/js/builder.index.entity.base.js', 'RainLab.Builder');
-        $this->addJs('/plugins/rainlab/builder/assets/js/builder.index.entity.plugin.js', 'RainLab.Builder');
-        $this->addJs('/plugins/rainlab/builder/assets/js/builder.index.entity.databasetable.js', 'RainLab.Builder');
-        $this->addJs('/plugins/rainlab/builder/assets/js/builder.index.entity.model.js', 'RainLab.Builder');
-        $this->addJs('/plugins/rainlab/builder/assets/js/builder.index.entity.modelform.js', 'RainLab.Builder');
-        $this->addJs('/plugins/rainlab/builder/assets/js/builder.index.entity.modellist.js', 'RainLab.Builder');
-        $this->addJs('/plugins/rainlab/builder/assets/js/builder.index.entity.permission.js', 'RainLab.Builder');
-        $this->addJs('/plugins/rainlab/builder/assets/js/builder.index.entity.menus.js', 'RainLab.Builder');
-        $this->addJs('/plugins/rainlab/builder/assets/js/builder.index.entity.version.js', 'RainLab.Builder');
-        $this->addJs('/plugins/rainlab/builder/assets/js/builder.index.entity.localization.js', 'RainLab.Builder');
-        $this->addJs('/plugins/rainlab/builder/assets/js/builder.index.entity.controller.js', 'RainLab.Builder');
-        $this->addJs('/plugins/rainlab/builder/assets/js/builder.index.js', 'RainLab.Builder');
-        $this->addJs('/plugins/rainlab/builder/assets/js/builder.localizationinput.js', 'RainLab.Builder');
-        $this->addJs('/plugins/rainlab/builder/assets/js/builder.inspector.editor.localization.js', 'RainLab.Builder');
-        $this->addJs('/plugins/rainlab/builder/assets/js/builder.table.processor.localization.js', 'RainLab.Builder');
+        $this->addJs('/plugins/rainlab/builder/assets/js/build-min.js', 'RainLab.Builder');
 
         $this->pageTitleTemplate = '%s Builder';
     }

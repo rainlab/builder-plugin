@@ -589,6 +589,9 @@ html.gecko.mac .builder-building-area div[data-root-control-wrapper] {
 .builder-controllers-builder-area ul.controller-behavior-list .behavior-container.inspector-open * {
   border-color: #2581b8 !important;
 }
+html.gecko.mac .builder-controllers-builder-area ul.controller-behavior-list {
+  padding-right: 40px;
+}
 .builder-tabs > .tabs {
   position: relative;
 }
