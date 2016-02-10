@@ -69,7 +69,7 @@ class ModelModel extends BaseModel
 
             $model = new ModelModel();
             $model->className = $modelInfo['class'];
-            $model->databaseTable = $modelInfo['table'];
+            $model->databaseTable = isset($modelInfo['table']) ? $modelInfo['table'] : null;
 
             $result[] = $model;
         }
