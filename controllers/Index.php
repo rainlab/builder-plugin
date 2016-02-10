@@ -70,9 +70,9 @@ class Index extends Controller
         $this->pageTitleTemplate = '%s Builder';
     }
 
-    public function setBuilderActivePlugin($pluginCpde, $refreshPluginList = false)
+    public function setBuilderActivePlugin($pluginCode, $refreshPluginList = false)
     {
-        $this->widget->pluginList->setActivePlugin($pluginCpde);
+        $this->widget->pluginList->setActivePlugin($pluginCode);
 
         $result = [];
         if ($refreshPluginList) {
