@@ -1,15 +1,18 @@
 <?php if (!$this->fatalError): ?>
 
-    <?= Form::open() ?>
-        <?= $this->formRender() ?>
+    <?= Form::open(['class' => 'layout']) ?>
 
-        <div class="form-buttons layout-item fix">
+        <div class="layout-row">
+            <?= $this->formRender() ?>
+        </div>
+
+        <div class="form-buttons">
             <div class="loading-indicator-container">
                 <button
                     type="submit"
                     data-request="onSave"
                     data-hotkey="ctrl+s, cmd+s"
-                    ddata-load-indicator="<?= e(trans('backend::lang.form.saving')) ?>"
+                    data-load-indicator="<?= e(trans('backend::lang.form.saving')) ?>"
                     class="btn btn-primary">
                     <?= e(trans('backend::lang.form.create')) ?>
                 </button>
