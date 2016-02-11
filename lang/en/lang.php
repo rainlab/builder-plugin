@@ -58,6 +58,7 @@ return [
         'btn_add_column' => 'Add column',
         'btn_delete_column' => 'Delete column',
         'confirm_delete' => 'Do you really want to delete the table?',
+        'error_enum_not_supported' => 'The table contains column(s) with type "enum" which is not currently supported by the Builder.',
         'error_table_name_invalid_prefix' => "Table name should start with the plugin prefix: ':prefix'.",
         'error_table_name_invalid_characters' => 'Invalid table name. Table names should contain only Latin letters, digits and underscores. Names should start with a Latin letter and could not contain spaces.',
         'error_table_duplicate_column' => "Duplicate column name: ':column'.",

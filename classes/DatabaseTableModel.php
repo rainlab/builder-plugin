@@ -1,6 +1,7 @@
 <?php namespace RainLab\Builder\Classes;
 
 use RainLab\Builder\Models\Settings as PluginSettings;
+use Doctrine\DBAL\Types\Type;
 use ApplicationException;
 use ValidationException;
 use SystemException;
@@ -314,6 +315,13 @@ class DatabaseTableModel extends BaseModel
     {
         if (!self::$schemaManager) {
             self::$schemaManager = Schema::getConnection()->getDoctrineSchemaManager();
+
+            Type::addType('enumdbtype', 'RainLab\Builder\Classes\EnumDbType');
+
+            // Fixes the problem with enum column type not supported
+            // by Doctrine (https://github.com/laravel/framework/issues/1346)
+            $platform = self::$schemaManager->getDatabasePlatform();
+            $platform->registerDoctrineTypeMapping('enum', 'enumdbtype');
         }
 
         return self::$schemaManager;
@@ -321,6 +329,7 @@ class DatabaseTableModel extends BaseModel
 
     protected static function getSchema()
     {
+
         if (!self::$schema) {
             self::$schema = self::getSchemaManager()->createSchema();
         }
@@ -342,6 +351,10 @@ class DatabaseTableModel extends BaseModel
         foreach ($columns as $column) {
             $columnName = $column->getName();
             $typeName = $column->getType()->getName();
+
+            if ($typeName == EnumDbType::TYPENAME) {
+                throw new ApplicationException(Lang::get('rainlab.builder::lang.database.error_enum_not_supported'));
+            }
 
             $item = [
                 'name' => $columnName,
