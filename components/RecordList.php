@@ -91,7 +91,7 @@ class RecordList extends ComponentBase
                 'depends'     => ['modelClass'],
                 'validation'  => [
                     'required' => [
-                        'message' => 'rainlab.builder::lang.components.list_display_column_required'
+                        'message' => Lang::get('rainlab.builder::lang.components.list_display_column_required')
                     ]
                 ]
             ],
