@@ -34,8 +34,6 @@ class Index extends Controller
         'RainLab.Builder.Behaviors.IndexDataRegistry'
     ];
 
-    public $requiredPermissions = ['rainlab.buileder.*'];
-
     /**
      * Constructor.
      */
