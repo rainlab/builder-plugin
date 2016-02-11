@@ -4,7 +4,6 @@ use ApplicationException;
 use Symfony\Component\Yaml\Dumper as YamlDumper;
 use SystemException;
 use DirectoryIterator;
-use ValidationException;
 use Yaml;
 use Exception;
 use Lang;

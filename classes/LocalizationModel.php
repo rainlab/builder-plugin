@@ -5,7 +5,6 @@ use Symfony\Component\Yaml\Dumper as YamlDumper;
 use SystemException;
 use DirectoryIterator;
 use ValidationException;
-use RainLab\Builder\Models\Settings as PluginSettings;
 use Yaml;
 use Exception;
 use Config;
@@ -353,7 +352,7 @@ class LocalizationModel extends BaseModel
             $phpData = var_export($data, true);
             $phpData = preg_replace('/^(\s+)\),/m', '$1],', $phpData);
             $phpData = preg_replace('/^(\s+)array\s+\(/m', '$1[', $phpData);
-            $phpData = preg_replace_callback('/^(\s+)/m', function($matches){
+            $phpData = preg_replace_callback('/^(\s+)/m', function($matches) {
                 return str_repeat($matches[1], 2); // Increase indentation
             }, $phpData);
             $phpData = preg_replace('/\n\s+\[/m', '[', $phpData);

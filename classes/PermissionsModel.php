@@ -1,14 +1,9 @@
 <?php namespace RainLab\Builder\Classes;
 
-use RainLab\Builder\Models\Settings as PluginSettings;
-use System\Classes\UpdateManager;
-use System\Classes\PluginManager;
 use ApplicationException;
 use SystemException;
 use ValidationException;
-use Exception;
 use Lang;
-use File;
 
 /**
  * Manages plugin permissions information.

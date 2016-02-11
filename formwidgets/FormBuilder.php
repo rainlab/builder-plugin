@@ -1,6 +1,5 @@
 <?php namespace RainLab\Builder\FormWidgets;
 
-use Request;
 use Backend\Classes\FormWidgetBase;
 use RainLab\Builder\Classes\ControlLibrary;
 use ApplicationException;

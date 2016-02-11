@@ -2,7 +2,6 @@
 
 use SystemException;
 use ApplicationException;
-use Doctrine\DBAL\Schema\Table;
 use Doctrine\DBAL\Types\Type as DoctrineType;
 use Lang;
 

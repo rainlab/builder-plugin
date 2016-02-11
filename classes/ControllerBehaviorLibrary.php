@@ -1,8 +1,5 @@
 <?php namespace RainLab\Builder\Classes;
 
-use ApplicationException;
-use SystemException;
-use Exception;
 use Event;
 use Lang;
 
@@ -39,12 +36,12 @@ class ControllerBehaviorLibrary
      * @param array $properties Specifies the behavior properties.
      * The property definitions should be compatible with Inspector properties, similarly
      * to the Component properties: http://octobercms.com/docs/plugin/components#component-properties
-     * @param $configFilePropertyName Specifies the name of the controller property that contains the configuration file name for the behavior.
+     * @param string $configFilePropertyName Specifies the name of the controller property that contains the configuration file name for the behavior.
      * @param string $designTimeProviderClass Specifies the behavior design-time provider class name.
      * The class should extend RainLab\Builder\Classes\BehaviorDesignTimeProviderBase. If the class is not provided,
      * the default control design and design settings will be used.
-     * @param $configFileName Default behavior configuration file name, for example config_form.yaml.
-     * @param $viewTemplates An array of view templates that are required for the behavior.
+     * @param string $configFileName Default behavior configuration file name, for example config_form.yaml.
+     * @param array $viewTemplates An array of view templates that are required for the behavior.
      * The templates are used when a new controller is created. The templates should be specified as paths 
      * to Twig files in the format ['~/plugins/author/plugin/behaviors/behaviorname/templates/view.htm.tpl'].
      */

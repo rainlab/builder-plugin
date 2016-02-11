@@ -8,10 +8,7 @@ use RainLab\Builder\Classes\PluginVector;
 use Input;
 use File;
 use Exception;
-use Response;
-use Request;
 use Str;
-use Lang;
 
 /**
  * Plugin list widget.
@@ -178,7 +175,7 @@ class PluginList extends WidgetBase
             $result[$code] = $itemInfo;
         }
 
-        uasort($result, function($a, $b){
+        uasort($result, function($a, $b) {
             return strcmp(trans($a['name']), trans($b['name']));
         });
 

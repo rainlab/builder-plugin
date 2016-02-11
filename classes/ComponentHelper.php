@@ -1,11 +1,10 @@
 <?php namespace RainLab\Builder\Classes;
 
-use ApplicationException;
-use SystemException;
+use Cache;
 use Input;
 use Exception;
 use October\Rain\Support\Traits\Singleton;
-use Cache;
+use ApplicationException;
 
 /**
  * Provides helper methods for Builder CMS components.

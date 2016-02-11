@@ -2,10 +2,7 @@
 
 use ApplicationException;
 use Symfony\Component\Yaml\Dumper as YamlDumper;
-use SystemException;
-use DirectoryIterator;
 use ValidationException;
-use Yaml;
 use Exception;
 use Lang;
 use File;
@@ -50,7 +47,8 @@ class ControllerGenerator
             $this->generateControllerFile();
             $this->generateConfigFiles();
             $this->generateViews();
-        } catch (Exception $ex) {
+        }
+        catch (Exception $ex) {
             $this->rollback();
 
             throw $ex;

@@ -1,6 +1,5 @@
 <?php namespace RainLab\Builder\Classes;
 
-use File;
 use SystemException;
 
 /**

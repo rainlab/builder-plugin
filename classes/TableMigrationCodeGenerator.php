@@ -1,6 +1,5 @@
 <?php namespace RainLab\Builder\Classes;
 
-use Doctrine\DBAL\Schema\Table;
 use Doctrine\DBAL\Schema\Comparator;
 use Doctrine\DBAL\Schema\TableDiff;
 use October\Rain\Parse\Template as TextParser;
@@ -25,8 +24,8 @@ class TableMigrationCodeGenerator extends BaseModel
 
     /**
      * Generates code for creating or updating a database table.
-     * @param Doctrine\DBAL\Schema\Table $updatedTable Specifies the updated table schema.
-     * @param Doctrine\DBAL\Schema\Table $existingTable Specifies the existing table schema, if applicable.
+     * @param \Doctrine\DBAL\Schema\Table $updatedTable Specifies the updated table schema.
+     * @param \Doctrine\DBAL\Schema\Table $existingTable Specifies the existing table schema, if applicable.
      * @param string $newTableName An updated name of the theme. 
      * @return string|boolean Returns the migration up() and down() methods code. 
      * Returns false if there the table was not changed.
@@ -76,9 +75,10 @@ class TableMigrationCodeGenerator extends BaseModel
 
     /**
      * Wrap migration's up() and down() functions into a complete migration class declaration
-     * @param string $scriptFileName Specifies the migration script file name
+     * @param string $scriptFilename Specifies the migration script file name
      * @param string $code Specifies the migration code
      * @param PluginCode $pluginCodeObj The plugin code object
+     * @return TextParser
      */
     public function wrapMigrationCode($scriptFilename, $code, $pluginCodeObj)
     {
@@ -96,7 +96,7 @@ class TableMigrationCodeGenerator extends BaseModel
 
     /**
      * Generates code for dropping a database table.
-     * @param Doctrine\DBAL\Schema\Table $existingTable Specifies the existing table schema.
+     * @param \Doctrine\DBAL\Schema\Table $existingTable Specifies the existing table schema.
      * @return string Returns the migration up() and down() methods code. 
      */
     public function dropTable($existingTable)

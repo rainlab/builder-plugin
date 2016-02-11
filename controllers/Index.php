@@ -8,9 +8,6 @@ use RainLab\Builder\Widgets\ModelList;
 use RainLab\Builder\Widgets\VersionList;
 use RainLab\Builder\Widgets\LanguageList;
 use RainLab\Builder\Widgets\ControllerList;
-use RainLab\Builder\Traits\IndexPluginOperations;
-use ApplicationException;
-use Exception;
 use BackendMenu;
 
 /**

@@ -29,7 +29,7 @@ class DefaultBehaviorDesignTimeProvider extends BehaviorDesignTimeProviderBase
      * Renders behaivor body.
      * @param string $class Specifies the behavior class to render.
      * @param array $properties Behavior property values.
-     * @param  RainLab\Builder\FormWidgets\ControllerBuilder $controllerBuilder ControllerBuilder widget instance.
+     * @param  \RainLab\Builder\FormWidgets\ControllerBuilder $controllerBuilder ControllerBuilder widget instance.
      * @return string Returns HTML markup string.
      */
     public function renderBehaviorBody($class, $properties, $controllerBuilder)

@@ -9,7 +9,7 @@
 class MigrationFileParser
 {
     /**
-     * Retrurns the migration namespace and class name.
+     * Returns the migration namespace and class name.
      * @param string $fileContents Specifies the file contents.
      * @return array|null Returns an array with keys 'class', 'namespace'.
      * Returns null if the parsing fails.
