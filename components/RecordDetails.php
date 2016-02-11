@@ -72,7 +72,7 @@ class RecordDetails extends ComponentBase
                 'default'     => '{{ :id }}',
                 'validation'  => [
                     'required' => [
-                        'message' => 'rainlab.builder::lang.components.details_identifier_value_required'
+                        'message' => Lang::get('rainlab.builder::lang.components.details_identifier_value_required')
                     ]
                 ]
             ],
@@ -83,7 +83,7 @@ class RecordDetails extends ComponentBase
                 'default'     => 'id',
                 'validation'  => [
                     'required' => [
-                        'message' => 'rainlab.builder::lang.components.details_key_column_required'
+                        'message' => Lang::get('rainlab.builder::lang.components.details_key_column_required')
                     ]
                 ],
                 'showExternalParam' => false
@@ -95,7 +95,7 @@ class RecordDetails extends ComponentBase
                 'depends'     => ['modelClass'],
                 'validation'  => [
                     'required' => [
-                        'message' => 'rainlab.builder::lang.components.details_display_column_required'
+                        'message' => Lang::get('rainlab.builder::lang.components.details_display_column_required')
                     ]
                 ],
                 'showExternalParam' => false
