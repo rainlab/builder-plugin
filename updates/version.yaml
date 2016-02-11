@@ -1,2 +1,4 @@
 1.0.1:
     - Initialize plugin.
+1.0.2:
+    - Fixes the problem with selecting a plugin. Minor localization corrections. Configuration files in the list and form behaviors are now autocomplete.

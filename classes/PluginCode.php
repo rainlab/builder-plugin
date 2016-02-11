@@ -77,7 +77,7 @@ class PluginCode
 
     public function toPluginInformationFilePath()
     {
-        return '$/'.$this->toFilesystemPath().'/plugin.php';
+        return '$/'.$this->toFilesystemPath().'/Plugin.php';
     }
 
     public function toPluginDirectoryPath()

@@ -38,7 +38,7 @@ abstract class PluginYamlModel extends YamlModel
 
     public function getPluginName()
     {
-        return $this->pluginName;
+        return Lang::get($this->pluginName);
     }
 
     protected function loadCommonProperties()

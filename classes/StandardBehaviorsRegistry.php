@@ -41,6 +41,7 @@ class StandardBehaviorsRegistry
             'modelClass' => [
                 'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_form_model_class'),
                 'description' => Lang::get('rainlab.builder::lang.controller.property_behavior_form_model_class_description'),
+                'placeholder' => Lang::get('rainlab.builder::lang.controller.property_behavior_form_model_class_placeholder'),
                 'type' => 'dropdown',
                 'fillFrom' => 'model-classes',
                 'validation' => [
@@ -53,7 +54,7 @@ class StandardBehaviorsRegistry
                 'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_form_file'),
                 'description' => Lang::get('rainlab.builder::lang.controller.property_behavior_form_file_description'),
                 'placeholder' => Lang::get('rainlab.builder::lang.controller.property_behavior_form_placeholder'),
-                'type' => 'dropdown',
+                'type' => 'autocomplete',
                 'fillFrom' => 'model-forms',
                 'subtypeFrom' => 'modelClass',
                 'depends' => ['modelClass'],
@@ -189,18 +190,19 @@ class StandardBehaviorsRegistry
                 'type' => 'builderLocalization',
                 'validation' => [
                     'required' => [
-                        'message' => Lang::get('rainlab.builder::lang.property_behavior_form_name.property_behavior_list_title_required')
+                        'message' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_title_required')
                     ]
                 ],
             ],
             'modelClass' => [
                 'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_model_class'),
                 'description' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_model_class_description'),
+                'placeholder' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_model_placeholder'),
                 'type' => 'dropdown',
                 'fillFrom' => 'model-classes',
                 'validation' => [
                     'required' => [
-                        'message' => Lang::get('rainlab.builder::lang.property_behavior_form_name.property_behavior_list_model_class_required')
+                        'message' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_model_class_required')
                     ]
                 ],
             ],
@@ -208,13 +210,13 @@ class StandardBehaviorsRegistry
                 'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_file'),
                 'placeholder' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_placeholder'),
                 'description' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_file_description'),
-                'type' => 'dropdown',
+                'type' => 'autocomplete',
                 'fillFrom' => 'model-lists',
                 'subtypeFrom' => 'modelClass',
                 'depends' => ['modelClass'],
                 'validation' => [
                     'required' => [
-                        'message' => Lang::get('rainlab.builder::lang.property_behavior_form_name.property_behavior_list_file_required')
+                        'message' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_file_required')
                     ]
                 ],
             ],
