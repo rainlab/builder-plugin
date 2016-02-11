@@ -34,7 +34,7 @@ class StandardBehaviorsRegistry
                 'type' => 'string',
                 'validation' => [
                     'required' => [
-                        'message' => Lang::get('rainlab.builder::lang.property_behavior_form_name.property_behavior_form_name_required')
+                        'message' => Lang::get('rainlab.builder::lang.controller.property_behavior_form_name_required')
                     ]
                 ],
             ],
@@ -46,7 +46,7 @@ class StandardBehaviorsRegistry
                 'fillFrom' => 'model-classes',
                 'validation' => [
                     'required' => [
-                        'message' => Lang::get('rainlab.builder::lang.property_behavior_form_name.property_behavior_form_model_class_required')
+                        'message' => Lang::get('rainlab.builder::lang.controller.property_behavior_form_model_class_required')
                     ]
                 ],
             ],
@@ -60,7 +60,7 @@ class StandardBehaviorsRegistry
                 'depends' => ['modelClass'],
                 'validation' => [
                     'required' => [
-                        'message' => Lang::get('rainlab.builder::lang.property_behavior_form_name.property_behavior_form_file_required')
+                        'message' => Lang::get('rainlab.builder::lang.controller.property_behavior_form_file_required')
                     ]
                 ],
             ],
