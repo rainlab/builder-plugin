@@ -2,12 +2,8 @@
 
 use Backend\Classes\WidgetBase;
 use RainLab\Builder\Classes\ControllerModel;
-use RainLab\Builder\Classes\PluginVersion;
 use Input;
-use Response;
-use Request;
 use Str;
-use Lang;
 
 /**
  * Plugin controller list widget.

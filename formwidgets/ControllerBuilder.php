@@ -1,11 +1,8 @@
 <?php namespace RainLab\Builder\FormWidgets;
 
-use Request;
 use Backend\Classes\FormWidgetBase;
 use RainLab\Builder\Classes\ControllerBehaviorLibrary;
 use ApplicationException;
-use Input;
-use Lang;
 
 /**
  * Controller builder widget.

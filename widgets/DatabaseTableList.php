@@ -2,12 +2,8 @@
 
 use Backend\Classes\WidgetBase;
 use RainLab\Builder\Classes\DatabaseTableModel;
-use RainLab\Builder\Models\Settings as PluginSettings;
 use Input;
-use Response;
-use Request;
 use Str;
-use Lang;
 
 /**
  * Database table list widget.

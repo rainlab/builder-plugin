@@ -1,12 +1,8 @@
 <?php namespace RainLab\Builder\Classes;
 
 use ApplicationException;
-use DirectoryIterator;
-use SystemException;
-use Exception;
 use Lang;
 use File;
-use Yaml;
 
 /**
  * A base class for models that keep data in the plugin.yaml file.

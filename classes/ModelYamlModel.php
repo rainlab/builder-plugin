@@ -1,6 +1,5 @@
 <?php namespace RainLab\Builder\Classes;
 
-use ApplicationException;
 use DirectoryIterator;
 use SystemException;
 use Exception;

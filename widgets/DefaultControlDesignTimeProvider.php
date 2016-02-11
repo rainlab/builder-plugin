@@ -1,12 +1,6 @@
 <?php namespace RainLab\Builder\Widgets;
 
 use RainLab\Builder\Classes\ControlDesignTimeProviderBase;
-use SystemException;
-use Input;
-use Response;
-use Request;
-use Str;
-use Lang;
 use File;
 
 /**
@@ -44,10 +38,10 @@ class DefaultControlDesignTimeProvider extends ControlDesignTimeProviderBase
     ];
 
     /**
-     * Renders conrol body.
+     * Renders control body.
      * @param string $type Specifies the control type to render.
      * @param array $properties Control property values.
-     * @param  RainLab\Builder\FormWidgets\FormBuilder $formBuilder FormBuilder widget instance.
+     * @param  \RainLab\Builder\FormWidgets\FormBuilder $formBuilder FormBuilder widget instance.
      * @return string Returns HTML markup string.
      */
     public function renderControlBody($type, $properties, $formBuilder)
@@ -63,12 +57,12 @@ class DefaultControlDesignTimeProvider extends ControlDesignTimeProviderBase
     }
 
     /**
-     * Renders conrol static body.
+     * Renders control static body.
      * The control static body is never updated with AJAX during the form editing.
      * @param string $type Specifies the control type to render.
      * @param array $properties Control property values preprocessed for the Inspector.
      * @param array $controlConfiguration Raw control property values.
-     * @param  RainLab\Builder\FormWidgets\FormBuilder $formBuilder FormBuilder widget instance.
+     * @param  \RainLab\Builder\FormWidgets\FormBuilder $formBuilder FormBuilder widget instance.
      * @return string Returns HTML markup string.
      */
     public function renderControlStaticBody($type, $properties, $controlConfiguration, $formBuilder)

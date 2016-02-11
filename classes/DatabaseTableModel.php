@@ -1,6 +1,5 @@
 <?php namespace RainLab\Builder\Classes;
 
-use RainLab\Builder\Models\Settings as PluginSettings;
 use Doctrine\DBAL\Types\Type;
 use ApplicationException;
 use ValidationException;
@@ -8,7 +7,6 @@ use SystemException;
 use Exception;
 use Validator;
 use Lang;
-use File;
 use Schema;
 use Str;
 use Db;
@@ -38,17 +36,17 @@ class DatabaseTableModel extends BaseModel
     ];
 
     /**
-     * @var Doctrine\DBAL\Schema\Table Table details loaded from the database.
+     * @var \Doctrine\DBAL\Schema\Table Table details loaded from the database.
      */
     protected $tableInfo;
 
     /**
-     * @var Doctrine\DBAL\Schema\AbstractSchemaManager Contains the database schema
+     * @var \Doctrine\DBAL\Schema\AbstractSchemaManager Contains the database schema
      */
     protected static $schemaManager = null;
 
     /**
-     * @var Doctrine\DBAL\Schema\Schema Contains the database schema
+     * @var \Doctrine\DBAL\Schema\Schema Contains the database schema
      */
     protected static $schema = null;
 

@@ -1,10 +1,8 @@
 <?php namespace RainLab\Builder\Classes;
 
-use RainLab\Builder\Models\Settings as PluginSettings;
 use Symfony\Component\Yaml\Dumper as YamlDumper;
 use October\Rain\Parse\Template as TextParser;
 use System\Classes\VersionManager;
-use System\Classes\UpdateManager;
 use ApplicationException;
 use ValidationException;
 use SystemException;
@@ -12,7 +10,6 @@ use Exception;
 use Validator;
 use Lang;
 use File;
-use Yaml;
 use Str;
 
 /**
@@ -135,7 +132,8 @@ class MigrationModel extends BaseModel
             if ($executeOnSave) {
                 VersionManager::instance()->updatePlugin($this->getPluginCodeObj()->toCode(), $this->version);
             }
-        } catch (Exception $ex) {
+        }
+        catch (Exception $ex) {
             // Remove the script file, and rollback 
             // the version.yaml.
             $this->rollbackSaving($originalVersionData, $originalFileContents);

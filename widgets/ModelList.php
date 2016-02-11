@@ -4,12 +4,8 @@ use Backend\Classes\WidgetBase;
 use RainLab\Builder\Classes\ModelModel;
 use RainLab\Builder\Classes\ModelFormModel;
 use RainLab\Builder\Classes\ModelListModel;
-use RainLab\Builder\Models\Settings as PluginSettings;
 use Input;
-use Response;
-use Request;
 use Str;
-use Lang;
 
 /**
  * Model list widget.

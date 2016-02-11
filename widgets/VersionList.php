@@ -1,14 +1,10 @@
 <?php namespace RainLab\Builder\Widgets;
 
 use Backend\Classes\WidgetBase;
-use RainLab\Builder\Classes\MigrationModel;
 use RainLab\Builder\Classes\PluginVersion;
 use System\Classes\VersionManager;
 use Input;
-use Response;
-use Request;
 use Str;
-use Lang;
 
 /**
  * Plugin version list widget.
@@ -95,7 +91,10 @@ class VersionList extends WidgetBase
             foreach ($items as $version=>$versionInfo) {
                 $description = $this->getVersionDescription($versionInfo);
 
-                if ($this->textMatchesSearch($words, $version) || (strlen($description) && $this->textMatchesSearch($words, $description))) {
+                if (
+                    $this->textMatchesSearch($words, $version) ||
+                    (strlen($description) && $this->textMatchesSearch($words, $description))
+                ) {
                     $result[$version] = $versionInfo;
                 }
             }

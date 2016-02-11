@@ -1,10 +1,7 @@
 <?php namespace RainLab\Builder\FormWidgets;
 
-use Request;
 use Backend\Classes\FormWidgetBase;
-use RainLab\Builder\Classes\ControlLibrary;
 use RainLab\Builder\Classes\IconList;
-use ApplicationException;
 use Input;
 use Lang;
 

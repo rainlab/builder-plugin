@@ -3,10 +3,7 @@
 use RainLab\Builder\Models\Settings as PluginSettings;
 use System\Classes\UpdateManager;
 use System\Classes\PluginManager;
-use ApplicationException;
-use SystemException;
 use Exception;
-use Lang;
 use File;
 
 /**

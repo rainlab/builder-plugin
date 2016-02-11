@@ -1,7 +1,6 @@
 <?php namespace RainLab\Builder\Classes;
 
 use ApplicationException;
-use SystemException;
 
 /**
  * Represents a plugin code and provides basic code operations.

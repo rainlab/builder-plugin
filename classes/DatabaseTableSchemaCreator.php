@@ -15,7 +15,7 @@ class DatabaseTableSchemaCreator extends BaseModel
     /**
      * @param string $name Specifies the table name.
      * @param array $columns A list of the table columns.
-     * @return Doctrine\DBAL\Schema\Table Returns the table schema.
+     * @return \Doctrine\DBAL\Schema\Table Returns the table schema.
      */
     public function createTableSchema($name, $columns)
     {

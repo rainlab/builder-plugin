@@ -1,9 +1,8 @@
 <?php namespace RainLab\Builder;
 
+use Event;
 use Backend;
 use System\Classes\PluginBase;
-use Event;
-use Lang;
 use RainLab\Builder\Classes\StandardControlsRegistry;
 use RainLab\Builder\Classes\StandardBehaviorsRegistry;
 

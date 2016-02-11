@@ -2,13 +2,8 @@
 
 use Backend\Classes\WidgetBase;
 use RainLab\Builder\Classes\LocalizationModel;
-use RainLab\Builder\Classes\PluginVersion;
-use System\Classes\VersionManager;
 use Input;
-use Response;
-use Request;
 use Str;
-use Lang;
 
 /**
  * Plugin language list widget.

@@ -1,8 +1,5 @@
 <?php namespace RainLab\Builder\Classes;
 
-use ApplicationException;
-use SystemException;
-use Exception;
 use Event;
 use Lang;
 
@@ -79,7 +76,7 @@ class ControlLibrary
 
     /**
      * Registers a control.
-     * @param string $type Specifies the control code, for example "codeeditor".
+     * @param string $code Specifies the control code, for example "codeeditor".
      * @param string $name Specifies the control name, for example "Code editor".
      * @param string $description Specifies the control descritpion, can be empty.
      * @param string|integer $controlGroup Specifies the control group.
@@ -140,10 +137,10 @@ class ControlLibrary
                 'type' => 'dropdown',
                 'default' => 'full',
                 'options' => [
-                    'left'=>Lang::get('rainlab.builder::lang.form.span_left'), 
-                    'right'=>Lang::get('rainlab.builder::lang.form.span_right'), 
-                    'full'=>Lang::get('rainlab.builder::lang.form.span_full'), 
-                    'auto'=>Lang::get('rainlab.builder::lang.form.span_auto')
+                    'left' => Lang::get('rainlab.builder::lang.form.span_left'),
+                    'right' => Lang::get('rainlab.builder::lang.form.span_right'),
+                    'full' => Lang::get('rainlab.builder::lang.form.span_full'),
+                    'auto' => Lang::get('rainlab.builder::lang.form.span_auto')
                 ]
             ],
             'placeholder' => [

@@ -16,7 +16,7 @@ use Input;
 class RecordDetails extends ComponentBase
 {
     /**
-     * A model instance to dislay
+     * A model instance to display
      * @var Model
      */
     public $record = null;

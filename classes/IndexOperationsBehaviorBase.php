@@ -1,12 +1,8 @@
 <?php namespace RainLab\Builder\Classes;
 
 use Backend\Classes\ControllerBehavior;
-use RainLab\Builder\Classes\PluginBaseModel;
 use Backend\Behaviors\FormController;
-use SystemException;
 use ApplicationException;
-use Exception;
-use Input;
 
 /**
  * Base class for index operation behaviors

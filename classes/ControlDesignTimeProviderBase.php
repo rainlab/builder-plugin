@@ -8,7 +8,7 @@ abstract class ControlDesignTimeProviderBase extends WidgetBase
      * Renders conrol body.
      * @param string $type Specifies the control type to render.
      * @param array $properties Control property values.
-     * @param  RainLab\Builder\FormWidgets\FormBuilder $formBuilder FormBuilder widget instance.
+     * @param  \RainLab\Builder\FormWidgets\FormBuilder $formBuilder FormBuilder widget instance.
      * @return string Returns HTML markup string.
      */
     abstract public function renderControlBody($type, $properties, $formBuilder);
@@ -19,7 +19,7 @@ abstract class ControlDesignTimeProviderBase extends WidgetBase
      * @param string $type Specifies the control type to render.
      * @param array $properties Control property values.
      * @param array $controlConfiguration Raw control property values.
-     * @param  RainLab\Builder\FormWidgets\FormBuilder $formBuilder FormBuilder widget instance.
+     * @param  \RainLab\Builder\FormWidgets\FormBuilder $formBuilder FormBuilder widget instance.
      * @return string Returns HTML markup string.
      */
     abstract public function renderControlStaticBody($type, $properties, $controlConfiguration, $formBuilder);
