@@ -25,7 +25,8 @@ return [
         'field_homepage' => 'Plugin homepage URL',
         'no_description' => 'No description provided for this plugin',
         'error_settings_not_editable' => 'Settings of this plugin cannot be edited with Builder.',
-        'update_hint' => 'You can edit localized plugin\'s name and description on the Localization tab.'
+        'update_hint' => 'You can edit localized plugin\'s name and description on the Localization tab.',
+        'manage_plugins' => 'Create and edit plugins'
     ],
     'author_name' => [
         'title' => 'Author name',

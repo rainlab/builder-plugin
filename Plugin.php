@@ -29,6 +29,11 @@ class Plugin extends PluginBase
 
     public function registerPermissions()
     {
+        return [
+            'rainlab.builder.manage_plugins' => [
+                'tab' => 'rainlab.builder::lang.plugin.name', 
+                'label' => 'rainlab.builder::lang.plugin.manage_plugins']
+        ];
     }
 
     public function registerNavigation()
@@ -38,7 +43,7 @@ class Plugin extends PluginBase
                 'label'       => 'rainlab.builder::lang.plugin.name',
                 'url'         => Backend::url('rainlab/builder'),
                 'icon'        => 'icon-wrench',
-                'permissions' => ['rainlab.builder.*'],
+                'permissions' => ['rainlab.builder.manage_plugins'],
                 'order'       => 40, 
 
                 'sideMenu' => [
@@ -47,49 +52,49 @@ class Plugin extends PluginBase
                         'icon'        => 'icon-hdd-o',
                         'url'         => 'javascript:;',
                         'attributes'  => ['data-menu-item'=>'database'],
-                        'permissions' => ['rainlab.builder.*']
+                        'permissions' => ['rainlab.builder.manage_plugins']
                     ],
                     'models' => [
                         'label'       => 'rainlab.builder::lang.model.menu_label',
                         'icon'        => 'icon-random',
                         'url'         => 'javascript:;',
                         'attributes'  => ['data-menu-item'=>'models'],
-                        'permissions' => ['rainlab.builder.*']
+                        'permissions' => ['rrainlab.builder.manage_plugins']
                     ],
                     'permissions' => [
                         'label'       => 'rainlab.builder::lang.permission.menu_label',
                         'icon'        => 'icon-unlock-alt',
                         'url'         => '#',
                         'attributes'  => ['data-no-side-panel'=>'true', 'data-builder-command'=>'permission:cmdOpenPermissions', 'data-menu-item'=>'permissions'],
-                        'permissions' => ['rainlab.builder.*']
+                        'permissions' => ['rainlab.builder.manage_plugins']
                     ],
                     'menus' => [
                         'label'       => 'rainlab.builder::lang.menu.menu_label',
                         'icon'        => 'icon-location-arrow',
                         'url'         => 'javascript:;',
                         'attributes'  => ['data-no-side-panel'=>'true', 'data-builder-command'=>'menus:cmdOpenMenus', 'data-menu-item'=>'menus'],
-                        'permissions' => ['rainlab.builder.*']
+                        'permissions' => ['rainlab.builder.manage_plugins']
                     ],
                     'controllers' => [
                         'label'       => 'rainlab.builder::lang.controller.menu_label',
                         'icon'        => 'icon-asterisk',
                         'url'         => 'javascript:;',
                         'attributes'  => ['data-menu-item'=>'controllers'],
-                        'permissions' => ['rainlab.builder.*']
+                        'permissions' => ['rainlab.builder.manage_plugins']
                     ],
                     'versions' => [
                         'label'       => 'rainlab.builder::lang.version.menu_label',
                         'icon'        => 'icon-code-fork',
                         'url'         => 'javascript:;',
                         'attributes'  => ['data-menu-item'=>'version'],
-                        'permissions' => ['rainlab.builder.*']
+                        'permissions' => ['rainlab.builder.manage_plugins']
                     ],
                     'localization' => [
                         'label'       => 'rainlab.builder::lang.localization.menu_label',
                         'icon'        => 'icon-globe',
                         'url'         => 'javascript:;',
                         'attributes'  => ['data-menu-item'=>'localization'],
-                        'permissions' => ['rainlab.builder.*']
+                        'permissions' => ['rainlab.builder.manage_plugins']
                     ]
                 ]
 
