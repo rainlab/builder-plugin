@@ -6,3 +6,5 @@
     - Improved handling of the enum data type.
 1.0.4:
     - Added user permissions to work with the Builder.
+1.0.5:
+    - Fixed permissions registration.

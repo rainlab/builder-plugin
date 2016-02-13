@@ -8,10 +8,6 @@ class Plugin extends PluginBase
     {
     }
 
-    public function registerPermissions()
-    {
-    }
-
     public function registerSettings()
     {
     }
