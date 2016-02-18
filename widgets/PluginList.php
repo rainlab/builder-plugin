@@ -1,14 +1,14 @@
 <?php namespace RainLab\Builder\Widgets;
 
+use Str;
+use Input;
+use File;
 use Backend\Classes\WidgetBase;
 use System\Classes\PluginManager;
 use RainLab\Builder\Classes\PluginCode;
 use RainLab\Builder\Models\Settings as PluginSettings;
 use RainLab\Builder\Classes\PluginVector;
-use Input;
-use File;
 use Exception;
-use Str;
 
 /**
  * Plugin list widget.

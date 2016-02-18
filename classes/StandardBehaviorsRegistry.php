@@ -167,9 +167,9 @@ class StandardBehaviorsRegistry
         ];
 
         $templates = [
-            '~/plugins/rainlab/builder/classes/standardbehaviorsregistry/formcontroller/templates/create.htm.tpl',
-            '~/plugins/rainlab/builder/classes/standardbehaviorsregistry/formcontroller/templates/update.htm.tpl',
-            '~/plugins/rainlab/builder/classes/standardbehaviorsregistry/formcontroller/templates/preview.htm.tpl'
+            '$/rainlab/builder/classes/standardbehaviorsregistry/formcontroller/templates/create.htm.tpl',
+            '$/rainlab/builder/classes/standardbehaviorsregistry/formcontroller/templates/update.htm.tpl',
+            '$/rainlab/builder/classes/standardbehaviorsregistry/formcontroller/templates/preview.htm.tpl'
         ];
 
         $this->behaviorLibrary->registerBehavior(
@@ -339,8 +339,8 @@ class StandardBehaviorsRegistry
         ];
 
         $templates = [
-            '~/plugins/rainlab/builder/classes/standardbehaviorsregistry/listcontroller/templates/index.htm.tpl',
-            '~/plugins/rainlab/builder/classes/standardbehaviorsregistry/listcontroller/templates/_list_toolbar.htm.tpl'
+            '$/rainlab/builder/classes/standardbehaviorsregistry/listcontroller/templates/index.htm.tpl',
+            '$/rainlab/builder/classes/standardbehaviorsregistry/listcontroller/templates/_list_toolbar.htm.tpl'
         ];
 
         $this->behaviorLibrary->registerBehavior(
@@ -405,8 +405,8 @@ class StandardBehaviorsRegistry
         ];
 
         $templates = [
-            '~/plugins/rainlab/builder/classes/standardbehaviorsregistry/reordercontroller/templates/reorder.htm.tpl',
-            '~/plugins/rainlab/builder/classes/standardbehaviorsregistry/reordercontroller/templates/_reorder_toolbar.htm.tpl'
+            '$/rainlab/builder/classes/standardbehaviorsregistry/reordercontroller/templates/reorder.htm.tpl',
+            '$/rainlab/builder/classes/standardbehaviorsregistry/reordercontroller/templates/_reorder_toolbar.htm.tpl'
         ];
 
         $this->behaviorLibrary->registerBehavior(

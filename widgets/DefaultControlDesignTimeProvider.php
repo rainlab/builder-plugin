@@ -1,7 +1,7 @@
 <?php namespace RainLab\Builder\Widgets;
 
-use RainLab\Builder\Classes\ControlDesignTimeProviderBase;
 use File;
+use RainLab\Builder\Classes\ControlDesignTimeProviderBase;
 
 /**
  * Default control design-time provider.

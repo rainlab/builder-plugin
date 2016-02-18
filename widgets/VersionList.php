@@ -1,10 +1,10 @@
 <?php namespace RainLab\Builder\Widgets;
 
+use Str;
+use Input;
 use Backend\Classes\WidgetBase;
 use RainLab\Builder\Classes\PluginVersion;
 use System\Classes\VersionManager;
-use Input;
-use Str;
 
 /**
  * Plugin version list widget.

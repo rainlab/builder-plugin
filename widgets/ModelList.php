@@ -1,11 +1,11 @@
 <?php namespace RainLab\Builder\Widgets;
 
+use Str;
+use Input;
 use Backend\Classes\WidgetBase;
 use RainLab\Builder\Classes\ModelModel;
 use RainLab\Builder\Classes\ModelFormModel;
 use RainLab\Builder\Classes\ModelListModel;
-use Input;
-use Str;
 
 /**
  * Model list widget.

@@ -1,9 +1,9 @@
 <?php namespace RainLab\Builder\Widgets;
 
+use Str;
+use Input;
 use Backend\Classes\WidgetBase;
 use RainLab\Builder\Classes\LocalizationModel;
-use Input;
-use Str;
 
 /**
  * Plugin language list widget.

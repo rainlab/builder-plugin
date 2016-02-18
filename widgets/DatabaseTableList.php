@@ -1,9 +1,9 @@
 <?php namespace RainLab\Builder\Widgets;
 
+use Str;
+use Input;
 use Backend\Classes\WidgetBase;
 use RainLab\Builder\Classes\DatabaseTableModel;
-use Input;
-use Str;
 
 /**
  * Database table list widget.

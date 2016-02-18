@@ -1,16 +1,11 @@
 <?php namespace RainLab\Builder\Widgets;
 
+use Lang;
 use RainLab\Builder\Classes\BehaviorDesignTimeProviderBase;
 use RainLab\Builder\Classes\ModelListModel;
 use RainLab\Builder\Classes\ModelFormModel;
 use SystemException;
 use ApplicationException;
-use Input;
-use Response;
-use Request;
-use Str;
-use Lang;
-use File;
 
 /**
  * Default behavior design-time provider.
@@ -184,7 +179,7 @@ class DefaultBehaviorDesignTimeProvider extends BehaviorDesignTimeProviderBase
 
     protected function getModelFilePath($pluginCodeObj, $modelClassName, $file)
     {
-        return '~/plugins/'.$pluginCodeObj->toFilesystemPath().'/models/'.strtolower($modelClassName).'/'.$file;
+        return '$/' . $pluginCodeObj->toFilesystemPath() . '/models/' . strtolower($modelClassName) . '/' . $file;
     }
 
     protected function getControllerlUrl($pluginCodeObj, $controller)
