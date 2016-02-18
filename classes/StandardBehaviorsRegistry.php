@@ -23,6 +23,7 @@ class StandardBehaviorsRegistry
     {
         $this->registerListBehavior();
         $this->registerFormBehavior();
+        $this->registerReorderBehavior();
     }
 
     protected function registerFormBehavior()
@@ -179,7 +180,8 @@ class StandardBehaviorsRegistry
             'formConfig',
             null,
             'config_form.yaml',
-            $templates);
+            $templates
+        );
     }
 
     protected function registerListBehavior()
@@ -349,6 +351,73 @@ class StandardBehaviorsRegistry
             'listConfig',
             null,
             'config_list.yaml',
-            $templates);
+            $templates
+        );
+    }
+
+    protected function registerReorderBehavior()
+    {
+        $properties = [
+            'title' => [
+                'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_reorder_title'),
+                'type' => 'builderLocalization',
+                'validation' => [
+                    'required' => [
+                        'message' => Lang::get('rainlab.builder::lang.controller.property_behavior_reorder_title_required')
+                    ]
+                ],
+            ],
+            'nameFrom' => [
+                'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_reorder_name_from'),
+                'type' => 'string',
+                'validation' => [
+                    'required' => [
+                        'message' => Lang::get('rainlab.builder::lang.controller.property_behavior_reorder_name_from_required')
+                    ]
+                ],
+            ],
+            'modelClass' => [
+                'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_reorder_model_class'),
+                'description' => Lang::get('rainlab.builder::lang.controller.property_behavior_reorder_model_class_description'),
+                'placeholder' => Lang::get('rainlab.builder::lang.controller.property_behavior_reorder_model_placeholder'),
+                'type' => 'dropdown',
+                'fillFrom' => 'model-classes',
+                'validation' => [
+                    'required' => [
+                        'message' => Lang::get('rainlab.builder::lang.controller.property_behavior_reorder_model_class_required')
+                    ]
+                ],
+            ],
+            'toolbar' => [
+                'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_reorder_toolbar'),
+                'type' => 'object',
+                'ignoreIfEmpty' => true,
+                'properties' => [
+                    [
+                        'property' => 'buttons',
+                        'type' => 'string',
+                        'ignoreIfEmpty' => true,
+                        'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_reorder_toolbar_buttons'),
+                        'description' => Lang::get('rainlab.builder::lang.controller.property_behavior_reorder_toolbar_buttons_description'),
+                    ]
+                ]
+            ],
+        ];
+
+        $templates = [
+            '~/plugins/rainlab/builder/classes/standardbehaviorsregistry/reordercontroller/templates/reorder.htm.tpl',
+            '~/plugins/rainlab/builder/classes/standardbehaviorsregistry/reordercontroller/templates/_reorder_toolbar.htm.tpl'
+        ];
+
+        $this->behaviorLibrary->registerBehavior(
+            'Backend\Behaviors\ReorderController',
+            'rainlab.builder::lang.controller.behavior_reorder_controller',
+            'rainlab.builder::lang.controller.behavior_reorder_controller_description',
+            $properties,
+            'reorderConfig',
+            null,
+            'config_reorder.yaml',
+            $templates
+        );
     }
 }

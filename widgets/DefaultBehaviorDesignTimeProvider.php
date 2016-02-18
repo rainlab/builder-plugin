@@ -22,7 +22,8 @@ class DefaultBehaviorDesignTimeProvider extends BehaviorDesignTimeProviderBase
 {
     protected $defaultBehaviorClasses = [
         'Backend\Behaviors\FormController' => 'form-controller',
-        'Backend\Behaviors\ListController' => 'list-controller'
+        'Backend\Behaviors\ListController' => 'list-controller',
+        'Backend\Behaviors\ReorderController' => 'reorder-controller'
     ];
 
     /**
@@ -64,6 +65,8 @@ class DefaultBehaviorDesignTimeProvider extends BehaviorDesignTimeProviderBase
                 return $this->getFormControllerDefaultConfiguration($controllerModel, $controllerGenerator);
             case 'Backend\Behaviors\ListController' : 
                 return $this->getListControllerDefaultConfiguration($controllerModel, $controllerGenerator);
+            case 'Backend\Behaviors\ReorderController' :
+                return $this->getFormControllerDefaultConfiguration($controllerModel, $controllerGenerator);
         }
     }
 
@@ -78,7 +81,9 @@ class DefaultBehaviorDesignTimeProvider extends BehaviorDesignTimeProviderBase
     protected function getFormControllerDefaultConfiguration($controllerModel, $controllerGenerator)
     {
         if (!$controllerModel->baseModelClassName) {
-            throw new ApplicationException(Lang::get('rainlab.builder::lang.controller.error_behavior_requires_base_model', ['behavior'=>'Form Controller']));
+            throw new ApplicationException(Lang::get('rainlab.builder::lang.controller.error_behavior_requires_base_model', [
+                'behavior' => 'Form Controller'
+            ]));
         }
 
         $pluginCodeObj = $controllerModel->getPluginCodeObj();
@@ -111,7 +116,9 @@ class DefaultBehaviorDesignTimeProvider extends BehaviorDesignTimeProviderBase
     protected function getListControllerDefaultConfiguration($controllerModel, $controllerGenerator)
     {
         if (!$controllerModel->baseModelClassName) {
-            throw new ApplicationException(Lang::get('rainlab.builder::lang.controller.error_behavior_requires_base_model', ['behavior'=>'List Controller']));
+            throw new ApplicationException(Lang::get('rainlab.builder::lang.controller.error_behavior_requires_base_model', [
+                'behavior' => 'List Controller'
+            ]));
         }
 
         $pluginCodeObj = $controllerModel->getPluginCodeObj();
@@ -145,6 +152,27 @@ class DefaultBehaviorDesignTimeProvider extends BehaviorDesignTimeProviderBase
             $controllerGenerator->setTemplateVariable('hasFormBehavior', true);
             $controllerGenerator->setTemplateVariable('createUrl', $createUrl);
         }
+
+        return $result;
+    }
+
+    protected function getReorderControllerDefaultConfiguration($controllerModel, $controllerGenerator)
+    {
+        if (!$controllerModel->baseModelClassName) {
+            throw new ApplicationException(Lang::get('rainlab.builder::lang.controller.error_behavior_requires_base_model', [
+                'behavior' => 'Reorder Controller'
+            ]));
+        }
+
+        $pluginCodeObj = $controllerModel->getPluginCodeObj();
+
+        $result = [
+            'title' => $controllerModel->controller,
+            'modelClass' => $this->getFullModelClass($pluginCodeObj, $controllerModel->baseModelClassName),
+            'toolbar' => [
+                'buttons' => 'reorder_toolbar',
+            ]
+        ];
 
         return $result;
     }
