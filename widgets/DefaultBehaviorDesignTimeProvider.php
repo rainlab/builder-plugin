@@ -1,16 +1,11 @@
 <?php namespace RainLab\Builder\Widgets;
 
+use Lang;
 use RainLab\Builder\Classes\BehaviorDesignTimeProviderBase;
 use RainLab\Builder\Classes\ModelListModel;
 use RainLab\Builder\Classes\ModelFormModel;
 use SystemException;
 use ApplicationException;
-use Input;
-use Response;
-use Request;
-use Str;
-use Lang;
-use File;
 
 /**
  * Default behavior design-time provider.
@@ -22,7 +17,8 @@ class DefaultBehaviorDesignTimeProvider extends BehaviorDesignTimeProviderBase
 {
     protected $defaultBehaviorClasses = [
         'Backend\Behaviors\FormController' => 'form-controller',
-        'Backend\Behaviors\ListController' => 'list-controller'
+        'Backend\Behaviors\ListController' => 'list-controller',
+        'Backend\Behaviors\ReorderController' => 'reorder-controller'
     ];
 
     /**
@@ -64,6 +60,8 @@ class DefaultBehaviorDesignTimeProvider extends BehaviorDesignTimeProviderBase
                 return $this->getFormControllerDefaultConfiguration($controllerModel, $controllerGenerator);
             case 'Backend\Behaviors\ListController' : 
                 return $this->getListControllerDefaultConfiguration($controllerModel, $controllerGenerator);
+            case 'Backend\Behaviors\ReorderController' :
+                return $this->getReorderControllerDefaultConfiguration($controllerModel, $controllerGenerator);
         }
     }
 
@@ -78,7 +76,9 @@ class DefaultBehaviorDesignTimeProvider extends BehaviorDesignTimeProviderBase
     protected function getFormControllerDefaultConfiguration($controllerModel, $controllerGenerator)
     {
         if (!$controllerModel->baseModelClassName) {
-            throw new ApplicationException(Lang::get('rainlab.builder::lang.controller.error_behavior_requires_base_model', ['behavior'=>'Form Controller']));
+            throw new ApplicationException(Lang::get('rainlab.builder::lang.controller.error_behavior_requires_base_model', [
+                'behavior' => 'Form Controller'
+            ]));
         }
 
         $pluginCodeObj = $controllerModel->getPluginCodeObj();
@@ -111,7 +111,9 @@ class DefaultBehaviorDesignTimeProvider extends BehaviorDesignTimeProviderBase
     protected function getListControllerDefaultConfiguration($controllerModel, $controllerGenerator)
     {
         if (!$controllerModel->baseModelClassName) {
-            throw new ApplicationException(Lang::get('rainlab.builder::lang.controller.error_behavior_requires_base_model', ['behavior'=>'List Controller']));
+            throw new ApplicationException(Lang::get('rainlab.builder::lang.controller.error_behavior_requires_base_model', [
+                'behavior' => 'List Controller'
+            ]));
         }
 
         $pluginCodeObj = $controllerModel->getPluginCodeObj();
@@ -149,6 +151,27 @@ class DefaultBehaviorDesignTimeProvider extends BehaviorDesignTimeProviderBase
         return $result;
     }
 
+    protected function getReorderControllerDefaultConfiguration($controllerModel, $controllerGenerator)
+    {
+        if (!$controllerModel->baseModelClassName) {
+            throw new ApplicationException(Lang::get('rainlab.builder::lang.controller.error_behavior_requires_base_model', [
+                'behavior' => 'Reorder Controller'
+            ]));
+        }
+
+        $pluginCodeObj = $controllerModel->getPluginCodeObj();
+
+        $result = [
+            'title' => $controllerModel->controller,
+            'modelClass' => $this->getFullModelClass($pluginCodeObj, $controllerModel->baseModelClassName),
+            'toolbar' => [
+                'buttons' => 'reorder_toolbar',
+            ]
+        ];
+
+        return $result;
+    }
+
     protected function getFullModelClass($pluginCodeObj, $modelClassName)
     {
         return $pluginCodeObj->toPluginNamespace().'\\Models\\'.$modelClassName;
@@ -156,7 +179,7 @@ class DefaultBehaviorDesignTimeProvider extends BehaviorDesignTimeProviderBase
 
     protected function getModelFilePath($pluginCodeObj, $modelClassName, $file)
     {
-        return '~/plugins/'.$pluginCodeObj->toFilesystemPath().'/models/'.strtolower($modelClassName).'/'.$file;
+        return '$/' . $pluginCodeObj->toFilesystemPath() . '/models/' . strtolower($modelClassName) . '/' . $file;
     }
 
     protected function getControllerlUrl($pluginCodeObj, $controller)

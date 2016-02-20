@@ -76,7 +76,9 @@ class ControllerGenerator
             $behaviorInfo = $behaviorLibrary->getBehaviorInfo($behaviorClass);
             if (!$behaviorInfo) {
                 throw new ValidationException([
-                    'behaviors' => Lang::get('rainlab.builder::lang.controller.error_unknown_behavior', ['class'=>$behaviorClass])
+                    'behaviors' => Lang::get('rainlab.builder::lang.controller.error_unknown_behavior', [
+                        'class' => $behaviorClass
+                    ])
                 ]);
             }
 
@@ -87,7 +89,7 @@ class ControllerGenerator
                 if (in_array($templateFileName, $knownTemplates)) {
                     throw new ValidationException([
                         'behaviors' => Lang::get('rainlab.builder::lang.controller.error_behavior_view_conflict', [
-                            'view'=> $templateBaseName
+                            'view' => $templateBaseName
                         ])
                     ]);
 
@@ -100,8 +102,8 @@ class ControllerGenerator
                 if (!File::isFile($filePath)) {
                     throw new ValidationException([
                         'behaviors' => Lang::get('rainlab.builder::lang.controller.error_behavior_view_file_not_found', [
-                            'class'=>$behaviorClass,
-                            'view'=>$templateFileName
+                            'class' => $behaviorClass,
+                            'view' => $templateFileName
                         ])
                     ]);
                 }
@@ -110,7 +112,7 @@ class ControllerGenerator
                 if (File::isFile($destFilePath)) {
                     throw new ValidationException([
                         'behaviors' => Lang::get('rainlab.builder::lang.controller.error_behavior_view_file_exists', [
-                            'view'=>$destFilePath
+                            'view' => $destFilePath
                         ])
                     ]);
                 }
@@ -143,7 +145,7 @@ class ControllerGenerator
             if (in_array($configFileName, $knownConfgFiles)) {
                 throw new ValidationException([
                     'behaviors' => Lang::get('rainlab.builder::lang.controller.error_behavior_config_conflict', [
-                        'file'=> $configFileName
+                        'file' => $configFileName
                     ])
                 ]);
 
@@ -156,7 +158,7 @@ class ControllerGenerator
             if (File::isFile($destFilePath)) {
                 throw new ValidationException([
                     'behaviors' => Lang::get('rainlab.builder::lang.controller.error_behavior_config_file_exists', [
-                        'file'=>$destFilePath
+                        'file' => $destFilePath
                     ])
                 ]);
             }
@@ -172,7 +174,9 @@ class ControllerGenerator
 
         if (File::isFile($controlerFilePath)) {
             throw new ValidationException([
-                'controller' => Lang::get('rainlab.builder::lang.controller.error_controller_exists', ['file'=>basename($controlerFilePath)])
+                'controller' => Lang::get('rainlab.builder::lang.controller.error_controller_exists', [
+                    'file' => basename($controlerFilePath)
+                ])
             ]);
         }
     }
@@ -230,12 +234,16 @@ class ControllerGenerator
         $fileDirectory = dirname($path);
         if (!File::isDirectory($fileDirectory)) {
             if (!File::makeDirectory($fileDirectory, 0777, true, true)) {
-                throw new ApplicationException(Lang::get('rainlab.builder::lang.common.error_make_dir', ['name'=>$fileDirectory]));
+                throw new ApplicationException(Lang::get('rainlab.builder::lang.common.error_make_dir', [
+                    'name' => $fileDirectory
+                ]));
             }
         }
 
         if (@File::put($path, $data) === false) {
-            throw new ApplicationException(Lang::get('rainlab.builder::lang.controller.error_save_file', ['file'=>basename($path)]));
+            throw new ApplicationException(Lang::get('rainlab.builder::lang.controller.error_save_file', [
+                'file' => basename($path)
+            ]));
         }
 
         @File::chmod($path);
@@ -311,8 +319,9 @@ class ControllerGenerator
 
             try {
                 $configArray = $provider->getDefaultConfiguration($behaviorClass, $this->sourceModel, $this);
-            } catch (Exception $ex) {
-                throw new ValidationException(['baseModelClassName'=>$ex->getMessage()]);
+            }
+            catch (Exception $ex) {
+                throw new ValidationException(['baseModelClassName' => $ex->getMessage()]);
             }
 
             $code = $dumper->dump($configArray, 20, 0, false, true);
