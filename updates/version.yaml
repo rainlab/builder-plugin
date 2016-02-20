@@ -12,3 +12,5 @@
     - Fixed front-end record ordering in the Record List component.
 1.0.7:
     - Builder settings are now protected with user permissions. The database table column list is scrollable now. Minor code cleanup.
+1.0.8:
+    - Added the Reorder Controller behavior.
