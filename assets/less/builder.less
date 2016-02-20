@@ -82,6 +82,36 @@ form.hide-secondary-tabs {
     }
 }
 
+// Full height database columns table
+
+form[data-entity=database] {
+    div.field-datatable {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+
+        div[data-control=table] {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+
+            div.table-container {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+
+                div.control-scrollbar {
+                    top: 73px;
+                    bottom: 0;
+                    position: absolute;
+                    max-height: none!important;
+                    height: auto!important;
+                }
+            }
+        }
+    }
+}
+
 // TODO: Move the aux tab styles to the tab.less
 
 .control-tabs {
