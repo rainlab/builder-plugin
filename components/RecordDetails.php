@@ -1,23 +1,15 @@
 <?php namespace RainLab\Builder\Components;
 
-use Redirect;
-use Cms\Classes\Page;
-use Cms\Classes\ComponentBase;
-use RainLab\Builder\Classes\PluginBaseModel;
-use RainLab\Builder\Classes\ComponentHelper;
-use RainLab\Builder\Classes\ModelModel;
-use RainLab\Builder\Classes\PluginCode;
 use Lang;
-use Exception;
+use Cms\Classes\ComponentBase;
+use RainLab\Builder\Classes\ComponentHelper;;
 use SystemException;
-use ApplicationException;
-use Input;
 
 class RecordDetails extends ComponentBase
 {
     /**
      * A model instance to display
-     * @var Model
+     * @var \October\Rain\Database\Model
      */
     public $record = null;
     

@@ -1,17 +1,17 @@
 <?php namespace RainLab\Builder\Components;
 
+use Lang;
 use Cms\Classes\Page;
 use Cms\Classes\ComponentBase;
 use RainLab\Builder\Classes\ComponentHelper;
-use Lang;
-use Exception;
 use SystemException;
+use Exception;
 
 class RecordList extends ComponentBase
 {
     /**
      * A collection of records to display
-     * @var Collection
+     * @var \October\Rain\Database\Collection
      */
     public $records;
 
