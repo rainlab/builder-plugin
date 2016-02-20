@@ -443,7 +443,6 @@ return [
         'property_behavior_reorder_toolbar' => 'Toolbar',
         'property_behavior_reorder_toolbar_buttons' => 'Buttons partial',
         'property_behavior_reorder_toolbar_buttons_description' => 'Reference to a controller partial file with the toolbar buttons. Eg: reorder_toolbar',
-
         'error_controller_not_found' => 'Original controller file is not found.',
         'error_invalid_config_file_name' => 'The behavior :class configuration file name (:file) contains invalid characters and cannot be loaded.',
         'error_file_not_yaml' => 'The behavior :class configuration file (:file) is not a YAML file. Only YAML configuration files are supported.',

@@ -61,7 +61,7 @@ class DefaultBehaviorDesignTimeProvider extends BehaviorDesignTimeProviderBase
             case 'Backend\Behaviors\ListController' : 
                 return $this->getListControllerDefaultConfiguration($controllerModel, $controllerGenerator);
             case 'Backend\Behaviors\ReorderController' :
-                return $this->getFormControllerDefaultConfiguration($controllerModel, $controllerGenerator);
+                return $this->getReorderControllerDefaultConfiguration($controllerModel, $controllerGenerator);
         }
     }
 
