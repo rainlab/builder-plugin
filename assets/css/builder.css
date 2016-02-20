@@ -501,7 +501,7 @@ html.gecko.mac .builder-building-area div[data-root-control-wrapper] {
   clear: both;
 }
 .builder-controllers-builder-area ul.controller-behavior-list .behavior-container .list-behavior,
-.builder-controllers-builder-area ul.controller-behavior-list .behavior-container .reorder-behavior{
+.builder-controllers-builder-area ul.controller-behavior-list .behavior-container .reorder-behavior {
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   border-radius: 4px;
@@ -509,27 +509,39 @@ html.gecko.mac .builder-building-area div[data-root-control-wrapper] {
   padding: 25px 10px 25px 10px;
 }
 .builder-controllers-builder-area ul.controller-behavior-list .behavior-container .list-behavior table,
-.builder-controllers-builder-area ul.controller-behavior-list .behavior-container .reorder-behavior table{
+.builder-controllers-builder-area ul.controller-behavior-list .behavior-container .reorder-behavior table {
   border-collapse: collapse;
   width: 100%;
 }
 .builder-controllers-builder-area ul.controller-behavior-list .behavior-container .list-behavior table td,
-.builder-controllers-builder-area ul.controller-behavior-list .behavior-container .reorder-behavior table td{
+.builder-controllers-builder-area ul.controller-behavior-list .behavior-container .reorder-behavior table td {
   padding: 0 15px 15px 15px;
   border-right: 1px solid #bdc3c7;
 }
 .builder-controllers-builder-area ul.controller-behavior-list .behavior-container .list-behavior table td:last-child,
-.builder-controllers-builder-area ul.controller-behavior-list .behavior-container .reorder-behavior table td:last-child{
+.builder-controllers-builder-area ul.controller-behavior-list .behavior-container .reorder-behavior table td:last-child {
   border-right: none;
 }
 .builder-controllers-builder-area ul.controller-behavior-list .behavior-container .list-behavior table .placeholder,
-.builder-controllers-builder-area ul.controller-behavior-list .behavior-container .reorder-behavior table .placeholder{
+.builder-controllers-builder-area ul.controller-behavior-list .behavior-container .reorder-behavior table .placeholder {
   background: #EEF2F4;
   height: 25px;
 }
 .builder-controllers-builder-area ul.controller-behavior-list .behavior-container .list-behavior table tbody tr:last-child td,
-.builder-controllers-builder-area ul.controller-behavior-list .behavior-container .reorder-behavior table tbody tr:last-child td{
+.builder-controllers-builder-area ul.controller-behavior-list .behavior-container .reorder-behavior table tbody tr:last-child td {
   padding-bottom: 0;
+}
+.builder-controllers-builder-area ul.controller-behavior-list .behavior-container .reorder-behavior table i.icon-bars,
+.builder-controllers-builder-area ul.controller-behavior-list .behavior-container .reorder-behavior table .placeholder {
+  float: left;
+}
+.builder-controllers-builder-area ul.controller-behavior-list .behavior-container .reorder-behavior table i.icon-bars {
+  margin-right: 15px;
+  color: #D6DDE0;
+  font-size: 28px;
+  line-height: 28px;
+  position: relative;
+  top: -2px;
 }
 .builder-controllers-builder-area ul.controller-behavior-list .behavior-container .form-behavior div.form {
   padding: 25px 25px 0 25px;

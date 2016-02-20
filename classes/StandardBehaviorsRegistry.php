@@ -367,15 +367,6 @@ class StandardBehaviorsRegistry
                     ]
                 ],
             ],
-            'nameFrom' => [
-                'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_reorder_name_from'),
-                'type' => 'string',
-                'validation' => [
-                    'required' => [
-                        'message' => Lang::get('rainlab.builder::lang.controller.property_behavior_reorder_name_from_required')
-                    ]
-                ],
-            ],
             'modelClass' => [
                 'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_reorder_model_class'),
                 'description' => Lang::get('rainlab.builder::lang.controller.property_behavior_reorder_model_class_description'),
@@ -385,6 +376,19 @@ class StandardBehaviorsRegistry
                 'validation' => [
                     'required' => [
                         'message' => Lang::get('rainlab.builder::lang.controller.property_behavior_reorder_model_class_required')
+                    ]
+                ],
+            ],
+            'nameFrom' => [
+                'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_reorder_name_from'),
+                'description' => Lang::get('rainlab.builder::lang.controller.property_behavior_reorder_name_from_description'),
+                'type' => 'autocomplete',
+                'fillFrom' => 'model-columns',
+                'subtypeFrom' => 'modelClass',
+                'depends' => ['modelClass'],
+                'validation' => [
+                    'required' => [
+                        'message' => Lang::get('rainlab.builder::lang.controller.property_behavior_reorder_name_from_required')
                     ]
                 ],
             ],

@@ -434,6 +434,7 @@ return [
         'property_behavior_reorder_title' => 'Reorder title',
         'property_behavior_reorder_title_required' => 'Please enter the reorder title',
         'property_behavior_reorder_name_from' => 'Attribute name',
+        'property_behavior_reorder_name_from_description' => 'Model\'s attribute that should be used as a label for each record.',
         'property_behavior_reorder_name_from_required' => 'Please enter the attribute name',
         'property_behavior_reorder_model_class' => 'Model class',
         'property_behavior_reorder_model_class_description' => 'A model class name, the reorder data is loaded from this model.',
