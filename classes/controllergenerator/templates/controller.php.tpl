@@ -1,7 +1,9 @@
 <?php namespace {{ pluginNamespace }}\Controllers;
 
-use Backend\Classes\Controller;
+use Lang;
+use Flash;
 use BackendMenu;
+use Backend\Classes\Controller;
 
 class {{ controller }} extends Controller
 {
@@ -17,5 +19,24 @@ class {{ controller }} extends Controller
         BackendMenu::setContext('{{ pluginCode }}', '{{ menuItem }}', '{{ sideMenuItem }}');
 {% endif %}
 {% endif %}
+    }
+
+    public function index_onDelete()
+    {
+        $model = $this->getConfig('modelClass');
+
+        if (($checkedIds = post('checked')) && is_array($checkedIds) && count($checkedIds)) {
+            foreach ($checkedIds as $id) {
+                if (!$record = $model::find($id)) {
+                    continue;
+                }
+
+                $record->delete();
+            }
+
+            Flash::success(Lang::get('backend::lang.list.delete_selected_success'));
+        }
+
+        return $this->listRefresh();
     }
 }
