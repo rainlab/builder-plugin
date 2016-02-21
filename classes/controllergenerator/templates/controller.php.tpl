@@ -1,7 +1,9 @@
 <?php namespace {{ pluginNamespace }}\Controllers;
 
+{% if hasListBehavior %}
 use Lang;
 use Flash;
+{% endif %}
 use BackendMenu;
 use Backend\Classes\Controller;
 
@@ -20,7 +22,7 @@ class {{ controller }} extends Controller
 {% endif %}
 {% endif %}
     }
-
+    {% if hasListBehavior %}
     public function index_onDelete()
     {
         $model = $this->getConfig('modelClass');
@@ -39,4 +41,6 @@ class {{ controller }} extends Controller
 
         return $this->listRefresh();
     }
+    {% endif %}
+
 }
