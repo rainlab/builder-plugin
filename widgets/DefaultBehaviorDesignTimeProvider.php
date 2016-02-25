@@ -1,7 +1,10 @@
 <?php namespace RainLab\Builder\Widgets;
 
+use File;
 use Lang;
+use Twig;
 use RainLab\Builder\Classes\BehaviorDesignTimeProviderBase;
+use RainLab\Builder\Classes\ModelFileParser;
 use RainLab\Builder\Classes\ModelListModel;
 use RainLab\Builder\Classes\ModelFormModel;
 use SystemException;
@@ -18,7 +21,8 @@ class DefaultBehaviorDesignTimeProvider extends BehaviorDesignTimeProviderBase
     protected $defaultBehaviorClasses = [
         'Backend\Behaviors\FormController' => 'form-controller',
         'Backend\Behaviors\ListController' => 'list-controller',
-        'Backend\Behaviors\ReorderController' => 'reorder-controller'
+        'Backend\Behaviors\ReorderController' => 'reorder-controller',
+        'Backend\Behaviors\ImportExportController' => 'import-export-controller'
     ];
 
     /**
@@ -62,6 +66,8 @@ class DefaultBehaviorDesignTimeProvider extends BehaviorDesignTimeProviderBase
                 return $this->getListControllerDefaultConfiguration($controllerModel, $controllerGenerator);
             case 'Backend\Behaviors\ReorderController' :
                 return $this->getReorderControllerDefaultConfiguration($controllerModel, $controllerGenerator);
+            case 'Backend\Behaviors\ImportExportController' :
+                return $this->getImportExportControllerDefaultConfiguration($controllerModel, $controllerGenerator);
         }
     }
 
@@ -169,6 +175,86 @@ class DefaultBehaviorDesignTimeProvider extends BehaviorDesignTimeProviderBase
             ]
         ];
 
+        if (in_array('Backend\Behaviors\ReorderController', $controllerModel->behaviors)) {
+            $reorderUrl = $this->getControllerlUrl($pluginCodeObj, $controllerModel->controller).'/reorder';
+
+            $result['reorderUrl'] = $reorderUrl;
+
+            $controllerGenerator->setTemplateVariable('hasReorderBehavior', true);
+            $controllerGenerator->setTemplateVariable('reorderUrl', $reorderUrl);
+        }
+
+        return $result;
+    }
+
+    protected function getImportExportControllerDefaultConfiguration($controllerModel, $controllerGenerator)
+    {
+        if (!$controllerModel->baseModelClassName) {
+            throw new ApplicationException(Lang::get('rainlab.builder::lang.controller.error_behavior_requires_base_model', [
+                'behavior' => 'Import / Export Controller'
+            ]));
+        }
+
+        $pluginCodeObj = $controllerModel->getPluginCodeObj();
+
+        $lists = ModelListModel::listModelFiles($pluginCodeObj, $controllerModel->baseModelClassName);
+        if (!$lists) {
+            throw new ApplicationException(Lang::get('rainlab.builder::lang.controller.error_model_doesnt_have_lists'));
+        }
+
+        $result = [
+            'title' => $controllerModel->controller,
+            'noRecordsMessage' => 'backend::lang.list.no_records',
+            'import' => [
+                'list' => $this->getModelFilePath($pluginCodeObj, $controllerModel->baseModelClassName, $lists[0]),
+                'modelClass' => $this->getFullModelClass($pluginCodeObj, $controllerModel->baseModelClassName)
+            ],
+            'export' => [
+                'list' => $this->getModelFilePath($pluginCodeObj, $controllerModel->baseModelClassName, $lists[0]),
+                'modelClass' => $this->getFullModelClass($pluginCodeObj, $controllerModel->baseModelClassName)
+            ],
+            'toolbar' => [
+                'buttons' => 'import_export_toolbar'
+            ]
+        ];
+
+        if (in_array('Backend\Behaviors\ImportExportController', $controllerModel->behaviors)) {
+
+            $importUrl = $this->getControllerlUrl($pluginCodeObj, $controllerModel->controller).'/import';
+            $exportUrl = $this->getControllerlUrl($pluginCodeObj, $controllerModel->controller).'/export';
+
+            $result['importUrl'] = $importUrl;
+            $result['exportUrl'] = $exportUrl;
+
+            $controllerGenerator->setTemplateVariable('hasImportExportBehavior', true);
+            $controllerGenerator->setTemplateVariable('importUrl', $importUrl);
+            $controllerGenerator->setTemplateVariable('exportUrl', $exportUrl);
+
+            $parser = new ModelFileParser();
+            $className = $controllerModel->baseModelClassName;
+            $modelPath = File::symbolizePath($pluginCodeObj->toPluginDirectoryPath() . '/models/' . $className . '.php');
+            $namespace = $pluginCodeObj->toPluginNamespace() . '\Models';
+            $table = $parser->extractModelInfoFromSource(File::get($modelPath))['table'];
+
+            $importModelPath = File::symbolizePath($pluginCodeObj->toPluginDirectoryPath().'/models/Import' . $className . '.php');
+            $importModelCode = $this->parseTemplate($this->getImportExportModelTemplatePath('importmodel', 'import_model.php.tpl'), [
+                'namespace' => $namespace,
+                'className' => $className,
+                'table' => $table
+            ]);
+
+            $this->writeFile($importModelPath, $importModelCode);
+
+            $exportModelPath = File::symbolizePath($pluginCodeObj->toPluginDirectoryPath().'/models/Export' . $className . '.php');
+            $exportModelCode = $this->parseTemplate($this->getImportExportModelTemplatePath('exportmodel', 'export_model.php.tpl'), [
+                'namespace' => $namespace,
+                'className' => $className,
+                'table' => $table
+            ]);
+
+            $this->writeFile($exportModelPath, $exportModelCode);
+        }
+
         return $result;
     }
 
@@ -185,5 +271,38 @@ class DefaultBehaviorDesignTimeProvider extends BehaviorDesignTimeProviderBase
     protected function getControllerlUrl($pluginCodeObj, $controller)
     {
          return $pluginCodeObj->toUrl().'/'.strtolower($controller);
+    }
+
+    protected function parseTemplate($templatePath, $vars)
+    {
+        $template = File::get($templatePath);
+        $code = Twig::parse($template, $vars);
+
+        return $code;
+    }
+
+    protected function writeFile($path, $data)
+    {
+        $fileDirectory = dirname($path);
+        if (!File::isDirectory($fileDirectory)) {
+            if (!File::makeDirectory($fileDirectory, 0777, true, true)) {
+                throw new ApplicationException(Lang::get('rainlab.builder::lang.common.error_make_dir', [
+                    'name' => $fileDirectory
+                ]));
+            }
+        }
+
+        if (@File::put($path, $data) === false) {
+            throw new ApplicationException(Lang::get('rainlab.builder::lang.controller.error_save_file', [
+                'file' => basename($path)
+            ]));
+        }
+
+        @File::chmod($path);
+    }
+
+    protected function getImportExportModelTemplatePath($directory, $template)
+    {
+        return __DIR__ . '/../classes/' . $directory . '/templates/'.$template;
     }
 }

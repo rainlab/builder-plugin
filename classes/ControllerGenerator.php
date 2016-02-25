@@ -170,12 +170,12 @@ class ControllerGenerator
 
     protected function validateControllerUnique()
     {
-        $controlerFilePath = $this->sourceModel->getControllerFilePath();
+        $controllerFilePath = $this->sourceModel->getControllerFilePath();
 
-        if (File::isFile($controlerFilePath)) {
+        if (File::isFile($controllerFilePath)) {
             throw new ValidationException([
                 'controller' => Lang::get('rainlab.builder::lang.controller.error_controller_exists', [
-                    'file' => basename($controlerFilePath)
+                    'file' => basename($controllerFilePath)
                 ])
             ]);
         }
@@ -281,9 +281,9 @@ class ControllerGenerator
             'templateParts' => $templateParts
         ]);
 
-        $controlerFilePath = $this->sourceModel->getControllerFilePath();
+        $controllerFilePath = $this->sourceModel->getControllerFilePath();
 
-        $this->writeFile($controlerFilePath, $code);
+        $this->writeFile($controllerFilePath, $code);
     }
 
     protected function getBehaviorDesignTimeProvider($providerClass)
