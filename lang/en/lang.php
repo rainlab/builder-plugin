@@ -461,7 +461,6 @@ return [
         'property_behavior_import_export_model_class_placeholder' => '--select model--',
         'property_behavior_import_export_model_class_required' => 'Please select a model class',
         'property_behavior_import_export_model_placeholder' => '--select model--',
-        // Import
         'property_behavior_import' => 'Import',
         'property_behavior_import_title' => 'Title',
         'property_behavior_import_title_required' => 'Please enter the import title',
@@ -475,8 +474,6 @@ return [
         'property_behavior_import_file_required' => 'Please enter a path to the list configuration file',
         'property_behavior_import_redirect' => 'Redirect',
         'property_behavior_import_redirect_description' => 'A page to redirect to after records are imported.',
-
-        // Export
         'property_behavior_export' => 'Export',
         'property_behavior_export_title' => 'Title',
         'property_behavior_export_title_required' => 'Please enter the import title',
@@ -490,13 +487,9 @@ return [
         'property_behavior_export_file_required' => 'Please enter a path to the list configuration file',
         'property_behavior_export_redirect' => 'Redirect',
         'property_behavior_export_redirect_description' => 'A page to redirect to after records are exported.',
-        // Toolbar
         'property_behavior_import_export_toolbar' => 'Toolbar',
         'property_behavior_import_export_toolbar_buttons' => 'Buttons partial',
         'property_behavior_import_export_toolbar_buttons_description' => 'Reference to a controller partial file with the toolbar buttons. Eg: import_export_toolbar',
-
-
-
         'error_controller_not_found' => 'Original controller file is not found.',
         'error_invalid_config_file_name' => 'The behavior :class configuration file name (:file) contains invalid characters and cannot be loaded.',
         'error_file_not_yaml' => 'The behavior :class configuration file (:file) is not a YAML file. Only YAML configuration files are supported.',
