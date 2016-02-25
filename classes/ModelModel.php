@@ -88,7 +88,7 @@ class ModelModel extends BaseModel
         $variables = [
             'namespace' => $namespace,
             'classname' => $this->className,
-            'table' => $this->databaseTable
+            'table' => $this->databaseTable,
         ];
 
         $generator = new FilesystemGenerator('$', $structure, '$/rainlab/builder/classes/modelmodel/templates');
