@@ -214,7 +214,7 @@ class StandardBehaviorsRegistry
                 'placeholder' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_placeholder'),
                 'description' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_file_description'),
                 'type' => 'autocomplete',
-                'fillFrom' => 'tsmodel-lis',
+                'fillFrom' => 'model-lists',
                 'subtypeFrom' => 'modelClass',
                 'depends' => ['modelClass'],
                 'validation' => [
