@@ -43,6 +43,7 @@ class Plugin extends PluginBase
                 'label'       => 'rainlab.builder::lang.plugin.name',
                 'url'         => Backend::url('rainlab/builder'),
                 'icon'        => 'icon-wrench',
+                'iconSvg'     => 'plugins/rainlab/builder/assets/images/builder-icon.svg',
                 'permissions' => ['rainlab.builder.manage_plugins'],
                 'order'       => 40, 
 
