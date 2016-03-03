@@ -231,7 +231,6 @@ return [
         'property_description_from_description' => 'Gerelateerde kolomnaam die gebruikt moet worden voor het weergeven van een omschrijving.',
         'property_recordfinder_prompt' => 'Prompt',
         'property_recordfinder_prompt_description' => 'Text to display when there is no record selected. The %s character represents the search icon. Leave empty for the default prompt.',
-        // TODO
         'property_recordfinder_list' => 'Lijst configuratie',
         'property_recordfinder_list_description' => 'Een referentie naar een lijstkolom definitie bestand. Gebruik het $ symbool om te refereren naar de plugin map, bijvoorbeeld: $/acme/blog/lists/_list.yaml',
         'property_recordfinder_list_required' => 'Geef een pad op naar het YAML bestand',
@@ -241,7 +240,6 @@ return [
         'property_mediafinder_mode_image' => 'Afbeelding',
         'property_mediafinder_prompt' => 'Prompt',
         'property_mediafinder_prompt_description' => 'Tekst om weer te geven als er geen item geselecteerd is. Het karakter %s representeerd het media beheer icoon. Laat leeg voor de standaard prompt.',
-        // TODO
         'property_group_relation' => 'Relatie',
         'property_relation_prompt' => 'Prompt',
         'property_relation_prompt_description' => 'Tekst om weer te geven als er geen selecties beschikbaar zijn.',
