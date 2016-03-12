@@ -6,7 +6,6 @@ return [
         'description' => 'Provides visual tools for building October plugins.',
         'add' => 'Create plugin',
         'no_records' => 'No plugins found',
-        'no_description' => 'No description',
         'no_name' => 'No name',
         'search' => 'Search...',
         'filter_description' => 'Display all plugins or only your plugins.',
@@ -26,15 +25,15 @@ return [
         'no_description' => 'No description provided for this plugin',
         'error_settings_not_editable' => 'Settings of this plugin cannot be edited with Builder.',
         'update_hint' => 'You can edit localized plugin\'s name and description on the Localization tab.',
-        'manage_plugins' => 'Create and edit plugins'
+        'manage_plugins' => 'Create and edit plugins',
     ],
     'author_name' => [
         'title' => 'Author name',
-        'description' => 'Default author name to use for your new plugins. The author name is not fixed - you can change it in the plugins configuration at any time.'
+        'description' => 'Default author name to use for your new plugins. The author name is not fixed - you can change it in the plugins configuration at any time.',
     ],
     'author_namespace' => [
         'title' => 'Author namespace',
-        'description' => 'If you develop for the Marketplace, the namespace should match the author code and cannot be changed. Refer to the documentation for details.'
+        'description' => 'If you develop for the Marketplace, the namespace should match the author code and cannot be changed. Refer to the documentation for details.',
     ],
     'database' => [
         'menu_label' => 'Database',
@@ -48,7 +47,7 @@ return [
         'column_name_type' => 'Type',
         'column_type_required' => 'Please select the column type',
         'column_name_length' => 'Length',
-        'column_validation_length' => "The Length value should be integer or specified as precision and scale (10,2) for decimal columns. Spaces are not allowed in the length column.",
+        'column_validation_length' => 'The Length value should be integer or specified as precision and scale (10,2) for decimal columns. Spaces are not allowed in the length column.',
         'column_validation_title' => 'Only digits, lower-case Latin letters and underscores are allowed in column names',
         'column_name_unsigned' => 'Unsigned',
         'column_name_nullable' => 'Nullable',
@@ -73,7 +72,7 @@ return [
         'error_decimal_default_value' => "Invalid default value for the decimal or double column ':column'. The allowed formats are '1.00', '-1.00'.",
         'error_boolean_default_value' => "Invalid default value for the boolean column ':column'. The allowed values are '0' and '1'.",
         'error_unsigned_negative_value' => "The default value for the unsigned column ':column' can't be negative.",
-        'error_table_already_exists' => "The table ':name' already exists in the database."
+        'error_table_already_exists' => "The table ':name' already exists in the database.",
     ],
     'model' => [
         'menu_label' => 'Models',
@@ -90,7 +89,7 @@ return [
         'add_list' => 'Add list',
     ],
     'form' => [
-        'saved'=> 'The form has been successfully saved.',
+        'saved' => 'The form has been successfully saved.',
         'confirm_delete' => 'Do you really want to delete the form?',
         'tab_new_form' => 'New form',
         'property_label_title' => 'Label',
@@ -315,11 +314,11 @@ return [
         'tab_css_class' => 'CSS class',
         'tab_css_class_description' => 'Assigns a CSS class to the tabs container.',
         'tab_name_template' => 'Tab %s',
-        'tab_already_exists' => 'Tab with the specified title already exists.'
+        'tab_already_exists' => 'Tab with the specified title already exists.',
     ],
     'list' => [
         'tab_new_list' => 'New list',
-        'saved'=> 'The list has been successfully saved.',
+        'saved' => 'The list has been successfully saved.',
         'confirm_delete' => 'Do you really want to delete the list?',
         'tab_columns' => 'Columns',
         'btn_add_column' => 'Add column',
@@ -351,7 +350,7 @@ return [
         'column_label_path' => 'Path',
         'column_label_format' => 'Format',
         'column_label_value_from' => 'Value from',
-        'error_duplicate_column' => "Duplicate column field name: ':column'."
+        'error_duplicate_column' => "Duplicate column field name: ':column'.",
     ],
     'controller' => [
         'menu_label' => 'Controllers',
@@ -473,7 +472,7 @@ return [
         'error_save_file' => 'Error saving conroller file: :file',
         'error_behavior_requires_base_model' => 'Behavior :behavior requires a base model class to be selected.',
         'error_model_doesnt_have_lists' => 'The selected model doesn\'t have any lists. Please create a list first.',
-        'error_model_doesnt_have_forms' => 'The selected model doesn\'t have any forms. Please create a form first.'
+        'error_model_doesnt_have_forms' => 'The selected model doesn\'t have any forms. Please create a form first.',
     ],
     'version' => [
         'menu_label' => 'Versions',
@@ -496,7 +495,7 @@ return [
         'hint_rollback' => 'Rolling back a version will also roll back all versions newer than this version. Please note that unapplied versions could be automatically applied by the system when you or another user logs into the back-end or when a database table is saved in the Database section of the Builder.',
         'hint_apply' => 'Applying a version will also apply all older unapplied versions of the plugin.',
         'dont_show_again' => 'Don\'t show again',
-        'save_unapplied_version' => 'Save unapplied version'
+        'save_unapplied_version' => 'Save unapplied version',
     ],
     'menu' => [
         'menu_label' => 'Backend Menu',
@@ -522,7 +521,7 @@ return [
         'property_code_invalid' => 'The code should contain only Latin letter and digits',
         'property_code_required' => 'Please enter the menu item code.',
         'error_duplicate_main_menu_code' => "Duplicate main menu item code: ':code'.",
-        'error_duplicate_side_menu_code' => "Duplicate side menu item code: ':code'."
+        'error_duplicate_side_menu_code' => "Duplicate side menu item code: ':code'.",
     ],
     'localization' => [
         'menu_label' => 'Localization',
@@ -549,7 +548,7 @@ return [
         'string_value' => 'String value',
         'string_key_is_empty' => 'String key should not be empty',
         'string_value_is_empty' => 'String value should not be empty',
-        'string_key_exists' => 'The string key already exists'
+        'string_key_exists' => 'The string key already exists',
     ],
     'permission' => [
         'menu_label' => 'Permissions',
@@ -564,10 +563,10 @@ return [
         'column_label_label' => 'Label',
         'column_label_required' => 'Please enter the permission label',
         'saved' => 'The permissions have been successfully saved.',
-        'error_duplicate_code' => "Duplicate permission code: ':code'."
+        'error_duplicate_code' => "Duplicate permission code: ':code'.",
     ],
     'yaml' => [
-        'save_error' => "Error saving file ':name'. Please check write permissions."
+        'save_error' => "Error saving file ':name'. Please check write permissions.",
     ],
     'common' => [
         'error_file_exists' => "File already exists: ':path'.",
@@ -580,7 +579,7 @@ return [
         'error_loading_template' => "Error loading template file: ':name'.",
         'select_plugin_first' => 'Please select a plugin first. To see the plugin list click the > icon on the left sidebar.',
         'plugin_not_selected' => 'Plugin is not selected',
-        'add' => 'Add'
+        'add' => 'Add',
     ],
     'migration' => [
         'entity_name' => 'Migration',
@@ -598,7 +597,7 @@ return [
         'no_changes_to_save' => 'There are no changes to save.',
         'error_namespace_mismatch' => "The migration code should use the plugin namespace: :namespace",
         'error_migration_file_exists' => "Migration file :file already exists. Please use another class name.",
-        'error_cant_delete_applied' => 'This version has already been applied and cannot be deleted. Please rollback the version first.'
+        'error_cant_delete_applied' => 'This version has already been applied and cannot be deleted. Please rollback the version first.',
     ],
     'components' => [
         'list_title' => 'Record list',
@@ -639,7 +638,7 @@ return [
         'details_identifier_value' => 'Identifier value',
         'details_identifier_value_description' => 'Identifier value to load the record from the database. Specify a fixed value or URL parameter name.',
         'details_identifier_value_required' => 'The identifier value is required',
-        'details_key_column' => 'Key column', 
+        'details_key_column' => 'Key column',
         'details_key_column_description' => 'Model column to use as a record identifier for fetching the record from the database.',
         'details_key_column_required' => 'The key column name is required',
         'details_display_column' => 'Display column',
@@ -648,5 +647,5 @@ return [
         'details_not_found_message' => 'Not found message',
         'details_not_found_message_description' => 'Message to display if the record is not found. Used in the default component\'s partial.',
         'details_not_found_message_default' => 'Record not found',
-    ]
+    ],
 ];
