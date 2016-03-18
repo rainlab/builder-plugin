@@ -1,10 +1,10 @@
 <?php namespace RainLab\Builder\Classes;
 
+use Str;
+use File;
 use Doctrine\DBAL\Schema\Comparator;
 use Doctrine\DBAL\Schema\TableDiff;
-use October\Rain\Parse\Template as TextParser;
-use File;
-use Str;
+use October\Rain\Parse\Bracket as TextParser;
 
 /**
  * Generates migration code for creating, updates and deleting tables.
@@ -35,8 +35,9 @@ class TableMigrationCodeGenerator extends BaseModel
         $tableDiff = false;
 
         if ($existingTable !== null) {
-            // The table already exists
-            //
+            /*
+             * The table already exists
+             */
             $comparator = new Comparator();
             $tableDiff = $comparator->diffTable($existingTable, $updatedTable);
 
@@ -49,10 +50,11 @@ class TableMigrationCodeGenerator extends BaseModel
             }
         }
         else {
-            // The table doesn't exist
-            //
+            /*
+             * The table doesn't exist
+             */
             $tableDiff = new TableDiff(
-                $updatedTable->getName(), 
+                $updatedTable->getName(),
                 $updatedTable->getColumns(),
                 [], // Changed columns
                 [], // Removed columns
@@ -109,9 +111,11 @@ class TableMigrationCodeGenerator extends BaseModel
 
     protected function generateCreateOrUpdateCode($tableDiff, $isNewTable, $newOrUpdatedTable)
     {
-        // Although it might seem that a reverse diff could be used
-        // for the down() method, that's not so. The up and down operations 
-        // are not fully symmetrical.
+        /*
+         * Although it might seem that a reverse diff could be used
+         * for the down() method, that's not so. The up and down operations 
+         * are not fully symmetrical.
+         */
 
         return $this->generateMigrationCode(
             $this->generateCreateOrUpdateUpCode($tableDiff, $isNewTable, $newOrUpdatedTable),
@@ -259,7 +263,7 @@ class TableMigrationCodeGenerator extends BaseModel
     protected function generateDropDownCode($table)
     {
         $tableDiff = new TableDiff(
-            $table->getName(), 
+            $table->getName(),
             $table->getColumns(),
             [], // Changed columns
             [], // Removed columns
@@ -379,7 +383,7 @@ class TableMigrationCodeGenerator extends BaseModel
         $result .= $this->generateNullable($column, $changeMode, $columnData, $forceFlagsChange);
         $result .= $this->generateUnsigned($column, $changeMode, $columnData, $forceFlagsChange);
         $result .= $this->generateDefault($column, $changeMode, $columnData, $forceFlagsChange);
- 
+
         if ($changeMode) {
             $result .= '->change()';
         }
@@ -455,9 +459,10 @@ class TableMigrationCodeGenerator extends BaseModel
 
     protected function generateDefault($column, $changeMode, $columnData, $forceFlagsChange)
     {
-        // See a note about empty strings as default values in
-        // DatabaseTableSchemaCreator::formatOptions() method.
-
+        /*
+         * See a note about empty strings as default values in
+         * DatabaseTableSchemaCreator::formatOptions() method.
+         */
         $result = null;
         $default = $column->getDefault();
 
@@ -581,10 +586,11 @@ class TableMigrationCodeGenerator extends BaseModel
 
     protected function findPrimaryKeyIndex($indexes, $table)
     {
-        // This method ignores auto-increment primary keys
-        // as they are managed with the increments() method
-        // instead of the primary().
-        //
+        /*
+         * This method ignores auto-increment primary keys
+         * as they are managed with the increments() method
+         * instead of the primary().
+         */
         foreach ($indexes as $index) {
             if (!$index->isPrimary()) {
                 continue;

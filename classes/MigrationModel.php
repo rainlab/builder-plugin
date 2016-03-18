@@ -1,16 +1,16 @@
 <?php namespace RainLab\Builder\Classes;
 
-use Symfony\Component\Yaml\Dumper as YamlDumper;
-use October\Rain\Parse\Template as TextParser;
+use Str;
+use Lang;
+use File;
+use Yaml;
+use Validator;
 use System\Classes\VersionManager;
+use October\Rain\Parse\Bracket as TextParser;
 use ApplicationException;
 use ValidationException;
 use SystemException;
 use Exception;
-use Validator;
-use Lang;
-use File;
-use Str;
 
 /**
  * Manages plugin migrations
@@ -165,7 +165,7 @@ class MigrationModel extends BaseModel
         $versionInformation = $pluginVersions[$versionNumber];
         if (!is_array($versionInformation)) {
             $this->description = $versionInformation;
-        } 
+        }
         else {
             $cnt = count($versionInformation);
 
@@ -287,8 +287,9 @@ class MigrationModel extends BaseModel
             return;
         }
 
-        // The file name is based on the migration class name. 
-        //
+        /*
+         * The file name is based on the migration class name. 
+         */
         $parser = new MigrationFileParser();
         $migrationInfo = $parser->extractMigrationInfoFromSource($code);
 
@@ -315,8 +316,9 @@ class MigrationModel extends BaseModel
 
         $this->scriptFileName = Str::snake($migrationInfo['class']);
 
-        // Validate that a file with the generated name does not exist yet.
-        //
+        /*
+         * Validate that a file with the generated name does not exist yet.
+         */
         if ($this->scriptFileName != $this->originalScriptFileName) {
             $fileName = $this->scriptFileName.'.php';
             $filePath = $this->getPluginUpdatesPath($fileName);
@@ -380,8 +382,7 @@ class MigrationModel extends BaseModel
     {
         $scriptFilePath = $this->getPluginUpdatesPath($this->scriptFileName.'.php');
 
-        // Using unlink instead of File::remove() 
-        // is safer here.
+        // Using unlink instead of File::remove() is safer here.
         @unlink($scriptFilePath);
     }
 
@@ -439,8 +440,7 @@ class MigrationModel extends BaseModel
             }
         }
 
-        $dumper = new YamlDumper();
-        $yamlData = $dumper->dump($versionInformation, 20, 0, false, true);
+        $yamlData = Yaml::render($versionInformation);
 
         if (!File::put($versionFilePath, $yamlData)) {
             throw new SystemException(sprintf('Error saving file %s', $versionFilePath));
@@ -463,9 +463,7 @@ class MigrationModel extends BaseModel
         }
 
         $versionFilePath = $this->getPluginUpdatesPath('version.yaml');
-
-        $dumper = new YamlDumper();
-        $yamlData = $dumper->dump($versionInformation, 20, 0, false, true);
+        $yamlData = Yaml::render($versionInformation);
 
         if (!File::put($versionFilePath, $yamlData)) {
             throw new SystemException(sprintf('Error saving file %s', $versionFilePath));
@@ -496,7 +494,7 @@ class MigrationModel extends BaseModel
 
     protected function getPluginVersionInformation()
     {
-        $versionObj = new PluginVersion();
+        $versionObj = new PluginVersion;
         return $versionObj->getPluginVersionInformation($this->getPluginCodeObj());
     }
 }
