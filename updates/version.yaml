@@ -1,16 +1,9 @@
-1.0.1:
-    - Initialize plugin.
-1.0.2:
-    - Fixes the problem with selecting a plugin. Minor localization corrections. Configuration files in the list and form behaviors are now autocomplete.
-1.0.3:
-    - Improved handling of the enum data type.
-1.0.4:
-    - Added user permissions to work with the Builder.
-1.0.5:
-    - Fixed permissions registration.
-1.0.6:
-    - Fixed front-end record ordering in the Record List component.
-1.0.7:
-    - Builder settings are now protected with user permissions. The database table column list is scrollable now. Minor code cleanup.
-1.0.8:
-    - Added the Reorder Controller behavior.
+1.0.1: Initialize plugin.
+1.0.2: Fixes the problem with selecting a plugin. Minor localization corrections. Configuration files in the list and form behaviors are now autocomplete.
+1.0.3: Improved handling of the enum data type.
+1.0.4: Added user permissions to work with the Builder.
+1.0.5: Fixed permissions registration.
+1.0.6: Fixed front-end record ordering in the Record List component.
+1.0.7: Builder settings are now protected with user permissions. The database table column list is scrollable now. Minor code cleanup.
+1.0.8: Added the Reorder Controller behavior.
+1.0.9: Minor API and UI updates.
