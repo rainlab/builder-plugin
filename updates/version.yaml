@@ -7,3 +7,4 @@
 1.0.7: Builder settings are now protected with user permissions. The database table column list is scrollable now. Minor code cleanup.
 1.0.8: Added the Reorder Controller behavior.
 1.0.9: Minor API and UI updates.
+1.0.10: Minor styling update.
