@@ -2,7 +2,7 @@
 
 use Lang;
 use File;
-use October\Rain\Parse\Bracket as TextParser;
+use October\Rain\Parse\Template as TextParser;
 use ApplicationException;
 use SystemException;
 
