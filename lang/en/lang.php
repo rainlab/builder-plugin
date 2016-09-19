@@ -484,7 +484,7 @@ return [
         'tab_new_version' => 'New version',
         'migration' => 'Migration',
         'seeder' => 'Seeder',
-        'custom' => 'Increase the verison number',
+        'custom' => 'Increase the version number',
         'apply_version' => 'Apply version',
         'applying' => 'Applying...',
         'rollback_version' => 'Rollback version',
