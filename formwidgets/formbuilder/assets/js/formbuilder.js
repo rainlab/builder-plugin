@@ -784,6 +784,9 @@
 
     FormBuilder.prototype.onPlaceholderClick = function(ev) {
         this.displayControlPaletteForPlaceholder(ev.target)
+        ev.stopPropagation()
+        ev.preventDefault()
+        return false;
     }
 
     $(document).ready(function(){

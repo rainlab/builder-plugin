@@ -1,15 +1,15 @@
 <?php namespace RainLab\Builder\Classes;
 
-use October\Rain\Parse\Template as TextParser;
+use Lang;
+use File;
+use October\Rain\Parse\Bracket as TextParser;
 use ApplicationException;
 use SystemException;
-use File;
-use Lang;
 
 /**
  * Generates filesystem objects basing on a structure provided with an array 
  * and using file templates and variables. Variables in template files use
- * the Twig syntax, but processed with October\Rain\Syntax\TextParser.
+ * the Twig syntax, but processed with October\Rain\Syntax\Bracket.
  *
  * Example - generate a plugin directory containing the plugin.php file.
  * The file is created from a template, which uses a couple of variables.
@@ -32,7 +32,7 @@ use Lang;
  */
 class FilesystemGenerator
 {
-    protected $dstPath;
+    protected $destinationPath;
 
     protected $structure;
 
@@ -42,16 +42,16 @@ class FilesystemGenerator
 
     /**
      * Initializes the object.
-     * @param string $dstPath Destination path to create the filesystem objects in.
+     * @param string $destinationPath Destination path to create the filesystem objects in.
      * The path can contain filesystem symbols.
      * @param array $structure Specifies the structure as array.
      * @param string $templatesPath Path to the directory that contains file templates.
      * The parameter is required only in case any files should be created. The path can 
      * contain filesystem symbols.
      */
-    public function __construct($dstPath, array $structure, $templatesPath = null)
+    public function __construct($destinationPath, array $structure, $templatesPath = null)
     {
-        $this->dstPath = File::symbolizePath($dstPath);
+        $this->destinationPath = File::symbolizePath($destinationPath);
         $this->structure = $structure;
 
         if ($templatesPath) {
@@ -73,8 +73,8 @@ class FilesystemGenerator
 
     public function generate()
     {
-        if (!File::isDirectory($this->dstPath)) {
-            throw new SystemException(Lang::get('rainlab.builder::lang.common.destination_dir_not_exists', ['path'=>$this->dstPath]));
+        if (!File::isDirectory($this->destinationPath)) {
+            throw new SystemException(Lang::get('rainlab.builder::lang.common.destination_dir_not_exists', ['path'=>$this->destinationPath]));
         }
 
         foreach ($this->structure as $key=>$value) {
@@ -89,7 +89,7 @@ class FilesystemGenerator
 
     protected function makeDirectory($dirPath)
     {
-        $path = $this->dstPath.DIRECTORY_SEPARATOR.$dirPath;
+        $path = $this->destinationPath.DIRECTORY_SEPARATOR.$dirPath;
 
         if (File::isDirectory($path)) {
             throw new ApplicationException(Lang::get('rainlab.builder::lang.common.error_dir_exists', ['path'=>$path]));
@@ -102,7 +102,7 @@ class FilesystemGenerator
 
     protected function makeFile($filePath, $templateName)
     {
-        $path = $this->dstPath.DIRECTORY_SEPARATOR.$filePath;
+        $path = $this->destinationPath.DIRECTORY_SEPARATOR.$filePath;
 
         if (File::isFile($path)) {
             throw new ApplicationException(Lang::get('rainlab.builder::lang.common.error_file_exists', ['path'=>$path]));
