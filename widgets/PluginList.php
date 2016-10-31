@@ -41,11 +41,6 @@ class PluginList extends WidgetBase
         return $this->makePartial('body', $this->getRenderData());
     }
 
-    /**
-     * Returns information about this widget, including name and description.
-     */
-    public function widgetDetails() {}
-
     public function setActivePlugin($pluginCode)
     {
         $pluginCodeObj = new PluginCode($pluginCode);
