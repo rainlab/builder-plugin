@@ -99,7 +99,7 @@ class ControllerModel extends BaseModel
         return $result;
     }
 
-    public function getBaseModelClassNameOptions($keyValue = null)
+    public function getBaseModelClassNameOptions()
     {
         $models = ModelModel::listPluginModels($this->getPluginCodeObj());
 
@@ -119,7 +119,7 @@ class ControllerModel extends BaseModel
         $result = [];
         foreach ($behaviors as $behaviorClass=>$behaviorInfo) {
             $result[$behaviorClass] = [
-                $behaviorInfo['name'], 
+                $behaviorInfo['name'],
                 $behaviorInfo['description']
             ];
         }
