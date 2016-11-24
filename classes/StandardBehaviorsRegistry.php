@@ -31,7 +31,7 @@ class StandardBehaviorsRegistry
         $properties = [
             'name' => [
                 'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_form_name'),
-                'description' => Lang::get('rainlab.builder::lang.form.property_behavior_form_name_description'),
+                'description' => Lang::get('rainlab.builder::lang.controller.property_behavior_form_name_description'),
                 'type' => 'string',
                 'validation' => [
                     'required' => [
