@@ -123,7 +123,9 @@ abstract class BaseModel
     public function getPluginCodeObj()
     {
         if (!$this->pluginCodeObj) {
-            throw new SystemException(sprintf('The active plugin is not set in the %s object.', get_class($this)));
+            throw new SystemException(sprintf(
+                'The active plugin is not set in the %s object.', get_class($this)
+            ));
         }
 
         return $this->pluginCodeObj;

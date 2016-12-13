@@ -65,19 +65,27 @@ abstract class YamlModel extends BaseModel
 
         if (File::isFile($filePath)) {
             if ($isNew || $this->originalFilePath != $filePath) {
-                throw new ValidationException(['fileName' => Lang::get('rainlab.builder::lang.common.error_file_exists', ['path'=>basename($filePath)])]);
+                throw new ValidationException([
+                    'fileName' => Lang::get('rainlab.builder::lang.common.error_file_exists', [
+                        'path' => basename($filePath)
+                    ])
+                ]);
             }
         }
 
         $fileDirectory = dirname($filePath);
         if (!File::isDirectory($fileDirectory)) {
             if (!File::makeDirectory($fileDirectory, 0777, true, true)) {
-                throw new ApplicationException(Lang::get('rainlab.builder::lang.common.error_make_dir', ['name'=>$fileDirectory]));
+                throw new ApplicationException(Lang::get('rainlab.builder::lang.common.error_make_dir', [
+                    'name' => $fileDirectory
+                ]));
             }
         }
 
         if (@File::put($filePath, $yamlData) === false) {
-            throw new ApplicationException(Lang::get('rainlab.builder::lang.yaml.save_error', ['name'=>$filePath]));
+            throw new ApplicationException(Lang::get('rainlab.builder::lang.yaml.save_error', [
+                'name' => $filePath
+            ]));
         }
 
         @File::chmod($filePath);
@@ -102,14 +110,18 @@ abstract class YamlModel extends BaseModel
         $filePath = File::symbolizePath($filePath);
 
         if (!File::isFile($filePath)) {
-            throw new ApplicationException('Cannot load the model - the original file is not found: '.basename($filePath));
+            throw new ApplicationException(sprintf(
+                'Cannot load the model - the original file is not found: %s', basename($filePath)
+            ));
         }
 
         try {
             $data = Yaml::parse(File::get($filePath));
         } 
         catch (Exception $ex) {
-            throw new ApplicationException(sprintf('Cannot parse the YAML file %s: %s', basename($filePath), $ex->getMessage()));
+            throw new ApplicationException(sprintf(
+                'Cannot parse the YAML file %s: %s', basename($filePath), $ex->getMessage()
+            ));
         }
 
         $this->originalFilePath = $filePath;
@@ -134,7 +146,9 @@ abstract class YamlModel extends BaseModel
     public function deleteModel()
     {
         if (!File::isFile($this->originalFilePath)) {
-            throw new ApplicationException('Cannot load the model - the original file is not found: '.$filePath);
+            throw new ApplicationException(sprintf(
+                'Cannot load the model - the original file is not found: %s', $this->originalFilePath
+            ));
         }
 
         if (strtolower(substr($this->originalFilePath, -5)) !== '.yaml') {
