@@ -105,8 +105,6 @@ class ModelModel extends BaseModel
         ];
 
         Validator::extend('uniqModelName', function($attribute, $value, $parameters) use ($path) {
-            $value = trim($value);
-
             if (!$this->isNewModel()) {
                 // Editing models is not supported at the moment, 
                 // so no validation is required.

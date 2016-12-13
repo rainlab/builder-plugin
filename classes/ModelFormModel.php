@@ -19,7 +19,7 @@ class ModelFormModel extends ModelYamlModel
     ];
 
     protected $validationRules = [
-        'fileName' => ['required', 'regex:/^[a-z0-9\.\-]+$/i']
+        'fileName' => ['required', 'regex:/^[0-9a-z\.\s_\-\/]+$/i']
     ];
 
     public function loadForm($path)
