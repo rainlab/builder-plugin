@@ -116,7 +116,7 @@ class MigrationColumnType extends BaseModel
             // The datetime type maps to datetime and timestamp. Use the name 
             // guessing as the only possible solution.
 
-            if (in_array($columnName, ['created_at', 'updated_at', 'deleted_at'])) {
+            if (in_array($columnName, ['created_at', 'updated_at', 'deleted_at', 'published_at'])) {
                 return self::TYPE_TIMESTAMP;
             }
 
