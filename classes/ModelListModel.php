@@ -21,7 +21,7 @@ class ModelListModel extends ModelYamlModel
     ];
 
     protected $validationRules = [
-        'fileName' => ['required', 'regex:/^[a-z0-9\.\-]+$/i']
+        'fileName' => ['required', 'regex:/^[a-z0-9\.\-_]+$/i']
     ];
 
     public function loadForm($path)

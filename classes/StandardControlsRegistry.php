@@ -905,7 +905,6 @@ class StandardControlsRegistry
             'dependsOn',
             'preset',
             'attributes',
-            'trigger',
             'disabled'
         ];
 
