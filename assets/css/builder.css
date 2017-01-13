@@ -1113,7 +1113,7 @@ form[data-entity=database] div.field-datatable div[data-control=table] div.table
   height: 100%;
 }
 form[data-entity=database] div.field-datatable div[data-control=table] div.table-container div.control-scrollbar {
-  top: 74px;
+  top: 70px;
   bottom: 0;
   position: absolute;
   max-height: none!important;
