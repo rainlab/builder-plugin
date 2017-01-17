@@ -53,7 +53,9 @@
 
     LocalizationEditor.prototype.buildLocalizationEditor = function() {
         this.localizationInput = new $.oc.builder.localizationInput(this.getInput(), this.getForm(), {
-            plugin: this.getPluginCode()
+            plugin: this.getPluginCode(),
+            beforePopupShowCallback: this.proxy(this.onPopupShown, this),
+            afterPopupHideCallback: this.proxy(this.onPopupHidden, this)
         })
     }
 
@@ -98,6 +100,14 @@
         }
 
         return $input.val()
+    }
+
+    LocalizationEditor.prototype.onPopupShown = function() {
+        this.getRootSurface().popupDisplayed()
+    }
+
+    LocalizationEditor.prototype.onPopupHidden = function() {
+        this.getRootSurface().popupHidden()
     }
 
     $.oc.inspector.propertyEditors.builderLocalization = LocalizationEditor
