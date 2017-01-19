@@ -5,3 +5,13 @@ fields:
     databaseTable:
         label: rainlab.builder::lang.model.field_database_table
         type: dropdown
+
+    addTimestamps:
+        label: rainlab.builder::lang.model.field_add_timestamps
+        comment: rainlab.builder::lang.model.field_add_timestamps_description
+        type: checkbox
+
+    addSoftDeleting:
+        label: rainlab.builder::lang.model.field_add_soft_deleting
+        comment: rainlab.builder::lang.model.field_add_soft_deleting_description
+        type: checkbox

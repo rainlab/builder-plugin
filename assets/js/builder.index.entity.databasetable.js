@@ -23,15 +23,22 @@
     // ============================
 
     DatabaseTable.prototype.cmdCreateTable = function(ev) {
-        this.indexController.openOrLoadMasterTab($(ev.target), 'onDatabaseTableCreateOrOpen', this.newTabId())
+        var result = this.indexController.openOrLoadMasterTab($(ev.target), 'onDatabaseTableCreateOrOpen', this.newTabId())
+
+        if (result !== false) {
+            result.done(this.proxy(this.onTableLoaded, this))
+        }
     }
 
     DatabaseTable.prototype.cmdOpenTable = function(ev) {
-        var table = $(ev.currentTarget).data('id')
+        var table = $(ev.currentTarget).data('id'),
+            result = this.indexController.openOrLoadMasterTab($(ev.target), 'onDatabaseTableCreateOrOpen', this.makeTabId(table), {
+                table_name: table
+            })
 
-        this.indexController.openOrLoadMasterTab($(ev.target), 'onDatabaseTableCreateOrOpen', this.makeTabId(table), {
-            table_name: table
-        })
+        if (result !== false) {
+            result.done(this.proxy(this.onTableLoaded, this))
+        }
     }
 
     DatabaseTable.prototype.cmdSaveTable = function(ev) {
@@ -77,6 +84,24 @@
     DatabaseTable.prototype.cmdUnModifyForm = function() {
         var $masterTabPane = this.getMasterTabsActivePane()
         this.unmodifyTab($masterTabPane)
+    }
+
+    DatabaseTable.prototype.cmdAddTimestamps = function(ev) {
+        var $target = $(ev.currentTarget),
+            added = this.addTimeStampColumns($target, ['created_at', 'updated_at'])
+
+        if (!added) {
+            alert($target.closest('form').attr('data-lang-timestamps-exist'))
+        }
+    }
+
+    DatabaseTable.prototype.cmdAddSoftDelete = function(ev) {
+        var $target = $(ev.currentTarget),
+            added = this.addTimeStampColumns($target, ['deleted_at'])
+
+        if (!added) {
+            alert($target.closest('form').attr('data-lang-soft-deleting-exist'))
+        }
     }
 
     // EVENT HANDLERS
@@ -126,6 +151,22 @@
         }
 
         $target.table('setRowValues', rowIndex, updatedRow)
+    }
+
+    DatabaseTable.prototype.onTableLoaded = function() {
+        $(document).trigger('render')
+
+        var $masterTabPane = this.getMasterTabsActivePane(),
+            $form = $masterTabPane.find('form'),
+            $toolbar = $masterTabPane.find('div[data-control=table] div.toolbar'),
+            $button = $('<a class="btn oc-icon-clock-o builder-custom-table-button" data-builder-command="databaseTable:cmdAddTimestamps"></a>')
+
+        $button.text($form.attr('data-lang-add-timestamps'));
+        $toolbar.append($button)
+
+        $button = $('<a class="btn oc-icon-refresh builder-custom-table-button" data-builder-command="databaseTable:cmdAddSoftDelete"></a>')
+        $button.text($form.attr('data-lang-add-soft-delete'));
+        $toolbar.append($button)
     }
 
     // INTERNAL METHODS
@@ -195,6 +236,63 @@
         $masterTabPane.find('form').popup({
             handler: 'onDatabaseTableShowDeletePopup'
         })
+    }
+
+    DatabaseTable.prototype.getColumnNames = function($target) {
+        var tableObj = this.getTableControlObject($target)
+
+        tableObj.unfocusTable()
+
+        var data = this.getTableData($target),
+            result = []
+
+        for (var index in data) {
+            if (data[index].name !== undefined) {
+                result.push($.trim(data[index].name))
+            }
+        }
+
+        return result
+    }
+
+    DatabaseTable.prototype.addTimeStampColumns = function($target, columns)
+    {
+        var existingColumns = this.getColumnNames($target),
+            added = false
+
+        for (var index in columns) {
+            var column = columns[index]
+
+            if ($.inArray(column, existingColumns) == -1) {
+                this.addTimeStampColumn($target, column)
+                added = true
+            }
+        }
+
+        if (added) {
+            $target.trigger('change')
+        }
+
+        return added
+    }
+
+    DatabaseTable.prototype.addTimeStampColumn = function($target, column) {
+        var tableObj = this.getTableControlObject($target),
+            currentData = this.getTableData($target),
+            rowData = {
+                name: column,
+                type: 'timestamp',
+                'default': null,
+                allow_null: true // Simplifies the case when a timestamp is added to a table with data
+            }
+
+        tableObj.addRecord('bottom', true)
+        tableObj.setRowValues(currentData.length-1, rowData)
+
+        // Forces the table to apply values
+        // from the data source
+        tableObj.addRecord('bottom', false)
+        tableObj.deleteRecord()
     }
 
     // REGISTRATION

@@ -87,6 +87,18 @@ class FilesystemGenerator
         }
     }
 
+    public function getTemplateContents($templateName)
+    {
+        $templatePath = $this->templatesPath.DIRECTORY_SEPARATOR.$templateName;
+        if (!File::isFile($templatePath)) {
+            throw new SystemException(Lang::get('rainlab.builder::lang.common.template_not_found', ['name'=>$templateName]));
+        }
+
+        $fileContents = File::get($templatePath);
+
+        return TextParser::parse($fileContents, $this->variables);
+    }
+
     protected function makeDirectory($dirPath)
     {
         $path = $this->destinationPath.DIRECTORY_SEPARATOR.$dirPath;
@@ -115,17 +127,7 @@ class FilesystemGenerator
             }
         }
 
-        $templatePath = $this->templatesPath.DIRECTORY_SEPARATOR.$templateName;
-        if (!File::isFile($templatePath)) {
-            throw new SystemException(Lang::get('rainlab.builder::lang.common.template_not_found', ['name'=>$templateName]));
-        }
-
-        $fileContents = File::get($templatePath);
-        if (!$fileContents) {
-            throw new SystemException(Lang::get('rainlab.builder::lang.common.error_loading_template', ['name'=>$templateName]));
-        }
-
-        $fileContents = TextParser::parse($fileContents, $this->variables);
+        $fileContents = $this->getTemplateContents($templateName);
         if (@File::put($path, $fileContents) === false) {
             throw new SystemException(Lang::get('rainlab.builder::lang.common.error_generating_file', ['path'=>$path]));
         }

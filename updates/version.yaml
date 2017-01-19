@@ -12,3 +12,4 @@
 1.0.12: Added support for the Trigger property to the Media Finder widget configuration. Names of form fields and list columns definition files can now contain underscores.
 1.0.13: Minor styling fix on the database editor.
 1.0.14: Added support for published_at timestamp field
+1.0.15: Fixed a bug where saving a localization string in Inspector could cause a JavaScript error. Added support for Timestamps and Soft Deleting for new models.

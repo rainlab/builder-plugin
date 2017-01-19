@@ -1119,6 +1119,15 @@ form[data-entity=database] div.field-datatable div[data-control=table] div.table
   max-height: none!important;
   height: auto!important;
 }
+div.control-table .toolbar a.builder-custom-table-button:before {
+  line-height: 17px;
+  font-size: 21px;
+  color: #323e50;
+  margin-right: 5px;
+  top: 3px;
+  opacity: 1;
+  filter: alpha(opacity=100);
+}
 .control-tabs.auxiliary-tabs {
   background: white;
 }

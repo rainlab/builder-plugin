@@ -23,12 +23,16 @@ class ModelModel extends BaseModel
 
     protected static $fillable = [
         'className',
-        'databaseTable'
+        'databaseTable',
+        'addTimestamps',
+        'addSoftDeleting'
     ];
 
     protected $validationRules = [
         'className' => ['required', 'regex:/^[A-Z]+[a-zA-Z0-9_]+$/', 'uniqModelName'],
-        'databaseTable' => ['required']
+        'databaseTable' => ['required'],
+        'addTimestamps' => ['timestampColumnsMustExist'],
+        'addSoftDeleting' => ['deletedAtColumnMustExist']
     ];
 
     public static function listPluginModels($pluginCodeObj)
@@ -91,8 +95,21 @@ class ModelModel extends BaseModel
             'table' => $this->databaseTable
         ];
 
+        $dynamicContents = [];
+
         $generator = new FilesystemGenerator('$', $structure, '$/rainlab/builder/classes/modelmodel/templates');
         $generator->setVariables($variables);
+
+        if ($this->addSoftDeleting) {
+            $dynamicContents[] = $generator->getTemplateContents('soft-delete.php.tpl');
+        }
+
+        if (!$this->addTimestamps) {
+            $dynamicContents[] = $generator->getTemplateContents('no-timestamps.php.tpl');
+        }
+
+        $generator->setVariable('dynamicContents', implode('', $dynamicContents));
+
         $generator->generate();
     }
 
@@ -101,7 +118,9 @@ class ModelModel extends BaseModel
         $path = File::symbolizePath('$/'.$this->getFilePath());
 
         $this->validationMessages = [
-            'className.uniq_model_name' => Lang::get('rainlab.builder::lang.model.error_class_name_exists', ['path'=>$path])
+            'className.uniq_model_name' => Lang::get('rainlab.builder::lang.model.error_class_name_exists', ['path'=>$path]),
+            'addTimestamps.timestamp_columns_must_exist' => Lang::get('rainlab.builder::lang.model.error_timestamp_columns_must_exist'),
+            'addSoftDeleting.deleted_at_column_must_exist' => Lang::get('rainlab.builder::lang.model.error_deleted_at_column_must_exist')
         ];
 
         Validator::extend('uniqModelName', function($attribute, $value, $parameters) use ($path) {
@@ -114,6 +133,15 @@ class ModelModel extends BaseModel
             }
 
             return !File::isFile($path);
+        });
+
+        $columns = $this->isNewModel() ? Schema::getColumnListing($this->databaseTable) : [];
+        Validator::extend('timestampColumnsMustExist', function($attribute, $value, $parameters) use ($columns) {
+            return $this->validateColumnsExist($value, $columns, ['created_at', 'updated_at']);
+        });
+
+        Validator::extend('deletedAtColumnMustExist', function($attribute, $value, $parameters) use ($columns) {
+            return $this->validateColumnsExist($value, $columns, ['deleted_at']);
         });
 
         parent::validate();
@@ -208,5 +236,24 @@ class ModelModel extends BaseModel
     protected function getFilePath()
     {
         return $this->getPluginCodeObj()->toFilesystemPath().'/models/'.$this->className.'.php';
+    }
+
+    protected function validateColumnsExist($value, $columns, $columnsToCheck)
+    {
+        if (!strlen(trim($this->databaseTable))) {
+            return true;
+        }
+
+        if (!$this->isNewModel()) {
+            // Editing models is not supported at the moment, 
+            // so no validation is required.
+            return true;
+        }
+
+        if (!$value) {
+            return true;
+        }
+
+        return count(array_intersect($columnsToCheck, $columns)) == count($columnsToCheck);
     }
 }
