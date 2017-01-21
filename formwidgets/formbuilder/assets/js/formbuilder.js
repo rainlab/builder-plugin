@@ -490,7 +490,7 @@
         var current = element
 
         while (current) {
-            if (current.hasAttribute('data-contol-container') ) {
+            if (current.hasAttribute('data-control-container') ) {
                 return current
             }
 

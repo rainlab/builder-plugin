@@ -557,6 +557,7 @@ return [
         'string_key_comment' => 'Enter the string key using period as a section separator. For example: plugin.search. The string will be created in the plugin\'s default language localization file.',
         'string_value' => 'String value',
         'string_key_is_empty' => 'String key should not be empty',
+        'string_key_is_a_string' => ':key is a string and cannot contain other strings.',
         'string_value_is_empty' => 'String value should not be empty',
         'string_key_exists' => 'The string key already exists',
     ],

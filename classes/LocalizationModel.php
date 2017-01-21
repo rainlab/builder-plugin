@@ -211,6 +211,7 @@ class LocalizationModel extends BaseModel
         $sectionArray = [];
         self::createStringSections($sectionArray, $stringKey, $stringValue) ;
 
+        $this->checkKeyWritable($stringKey, $existingStrings, $languagePrefix);
         $newStrings = LanguageMixer::arrayMergeRecursive($originalStringArray, $sectionArray);
 
         $dumper = new YamlDumper();
@@ -410,5 +411,26 @@ class LocalizationModel extends BaseModel
         });
 
         return $strings;
+    }
+
+    protected function checkKeyWritable($stringKey, $existingStrings, $languagePrefix)
+    {
+        $sectionList = explode('.', $stringKey);
+
+        $lastElement = array_pop($sectionList);
+        while (strlen($lastElement)) {
+            if (count($sectionList) > 0) {
+                $fullKey = implode('.', $sectionList).'.'.$lastElement;
+            }
+            else {
+                $fullKey = $lastElement;
+            }
+
+            if (array_key_exists($languagePrefix.$fullKey, $existingStrings)) {
+                throw new ValidationException(['key' => Lang::get('rainlab.builder::lang.localization.string_key_is_a_string', ['key'=>$fullKey])]);
+            }
+
+            $lastElement = array_pop($sectionList);
+        }
     }
 }

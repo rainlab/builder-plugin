@@ -34,7 +34,7 @@
     ModelForm.prototype.cmdSaveForm = function(ev) {
         var $target = $(ev.currentTarget),
             $form = $target.closest('form'),
-            $rootContainer = $('[data-root-control-wrapper] > [data-contol-container]', $form), 
+            $rootContainer = $('[data-root-control-wrapper] > [data-control-container]', $form), 
             $inspectorContainer = $form.find('.inspector-container'),
             controls = $.oc.builder.formbuilder.domToPropertyJson.convert($rootContainer.get(0))
 
