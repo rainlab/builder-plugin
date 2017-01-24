@@ -331,7 +331,6 @@ class StandardControlsRegistry
             'required',
             'defaultFrom',
             'dependsOn',
-            'trigger', 
             'preset',
             'attributes'
         ];
@@ -841,7 +840,6 @@ class StandardControlsRegistry
             'dependsOn',
             'preset',
             'attributes',
-            'trigger',
             'disabled'
         ];
 
