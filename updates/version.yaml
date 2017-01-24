@@ -14,3 +14,4 @@
 1.0.14: Added support for published_at timestamp field
 1.0.15: Fixed a bug where saving a localization string in Inspector could cause a JavaScript error. Added support for Timestamps and Soft Deleting for new models.
 1.0.16: Fixed a bug when saving a form with the Repeater widget in a tab could create invalid fields in the form's outside area. Added a check that prevents creating localization strings inside other existing strings.
+1.0.17: Added support Trigger attribute support for RecordFinder and Repeater form widgets.
