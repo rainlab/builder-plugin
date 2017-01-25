@@ -9,7 +9,7 @@
 class ModelFileParser
 {
     /**
-     * Retrurns the model namespace, class name and table name.
+     * Returns the model namespace, class name and table name.
      * @param string $fileContents Specifies the file contents.
      * @return array|null Returns an array with keys 'namespace', 'class' and 'table' 
      * Returns null if the parsing fails.
@@ -32,7 +32,7 @@ class ModelFileParser
                 $result['namespace'] = $namespace;
             }
 
-            if ($tokenCode == T_CLASS) {
+            if ($tokenCode == T_CLASS && !isset($result['class'])) {
                 $className = $this->extractClassName($stream);
                 if ($className === null) {
                     return null;
@@ -76,7 +76,6 @@ class ModelFileParser
 
         while ($stream->forward()) {
             $tokenCode = $stream->getCurrentCode();
-
 
             if ($tokenCode == T_PUBLIC) {
                 $relations = $this->extractRelations($stream);

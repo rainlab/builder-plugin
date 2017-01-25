@@ -254,6 +254,8 @@ return [
         'property_group_relation' => 'Relation',
         'property_relation_prompt' => 'Prompt',
         'property_relation_prompt_description' => 'Text to display when there is no available selections.',
+        'property_empty_option' => 'Empty option',
+        'property_empty_option_description' => 'The empty option corresponds to the empty selection, but unlike the placeholder it can be reselected.',
         'control_group_standard' => 'Standard',
         'control_group_widgets' => 'Widgets',
         'click_to_add_control' => 'Add control',
