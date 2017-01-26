@@ -155,7 +155,7 @@ class ModelModel extends BaseModel
         return array_combine($tables, $tables);
     }
 
-    public static function getModelFields($pluginCodeObj, $modelClassName)
+    private static function getTableNameFromModelClass($pluginCodeObj, $modelClassName)
     {
         if (!self::validateModelClassName($modelClassName)) {
             throw new SystemException('Invalid model class name: '.$modelClassName);
@@ -177,12 +177,49 @@ class ModelModel extends BaseModel
             return [];
         }
 
-        $tableName = $modelInfo['table'];
+        return $modelInfo['table'];
+    }
+
+    public static function getModelFields($pluginCodeObj, $modelClassName)
+    {
+        $tableName = self::getTableNameFromModelClass($pluginCodeObj, $modelClassName);
 
         // Currently we return only table columns,
         // but eventually we might want to return relations as well.
 
         return Schema::getColumnListing($tableName);
+    }
+
+    public static function getModelColumnsAndTypes($pluginCodeObj, $modelClassName)
+    {
+        $tableName = self::getTableNameFromModelClass($pluginCodeObj, $modelClassName);
+
+        if (!DatabaseTableModel::tableExists($tableName)) {
+            throw new ApplicationException('Database table not found: '.$tableName);
+        }
+
+        $schema = DatabaseTableModel::getSchema();
+        $tableInfo = $schema->getTable($tableName);
+
+        $columns = $tableInfo->getColumns();
+        $result = [];
+        foreach ($columns as $column) {
+            $columnName = $column->getName();
+            $typeName = $column->getType()->getName();
+
+            if ($typeName == EnumDbType::TYPENAME) {
+                continue;
+            }
+
+            $item = [
+                'name' => $columnName,
+                'type' => MigrationColumnType::toMigrationMethodName($typeName, $columnName)
+            ];
+
+            $result[] = $item;
+        }
+
+        return $result;
     }
 
     public static function getPluginRegistryData($pluginCode, $subtype)

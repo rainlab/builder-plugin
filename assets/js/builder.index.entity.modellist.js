@@ -34,7 +34,11 @@
                 model_class: $link.data('modelClass')
             }
 
-        this.indexController.openOrLoadMasterTab($link, 'onModelListCreateOrOpen', this.newTabId(), data)
+        var result = this.indexController.openOrLoadMasterTab($link, 'onModelListCreateOrOpen', this.newTabId(), data)
+
+        if (result !== false) {
+            result.done(this.proxy(this.onListLoaded, this))
+        }
     }
 
     ModelList.prototype.cmdSaveList = function(ev) {
@@ -58,15 +62,30 @@
         var list = $(ev.currentTarget).data('list'),
             model = $(ev.currentTarget).data('modelClass')
 
-        this.indexController.openOrLoadMasterTab($(ev.target), 'onModelListCreateOrOpen', this.makeTabId(model+'-'+list), {
+        var result = this.indexController.openOrLoadMasterTab($(ev.target), 'onModelListCreateOrOpen', this.makeTabId(model+'-'+list), {
             file_name: list,
             model_class: model
         })
+
+        if (result !== false) {
+            result.done(this.proxy(this.onListLoaded, this))
+        }
     }
 
     ModelList.prototype.cmdDeleteList = function(ev) {
         var $target = $(ev.currentTarget)
         $.oc.confirm($target.data('confirm'), this.proxy(this.deleteConfirmed))
+    }
+
+    ModelList.prototype.cmdAddDatabaseColumns = function(ev) {
+        var $target = $(ev.currentTarget)
+
+        $.oc.stripeLoadIndicator.show()
+        $target.request('onModelListLoadDatabaseColumns').done(
+            this.proxy(this.databaseColumnsLoaded)
+        ).always(
+            $.oc.builder.indexController.hideStripeIndicatorProxy
+        )
     }
 
     // INTERNAL METHODS
@@ -179,6 +198,79 @@
         }
     }
 
+    ModelList.prototype.databaseColumnsLoaded = function(data) {
+        if (!$.isArray(data.responseData.columns)) {
+            alert('Invalid server response')
+        }
+        
+        var $masterTabPane = this.getMasterTabsActivePane(),
+            $form = $masterTabPane.find('form'),
+            existingColumns = this.getColumnNames($form),
+            columnsAdded = false
+
+        for (var i in data.responseData.columns) {
+            var column = data.responseData.columns[i],
+                type = this.mapType(column.type)
+
+            if ($.inArray(column.name, existingColumns) !== -1) {
+                continue
+            }
+
+            this.addColumn($form, column.name, type)
+            columnsAdded = true
+        }
+
+        if (!columnsAdded) {
+            alert($form.attr('data-lang-all-database-columns-exist'))
+        }
+        else {
+            $form.trigger('change')
+        }
+    }
+
+    ModelList.prototype.mapType = function(type) {
+        switch (type) {
+            case 'integer' : return 'number'
+            case 'timestamp' : return 'datetime'
+            default: return 'text'
+        }
+    }
+
+    ModelList.prototype.addColumn = function($target, column, type) {
+        var tableObj = this.getTableControlObject($target),
+            currentData = this.getTableData($target),
+            rowData = {
+                field: column,
+                label: column,
+                type: type
+            }
+
+        tableObj.addRecord('bottom', true)
+        tableObj.setRowValues(currentData.length-1, rowData)
+
+        // Forces the table to apply values
+        // from the data source
+        tableObj.addRecord('bottom', false)
+        tableObj.deleteRecord()
+    }
+
+    ModelList.prototype.getColumnNames = function($target) {
+        var tableObj = this.getTableControlObject($target)
+
+        tableObj.unfocusTable()
+
+        var data = this.getTableData($target),
+            result = []
+
+        for (var index in data) {
+            if (data[index].field !== undefined) {
+                result.push($.trim(data[index].field))
+            }
+        }
+
+        return result
+    }
+
     // EVENT HANDLERS
     // ============================
 
@@ -190,6 +282,18 @@
 
             return false
         }
+    }
+
+    ModelList.prototype.onListLoaded = function() {
+        $(document).trigger('render')
+
+        var $masterTabPane = this.getMasterTabsActivePane(),
+            $form = $masterTabPane.find('form'),
+            $toolbar = $masterTabPane.find('div[data-control=table] div.toolbar'),
+            $button = $('<a class="btn oc-icon-magic builder-custom-table-button" data-builder-command="modelList:cmdAddDatabaseColumns"></a>')
+
+        $button.text($form.attr('data-lang-add-database-columns'));
+        $toolbar.append($button)
     }
 
     // REGISTRATION

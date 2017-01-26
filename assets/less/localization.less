@@ -46,7 +46,27 @@ table.data td.active .localization-input-container .localization-trigger {
             display: block;
             outline: none;
             border: none;
-            padding: 5px 10px;
+            padding: 6px 10px 6px;
+        }
+    }
+}
+
+html.chrome {
+    .control-table {
+        td[data-column-type=builderLocalization] {
+            input[type=text] {
+                padding: 6px 10px 7px!important;
+            }
+        }
+    }
+}
+
+html.safari, html.gecko {
+    .control-table {
+        td[data-column-type=builderLocalization] {
+            input[type=text] {
+                padding: 5px 10px 5px;
+            }
         }
     }
 }

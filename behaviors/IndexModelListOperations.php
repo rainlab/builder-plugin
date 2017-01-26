@@ -106,6 +106,17 @@ class IndexModelListOperations extends IndexOperationsBehaviorBase
         ];
     }
 
+    public function onModelListLoadDatabaseColumns()
+    {
+        $columns = ModelModel::getModelColumnsAndTypes($this->getPluginCode(), Input::get('model_class'));
+
+        return [
+            'responseData' => [
+                'columns' => $columns
+            ]
+        ];
+    }
+
     protected function loadOrCreateListFromPost()
     {
         $pluginCode = Request::input('plugin_code');
