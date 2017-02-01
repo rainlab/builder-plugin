@@ -626,7 +626,7 @@ return [
         'list_scope' => 'Scope',
         'list_scope_description' => 'Model scope waarin de records moeten worden opgevraagd (optioneel).',
         'list_scope_default' => '-- Selecteer een scope (optioneel) --',
-        'list_detalis_page_link' => 'Link naar de detailpagina',
+        'list_details_page_link' => 'Link naar de detailpagina',
         'list_details_key_column' => 'Detail sleutelkolom',
         'list_details_key_column_description' => 'Model kolom die moet worden gebruikt als record ID in de detailpagina links.',
         'list_details_url_parameter' => 'URL parameter naam',

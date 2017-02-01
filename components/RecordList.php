@@ -107,7 +107,7 @@ class RecordList extends ComponentBase
                 'description' => 'rainlab.builder::lang.components.list_details_page_description',
                 'type'        => 'dropdown',
                 'showExternalParam' => false,
-                'group'       => 'rainlab.builder::lang.components.list_detalis_page_link'
+                'group'       => 'rainlab.builder::lang.components.list_details_page_link'
             ],
             'detailsKeyColumn' => [
                 'title'       => 'rainlab.builder::lang.components.list_details_key_column',
@@ -115,7 +115,7 @@ class RecordList extends ComponentBase
                 'type'        => 'autocomplete',
                 'depends'     => ['modelClass'],
                 'showExternalParam' => false,
-                'group'       => 'rainlab.builder::lang.components.list_detalis_page_link'
+                'group'       => 'rainlab.builder::lang.components.list_details_page_link'
             ],
             'detailsUrlParameter' => [
                 'title'       => 'rainlab.builder::lang.components.list_details_url_parameter',
@@ -123,7 +123,7 @@ class RecordList extends ComponentBase
                 'type'        => 'string',
                 'default'     => 'id',
                 'showExternalParam' => false,
-                'group'       => 'rainlab.builder::lang.components.list_detalis_page_link'
+                'group'       => 'rainlab.builder::lang.components.list_details_page_link'
             ],
             'recordsPerPage' => [
                 'title'             => 'rainlab.builder::lang.components.list_records_per_page',

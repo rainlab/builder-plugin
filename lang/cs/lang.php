@@ -613,7 +613,7 @@ return [
         'list_scope' => 'Scope',
         'list_scope_description' => 'Optional model scope to fetch the records',
         'list_scope_default' => '--select a scope, optional--',
-        'list_detalis_page_link' => 'Link to the details page',
+        'list_details_page_link' => 'Link to the details page',
         'list_details_key_column' => 'Details key column',
         'list_details_key_column_description' => 'Model column to use as a record identifier in the details page links.',
         'list_details_url_parameter' => 'URL parameter name',

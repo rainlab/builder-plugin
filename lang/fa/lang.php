@@ -612,7 +612,7 @@ return [
         'list_scope' => 'محدوده',
         'list_scope_description' => 'محدوده اختیاری کلاس مدل جهت واکشی موارد',
         'list_scope_default' => '--محدوده را انتخاب نمایید، اختیاری--',
-        'list_detalis_page_link' => 'آدرس صفحه جزییات',
+        'list_details_page_link' => 'آدرس صفحه جزییات',
         'list_details_key_column' => 'ستون کلید جزییات',
         'list_details_key_column_description' => 'ستونی در مدل به عنوان کلید که مورد جهت نمایش جزییات از طریق آن در پایگاه داده یافت می شود.',
         'list_details_url_parameter' => 'پارامتر نام آدرس',
