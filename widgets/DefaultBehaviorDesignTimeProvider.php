@@ -148,6 +148,8 @@ class DefaultBehaviorDesignTimeProvider extends BehaviorDesignTimeProviderBase
             $controllerGenerator->setTemplateVariable('createUrl', $createUrl);
         }
 
+        $controllerGenerator->setTemplateVariable('hasListBehavior', true);
+
         return $result;
     }
 
