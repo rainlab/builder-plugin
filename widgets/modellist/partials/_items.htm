@@ -1,7 +1,6 @@
 <?php if ($items): ?>
     <ul>
-        <?php foreach ($items as $modelInfo): ?>
-        <?php
+        <?php foreach ($items as $modelInfo):
             $model = $modelInfo['model'];
             $modelForms = $modelInfo['forms'];
             $modelLists = $modelInfo['lists'];
@@ -10,12 +9,12 @@
             $modelGroup = $model->className;
             $formsGroup = $modelGroup.'-forms';
             $listsGroup = $modelGroup.'-lists';
-            $modelGroupStatus = $this->getCollapseStatus($modelGroup);
-            $formsGroupStatus = $this->getCollapseStatus($formsGroup);
-            $listsGroupStatus = $this->getCollapseStatus($listsGroup);
+            $modelGroupStatus = $this->getGroupStatus($modelGroup);
+            $formsGroupStatus = $this->getGroupStatus($formsGroup);
+            $listsGroupStatus = $this->getGroupStatus($listsGroup);
         ?>
-            <li class="group model"
-                data-id="<?= e($dataId) ?>"
+            <li class="group model" 
+                data-id="<?= e($dataId) ?>" 
                 data-status="<?= $modelGroupStatus ? 'expanded' : 'collapsed' ?>"
                 data-group-id="<?= e($modelGroup) ?>"
             >
@@ -43,7 +42,7 @@
                                 <li class="item"
                                     data-id="<?= e($formDataId) ?>" 
                                 >
-                                    <a
+                                    <a 
                                         href="javascript:;"
                                         data-builder-command="modelForm:cmdOpenForm"
                                         data-model-class="<?= e($model->className) ?>"
@@ -86,7 +85,7 @@
                         </ul>
                     </li>
                 </ul>
-
+                
             </li>
         <?php endforeach ?>
     </ul>
