@@ -1,5 +1,6 @@
 <?php namespace RainLab\Builder\Classes;
 
+use Illuminate\Support\Facades\DB;
 use Str;
 use File;
 use Doctrine\DBAL\Schema\Comparator;
@@ -41,9 +42,10 @@ class TableMigrationCodeGenerator extends BaseModel
             $comparator = new Comparator();
             $tableDiff = $comparator->diffTable($existingTable, $updatedTable);
 
-            if ($newTableName !== $existingTable->getName()) {
+            $existingTableName = substr($existingTable->getName(), mb_strlen(DB::getTablePrefix()));
+            if ($newTableName !== $existingTableName) {
                 if (!$tableDiff) {
-                    $tableDiff = new TableDiff($existingTable->getName());
+                    $tableDiff = new TableDiff($existingTableName);
                 }
 
                 $tableDiff->newName = $newTableName;

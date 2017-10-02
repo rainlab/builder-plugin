@@ -53,18 +53,20 @@ class DatabaseTableModel extends BaseModel
     public static function listPluginTables($pluginCode)
     {
         $pluginCodeObj = new PluginCode($pluginCode);
-        $prefix = $pluginCodeObj->toDatabasePrefix();
+        $prefix = DB::getTablePrefix() . $pluginCodeObj->toDatabasePrefix();
 
         $tables = self::getSchemaManager()->listTableNames();
 
-        return array_filter($tables, function($item) use($prefix) {
+        return array_map(function($item) {
+            return substr($item, mb_strlen(DB::getTablePrefix()));
+        }, array_filter($tables, function($item) use($prefix) {
             return Str::startsWith($item, $prefix);
-        });
+        }));
     }
 
     public static function tableExists($name)
     {
-        return self::getSchema()->hasTable($name);
+        return self::getSchema()->hasTable(DB::getTablePrefix() . $name);
     }
 
     /**
@@ -80,7 +82,7 @@ class DatabaseTableModel extends BaseModel
         $schema = self::getSchemaManager()->createSchema();
 
         $this->name = $name;
-        $this->tableInfo = $schema->getTable($this->name);
+        $this->tableInfo = $schema->getTable($this->fullTableName());
         $this->loadColumnsFromTableInfo();
         $this->exists = true;
     }
@@ -349,6 +351,10 @@ class DatabaseTableModel extends BaseModel
         }
 
         return self::$schemaManager;
+    }
+
+    protected function fullTableName() {
+        return DB::getTablePrefix() . $this->name;
     }
 
     protected function loadColumnsFromTableInfo()
