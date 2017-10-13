@@ -130,6 +130,7 @@ class DefaultBehaviorDesignTimeProvider extends BehaviorDesignTimeProviderBase
             'noRecordsMessage' => 'backend::lang.list.no_records',
             'showSetup' => true,
             'showCheckboxes' => true,
+            'recordsPerPage' => 50,
             'toolbar' => [
                 'buttons' => 'list_toolbar',
                 'search' => [
