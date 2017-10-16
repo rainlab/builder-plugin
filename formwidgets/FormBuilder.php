@@ -165,7 +165,7 @@ class FormBuilder extends FormWidgetBase
                 ],
                 'regex' => [
                     'message' => Lang::get('rainlab.builder::lang.form.property_field_name_regex'),
-                    'pattern' => '^[a-zA-Z]+[0-9a-z\_\[\]]*$'
+                    'pattern' => '^[a-zA-Z\_]+[0-9a-z\_\[\]]*$'
                 ]
             ]
         ];
