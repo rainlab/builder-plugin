@@ -243,6 +243,8 @@ return [
         'property_group_relation' => 'Relatie',
         'property_relation_prompt' => 'Prompt',
         'property_relation_prompt_description' => 'Tekst om weer te geven als er geen selecties beschikbaar zijn.',
+        'property_max_items' => 'Maximum aantal',
+        'property_max_items_description' => 'Maximum toegelaten aantal items in de herhaler.',        
         'control_group_standard' => 'Standaard',
         'control_group_widgets' => 'Widgets',
         'click_to_add_control' => 'Element toevoegen',
