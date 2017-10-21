@@ -328,7 +328,14 @@ class StandardControlsRegistry
             ],
             'form' => [
                 'type' => 'control-container'
-            ]
+            ],
+            'maxItems' =>  [
+                'title' => Lang::get('rainlab.builder::lang.form.property_max_items'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_max_items_description'),
+                'type' => 'string',
+                'ignoreIfEmpty' => true,
+                'sortOrder' => 82
+            ],            
         ];
 
         $ignoreProperties = [
