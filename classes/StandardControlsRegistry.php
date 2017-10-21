@@ -950,7 +950,33 @@ class StandardControlsRegistry
                 'ignoreIfEmpty' => true,
                 'type' => 'string',
                 'sortOrder' => 82
-            ]
+            ],
+            'imageWidth' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_fileupload_image_width'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_mediafinder_image_width_description'),
+                'type' => 'string',
+                'ignoreIfEmpty' => true,
+                'validation' => [
+                    'regex' => [
+                        'pattern' => '^[0-9]+$',
+                        'message' => Lang::get('rainlab.builder::lang.form.property_fileupload_invalid_dimension')
+                    ]
+                ],
+                'sortOrder' => 83
+            ],
+            'imageHeight' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_fileupload_image_height'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_mediafinder_image_height_description'),
+                'type' => 'string',
+                'ignoreIfEmpty' => true,
+                'validation' => [
+                    'regex' => [
+                        'pattern' => '^[0-9]+$',
+                        'message' => Lang::get('rainlab.builder::lang.form.property_fileupload_invalid_dimension')
+                    ]
+                ],
+                'sortOrder' => 84
+            ],            
         ];
 
         $this->controlLibrary->registerControl('mediafinder',
