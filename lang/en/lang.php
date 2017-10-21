@@ -256,6 +256,8 @@ return [
         'property_mediafinder_mode_image' => 'Image',
         'property_mediafinder_prompt' => 'Prompt',
         'property_mediafinder_prompt_description' => 'Text to display when there is no item selected. The %s character represents the media manager icon. Leave empty for the default prompt.',
+        'property_mediafinder_image_width_description' => 'If using image type, the preview image will be displayed to this width, optional.',
+        'property_mediafinder_image_height_description' => 'If using image type, the preview image will be displayed to this height, optional.',        
         'property_group_relation' => 'Relation',
         'property_relation_prompt' => 'Prompt',
         'property_relation_prompt_description' => 'Text to display when there is no available selections.',
