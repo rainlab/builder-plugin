@@ -41,7 +41,7 @@ class ModelFileParser
                 $result['class'] = $className;
             }
 
-            if ($tokenCode == T_PUBLIC) {
+            if ($tokenCode == T_PUBLIC || $tokenCode == T_PROTECTED) {
                 $tableName = $this->extractTableName($stream);
                 if ($tableName === false) {
                     continue;
