@@ -60,7 +60,7 @@ class Plugin extends PluginBase
                         'icon'        => 'icon-random',
                         'url'         => 'javascript:;',
                         'attributes'  => ['data-menu-item'=>'models'],
-                        'permissions' => ['rrainlab.builder.manage_plugins']
+                        'permissions' => ['rainlab.builder.manage_plugins']
                     ],
                     'permissions' => [
                         'label'       => 'rainlab.builder::lang.permission.menu_label',
