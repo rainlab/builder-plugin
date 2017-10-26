@@ -9,9 +9,9 @@
             $modelGroup = $model->className;
             $formsGroup = $modelGroup.'-forms';
             $listsGroup = $modelGroup.'-lists';
-            $modelGroupStatus = $this->getGroupStatus($modelGroup);
-            $formsGroupStatus = $this->getGroupStatus($formsGroup);
-            $listsGroupStatus = $this->getGroupStatus($listsGroup);
+            $modelGroupStatus = $this->getCollapseStatus($modelGroup);
+            $formsGroupStatus = $this->getCollapseStatus($formsGroup);
+            $listsGroupStatus = $this->getCollapseStatus($listsGroup);
         ?>
             <li class="group model" 
                 data-id="<?= e($dataId) ?>" 
