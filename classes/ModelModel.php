@@ -267,7 +267,7 @@ class ModelModel extends BaseModel
             return preg_match('/^[A-Z]+[a-zA-Z0-9_]+$/', $modelClassName);
         }
 
-        return preg_match('/^[A-Z]+[a-zA-Z0-9_\\\\]+$/', $modelClassName);
+        return class_exists($modelClassName);
     }
 
     protected function getFilePath()
