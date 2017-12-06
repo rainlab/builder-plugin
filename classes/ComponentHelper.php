@@ -71,7 +71,7 @@ class ComponentHelper
             $modelClass = key($models);
         }
 
-        if (!ModelModel::validateModelClassName($modelClass, true)) {
+        if (!ModelModel::validateModelClassName($modelClass)) {
             throw new ApplicationException('Invalid model class name.');
         }
 

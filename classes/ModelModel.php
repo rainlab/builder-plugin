@@ -17,6 +17,8 @@ use Db;
  */
 class ModelModel extends BaseModel
 {
+    const UNQUALIFIED_CLASS_NAME = '/^[A-Z]+[a-zA-Z0-9_]+$/';
+
     public $className;
 
     public $databaseTable;
@@ -29,7 +31,7 @@ class ModelModel extends BaseModel
     ];
 
     protected $validationRules = [
-        'className' => ['required', 'regex:/^[A-Z]+[a-zA-Z0-9_]+$/', 'uniqModelName'],
+        'className' => ['required', 'regex:' . self::UNQUALIFIED_CLASS_NAME, 'uniqModelName'],
         'databaseTable' => ['required'],
         'addTimestamps' => ['timestampColumnsMustExist'],
         'addSoftDeleting' => ['deletedAtColumnMustExist']
@@ -261,13 +263,9 @@ class ModelModel extends BaseModel
         return $result;
     }
 
-    public static function validateModelClassName($modelClassName, $allowNamespaces = false)
+    public static function validateModelClassName($modelClassName)
     {
-        if (!$allowNamespaces) {
-            return preg_match('/^[A-Z]+[a-zA-Z0-9_]+$/', $modelClassName);
-        }
-
-        return class_exists($modelClassName);
+      return class_exists($modelClassName) || !!preg_match(self::UNQUALIFIED_CLASS_NAME, $modelClassName);
     }
 
     protected function getFilePath()
