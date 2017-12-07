@@ -17,7 +17,7 @@ use Db;
  */
 class ModelModel extends BaseModel
 {
-    const CLASS_NAME_PATTERN = '/^[A-Z]+[a-zA-Z0-9_]+$/';
+    const UNQUALIFIED_CLASS_NAME_PATTERN = '/^[A-Z]+[a-zA-Z0-9_]+$/';
 
     public $className;
 
@@ -31,7 +31,7 @@ class ModelModel extends BaseModel
     ];
 
     protected $validationRules = [
-        'className' => ['required', 'regex:' . self::CLASS_NAME_PATTERN, 'uniqModelName'],
+        'className' => ['required', 'regex:' . self::UNQUALIFIED_CLASS_NAME_PATTERN, 'uniqModelName'],
         'databaseTable' => ['required'],
         'addTimestamps' => ['timestampColumnsMustExist'],
         'addSoftDeleting' => ['deletedAtColumnMustExist']
@@ -265,7 +265,7 @@ class ModelModel extends BaseModel
 
     public static function validateModelClassName($modelClassName)
     {
-      return class_exists($modelClassName) || !!preg_match(self::CLASS_NAME_PATTERN, $modelClassName);
+      return class_exists($modelClassName) || !!preg_match(self::UNQUALIFIED_CLASS_NAME_PATTERN, $modelClassName);
     }
 
     protected function getFilePath()
