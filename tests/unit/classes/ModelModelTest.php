@@ -1,6 +1,8 @@
-<?php namespace RainLab\Builder\Classes;
+<?php
 
-class ModelModelTest extends \PHPUnit_Framework_TestCase
+use RainLab\Builder\Classes\ModelModel;
+
+class ModelModelTest extends TestCase
 {
   public function testValidateModelClassName()
   {
