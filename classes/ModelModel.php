@@ -165,6 +165,7 @@ class ModelModel extends BaseModel
 
         $modelsDirectoryPath = File::symbolizePath($pluginCodeObj->toPluginDirectoryPath().'/models');
         if (!File::isDirectory($modelsDirectoryPath)) {
+            echo $modelsDirectoryPath;
             return '';
         }
 
