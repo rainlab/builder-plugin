@@ -12,6 +12,9 @@ class ModelModelTest extends \PHPUnit_Framework_TestCase
 
     $fullyQualifiedClassName = '\RainLab\Builder\Models\Settings';
     $this->assertTrue( ModelModel::validateModelClassName($fullyQualifiedClassName) );
+
+    $qualifiedClassNameStartingWithLowerCase = 'rainLab\Builder\Models\Settings';
+    $this->assertTrue( ModelModel::validateModelClassName($qualifiedClassNameStartingWithLowerCase) );
   }
 
   public function testInvalidateModelClassName()
