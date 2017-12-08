@@ -165,18 +165,18 @@ class ModelModel extends BaseModel
 
         $modelsDirectoryPath = File::symbolizePath($pluginCodeObj->toPluginDirectoryPath().'/models');
         if (!File::isDirectory($modelsDirectoryPath)) {
-            return [];
+            return '';
         }
 
         $modelFilePath = $modelsDirectoryPath.'/'.$modelClassName.'.php';
         if (!File::isFile($modelFilePath)) {
-            return [];
+            return '';
         }
 
         $parser = new ModelFileParser();
         $modelInfo = $parser->extractModelInfoFromSource(File::get($modelFilePath));
         if (!$modelInfo || !isset($modelInfo['table'])) {
-            return [];
+            return '';
         }
 
         return $modelInfo['table'];
