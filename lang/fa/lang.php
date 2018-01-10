@@ -242,6 +242,8 @@ return [
         'property_mediafinder_prompt' => 'متن',
         'property_mediafinder_prompt_description' => 'متنی که به هنگام خالی بودن نمایش داده شود. %s به آیکن جستجو اشاره میکند. جهت استفاده از مقدار پیشفرض این گزینه را خالی بگذارید.',
         'property_group_relation' => 'ارتباط',
+        'property_relation_select' => 'تحديد',
+        'property_relation_select_description' => 'كونكات أعمدة متعددة معا لعرض اسم',
         'property_relation_prompt' => 'متن',
         'property_relation_prompt_description' => 'متنی که به هنگام موجود نبودن موردی جهت انتخاب نمایش داده میشود.',
         'control_group_standard' => 'استاندارد',

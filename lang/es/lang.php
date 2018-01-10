@@ -228,6 +228,8 @@ return [
         'property_fileupload_thumb_extension' => 'File extension',
         'property_name_from' => 'Name column',
         'property_name_from_description' => 'Relation column name to use for displaying a name.',
+        'property_relation_select' => 'Select',
+        'property_relation_select_description' => 'CONCAT multiple columns together for displaying a name',
         'property_description_from' => 'Description column',
         'property_description_from_description' => 'Relation column name to use for displaying a description.',
         'property_recordfinder_prompt' => 'Prompt',
