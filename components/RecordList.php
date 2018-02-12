@@ -275,7 +275,11 @@ class RecordList extends ComponentBase
         $scopeValue = $this->property('scopeValue');
 
         if ($scope !== null) {
-            $model = $model->$scope($scopeValue);
+            if ($scopeValue !== null) {
+                $model = $model->$scope($scopeValue);
+            } else {
+                $model = $model->$scope();
+            }
         }
 
         $model = $this->sort($model);
