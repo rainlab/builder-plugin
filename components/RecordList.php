@@ -263,11 +263,6 @@ class RecordList extends ComponentBase
         }
     }
 
-    public function scopeSearchYear($query, $scopeValue)
-    {
-        return $query->where('year', $scopeValue);
-    }
-
     protected function listRecords()
     {
         $modelClassName = $this->property('modelClass');
