@@ -272,6 +272,8 @@ class RecordList extends ComponentBase
 
         $model = new $modelClassName();
         $scope = $this->getScopeName($model);
+        $scopeValue = $this->property('scopeValue');
+        $model = $query->where('year', $scopeValue);
 
         if ($scope !== null) {
             $model = $model->$scope();
