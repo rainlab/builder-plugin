@@ -130,7 +130,8 @@ class ControlLibrary
                 'options' => [
                     'above' => Lang::get('rainlab.builder::lang.form.property_comment_position_above'),
                     'below' => Lang::get('rainlab.builder::lang.form.property_comment_position_below')
-                ]
+                ],
+                'ignoreIfEmpty' => true,
             ],
             'span' => [
                 'title' => Lang::get('rainlab.builder::lang.form.property_span_title'),
