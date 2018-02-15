@@ -274,6 +274,12 @@ class RecordList extends ComponentBase
         $scope = $this->getScopeName($model);
         $scopeValue = $this->property('scopeValue');
 
+        if (strpos($this->property('scopeValue'), '::') > 0) {
+            list($componentAlias, $property) = explode('::', $this->property('scopeValue'));
+            $componentObj = $this->findComponentByName($componentAlias);
+            $this->scopeValue = $componentObj->record->attributes[$property];
+        }
+
         if ($scope !== null) {
             $model = $model->$scope($scopeValue);
         }

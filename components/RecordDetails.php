@@ -12,25 +12,25 @@ class RecordDetails extends ComponentBase
      * @var \October\Rain\Database\Model
      */
     public $record = null;
-    
+
     /**
      * Message to display if the record is not found.
      * @var string
      */
     public $notFoundMessage;
-    
+
     /**
      * Model column to display on the details page.
      * @var string
      */
     public $displayColumn;
-    
+
     /**
      * Model column to use as a record identifier for fetching the record from the database.
      * @var string
      */
     public $modelKeyColumn;
-    
+
     /**
      * Identifier value to load the record from the database.
      * @var string
@@ -135,6 +135,12 @@ class RecordDetails extends ComponentBase
         $this->modelKeyColumn = $this->page['modelKeyColumn'] = $this->property('modelKeyColumn');
         $this->identifierValue = $this->page['identifierValue'] = $this->property('identifierValue');
 
+        if (strpos($this->property('identifierValue'), '::') > 0) {
+            list($componentAlias, $property) = explode('::', $this->property('identifierValue'));
+            $componentObj = $this->findComponentByName($componentAlias);
+            $this->identifierValue = $componentObj->record->attributes[$property];
+        }
+
         if (!strlen($this->displayColumn)) {
             throw new SystemException('The display column name is not set.');
         }
@@ -156,6 +162,7 @@ class RecordDetails extends ComponentBase
         }
 
         $model = new $modelClassName();
+
         return $model->where($this->modelKeyColumn, '=', $this->identifierValue)->first();
     }
 }
