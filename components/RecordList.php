@@ -56,6 +56,12 @@ class RecordList extends ComponentBase
      * @var string
      */
     public $detailsUrlParameter;
+    
+    /**
+     * Method to use for ajaxPagination
+     * @var string
+     */
+    public $ajaxPagination;
 
     public function componentDetails()
     {
@@ -146,6 +152,19 @@ class RecordList extends ComponentBase
                 'default'     => '{{ :page }}',
                 'group'       => 'rainlab.builder::lang.components.list_pagination'
             ],
+            'ajaxPagination' => [
+                'title'       => 'rainlab.builder::lang.components.list_ajax_pagination',
+                'description' => 'rainlab.builder::lang.components.list_ajax_pagination_description',
+                'type'        => 'dropdown',
+                'options'     => [
+                    ''        => 'rainlab.builder::lang.components.list_ajax_pagination_description_disabled',
+                    'replace' => 'rainlab.builder::lang.components.list_ajax_pagination_description_replace',
+                    'append'  => 'rainlab.builder::lang.components.list_ajax_pagination_description_append',
+                    'prepend' => 'rainlab.builder::lang.components.list_ajax_pagination_description_prepend',
+                ],
+                'default'     => '',
+                'group'       => 'rainlab.builder::lang.components.list_pagination'
+            ],
             'sortColumn' => [
                 'title'       => 'rainlab.builder::lang.components.list_sort_column',
                 'description' => 'rainlab.builder::lang.components.list_sort_column_description',
@@ -231,6 +250,18 @@ class RecordList extends ComponentBase
 
         $this->records = $this->page['records'] = $this->listRecords();
     }
+    
+    //
+    // Ajax Pagination
+    //
+
+    public function onPaginate()
+    {
+        $this->setProperty('pageNumber', post('pageNumber'));
+        $this->prepareVars();
+
+        $this->records = $this->page['records'] = $this->listRecords();
+    }
 
     protected function prepareVars()
     {
@@ -240,6 +271,8 @@ class RecordList extends ComponentBase
 
         $this->detailsKeyColumn = $this->page['detailsKeyColumn'] = $this->property('detailsKeyColumn');
         $this->detailsUrlParameter = $this->page['detailsUrlParameter'] = $this->property('detailsUrlParameter');
+        
+        $this->ajaxPagination = $this->page['ajaxPagination'] = $this->property('ajaxPagination');
 
         $detailsPage = $this->property('detailsPage');
         if ($detailsPage == '-') {
