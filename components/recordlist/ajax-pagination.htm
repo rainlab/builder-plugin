@@ -1,0 +1,33 @@
+{% set records = __SELF__.records %}
+
+{% if records.lastPage > 1 %}
+    {% if ajaxPagination == 'replace' %}
+    <ul class="pagination">
+        {% if records.currentPage > 1 %}
+            <li><a href="return;" data-request="{{ __SELF__ }}::onPaginate" data-request-update="'@ajax-records':'#{{ __SELF__ }}-records-wrapper', '@ajax-pagination':'#{{ __SELF__ }}-pagination-wrapper'" data-request-data="pageNumber: {{ (records.currentPage-1) }}">&larr;</a></li>
+        {% endif %}
+
+        {% for page in 1..records.lastPage %}
+            <li class="{{ records.currentPage == page ? 'active' : null }}">
+                <a href="return;" data-request="{{ __SELF__ }}::onPaginate" data-request-update="'@ajax-records':'#{{ __SELF__ }}-records-wrapper', '@ajax-pagination':'#{{ __SELF__ }}-pagination-wrapper'" data-request-data="pageNumber: {{ page }}">{{ page }}</a>
+            </li>
+        {% endfor %}
+
+        {% if records.lastPage > records.currentPage %}
+            <li><a href="return;" data-request="{{ __SELF__ }}::onPaginate" data-request-update="'@ajax-records':'#{{ __SELF__ }}-records-wrapper', '@ajax-pagination':'#{{ __SELF__ }}-pagination-wrapper'" data-request-data="pageNumber: {{ (records.currentPage+1) }}">&rarr;</a></li>
+        {% endif %}
+    </ul>
+    {% elseif ajaxPagination == 'append' %}
+        {% if records.lastPage > records.currentPage %}
+            <div class="pagination">
+                <a href="return;" data-request="{{ __SELF__ }}::onPaginate" data-request-update="'@ajax-records':'@#{{ __SELF__ }}-records-wrapper', '@ajax-pagination':'#{{ __SELF__ }}-pagination-wrapper'" data-request-data="pageNumber: {{ (records.currentPage+1) }}">Load more</a>
+            </div>
+        {% endif %}
+    {% elseif ajaxPagination == 'prepend' %}
+        {% if records.lastPage > records.currentPage %}
+            <div class="pagination">
+                <a href="return;" data-request="{{ __SELF__ }}::onPaginate" data-request-update="'@ajax-records':'^#{{ __SELF__ }}-records-wrapper', '@ajax-pagination':'#{{ __SELF__ }}-pagination-wrapper'" data-request-data="pageNumber: {{ (records.currentPage+1) }}">Load more</a>
+            </div>
+        {% endif %}
+    {% endif %}
+{% endif %}
