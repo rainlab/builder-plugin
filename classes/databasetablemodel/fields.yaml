@@ -53,6 +53,7 @@ tabs:
                         boolean: Boolean
                         decimal: Decimal
                         double: Double
+                        enum: Enum
                     validation: 
                         required: 
                             message: rainlab.builder::lang.database.column_type_required
@@ -62,6 +63,8 @@ tabs:
                         regex:
                             pattern: (^[0-9]+$)|(^[0-9]+,[0-9]+$)
                             message: rainlab.builder::lang.database.column_validation_length
+                values:
+                    title: rainlab.builder::lang.database.column_name_values
                 unsigned:
                     title: rainlab.builder::lang.database.column_name_unsigned
                     type: checkbox

@@ -59,7 +59,6 @@ return [
         'btn_add_column' => 'Přidat sloupec',
         'btn_delete_column' => 'Smazat sloupec',
         'confirm_delete' => 'Opravdu chcete smazat tuto tabulku?',
-        'error_enum_not_supported' => 'Tabulka obsahuje sloupce s typem "enum" které Builder aktuálně nepodporuje.',
         'error_table_name_invalid_prefix' => "Název tabulky by měl začínat prefixem pluginu: ':prefix'.",
         'error_table_name_invalid_characters' => 'Formát názvu tabulky není správný, měl by obsahovat pouze písmena, číslice a nebo podtržítka. Název by měl začínat písmenem a neměl by obsahovat mezery.',
         'error_table_duplicate_column' => "Takový název sloupce již existuje: ':column'.",

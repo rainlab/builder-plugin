@@ -57,7 +57,6 @@ return [
         'btn_add_column' => 'Kolom toevoegen',
         'btn_delete_column' => 'Kolom verwijderen',
         'confirm_delete' => 'Do you really want to delete the table?',
-        'error_enum_not_supported' => 'De tabel bevat kolom(men) van het type "enum", deze worden momenteel niet ondersteund door Builder.',
         'error_table_name_invalid_prefix' => "De tabelnaam moet starten met de plugin prefix: ':prefix'.",
         'error_table_name_invalid_characters' => 'Ongeldige tabelnaam. Tabelnamen mogen alleen latijnse letters, cijfers en underscores bevatten. Tabelnamen moeten beginnen met een letter en mogen geen spaties bevatten.',
         'error_table_duplicate_column' => "Kolomnaam bestaat reeds: ':column'.",

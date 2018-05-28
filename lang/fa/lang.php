@@ -58,7 +58,6 @@ return [
         'btn_add_column' => 'افزودن ستون',
         'btn_delete_column' => 'حذف ستون',
         'confirm_delete' => 'آیا از حذف ان جدول اطمینان دارید؟',
-        'error_enum_not_supported' => 'جدول حاوی ستون(ها) ای با نوع enum می باشد که در حال حاظر توسط افزونه ساز پشتیبانی نمیشود.',
         'error_table_name_invalid_prefix' => 'نام جدول باید با پیشوند افزونه \':prefix\' آغاز شود. ',
         'error_table_name_invalid_characters' => 'نام جدول صحیح نمی باشد. نام جدول میتواند حاوی حروف لاتین، اعداد و خط زیر باشد و باید با حرف لاتین شروع شود. همچنین نام جدول نمیتواند شامل فاصله باشد.',
         'error_table_duplicate_column' => 'نام ستون \':column\' تکراری می باشد.',

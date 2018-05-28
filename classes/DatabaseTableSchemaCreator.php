@@ -51,6 +51,10 @@ class DatabaseTableSchemaCreator extends BaseModel
         $result['unsigned'] = !!$options['unsigned'];
         $result['notnull'] = !$options['allow_null'];
         $result['autoincrement'] = !!$options['auto_increment'];
+        
+        if (isset($options['values'])) {
+            $result['columnDefinition'] = $options['values'];
+        }
 
         $default = trim($options['default']);
 

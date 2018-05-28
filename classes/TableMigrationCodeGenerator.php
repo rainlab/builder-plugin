@@ -422,6 +422,11 @@ class TableMigrationCodeGenerator extends BaseModel
         $method = $this->applyMethodIncrements($method, $column);
 
         $lengthStr = $this->formatLengthParameters($column, $method);
+
+        if ($typeName === EnumDbType::TYPENAME) {
+            return sprintf('\t\t$table->%s(\'%s\', %s)', $method, $columnName, $column->getcolumnDefinition());
+        }
+
         return sprintf('\t\t$table->%s(\'%s\'%s)', $method, $columnName, $lengthStr);
     }
 

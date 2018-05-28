@@ -49,6 +49,7 @@ return [
         'column_name_length' => 'Length',
         'column_validation_length' => 'The Length value should be integer or specified as precision and scale (10,2) for decimal columns. Spaces are not allowed in the length column.',
         'column_validation_title' => 'Only digits, lower-case Latin letters and underscores are allowed in column names',
+        'column_name_values' => 'Values',
         'column_name_unsigned' => 'Unsigned',
         'column_name_nullable' => 'Nullable',
         'column_auto_increment' => 'AUTOINCR',
@@ -62,7 +63,6 @@ return [
         'timestamps_exist' => 'created_at and deleted_at columns already exist in the table.',
         'soft_deleting_exist' => 'deleted_at column already exists in the table.',
         'confirm_delete' => 'Delete the table?',
-        'error_enum_not_supported' => 'The table contains column(s) with type "enum" which is not currently supported by the Builder.',
         'error_table_name_invalid_prefix' => "Table name should start with the plugin prefix: ':prefix'.",
         'error_table_name_invalid_characters' => 'Invalid table name. Table names should contain only Latin letters, digits and underscores. Names should start with a Latin letter and could not contain spaces.',
         'error_table_duplicate_column' => "Duplicate column name: ':column'.",
@@ -78,6 +78,8 @@ return [
         'error_unsigned_negative_value' => "The default value for the unsigned column ':column' can't be negative.",
         'error_table_already_exists' => "The table ':name' already exists in the database.",
         'error_table_name_too_long' => "The table name should not be longer than 64 characters.",
+        'error_values_json_parse' => "Failed to parse JSON array for column with name :column: ",
+        'error_values_no_enum' => "The column with name ':column' has non-empty values which is not allowed when it's not an enum type",
         'error_column_name_too_long' => "The column name ':column' is too long. Column names should not be longer than 64 characters."
     ],
     'model' => [

@@ -178,8 +178,34 @@ class DatabaseTableModel extends BaseModel
         $this->validateDubplicatePrimaryKeys();
         $this->validateAutoIncrementColumns();
         $this->validateColumnsLengthParameter();
+        $this->validateValuesColumns();
         $this->validateUnsignedColumns();
         $this->validateDefaultValues();
+    }
+
+    protected function validateValuesColumns()
+    {
+        foreach ($this->columns as $column) {
+            if (!isset($column['values'])) {
+                continue;
+            }
+            
+            $values = @json_decode(trim($column['values']));
+
+            if ($column['type'] !== 'enum') {
+                throw new ValidationException([
+                    'columns' => Lang::get('rainlab.builder::lang.database.error_values_no_enum', 
+                        ['column' => $column['name']]
+                    )
+                ]);
+            } else if ($values === false || !is_array($values)) {
+                throw new ValidationException([
+                    'columns' => Lang::get('rainlab.builder::lang.database.error_values_json_parse', 
+                        ['column' => $column['name']]
+                    )
+                ]);
+            }
+        }
     }
 
     protected function validateColumnNameLengths()
@@ -340,12 +366,10 @@ class DatabaseTableModel extends BaseModel
         if (!self::$schemaManager) {
             self::$schemaManager = Schema::getConnection()->getDoctrineSchemaManager();
 
-            Type::addType('enumdbtype', 'RainLab\Builder\Classes\EnumDbType');
+            Type::addType(EnumDbType::TYPENAME, 'RainLab\Builder\Classes\EnumDbType');
 
-            // Fixes the problem with enum column type not supported
-            // by Doctrine (https://github.com/laravel/framework/issues/1346)
             $platform = self::$schemaManager->getDatabasePlatform();
-            $platform->registerDoctrineTypeMapping('enum', 'enumdbtype');
+            $platform->registerDoctrineTypeMapping('enum', EnumDbType::TYPENAME);
             $platform->registerDoctrineTypeMapping('json', 'text');
         }
 
@@ -367,10 +391,6 @@ class DatabaseTableModel extends BaseModel
             $columnName = $column->getName();
             $typeName = $column->getType()->getName();
 
-            if ($typeName == EnumDbType::TYPENAME) {
-                throw new ApplicationException(Lang::get('rainlab.builder::lang.database.error_enum_not_supported'));
-            }
-
             $item = [
                 'name' => $columnName,
                 'type' => MigrationColumnType::toMigrationMethodName($typeName, $columnName),
@@ -382,6 +402,10 @@ class DatabaseTableModel extends BaseModel
                 'default' => $column->getDefault(),
                 'id' => $columnName,
             ];
+
+            if ($typeName === EnumDbType::TYPENAME) {
+                var_dump($platform->getColumnDeclarationSQL($columnName));exit;
+            }
 
             $this->columns[] = $item;
         }

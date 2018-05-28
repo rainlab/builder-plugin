@@ -42,6 +42,7 @@ class MigrationColumnType extends BaseModel
     const TYPE_BOOLEAN = 'boolean';
     const TYPE_DECIMAL = 'decimal';
     const TYPE_DOUBLE = 'double';
+    const TYPE_ENUM = 'enum';
 
     const REGEX_LENGTH_SINGLE = '/^([0-9]+)$/';
     const REGEX_LENGTH_DOUBLE = '/^([0-9]+)\,([0-9]+)$/';
@@ -78,7 +79,8 @@ class MigrationColumnType extends BaseModel
             self::TYPE_BINARY => DoctrineType::BLOB,
             self::TYPE_BOOLEAN => DoctrineType::BOOLEAN,
             self::TYPE_DECIMAL => DoctrineType::DECIMAL,
-            self::TYPE_DOUBLE => DoctrineType::FLOAT
+            self::TYPE_DOUBLE => DoctrineType::FLOAT,
+            self::TYPE_ENUM => EnumDbType::TYPENAME,
         ];
     }
 

@@ -3,8 +3,10 @@
 use Event;
 use Backend;
 use System\Classes\PluginBase;
+use RainLab\Builder\Classes\EnumDbType;
 use RainLab\Builder\Classes\StandardControlsRegistry;
 use RainLab\Builder\Classes\StandardBehaviorsRegistry;
+use Doctrine\DBAL\Types\Type;
 
 class Plugin extends PluginBase
 {
