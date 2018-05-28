@@ -189,18 +189,18 @@ class DatabaseTableModel extends BaseModel
             if (!isset($column['values'])) {
                 continue;
             }
-            
+
             $values = @json_decode(trim($column['values']));
 
             if ($column['type'] !== 'enum') {
                 throw new ValidationException([
-                    'columns' => Lang::get('rainlab.builder::lang.database.error_values_no_enum', 
+                    'columns' => Lang::get('rainlab.builder::lang.database.error_values_no_enum',
                         ['column' => $column['name']]
                     )
                 ]);
             } else if ($values === false || !is_array($values)) {
                 throw new ValidationException([
-                    'columns' => Lang::get('rainlab.builder::lang.database.error_values_json_parse', 
+                    'columns' => Lang::get('rainlab.builder::lang.database.error_values_json_parse',
                         ['column' => $column['name']]
                     )
                 ]);
@@ -215,7 +215,7 @@ class DatabaseTableModel extends BaseModel
 
             if (Str::length($name) > 64) {
                 throw new ValidationException([
-                    'columns' => Lang::get('rainlab.builder::lang.database.error_column_name_too_long', 
+                    'columns' => Lang::get('rainlab.builder::lang.database.error_column_name_too_long',
                         ['column' => $name]
                     )
                 ]);
@@ -229,7 +229,7 @@ class DatabaseTableModel extends BaseModel
             foreach ($this->columns as $innerIndex=>$innerColumn) {
                 if ($innerIndex != $outerIndex && $innerColumn['name'] == $outerColumn['name']) {
                     throw new ValidationException([
-                        'columns' => Lang::get('rainlab.builder::lang.database.error_table_duplicate_column', 
+                        'columns' => Lang::get('rainlab.builder::lang.database.error_table_duplicate_column',
                             ['column' => $outerColumn['name']]
                         )
                     ]);
@@ -404,7 +404,7 @@ class DatabaseTableModel extends BaseModel
             ];
 
             if ($typeName === EnumDbType::TYPENAME) {
-                var_dump($platform->getColumnDeclarationSQL($columnName));exit;
+                // @TODO: How to parse enum values?
             }
 
             $this->columns[] = $item;
