@@ -4,7 +4,7 @@
             <div class="control-filelist single-line" 
                 data-control="filelist"
                 data-ignore-item-click="true"
-                data-group-status-handler="<?= $this->getEventHandler('onGroupStatusUpdate') ?>"
+                data-group-status-handler="<?= $this->getEventHandler('onSetCollapseStatus') ?>"
                 id="<?= $this->getId('plugin-model-list') ?>"
             >
                 <?= $this->makePartial('items', ['items'=>$items]) ?>

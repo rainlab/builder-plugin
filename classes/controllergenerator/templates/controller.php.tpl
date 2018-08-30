@@ -5,7 +5,9 @@ use BackendMenu;
 
 class {{ controller }} extends Controller
 {
-    public $implement = [{% for behavior in behaviors %}'{{ behavior }}'{% if not loop.last %},{% endif %}{% endfor %}];
+    public $implement = [{% for behavior in behaviors %}
+        '{{ behavior }}'{% if not loop.last %},{% endif %}{% endfor %}
+    ];
     {{ templateParts|raw }}
     public function __construct()
     {

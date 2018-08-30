@@ -60,7 +60,7 @@ class Plugin extends PluginBase
                         'icon'        => 'icon-random',
                         'url'         => 'javascript:;',
                         'attributes'  => ['data-menu-item'=>'models'],
-                        'permissions' => ['rrainlab.builder.manage_plugins']
+                        'permissions' => ['rainlab.builder.manage_plugins']
                     ],
                     'permissions' => [
                         'label'       => 'rainlab.builder::lang.permission.menu_label',
@@ -109,7 +109,7 @@ class Plugin extends PluginBase
             'config' => [
                 'label'       => 'Builder',
                 'icon'        => 'icon-wrench',
-                'description' => 'Set your plugins namespace and author name.',
+                'description' => 'Set your author name and namespace for plugin creation.',
                 'class'       => 'RainLab\Builder\Models\Settings',
                 'permissions' => ['rainlab.builder.manage_plugins'],
                 'order'       => 600

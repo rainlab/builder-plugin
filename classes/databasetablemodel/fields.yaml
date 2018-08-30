@@ -16,6 +16,7 @@ fields:
 
 tabs:
     stretch: true
+    cssClass: master-area
     fields:
         columns:
             stretch: true

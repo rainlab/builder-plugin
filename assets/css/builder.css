@@ -112,6 +112,7 @@
   display: none;
 }
 .builder-building-area ul.builder-control-list > li.control:not(.placeholder):not(.loading-control):not(.updating-control):hover > div.remove-control {
+  font-family: sans-serif;
   display: block;
   position: absolute;
   right: 0;

@@ -130,6 +130,7 @@ class DefaultBehaviorDesignTimeProvider extends BehaviorDesignTimeProviderBase
             'noRecordsMessage' => 'backend::lang.list.no_records',
             'showSetup' => true,
             'showCheckboxes' => true,
+            'recordsPerPage' => 20,
             'toolbar' => [
                 'buttons' => 'list_toolbar',
                 'search' => [
@@ -146,6 +147,12 @@ class DefaultBehaviorDesignTimeProvider extends BehaviorDesignTimeProviderBase
 
             $controllerGenerator->setTemplateVariable('hasFormBehavior', true);
             $controllerGenerator->setTemplateVariable('createUrl', $createUrl);
+        }
+        
+        if (in_array('Backend\Behaviors\ReorderController', $controllerModel->behaviors)) {
+            $reorderUrl = $this->getControllerlUrl($pluginCodeObj, $controllerModel->controller).'/reorder';
+            $controllerGenerator->setTemplateVariable('hasReorderBehavior', true);
+            $controllerGenerator->setTemplateVariable('reorderUrl', $reorderUrl);
         }
 
         return $result;

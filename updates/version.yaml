@@ -19,3 +19,4 @@
 1.0.19: Added a feature allowing to add all database columns to a list definition. Added max length validation for database table and column names.
 1.0.20: Fixes a bug where form the builder could trigger the "current.hasAttribute is not a function" error.
 1.0.21: Back-end navigation sort order updated.
+1.0.22: Added scopeValue property to the RecordList component.

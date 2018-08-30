@@ -260,7 +260,9 @@ class StandardBehaviorsRegistry
             'showSorting' => [
                 'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_show_sorting'),
                 'type' => 'checkbox',
-                'ignoreIfEmpty' => true,
+                'ignoreIfEmpty' => false,
+                'default' => true,
+                'ignoreIfDefault' => true,
             ],
             'defaultSort' => [
                 'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_default_sort'),

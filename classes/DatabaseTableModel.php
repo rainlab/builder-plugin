@@ -346,6 +346,7 @@ class DatabaseTableModel extends BaseModel
             // by Doctrine (https://github.com/laravel/framework/issues/1346)
             $platform = self::$schemaManager->getDatabasePlatform();
             $platform->registerDoctrineTypeMapping('enum', 'enumdbtype');
+            $platform->registerDoctrineTypeMapping('json', 'text');
         }
 
         return self::$schemaManager;

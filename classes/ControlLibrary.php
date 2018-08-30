@@ -32,13 +32,13 @@ class ControlLibrary
             return $returnGrouped ? $this->groupedControls : $this->controls;
         }
 
-        Event::fire('pages.builder.registerControls', [$this]);
-
         $this->groupedControls = [
             $this->resolveControlGroupName(self::GROUP_STANDARD) => [],
             $this->resolveControlGroupName(self::GROUP_WIDGETS) => []
         ];
 
+        Event::fire('pages.builder.registerControls', [$this]);
+        
         foreach ($this->controls as $controlType=>$controlInfo) {
             $controlGroup = $this->resolveControlGroupName($controlInfo['group']);
 
@@ -130,7 +130,8 @@ class ControlLibrary
                 'options' => [
                     'above' => Lang::get('rainlab.builder::lang.form.property_comment_position_above'),
                     'below' => Lang::get('rainlab.builder::lang.form.property_comment_position_below')
-                ]
+                ],
+                'ignoreIfEmpty' => true,
             ],
             'span' => [
                 'title' => Lang::get('rainlab.builder::lang.form.property_span_title'),

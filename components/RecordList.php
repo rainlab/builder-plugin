@@ -43,7 +43,7 @@ class RecordList extends ComponentBase
      * Model column name to display in the list.
      * @var string
      */
-    public $displayColumn; 
+    public $displayColumn;
 
     /**
      * Model column to use as a record identifier in the details page links
@@ -83,6 +83,12 @@ class RecordList extends ComponentBase
                 'type'        => 'dropdown',
                 'depends'     => ['modelClass'],
                 'showExternalParam' => false
+            ],
+            'scopeValue' => [
+                'title'       => 'rainlab.builder::lang.components.list_scope_value',
+                'description' => 'rainlab.builder::lang.components.list_scope_value_description',
+                'type'        => 'string',
+                'default'     => '{{ :scope }}',
             ],
             'displayColumn' => [
                 'title'       => 'rainlab.builder::lang.components.list_display_column',
@@ -266,9 +272,10 @@ class RecordList extends ComponentBase
 
         $model = new $modelClassName();
         $scope = $this->getScopeName($model);
+        $scopeValue = $this->property('scopeValue');
 
         if ($scope !== null) {
-            $model = $model->$scope();
+            $model = $model->$scope($scopeValue);
         }
 
         $model = $this->sort($model);
