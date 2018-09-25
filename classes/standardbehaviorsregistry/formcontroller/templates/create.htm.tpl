@@ -7,7 +7,7 @@
 
 <?php if (!$this->fatalError): ?>
 
-    <?= Form::open(['class' => 'layout']) ?>
+    <?= Form::open(['class' => 'layout', 'autocomplete' => 'off']) ?>
 
         <div class="layout-row">
             <?= $this->formRender() ?>
