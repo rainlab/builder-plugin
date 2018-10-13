@@ -18,6 +18,7 @@ class DefaultControlDesignTimeProvider extends ControlDesignTimeProviderBase
         'textarea',
         'checkbox',
         'dropdown',
+        'balloon-selector',
         'radio',
         'checkboxlist',
         'switch',

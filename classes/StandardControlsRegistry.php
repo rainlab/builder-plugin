@@ -30,6 +30,7 @@ class StandardControlsRegistry
         $this->registerSwitchControl();
         $this->registerTextareaControl();
         $this->registerDropdownControl();
+        $this->registerBalloonSelectorControl();
         $this->registerHintControl();
         $this->registerPartialControl();
         $this->registerSectionControl();
@@ -147,6 +148,27 @@ class StandardControlsRegistry
             'rainlab.builder::lang.form.control_dropdown_description',
             ControlLibrary::GROUP_STANDARD,
             'icon-angle-double-down',
+            $this->controlLibrary->getStandardProperties(['stretch'], $properties),
+            null
+        );
+    }
+
+    protected function registerBalloonSelectorControl()
+    {
+        $properties = [
+            'options' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_options'),
+                'type' => 'dictionary',
+                'ignoreIfEmpty' => true,
+                'sortOrder' => 81
+            ]
+        ];
+
+        $this->controlLibrary->registerControl('balloon-selector',
+            'rainlab.builder::lang.form.control_balloon-selector',
+            'rainlab.builder::lang.form.control_balloon-selector_description',
+            ControlLibrary::GROUP_STANDARD,
+            'icon-ellipsis-h',
             $this->controlLibrary->getStandardProperties(['stretch'], $properties),
             null
         );

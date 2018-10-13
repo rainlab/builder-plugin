@@ -1,4 +1,4 @@
-<div class="builder-blueprint-control-radiolist">
+<div class="builder-blueprint-control-balloon-selector control-balloon-selector control-disabled">
     <ul>
         <?php
             $defaultOptions = [
@@ -10,7 +10,7 @@
 
             foreach ($options as $option):
         ?>
-            <li><i class="icon-circle-o"></i> <span data-localization-key="<?= e($option) ?>" data-plugin="<?= e($formBuilder->getPluginCode()) ?>"><?= e(trans($option)) ?></span></li>
+            <li><span data-localization-key="<?= e($option) ?>" data-plugin="<?= e($formBuilder->getPluginCode()) ?>"><?= e(trans($option)) ?></span></li>
         <?php endforeach ?>
     </ul>
 </div>

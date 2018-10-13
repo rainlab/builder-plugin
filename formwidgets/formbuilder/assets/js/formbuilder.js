@@ -164,14 +164,14 @@
                 else {
                     if (!$.oc.foundation.element.hasClass(item, 'placeholder')) {
                         $.oc.foundation.element.addClass(item, 'span-left')
-                    } 
+                    }
                     else {
                         $.oc.foundation.element.addClass(item, 'span-full')
                     }
 
                     prevSpan = 'left'
                 }
-            } 
+            }
             else {
                 $.oc.foundation.element.removeClass(item, 'span-left')
                 $.oc.foundation.element.removeClass(item, 'span-full')
@@ -292,7 +292,7 @@
             elementRight = elementPosition.left + element.offsetWidth,
             elementBottom = elementPosition.top + element.offsetHeight
 
-        return point.x >= elementPosition.left && point.x <= elementRight 
+        return point.x >= elementPosition.left && point.x <= elementRight
                 && point.y >= elementPosition.top && point.y <= elementBottom
     }
 
@@ -309,7 +309,7 @@
 
     // UPDATING CONTROLS
     // ============================
-    
+
     FormBuilder.prototype.startUpdateControlBody = function(controlId) {
         this.clearUpdateControlBodyTimer()
 
@@ -383,6 +383,9 @@
             throw new Error('Cannot find control container for a placeholder.')
         }
 
+        // Replace any banned characters
+        controlType = controlType.replace(/[^a-zA-Z0-9_\[\]]/g, '')
+
         var counter = 1,
             fieldName = controlType + counter
 
@@ -395,7 +398,7 @@
     }
 
     FormBuilder.prototype.addControlToPlaceholder = function(placeholder, controlType, controlName, noNewPlaceholder) {
-        // Duplicate the placeholder and place it after 
+        // Duplicate the placeholder and place it after
         // the existing one
         if (!noNewPlaceholder) {
             var newPlaceholder = $(placeholder.outerHTML)
@@ -419,7 +422,7 @@
 
         var fieldName = this.generateFieldName(controlType, placeholder)
 
-        // Send request to the server to load the 
+        // Send request to the server to load the
         // control markup, Inspector data schema, inspector title, etc.
         var data = {
             controlType: controlType,

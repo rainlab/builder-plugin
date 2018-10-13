@@ -283,6 +283,8 @@ return [
         'control_textarea_description' => 'Multiline text box with controllable height',
         'control_dropdown' => 'Dropdown',
         'control_dropdown_description' => 'Dropdown list with static or dynamic options',
+        'control_balloon-selector' => 'Balloon Selector',
+        'control_balloon-selector_description' => 'List where only one item can be selected at a time with static or dynamic options',
         'control_unknown' => 'Unknown control type: :type',
         'control_repeater' => 'Repeater',
         'control_repeater_description' => 'Outputs a repeating set of form controls',
