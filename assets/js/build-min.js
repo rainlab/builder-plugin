@@ -1,2 +1,809 @@
-+function($){"use strict";void 0===$.oc.builder&&($.oc.builder={});var t=$.oc.foundation.base,e=t.prototype,o=function(){this.data={},this.requestCache={},this.callbackCache={},t.call(this)};o.prototype.set=function(t,e,o,i,r){this.storeData(t,e,o,i),"localization"!=e||o||this.localizationUpdated(t,r)},o.prototype.get=function(t,e,o,i,r){return void 0===this.data[e]||void 0===this.data[e][o]||void 0===this.data[e][o][i]||this.isCacheObsolete(this.data[e][o][i].timestamp)?this.loadDataFromServer(t,e,o,i,r):void r(this.data[e][o][i].data)},o.prototype.makeCacheKey=function(t,e,o){var i=t+"-"+e;return o&&(i+="-"+o),i},o.prototype.isCacheObsolete=function(t){return Date.now()-t>3e5},o.prototype.loadDataFromServer=function(t,e,o,i,r){var n=this,a=this.makeCacheKey(e,o,i);return void 0===this.requestCache[a]&&(this.requestCache[a]=t.request("onPluginDataRegistryGetData",{data:{registry_plugin_code:e,registry_data_type:o,registry_data_subtype:i}}).done(function(t){if(void 0===t.registryData)throw new Error("Invalid data registry response.");n.storeData(e,o,i,t.registryData),n.applyCallbacks(a,t.registryData),n.requestCache[a]=void 0})),this.addCallbackToQueue(r,a),this.requestCache[a]},o.prototype.addCallbackToQueue=function(t,e){void 0===this.callbackCache[e]&&(this.callbackCache[e]=[]),this.callbackCache[e].push(t)},o.prototype.applyCallbacks=function(t,e){if(void 0!==this.callbackCache[t]){for(var o=this.callbackCache[t].length-1;o>=0;o--)this.callbackCache[t][o](e);delete this.callbackCache[t]}},o.prototype.storeData=function(t,e,o,i){void 0===this.data[t]&&(this.data[t]={}),void 0===this.data[t][e]&&(this.data[t][e]={});var r={timestamp:Date.now(),data:i};this.data[t][e][o]=r},o.prototype.clearCache=function(t,e){void 0!==this.data[t]&&void 0!==this.data[t][e]&&(this.data[t][e]=void 0)},o.prototype.getLocalizationString=function(t,e,o,i){this.get(t,e,"localization",null,function(t){return void 0!==t[o]?void i(t[o]):void i(o)})},o.prototype.localizationUpdated=function(t,e){$.oc.builder.localizationInput.updatePluginInputs(t),void 0!==e&&e.suppressLanguageEditorUpdate||$.oc.builder.indexController.entityControllers.localization.languageUpdated(t),$.oc.builder.indexController.entityControllers.localization.updateOnScreenStrings(t)},$.oc.builder.dataRegistry=new o}(window.jQuery),+function($){"use strict";void 0===$.oc.builder&&($.oc.builder={}),void 0===$.oc.builder.entityControllers&&($.oc.builder.entityControllers={});var t=$.oc.foundation.base,e=t.prototype,o=function(e,o){if(void 0===e)throw new Error("The Builder entity type name should be set in the base constructor call.");if(void 0===o)throw new Error("The Builder index controller should be set when creating an entity controller.");this.typeName=e,this.indexController=o,t.call(this)};o.prototype=Object.create(e),o.prototype.constructor=o,o.prototype.registerHandlers=function(){},o.prototype.invokeCommand=function(t,e){if(!/^cmd[a-zA-Z0-9]+$/.test(t))throw new Error("Invalid command: "+t);if(void 0===this[t])throw new Error("Unknown command: "+t);this[t].apply(this,[e])},o.prototype.newTabId=function(){return this.typeName+Math.random()},o.prototype.makeTabId=function(t){return this.typeName+"-"+t},o.prototype.getMasterTabsActivePane=function(){return this.indexController.getMasterTabActivePane()},o.prototype.getMasterTabsObject=function(){return this.indexController.masterTabsObj},o.prototype.getSelectedPlugin=function(){var t=$("#PluginList-pluginList-plugin-list > ul > li.active");return t.data("id")},o.prototype.getIndexController=function(){return this.indexController},o.prototype.updateMasterTabIdAndTitle=function(t,e){var o=this.getMasterTabsObject();o.updateIdentifier(t,e.tabId),o.updateTitle(t,e.tabTitle)},o.prototype.unhideFormDeleteButton=function(t){$("[data-control=delete-button]",t).removeClass("hide")},o.prototype.forceCloseTab=function(t){t.trigger("close.oc.tab",[{force:!0}])},o.prototype.unmodifyTab=function(t){this.indexController.unchangeTab(t)},$.oc.builder.entityControllers.base=o}(window.jQuery),+function($){"use strict";void 0===$.oc.builder&&($.oc.builder={}),void 0===$.oc.builder.entityControllers&&($.oc.builder.entityControllers={});var t=$.oc.builder.entityControllers.base,e=t.prototype,o=function(e){t.call(this,"plugin",e),this.popupZIndex=5050};o.prototype=Object.create(e),o.prototype.constructor=o,o.prototype.cmdMakePluginActive=function(t){var e=$(t.currentTarget),o=e.data("pluginCode");this.makePluginActive(o)},o.prototype.cmdCreatePlugin=function(t){var e=$(t.currentTarget);e.one("shown.oc.popup",this.proxy(this.onPluginPopupShown)),e.popup({handler:"onPluginLoadPopup",zIndex:this.popupZIndex})},o.prototype.cmdApplyPluginSettings=function(t){var e=$(t.currentTarget),o=this;$.oc.stripeLoadIndicator.show(),e.request("onPluginSave").always($.oc.builder.indexController.hideStripeIndicatorProxy).done(function(t){e.trigger("close.oc.popup"),o.applyPluginSettingsDone(t)})},o.prototype.cmdEditPluginSettings=function(t){var e=$(t.currentTarget);e.one("shown.oc.popup",this.proxy(this.onPluginPopupShown)),e.popup({handler:"onPluginLoadPopup",zIndex:this.popupZIndex,extraData:{pluginCode:e.data("pluginCode")}})},o.prototype.onPluginPopupShown=function(t,e,o){$(o).find("input[name=name]").focus()},o.prototype.applyPluginSettingsDone=function(t){void 0!==t.responseData&&void 0!==t.responseData.isNewPlugin&&this.makePluginActive(t.responseData.pluginCode,!0)},o.prototype.makePluginActive=function(t,e){var o=$("#builder-plugin-selector-panel form").first();$.oc.stripeLoadIndicator.show(),o.request("onPluginSetActive",{data:{pluginCode:t,updatePluginList:e?1:0}}).always($.oc.builder.indexController.hideStripeIndicatorProxy).done(this.proxy(this.makePluginActiveDone))},o.prototype.makePluginActiveDone=function(t){var e=t.responseData.pluginCode;$("#builder-plugin-selector-panel [data-control=filelist]").fileList("markActive",e)},$.oc.builder.entityControllers.plugin=o}(window.jQuery),+function($){"use strict";void 0===$.oc.builder&&($.oc.builder={}),void 0===$.oc.builder.entityControllers&&($.oc.builder.entityControllers={});var t=$.oc.builder.entityControllers.base,e=t.prototype,o=function(e){t.call(this,"databaseTable",e)};o.prototype=Object.create(e),o.prototype.constructor=o,o.prototype.cmdCreateTable=function(t){var e=this.indexController.openOrLoadMasterTab($(t.target),"onDatabaseTableCreateOrOpen",this.newTabId());e!==!1&&e.done(this.proxy(this.onTableLoaded,this))},o.prototype.cmdOpenTable=function(t){var e=$(t.currentTarget).data("id"),o=this.indexController.openOrLoadMasterTab($(t.target),"onDatabaseTableCreateOrOpen",this.makeTabId(e),{table_name:e});o!==!1&&o.done(this.proxy(this.onTableLoaded,this))},o.prototype.cmdSaveTable=function(t){var e=$(t.currentTarget);if(this.validateTable(e)){var o={columns:this.getTableData(e)};e.popup({extraData:o,handler:"onDatabaseTableValidateAndShowPopup"})}},o.prototype.cmdSaveMigration=function(t){var e=$(t.currentTarget);$.oc.stripeLoadIndicator.show(),e.request("onDatabaseTableMigrationApply").always($.oc.builder.indexController.hideStripeIndicatorProxy).done(this.proxy(this.saveMigrationDone))},o.prototype.cmdDeleteTable=function(t){var e=$(t.currentTarget);$.oc.confirm(e.data("confirm"),this.proxy(this.deleteConfirmed))},o.prototype.cmdUnModifyForm=function(){var t=this.getMasterTabsActivePane();this.unmodifyTab(t)},o.prototype.cmdAddTimestamps=function(t){var e=$(t.currentTarget),o=this.addTimeStampColumns(e,["created_at","updated_at"]);o||alert(e.closest("form").attr("data-lang-timestamps-exist"))},o.prototype.cmdAddSoftDelete=function(t){var e=$(t.currentTarget),o=this.addTimeStampColumns(e,["deleted_at"]);o||alert(e.closest("form").attr("data-lang-soft-deleting-exist"))},o.prototype.onTableCellChanged=function(t,e,o,i){var r=$(t.target);if("columns"==r.data("alias")&&"database"==r.closest("form").data("entity")){var n={};"auto_increment"==e&&o&&(n.unsigned=1,n.primary_key=1),"unsigned"!=e||o||(n.auto_increment=0),"primary_key"==e&&o&&(n.allow_null=0),"allow_null"==e&&o&&(n.primary_key=0),"primary_key"!=e||o||(n.auto_increment=0),r.table("setRowValues",i,n)}},o.prototype.onTableLoaded=function(){$(document).trigger("render");var t=this.getMasterTabsActivePane(),e=t.find("form"),o=t.find("div[data-control=table] div.toolbar"),i=$('<a class="btn oc-icon-clock-o builder-custom-table-button" data-builder-command="databaseTable:cmdAddTimestamps"></a>');i.text(e.attr("data-lang-add-timestamps")),o.append(i),i=$('<a class="btn oc-icon-refresh builder-custom-table-button" data-builder-command="databaseTable:cmdAddSoftDelete"></a>'),i.text(e.attr("data-lang-add-soft-delete")),o.append(i)},o.prototype.registerHandlers=function(){this.indexController.$masterTabs.on("oc.tableCellChanged",this.proxy(this.onTableCellChanged))},o.prototype.validateTable=function(t){var e=this.getTableControlObject(t);return e.unfocusTable(),e.validate()},o.prototype.getTableData=function(t){var e=this.getTableControlObject(t);return e.dataSource.getAllData()},o.prototype.getTableControlObject=function(t){var e=t.closest("form"),o=e.find("[data-control=table]"),i=o.data("oc.table");if(!i)throw new Error("Table object is not found on the database table tab");return i},o.prototype.saveMigrationDone=function(t){if(void 0===t.builderResponseData)throw new Error("Invalid response data");$("#builderTableMigrationPopup").trigger("close.oc.popup");var e=this.getMasterTabsActivePane(),o=this.getMasterTabsObject();"delete"!=t.builderResponseData.operation?(e.find("input[name=table_name]").val(t.builderResponseData.builderObjectName),this.updateMasterTabIdAndTitle(e,t.builderResponseData),this.unhideFormDeleteButton(e),this.getTableList().fileList("markActive",t.builderResponseData.tabId),this.getIndexController().unchangeTab(e)):this.forceCloseTab(e),$.oc.builder.dataRegistry.clearCache(t.builderResponseData.pluginCode,"model-columns")},o.prototype.getTableList=function(){return $("#layout-side-panel form[data-content-id=database] [data-control=filelist]")},o.prototype.deleteConfirmed=function(){var t=this.getMasterTabsActivePane();t.find("form").popup({handler:"onDatabaseTableShowDeletePopup"})},o.prototype.getColumnNames=function(t){var e=this.getTableControlObject(t);e.unfocusTable();var o=this.getTableData(t),i=[];for(var r in o)void 0!==o[r].name&&i.push($.trim(o[r].name));return i},o.prototype.addTimeStampColumns=function(t,e){var o=this.getColumnNames(t),i=!1;for(var r in e){var n=e[r];-1==$.inArray(n,o)&&(this.addTimeStampColumn(t,n),i=!0)}return i&&t.trigger("change"),i},o.prototype.addTimeStampColumn=function(t,e){var o=this.getTableControlObject(t),i=this.getTableData(t),r={name:e,type:"timestamp","default":null,allow_null:!0};o.addRecord("bottom",!0),o.setRowValues(i.length-1,r),o.addRecord("bottom",!1),o.deleteRecord()},$.oc.builder.entityControllers.databaseTable=o}(window.jQuery),+function($){"use strict";void 0===$.oc.builder&&($.oc.builder={}),void 0===$.oc.builder.entityControllers&&($.oc.builder.entityControllers={});var t=$.oc.builder.entityControllers.base,e=t.prototype,o=function(e){t.call(this,"model",e)};o.prototype=Object.create(e),o.prototype.constructor=o,o.prototype.cmdCreateModel=function(t){var e=$(t.currentTarget);e.one("shown.oc.popup",this.proxy(this.onModelPopupShown)),e.popup({handler:"onModelLoadPopup"})},o.prototype.cmdApplyModelSettings=function(t){var e=$(t.currentTarget),o=this;$.oc.stripeLoadIndicator.show(),e.request("onModelSave").always($.oc.builder.indexController.hideStripeIndicatorProxy).done(function(t){e.trigger("close.oc.popup"),o.applyModelSettingsDone(t)})},o.prototype.onModelPopupShown=function(t,e,o){$(o).find("input[name=className]").focus()},o.prototype.applyModelSettingsDone=function(t){if(void 0!==t.builderResponseData.registryData){var e=t.builderResponseData.registryData;$.oc.builder.dataRegistry.set(e.pluginCode,"model-classes",null,e.models)}},$.oc.builder.entityControllers.model=o}(window.jQuery),+function($){"use strict";void 0===$.oc.builder&&($.oc.builder={}),void 0===$.oc.builder.entityControllers&&($.oc.builder.entityControllers={});var t=$.oc.builder.entityControllers.base,e=t.prototype,o=function(e){t.call(this,"modelForm",e)};o.prototype=Object.create(e),o.prototype.constructor=o,o.prototype.cmdCreateForm=function(t){var e=$(t.currentTarget),o={model_class:e.data("modelClass")};this.indexController.openOrLoadMasterTab(e,"onModelFormCreateOrOpen",this.newTabId(),o)},o.prototype.cmdSaveForm=function(t){var e=$(t.currentTarget),o=e.closest("form"),i=$("[data-root-control-wrapper] > [data-control-container]",o),r=o.find(".inspector-container"),n=$.oc.builder.formbuilder.domToPropertyJson.convert(i.get(0));if($.oc.inspector.manager.applyValuesFromContainer(r)){if(n===!1)return void $.oc.flashMsg({text:$.oc.builder.formbuilder.domToPropertyJson.getLastError(),"class":"error",interval:5});var a={controls:n};e.request("onModelFormSave",{data:a}).done(this.proxy(this.saveFormDone))}},o.prototype.cmdOpenForm=function(t){var e=$(t.currentTarget).data("form"),o=$(t.currentTarget).data("modelClass");this.indexController.openOrLoadMasterTab($(t.target),"onModelFormCreateOrOpen",this.makeTabId(o+"-"+e),{file_name:e,model_class:o})},o.prototype.cmdDeleteForm=function(t){var e=$(t.currentTarget);$.oc.confirm(e.data("confirm"),this.proxy(this.deleteConfirmed))},o.prototype.cmdAddControl=function(t){$.oc.builder.formbuilder.controlPalette.addControl(t)},o.prototype.cmdUndockControlPalette=function(t){$.oc.builder.formbuilder.controlPalette.undockFromContainer(t)},o.prototype.cmdDockControlPalette=function(t){$.oc.builder.formbuilder.controlPalette.dockToContainer(t)},o.prototype.cmdCloseControlPalette=function(t){$.oc.builder.formbuilder.controlPalette.closeInContainer(t)},o.prototype.saveFormDone=function(t){if(void 0===t.builderResponseData)throw new Error("Invalid response data");var e=this.getMasterTabsActivePane();e.find("input[name=file_name]").val(t.builderResponseData.builderObjectName),this.updateMasterTabIdAndTitle(e,t.builderResponseData),this.unhideFormDeleteButton(e),this.getModelList().fileList("markActive",t.builderResponseData.tabId),this.getIndexController().unchangeTab(e),this.updateDataRegistry(t)},o.prototype.updateDataRegistry=function(t){if(void 0!==t.builderResponseData.registryData){var e=t.builderResponseData.registryData;$.oc.builder.dataRegistry.set(e.pluginCode,"model-forms",e.modelClass,e.forms)}},o.prototype.deleteConfirmed=function(){var t=this.getMasterTabsActivePane(),e=t.find("form");$.oc.stripeLoadIndicator.show(),e.request("onModelFormDelete").always($.oc.builder.indexController.hideStripeIndicatorProxy).done(this.proxy(this.deleteDone))},o.prototype.deleteDone=function(t){var e=this.getMasterTabsActivePane();this.getIndexController().unchangeTab(e),this.forceCloseTab(e),this.updateDataRegistry(t)},o.prototype.getModelList=function(){return $("#layout-side-panel form[data-content-id=models] [data-control=filelist]")},$.oc.builder.entityControllers.modelForm=o}(window.jQuery),+function($){"use strict";void 0===$.oc.builder&&($.oc.builder={}),void 0===$.oc.builder.entityControllers&&($.oc.builder.entityControllers={});var t=$.oc.builder.entityControllers.base,e=t.prototype,o=function(e){this.cachedModelFieldsPromises={},t.call(this,"modelList",e)};o.prototype=Object.create(e),o.prototype.constructor=o,o.prototype.registerHandlers=function(){$(document).on("autocompleteitems.oc.table",'form[data-sub-entity="model-list"] [data-control=table]',this.proxy(this.onAutocompleteItems))},o.prototype.cmdCreateList=function(t){var e=$(t.currentTarget),o={model_class:e.data("modelClass")},i=this.indexController.openOrLoadMasterTab(e,"onModelListCreateOrOpen",this.newTabId(),o);i!==!1&&i.done(this.proxy(this.onListLoaded,this))},o.prototype.cmdSaveList=function(t){var e=$(t.currentTarget),o=e.closest("form");this.validateTable(e)&&e.request("onModelListSave",{data:{columns:this.getTableData(e)}}).done(this.proxy(this.saveListDone))},o.prototype.cmdOpenList=function(t){var e=$(t.currentTarget).data("list"),o=$(t.currentTarget).data("modelClass"),i=this.indexController.openOrLoadMasterTab($(t.target),"onModelListCreateOrOpen",this.makeTabId(o+"-"+e),{file_name:e,model_class:o});i!==!1&&i.done(this.proxy(this.onListLoaded,this))},o.prototype.cmdDeleteList=function(t){var e=$(t.currentTarget);$.oc.confirm(e.data("confirm"),this.proxy(this.deleteConfirmed))},o.prototype.cmdAddDatabaseColumns=function(t){var e=$(t.currentTarget);$.oc.stripeLoadIndicator.show(),e.request("onModelListLoadDatabaseColumns").done(this.proxy(this.databaseColumnsLoaded)).always($.oc.builder.indexController.hideStripeIndicatorProxy)},o.prototype.saveListDone=function(t){if(void 0===t.builderResponseData)throw new Error("Invalid response data");var e=this.getMasterTabsActivePane();e.find("input[name=file_name]").val(t.builderResponseData.builderObjectName),this.updateMasterTabIdAndTitle(e,t.builderResponseData),this.unhideFormDeleteButton(e),this.getModelList().fileList("markActive",t.builderResponseData.tabId),this.getIndexController().unchangeTab(e),this.updateDataRegistry(t)},o.prototype.deleteConfirmed=function(){var t=this.getMasterTabsActivePane(),e=t.find("form");$.oc.stripeLoadIndicator.show(),e.request("onModelListDelete").always($.oc.builder.indexController.hideStripeIndicatorProxy).done(this.proxy(this.deleteDone))},o.prototype.deleteDone=function(t){var e=this.getMasterTabsActivePane();this.getIndexController().unchangeTab(e),this.forceCloseTab(e),this.updateDataRegistry(t)},o.prototype.getTableControlObject=function(t){var e=t.closest("form"),o=e.find("[data-control=table]"),i=o.data("oc.table");if(!i)throw new Error("Table object is not found on the model list tab");return i},o.prototype.getModelList=function(){return $("#layout-side-panel form[data-content-id=models] [data-control=filelist]")},o.prototype.validateTable=function(t){var e=this.getTableControlObject(t);return e.unfocusTable(),e.validate()},o.prototype.getTableData=function(t){var e=this.getTableControlObject(t);return e.dataSource.getAllData()},o.prototype.loadModelFields=function(t,e){var o=$(t).closest("form"),i=o.find("input[name=model_class]").val(),r=o.data("oc.model-field-cache");return void 0!==r?void e(r):(void 0===this.cachedModelFieldsPromises[i]&&(this.cachedModelFieldsPromises[i]=o.request("onModelFormGetModelFields",{data:{as_plain_list:1}})),void(void 0!==e&&this.cachedModelFieldsPromises[i].done(function(t){o.data("oc.model-field-cache",t.responseData.options),e(t.responseData.options)})))},o.prototype.updateDataRegistry=function(t){if(void 0!==t.builderResponseData.registryData){var e=t.builderResponseData.registryData;$.oc.builder.dataRegistry.set(e.pluginCode,"model-lists",e.modelClass,e.lists),$.oc.builder.dataRegistry.clearCache(e.pluginCode,"plugin-lists")}},o.prototype.databaseColumnsLoaded=function(t){$.isArray(t.responseData.columns)||alert("Invalid server response");var e=this.getMasterTabsActivePane(),o=e.find("form"),i=this.getColumnNames(o),r=!1;for(var n in t.responseData.columns){var a=t.responseData.columns[n],s=this.mapType(a.type);-1===$.inArray(a.name,i)&&(this.addColumn(o,a.name,s),r=!0)}r?o.trigger("change"):alert(o.attr("data-lang-all-database-columns-exist"))},o.prototype.mapType=function(t){switch(t){case"integer":return"number";case"timestamp":return"datetime";default:return"text"}},o.prototype.addColumn=function(t,e,o){var i=this.getTableControlObject(t),r=this.getTableData(t),n={field:e,label:e,type:o};i.addRecord("bottom",!0),i.setRowValues(r.length-1,n),i.addRecord("bottom",!1),i.deleteRecord()},o.prototype.getColumnNames=function(t){var e=this.getTableControlObject(t);e.unfocusTable();var o=this.getTableData(t),i=[];for(var r in o)void 0!==o[r].field&&i.push($.trim(o[r].field));return i},o.prototype.onAutocompleteItems=function(t,e){return"model-fields"===e.columnConfiguration.fillFrom?(t.preventDefault(),this.loadModelFields(t.target,e.callback),!1):void 0},o.prototype.onListLoaded=function(){$(document).trigger("render");var t=this.getMasterTabsActivePane(),e=t.find("form"),o=t.find("div[data-control=table] div.toolbar"),i=$('<a class="btn oc-icon-magic builder-custom-table-button" data-builder-command="modelList:cmdAddDatabaseColumns"></a>');i.text(e.attr("data-lang-add-database-columns")),o.append(i)},$.oc.builder.entityControllers.modelList=o}(window.jQuery),+function($){"use strict";void 0===$.oc.builder&&($.oc.builder={}),void 0===$.oc.builder.entityControllers&&($.oc.builder.entityControllers={});var t=$.oc.builder.entityControllers.base,e=t.prototype,o=function(e){t.call(this,"permissions",e)};o.prototype=Object.create(e),o.prototype.constructor=o,o.prototype.registerHandlers=function(){this.indexController.$masterTabs.on("oc.tableNewRow",this.proxy(this.onTableRowCreated))},o.prototype.cmdOpenPermissions=function(t){var e=this.getSelectedPlugin();return e?void this.indexController.openOrLoadMasterTab($(t.target),"onPermissionsOpen",this.makeTabId(e)):void alert("Please select a plugin first")},o.prototype.cmdSavePermissions=function(t){var e=$(t.currentTarget),o=e.closest("form");this.validateTable(e)&&e.request("onPermissionsSave",{data:{permissions:this.getTableData(e)}}).done(this.proxy(this.savePermissionsDone))},o.prototype.getTableControlObject=function(t){var e=t.closest("form"),o=e.find("[data-control=table]"),i=o.data("oc.table");if(!i)throw new Error("Table object is not found on permissions tab");return i},o.prototype.validateTable=function(t){var e=this.getTableControlObject(t);return e.unfocusTable(),e.validate()},o.prototype.getTableData=function(t){var e=this.getTableControlObject(t);return e.dataSource.getAllData()},o.prototype.savePermissionsDone=function(t){if(void 0===t.builderResponseData)throw new Error("Invalid response data");var e=this.getMasterTabsActivePane();this.getIndexController().unchangeTab(e),$.oc.builder.dataRegistry.clearCache(t.builderResponseData.pluginCode,"permissions")},o.prototype.onTableRowCreated=function(t,e){var o=$(t.target);if("permissions"==o.data("alias")){var i=o.closest("form");if("permissions"==i.data("entity")){var r=i.find("input[name=plugin_code]").val();e.permission=r.toLowerCase()+"."}}},$.oc.builder.entityControllers.permission=o}(window.jQuery),+function($){"use strict";void 0===$.oc.builder&&($.oc.builder={}),void 0===$.oc.builder.entityControllers&&($.oc.builder.entityControllers={});var t=$.oc.builder.entityControllers.base,e=t.prototype,o=function(e){t.call(this,"menus",e)};o.prototype=Object.create(e),o.prototype.constructor=o,o.prototype.cmdOpenMenus=function(t){var e=this.getSelectedPlugin();return e?void this.indexController.openOrLoadMasterTab($(t.target),"onMenusOpen",this.makeTabId(e)):void alert("Please select a plugin first")},o.prototype.cmdSaveMenus=function(t){var e=$(t.currentTarget),o=e.closest("form"),i=o.find(".inspector-container");if($.oc.inspector.manager.applyValuesFromContainer(i)){var r=$.oc.builder.menubuilder.controller.getJson(o.get(0));e.request("onMenusSave",{data:{menus:r}}).done(this.proxy(this.saveMenusDone))}},o.prototype.cmdAddMainMenuItem=function(t){$.oc.builder.menubuilder.controller.addMainMenuItem(t)},o.prototype.cmdAddSideMenuItem=function(t){$.oc.builder.menubuilder.controller.addSideMenuItem(t)},o.prototype.cmdDeleteMenuItem=function(t){$.oc.builder.menubuilder.controller.deleteMenuItem(t)},o.prototype.saveMenusDone=function(t){if(void 0===t.builderResponseData)throw new Error("Invalid response data");var e=this.getMasterTabsActivePane();this.getIndexController().unchangeTab(e)},$.oc.builder.entityControllers.menus=o}(window.jQuery),+function($){"use strict";void 0===$.oc.builder&&($.oc.builder={}),void 0===$.oc.builder.entityControllers&&($.oc.builder.entityControllers={});var t=$.oc.builder.entityControllers.base,e=t.prototype,o=function(e){t.call(this,"version",e),this.hiddenHints={}};o.prototype=Object.create(e),o.prototype.constructor=o,o.prototype.cmdCreateVersion=function(t){var e=$(t.currentTarget),o=e.data("versionType");this.indexController.openOrLoadMasterTab(e,"onVersionCreateOrOpen",this.newTabId(),{version_type:o})},o.prototype.cmdSaveVersion=function(t){var e=$(t.currentTarget),o=e.closest("form");e.request("onVersionSave").done(this.proxy(this.saveVersionDone))},o.prototype.cmdOpenVersion=function(t){var e=$(t.currentTarget).data("id"),o=$(t.currentTarget).data("pluginCode");this.indexController.openOrLoadMasterTab($(t.target),"onVersionCreateOrOpen",this.makeTabId(o+"-"+e),{original_version:e})},o.prototype.cmdDeleteVersion=function(t){var e=$(t.currentTarget);$.oc.confirm(e.data("confirm"),this.proxy(this.deleteConfirmed))},o.prototype.cmdApplyVersion=function(t){var e=$(t.currentTarget),o=e.closest("div.tab-pane"),i=this;this.showHintPopup(o,"builder-version-apply",function(){e.request("onVersionApply").done(i.proxy(i.applyVersionDone))})},o.prototype.cmdRollbackVersion=function(t){var e=$(t.currentTarget),o=e.closest("div.tab-pane"),i=this;this.showHintPopup(o,"builder-version-rollback",function(){e.request("onVersionRollback").done(i.proxy(i.rollbackVersionDone))})},o.prototype.saveVersionDone=function(t){if(void 0===t.builderResponseData)throw new Error("Invalid response data");var e=this.getMasterTabsActivePane();this.updateUiAfterSave(e,t),t.builderResponseData.isApplied||this.showSavedNotAppliedHint(e)},o.prototype.showSavedNotAppliedHint=function(t){this.showHintPopup(t,"builder-version-save-unapplied")},o.prototype.showHintPopup=function(t,e,o){return this.getDontShowHintAgain(e,t)?void(o&&o.apply(this)):(t.one("hide.oc.popup",this.proxy(this.onHintPopupHide)),o&&t.one("shown.oc.popup",function(t,e,i){i.find("form").one("submit",function(t){return o.apply(this),t.preventDefault(),$(t.target).trigger("close.oc.popup"),!1})}),void t.popup({content:this.getPopupContent(t,e)}))},o.prototype.onHintPopupHide=function(t,e,o){var i=o.find("input[type=checkbox][name=dont_show_again]").is(":checked"),r=o.find("input[type=hidden][name=hint_code]").val();if(o.find("form").off("submit"),i){var n=this.getMasterTabsActivePane().find('form[data-entity="versions"]');n.request("onHideBackendHint",{data:{name:r}}),this.setDontShowHintAgain(r)}},o.prototype.setDontShowHintAgain=function(t){this.hiddenHints[t]=!0},o.prototype.getDontShowHintAgain=function(t,e){return void 0!==this.hiddenHints[t]?this.hiddenHints[t]:"true"==e.find('input[type=hidden][data-hint-hidden="'+t+'"]').val()},o.prototype.getPopupContent=function(t,e){var o=t.find('script[data-version-hint-template="'+e+'"]');if(0===o.length)throw new Error("Version popup template not found: "+e);return o.html()},o.prototype.updateUiAfterSave=function(t,e){t.find("input[name=original_version]").val(e.builderResponseData.savedVersion),this.updateMasterTabIdAndTitle(t,e.builderResponseData),this.unhideFormDeleteButton(t),this.getVersionList().fileList("markActive",e.builderResponseData.tabId),this.getIndexController().unchangeTab(t)},o.prototype.deleteConfirmed=function(){var t=this.getMasterTabsActivePane(),e=t.find("form");$.oc.stripeLoadIndicator.show(),e.request("onVersionDelete").always($.oc.builder.indexController.hideStripeIndicatorProxy).done(this.proxy(this.deleteDone))},o.prototype.deleteDone=function(){var t=this.getMasterTabsActivePane();this.getIndexController().unchangeTab(t),this.forceCloseTab(t)},o.prototype.applyVersionDone=function(t){if(void 0===t.builderResponseData)throw new Error("Invalid response data");var e=this.getMasterTabsActivePane();this.updateUiAfterSave(e,t),this.updateVersionsButtons()},o.prototype.rollbackVersionDone=function(t){if(void 0===t.builderResponseData)throw new Error("Invalid response data");var e=this.getMasterTabsActivePane();this.updateUiAfterSave(e,t),this.updateVersionsButtons()},o.prototype.getVersionList=function(){return $("#layout-side-panel form[data-content-id=version] [data-control=filelist]")},o.prototype.updateVersionsButtons=function(){for(var t=this.getMasterTabsObject(),e=t.$tabsContainer.find("> li"),o=this.getVersionList(),i=e.length-1;i>=0;i--){var r=$(e[i]),n=r.data("tabId");if(n&&0!=String(n).length){var a=o.find('li[data-id="'+n+'"]');if(a.length){var s=a.data("applied"),l=t.findPaneFromTab(r);s?(l.find('[data-builder-command="version:cmdApplyVersion"]').addClass("hide"),l.find('[data-builder-command="version:cmdRollbackVersion"]').removeClass("hide")):(l.find('[data-builder-command="version:cmdApplyVersion"]').removeClass("hide"),l.find('[data-builder-command="version:cmdRollbackVersion"]').addClass("hide"))}}}},$.oc.builder.entityControllers.version=o}(window.jQuery),+function($){"use strict";void 0===$.oc.builder&&($.oc.builder={}),void 0===$.oc.builder.entityControllers&&($.oc.builder.entityControllers={});var t=$.oc.builder.entityControllers.base,e=t.prototype,o=function(e){t.call(this,"localization",e)};o.prototype=Object.create(e),o.prototype.constructor=o,o.prototype.cmdCreateLanguage=function(t){this.indexController.openOrLoadMasterTab($(t.target),"onLanguageCreateOrOpen",this.newTabId())},o.prototype.cmdOpenLanguage=function(t){var e=$(t.currentTarget).data("id"),o=$(t.currentTarget).data("pluginCode");this.indexController.openOrLoadMasterTab($(t.target),"onLanguageCreateOrOpen",this.makeTabId(o+"-"+e),{original_language:e})},o.prototype.cmdSaveLanguage=function(t){var e=$(t.currentTarget),o=e.closest("form");e.request("onLanguageSave").done(this.proxy(this.saveLanguageDone))},o.prototype.cmdDeleteLanguage=function(t){var e=$(t.currentTarget);$.oc.confirm(e.data("confirm"),this.proxy(this.deleteConfirmed))},o.prototype.cmdCopyMissingStrings=function(t){var e=$(t.currentTarget),o=e.find("select[name=language]").val(),i=this.getMasterTabsActivePane();e.trigger("close.oc.popup"),$.oc.stripeLoadIndicator.show(),i.find("form").request("onLanguageCopyStringsFrom",{data:{copy_from:o}}).always($.oc.builder.indexController.hideStripeIndicatorProxy).done(this.proxy(this.copyStringsFromDone))},o.prototype.languageUpdated=function(t){var e=this.findDefaultLanguageForm(t);if(e){var o=$(e);o.hasClass("oc-data-changed")?this.mergeLanguageFromServer(o):this.updateLanguageFromServer(o)}},o.prototype.updateOnScreenStrings=function(t){var e=document.body.querySelectorAll('span[data-localization-key][data-plugin="'+t+'"]');$.oc.builder.dataRegistry.get($("#builder-plugin-selector-panel form"),t,"localization",null,function(t){for(var o=e.length-1;o>=0;o--){var i=e[o],r=i.getAttribute("data-localization-key");void 0!==t[r]?i.textContent=t[r]:i.textContent=r}})},o.prototype.saveLanguageDone=function(t){if(void 0===t.builderResponseData)throw new Error("Invalid response data");var e=this.getMasterTabsActivePane();if(e.find("input[name=original_language]").val(t.builderResponseData.language),this.updateMasterTabIdAndTitle(e,t.builderResponseData),this.unhideFormDeleteButton(e),this.getLanguageList().fileList("markActive",t.builderResponseData.tabId),this.getIndexController().unchangeTab(e),void 0!==t.builderResponseData.registryData){var o=t.builderResponseData.registryData;$.oc.builder.dataRegistry.set(o.pluginCode,"localization",null,o.strings,{suppressLanguageEditorUpdate:!0}),$.oc.builder.dataRegistry.set(o.pluginCode,"localization","sections",o.sections)}},o.prototype.getLanguageList=function(){return $("#layout-side-panel form[data-content-id=localization] [data-control=filelist]")},o.prototype.getCodeEditor=function(t){return t.find("div[data-field-name=strings] div[data-control=codeeditor]").data("oc.codeEditor").editor},o.prototype.deleteConfirmed=function(){var t=this.getMasterTabsActivePane(),e=t.find("form");$.oc.stripeLoadIndicator.show(),e.request("onLanguageDelete").always($.oc.builder.indexController.hideStripeIndicatorProxy).done(this.proxy(this.deleteDone))},o.prototype.deleteDone=function(){var t=this.getMasterTabsActivePane();this.getIndexController().unchangeTab(t),this.forceCloseTab(t)},o.prototype.copyStringsFromDone=function(t){if(void 0===t.builderResponseData)throw new Error("Invalid response data");
-var e=t.builderResponseData,o=this.getMasterTabsActivePane(),i=o.find("form"),r=this.getCodeEditor(o),n=i.data("newStringMessage"),a=i.data("structureMismatch");r.getSession().setValue(e.strings);for(var s=[],l=e.updatedLines.length-1;l>=0;l--){var d=e.updatedLines[l];s.push({row:d,column:0,text:n,type:"warning"})}r.getSession().setAnnotations(s),e.mismatch&&$.oc.alert(a)},o.prototype.findDefaultLanguageForm=function(t){for(var e=document.body.querySelectorAll("form[data-entity=localization]"),o=e.length-1;o>=0;o--){var i=e[o],r=i.querySelector("input[name=plugin_code]"),n=i.querySelector("input[name=original_language]");if(r&&r.value==t&&n&&i.getAttribute("data-default-language")==n.value)return i}return null},o.prototype.updateLanguageFromServer=function(t){var e=this;t.request("onLanguageGetStrings").done(function(o){e.updateLanguageFromServerDone(t,o)})},o.prototype.updateLanguageFromServerDone=function(t,e){if(void 0===e.builderResponseData)throw new Error("Invalid response data");var o=e.builderResponseData,i=t.closest(".tab-pane"),r=this.getCodeEditor(i);o.strings&&(r.getSession().setValue(o.strings),this.unmodifyTab(i))},o.prototype.mergeLanguageFromServer=function(t){var e=t.find("input[name=original_language]").val(),o=this;t.request("onLanguageCopyStringsFrom",{data:{copy_from:e}}).done(function(e){o.mergeLanguageFromServerDone(t,e)})},o.prototype.mergeLanguageFromServerDone=function(t,e){if(void 0===e.builderResponseData)throw new Error("Invalid response data");var o=e.builderResponseData,i=t.closest(".tab-pane"),r=this.getCodeEditor(i);r.getSession().setValue(o.strings),r.getSession().setAnnotations([])},$.oc.builder.entityControllers.localization=o}(window.jQuery),+function($){"use strict";void 0===$.oc.builder&&($.oc.builder={}),void 0===$.oc.builder.entityControllers&&($.oc.builder.entityControllers={});var t=$.oc.builder.entityControllers.base,e=t.prototype,o=function(e){t.call(this,"controller",e)};o.prototype=Object.create(e),o.prototype.constructor=o,o.prototype.cmdCreateController=function(t){var e=$(t.currentTarget),o=this,i=e.data("pluginCode"),r=e.find('input[name="behaviors[]"]:checked').length,n=null;n=r?this.indexController.openOrLoadMasterTab(e,"onControllerCreate",this.makeTabId(i+"-new-controller"),{}):e.request("onControllerCreate"),n.done(function(t){e.trigger("close.oc.popup"),o.updateDataRegistry(t)}).always($.oc.builder.indexController.hideStripeIndicatorProxy)},o.prototype.cmdOpenController=function(t){var e=$(t.currentTarget).data("id"),o=$(t.currentTarget).data("pluginCode");this.indexController.openOrLoadMasterTab($(t.target),"onControllerOpen",this.makeTabId(o+"-"+e),{controller:e})},o.prototype.cmdSaveController=function(t){var e=$(t.currentTarget),o=e.closest("form"),i=o.find(".inspector-container");$.oc.inspector.manager.applyValuesFromContainer(i)&&e.request("onControllerSave").done(this.proxy(this.saveControllerDone))},o.prototype.saveControllerDone=function(t){if(void 0===t.builderResponseData)throw new Error("Invalid response data");var e=this.getMasterTabsActivePane();this.getIndexController().unchangeTab(e)},o.prototype.updateDataRegistry=function(t){if(void 0!==t.builderResponseData.registryData){var e=t.builderResponseData.registryData;$.oc.builder.dataRegistry.set(e.pluginCode,"controller-urls",null,e.urls)}},o.prototype.getControllerList=function(){return $("#layout-side-panel form[data-content-id=controller] [data-control=filelist]")},$.oc.builder.entityControllers.controller=o}(window.jQuery),+function($){"use strict";void 0===$.oc.builder&&($.oc.builder={});var t=$.oc.foundation.base,e=t.prototype,o=function(){t.call(this),this.$masterTabs=null,this.masterTabsObj=null,this.hideStripeIndicatorProxy=null,this.entityControllers={},this.init()};o.prototype=Object.create(e),o.prototype.constructor=o,o.prototype.dispose=function(){e.dispose.call(this)},o.prototype.openOrLoadMasterTab=function(t,e,o,i){if(this.masterTabsObj.goTo(o))return!1;var r=void 0===i?{}:i;$.oc.stripeLoadIndicator.show();var n=t.request(e,{data:r}).done(this.proxy(this.addMasterTab)).always(this.hideStripeIndicatorProxy);return n},o.prototype.getMasterTabActivePane=function(){return this.$masterTabs.find("> .tab-content > .tab-pane.active")},o.prototype.unchangeTab=function(t){t.find("form").trigger("unchange.oc.changeMonitor")},o.prototype.triggerCommand=function(t,e){var o=t.split(":");if(2===o.length){var i=o[0],r=o[1];if(void 0===this.entityControllers[i])throw new Error("Unknown entity type: "+i);this.entityControllers[i].invokeCommand(r,e)}},o.prototype.init=function(){this.$masterTabs=$("#builder-master-tabs"),this.$sidePanel=$("#builder-side-panel"),this.masterTabsObj=this.$masterTabs.data("oc.tab"),this.hideStripeIndicatorProxy=this.proxy(this.hideStripeIndicator),new $.oc.tabFormExpandControls(this.$masterTabs),this.createEntityControllers(),this.registerHandlers()},o.prototype.createEntityControllers=function(){for(var t in $.oc.builder.entityControllers)"base"!=t&&(this.entityControllers[t]=new $.oc.builder.entityControllers[t](this))},o.prototype.registerHandlers=function(){$(document).on("click","[data-builder-command]",this.proxy(this.onCommand)),$(document).on("submit","[data-builder-command]",this.proxy(this.onCommand)),this.$masterTabs.on("changed.oc.changeMonitor",this.proxy(this.onFormChanged)),this.$masterTabs.on("unchanged.oc.changeMonitor",this.proxy(this.onFormUnchanged)),this.$masterTabs.on("shown.bs.tab",this.proxy(this.onTabShown)),this.$masterTabs.on("afterAllClosed.oc.tab",this.proxy(this.onAllTabsClosed)),this.$masterTabs.on("closed.oc.tab",this.proxy(this.onTabClosed)),this.$masterTabs.on("autocompleteitems.oc.inspector",this.proxy(this.onDataRegistryItems)),this.$masterTabs.on("dropdownoptions.oc.inspector",this.proxy(this.onDataRegistryItems));for(var t in this.entityControllers)void 0!==this.entityControllers[t].registerHandlers&&this.entityControllers[t].registerHandlers()},o.prototype.hideStripeIndicator=function(){$.oc.stripeLoadIndicator.hide()},o.prototype.addMasterTab=function(t){if(this.masterTabsObj.addTab(t.tabTitle,t.tab,t.tabId,"oc-"+t.tabIcon),t.isNewRecord){var e=this.getMasterTabActivePane();e.find("form").one("ready.oc.changeMonitor",this.proxy(this.onChangeMonitorReady))}},o.prototype.updateModifiedCounter=function(){var t={database:{menu:"database",count:0},models:{menu:"models",count:0},permissions:{menu:"permissions",count:0},menus:{menu:"menus",count:0},versions:{menu:"versions",count:0},localization:{menu:"localization",count:0},controller:{menu:"controllers",count:0}};$("> div.tab-content > div.tab-pane[data-modified] > form",this.$masterTabs).each(function(){var e=$(this).data("entity");t[e].count++}),$.each(t,function(t,e){$.oc.sideNav.setCounter("builder/"+e.menu,e.count)})},o.prototype.getFormPluginCode=function(t){var e=$(t).closest("form"),o=e.find('input[name="plugin_code"]'),i=o.val();if(!i)throw new Error("Plugin code input is not found in the form.");return i},o.prototype.setPageTitle=function(t){$.oc.layout.setPageTitle(t.length?t+" | ":t)},o.prototype.getFileLists=function(){return $("[data-control=filelist]",this.$sidePanel)},o.prototype.dataToInspectorArray=function(t){var e=[];for(var o in t){var i={title:t[o],value:o};e.push(i)}return e},o.prototype.onCommand=function(t){if("FORM"!=t.currentTarget.tagName||"click"!=t.type){var e=$(t.currentTarget).data("builderCommand");this.triggerCommand(e,t);var o=$(t.currentTarget);if("A"!==t.currentTarget.tagName||"menuitem"!=o.attr("role")||"javascript:;"!=o.attr("href"))return t.preventDefault(),!1}},o.prototype.onFormChanged=function(t){$(".form-tabless-fields",t.target).trigger("modified.oc.tab"),this.updateModifiedCounter()},o.prototype.onFormUnchanged=function(t){$(".form-tabless-fields",t.target).trigger("unmodified.oc.tab"),this.updateModifiedCounter()},o.prototype.onTabShown=function(t){var e=$(t.target).closest("[data-control=tab]");if(e.attr("id")==this.$masterTabs.attr("id")){var o=$(t.target).closest("li").attr("data-tab-id"),i=$(t.target).attr("title");i&&this.setPageTitle(i),this.getFileLists().fileList("markActive",o),$(window).trigger("resize")}},o.prototype.onAllTabsClosed=function(t){this.setPageTitle(""),this.getFileLists().fileList("markActive",null)},o.prototype.onTabClosed=function(t,e,o){$(o).find("form").off("ready.oc.changeMonitor",this.proxy(this.onChangeMonitorReady)),this.updateModifiedCounter()},o.prototype.onChangeMonitorReady=function(t){$(t.target).trigger("change")},o.prototype.onDataRegistryItems=function(t,e){var o=this;if("model-classes"==e.propertyDefinition.fillFrom||"model-forms"==e.propertyDefinition.fillFrom||"model-lists"==e.propertyDefinition.fillFrom||"controller-urls"==e.propertyDefinition.fillFrom||"model-columns"==e.propertyDefinition.fillFrom||"plugin-lists"==e.propertyDefinition.fillFrom||"permissions"==e.propertyDefinition.fillFrom){t.preventDefault();var i=null,r=e.propertyDefinition.subtypeFrom;void 0!==r&&(i=e.values[r]),$.oc.builder.dataRegistry.get($(t.target),this.getFormPluginCode(t.target),e.propertyDefinition.fillFrom,i,function(t){e.callback({options:o.dataToInspectorArray(t)})})}},$(document).ready(function(){$.oc.builder.indexController=new o})}(window.jQuery),+function($){"use strict";void 0===$.oc.builder&&($.oc.builder={});var t=$.oc.foundation.base,e=t.prototype,o=function(e,i,r){this.input=e,this.form=i,this.options=$.extend({},o.DEFAULTS,r),this.disposed=!1,this.initialized=!1,this.newStringPopupMarkup=null,t.call(this),this.init()};o.prototype=Object.create(e),o.prototype.constructor=o,o.prototype.dispose=function(){this.unregisterHandlers(),this.form=null,this.options.beforePopupShowCallback=null,this.options.afterPopupHideCallback=null,this.options=null,this.disposed=!0,this.newStringPopupMarkup=null,this.initialized&&$(this.input).autocomplete("destroy"),$(this.input).removeData("localization-input"),this.input=null,e.dispose.call(this)},o.prototype.init=function(){if(!this.options.plugin)throw new Error("The options.plugin value should be set in the localization input object.");var t=$(this.input);t.data("localization-input",this),t.attr("data-builder-localization-input","true"),t.attr("data-builder-localization-plugin",this.options.plugin),this.getContainer().addClass("localization-input-container"),this.registerHandlers(),this.loadDataAndBuild()},o.prototype.buildAddLink=function(){var t=this.getContainer();if(!(t.find("a.localization-trigger").length>0)){var e=document.createElement("a");e.setAttribute("class","oc-icon-plus localization-trigger"),e.setAttribute("href","#");var o=t.position();$(e).css({top:o.top+4,right:7}),t.append(e)}},o.prototype.loadDataAndBuild=function(){this.showLoadingIndicator();var t=$.oc.builder.dataRegistry.get(this.form,this.options.plugin,"localization",null,this.proxy(this.dataLoaded)),e=this;t&&t.always(function(){e.hideLoadingIndicator()})},o.prototype.reload=function(){$.oc.builder.dataRegistry.get(this.form,this.options.plugin,"localization",null,this.proxy(this.dataLoaded))},o.prototype.dataLoaded=function(t){if(!this.disposed){var e=$(this.input),o=e.data("autocomplete");if(o)o.source=this.preprocessData(t);else{this.hideLoadingIndicator();var i={source:this.preprocessData(t),matchWidth:!0};i=$.extend(i,this.options.autocompleteOptions),$(this.input).autocomplete(i),this.initialized=!0}}},o.prototype.preprocessData=function(t){var e=$.extend({},t);for(var o in e)e[o]=o+" - "+e[o];return e},o.prototype.getContainer=function(){return $(this.input).closest(".autocomplete-container")},o.prototype.showLoadingIndicator=function(){var t=this.getContainer();t.addClass("loading-indicator-container size-small"),t.loadIndicator()},o.prototype.hideLoadingIndicator=function(){var t=this.getContainer();t.loadIndicator("hide"),t.loadIndicator("destroy"),t.removeClass("loading-indicator-container")},o.prototype.loadAndShowPopup=function(){null===this.newStringPopupMarkup?($.oc.stripeLoadIndicator.show(),$(this.input).request("onLanguageLoadAddStringForm").done(this.proxy(this.popupMarkupLoaded)).always(function(){$.oc.stripeLoadIndicator.hide()})):this.showPopup()},o.prototype.popupMarkupLoaded=function(t){this.newStringPopupMarkup=t.markup,this.showPopup()},o.prototype.showPopup=function(){var t=$(this.input);t.popup({content:this.newStringPopupMarkup});var e=t.data("oc.popup").$content,o=e.find("#language_string_key");$.oc.builder.dataRegistry.get(this.form,this.options.plugin,"localization","sections",function(t){o.autocomplete({source:t,matchWidth:!0})}),e.find("form").on("submit",this.proxy(this.onSubmitPopupForm))},o.prototype.stringCreated=function(t){if(void 0===t.localizationData||void 0===t.registryData)throw new Error("Invalid server response.");var e=$(this.input);e.val(t.localizationData.key),$.oc.builder.dataRegistry.set(this.options.plugin,"localization",null,t.registryData.strings),$.oc.builder.dataRegistry.set(this.options.plugin,"localization","sections",t.registryData.sections),e.data("oc.popup").hide(),e.trigger("change")},o.prototype.onSubmitPopupForm=function(t){var e=$(t.target);return $.oc.stripeLoadIndicator.show(),e.request("onLanguageCreateString",{data:{plugin_code:this.options.plugin}}).done(this.proxy(this.stringCreated)).always(function(){$.oc.stripeLoadIndicator.hide()}),t.preventDefault(),!1},o.prototype.onPopupHidden=function(t,e,o){$(o).find("#language_string_key").autocomplete("destroy"),$(o).find("form").on("submit",this.proxy(this.onSubmitPopupForm)),this.options.afterPopupHideCallback&&this.options.afterPopupHideCallback()},o.updatePluginInputs=function(t){for(var e=document.body.querySelectorAll('input[data-builder-localization-input][data-builder-localization-plugin="'+t+'"]'),o=e.length-1;o>=0;o--)$(e[o]).data("localization-input").reload()},o.prototype.unregisterHandlers=function(){this.input.removeEventListener("focus",this.proxy(this.onInputFocus)),this.getContainer().off("click","a.localization-trigger",this.proxy(this.onTriggerClick)),$(this.input).off("hidden.oc.popup",this.proxy(this.onPopupHidden))},o.prototype.registerHandlers=function(){this.input.addEventListener("focus",this.proxy(this.onInputFocus)),this.getContainer().on("click","a.localization-trigger",this.proxy(this.onTriggerClick)),$(this.input).on("hidden.oc.popup",this.proxy(this.onPopupHidden))},o.prototype.onInputFocus=function(){this.buildAddLink()},o.prototype.onTriggerClick=function(t){return this.options.beforePopupShowCallback&&this.options.beforePopupShowCallback(),this.loadAndShowPopup(),t.preventDefault(),!1},o.DEFAULTS={plugin:null,autocompleteOptions:{},beforePopupShowCallback:null,afterPopupHideCallback:null},$.oc.builder.localizationInput=o}(window.jQuery),+function($){"use strict";var t=$.oc.inspector.propertyEditors.string,e=t.prototype,o=function(e,o,i,r){this.localizationInput=null,t.call(this,e,o,i,r)};o.prototype=Object.create(e),o.prototype.constructor=t,o.prototype.dispose=function(){this.removeLocalizationInput(),e.dispose.call(this)},o.prototype.build=function(){var t=document.createElement("div"),e=document.createElement("input"),o=void 0!==this.propertyDefinition.placeholder?this.propertyDefinition.placeholder:"",i=this.inspector.getPropertyValue(this.propertyDefinition.property);e.setAttribute("type","text"),e.setAttribute("class","string-editor"),e.setAttribute("placeholder",o),t.setAttribute("class","autocomplete-container"),void 0===i&&(i=this.propertyDefinition["default"]),void 0===i&&(i=""),e.value=i,$.oc.foundation.element.addClass(this.containerCell,"text autocomplete"),t.appendChild(e),this.containerCell.appendChild(t),this.buildLocalizationEditor()},o.prototype.buildLocalizationEditor=function(){this.localizationInput=new $.oc.builder.localizationInput(this.getInput(),this.getForm(),{plugin:this.getPluginCode(),beforePopupShowCallback:this.proxy(this.onPopupShown,this),afterPopupHideCallback:this.proxy(this.onPopupHidden,this)})},o.prototype.removeLocalizationInput=function(){this.localizationInput.dispose(),this.localizationInput=null},o.prototype.supportsExternalParameterEditor=function(){return!1},o.prototype.registerHandlers=function(){e.registerHandlers.call(this),$(this.getInput()).on("change",this.proxy(this.onInputKeyUp))},o.prototype.unregisterHandlers=function(){e.unregisterHandlers.call(this),$(this.getInput()).off("change",this.proxy(this.onInputKeyUp))},o.prototype.getForm=function(){var t=this.getRootSurface().getInspectableElement();if(!t)throw new Error("Cannot determine inspectable element in the Builder localization editor.");return $(t).closest("form")},o.prototype.getPluginCode=function(){var t=this.getForm(),e=t.find("input[name=plugin_code]");if(!e.length)throw new Error('The input "plugin_code" should be defined in the form in order to use the localization Inspector editor.');return e.val()},o.prototype.onPopupShown=function(){this.getRootSurface().popupDisplayed()},o.prototype.onPopupHidden=function(){this.getRootSurface().popupHidden()},$.oc.inspector.propertyEditors.builderLocalization=o}(window.jQuery),+function($){"use strict";if(void 0===$.oc.table)throw new Error("The $.oc.table namespace is not defined. Make sure that the table.js script is loaded.");if(void 0===$.oc.table.processor)throw new Error("The $.oc.table.processor namespace is not defined. Make sure that the table.processor.base.js script is loaded.");var t=$.oc.table.processor.string,e=t.prototype,o=function(e,o,i){this.localizationInput=null,this.popupDisplayed=!1,t.call(this,e,o,i)};o.prototype=Object.create(e),o.prototype.constructor=o,o.prototype.dispose=function(){this.removeLocalizationInput(),e.dispose.call(this)},o.prototype.onUnfocus=function(){this.activeCell&&!this.popupDisplayed&&(this.removeLocalizationInput(),e.onUnfocus.call(this))},o.prototype.onBeforePopupShow=function(){this.popupDisplayed=!0},o.prototype.onAfterPopupHide=function(){this.popupDisplayed=!1},o.prototype.renderCell=function(t,o){e.renderCell.call(this,t,o)},o.prototype.buildEditor=function(t,o,i){e.buildEditor.call(this,t,o,i),$.oc.foundation.element.addClass(o,"autocomplete-container"),this.buildLocalizationEditor()},o.prototype.buildLocalizationEditor=function(){var t=this.getInput();this.localizationInput=new $.oc.builder.localizationInput(t,$(t),{plugin:this.getPluginCode(t),beforePopupShowCallback:$.proxy(this.onBeforePopupShow,this),afterPopupHideCallback:$.proxy(this.onAfterPopupHide,this),autocompleteOptions:{menu:'<ul class="autocomplete dropdown-menu table-widget-autocomplete localization"></ul>',bodyContainer:!0}})},o.prototype.getInput=function(){return this.activeCell?this.activeCell.querySelector(".string-input"):null},o.prototype.getPluginCode=function(t){var e=$(t).closest("form"),o=e.find("input[name=plugin_code]");if(!o.length)throw new Error('The input "plugin_code" should be defined in the form in order to use the localization table processor.');return o.val()},o.prototype.removeLocalizationInput=function(){this.localizationInput&&(this.localizationInput.dispose(),this.localizationInput=null)},$.oc.table.processor.builderLocalization=o}(window.jQuery);
+
++function($){"use strict";if($.oc.builder===undefined)
+$.oc.builder={}
+var Base=$.oc.foundation.base,BaseProto=Base.prototype
+var DataRegistry=function(){this.data={}
+this.requestCache={}
+this.callbackCache={}
+Base.call(this)}
+DataRegistry.prototype.set=function(plugin,type,subtype,data,params){this.storeData(plugin,type,subtype,data)
+if(type=='localization'&&!subtype){this.localizationUpdated(plugin,params)}}
+DataRegistry.prototype.get=function($formElement,plugin,type,subtype,callback){if(this.data[plugin]===undefined||this.data[plugin][type]===undefined||this.data[plugin][type][subtype]===undefined||this.isCacheObsolete(this.data[plugin][type][subtype].timestamp)){return this.loadDataFromServer($formElement,plugin,type,subtype,callback)}
+callback(this.data[plugin][type][subtype].data)}
+DataRegistry.prototype.makeCacheKey=function(plugin,type,subtype){var key=plugin+'-'+type
+if(subtype){key+='-'+subtype}
+return key}
+DataRegistry.prototype.isCacheObsolete=function(timestamp){return(Date.now()-timestamp)>60000*5}
+DataRegistry.prototype.loadDataFromServer=function($formElement,plugin,type,subtype,callback){var self=this,cacheKey=this.makeCacheKey(plugin,type,subtype)
+if(this.requestCache[cacheKey]===undefined){this.requestCache[cacheKey]=$formElement.request('onPluginDataRegistryGetData',{data:{registry_plugin_code:plugin,registry_data_type:type,registry_data_subtype:subtype}}).done(function(data){if(data.registryData===undefined){throw new Error('Invalid data registry response.')}
+self.storeData(plugin,type,subtype,data.registryData)
+self.applyCallbacks(cacheKey,data.registryData)
+self.requestCache[cacheKey]=undefined})}
+this.addCallbackToQueue(callback,cacheKey)
+return this.requestCache[cacheKey]}
+DataRegistry.prototype.addCallbackToQueue=function(callback,key){if(this.callbackCache[key]===undefined){this.callbackCache[key]=[]}
+this.callbackCache[key].push(callback)}
+DataRegistry.prototype.applyCallbacks=function(key,registryData){if(this.callbackCache[key]===undefined){return}
+for(var i=this.callbackCache[key].length-1;i>=0;i--){this.callbackCache[key][i](registryData);}
+delete this.callbackCache[key]}
+DataRegistry.prototype.storeData=function(plugin,type,subtype,data){if(this.data[plugin]===undefined){this.data[plugin]={}}
+if(this.data[plugin][type]===undefined){this.data[plugin][type]={}}
+var dataItem={timestamp:Date.now(),data:data}
+this.data[plugin][type][subtype]=dataItem}
+DataRegistry.prototype.clearCache=function(plugin,type){if(this.data[plugin]===undefined){return}
+if(this.data[plugin][type]===undefined){return}
+this.data[plugin][type]=undefined}
+DataRegistry.prototype.getLocalizationString=function($formElement,plugin,key,callback){this.get($formElement,plugin,'localization',null,function(data){if(data[key]!==undefined){callback(data[key])
+return}
+callback(key)})}
+DataRegistry.prototype.localizationUpdated=function(plugin,params){$.oc.builder.localizationInput.updatePluginInputs(plugin)
+if(params===undefined||!params.suppressLanguageEditorUpdate){$.oc.builder.indexController.entityControllers.localization.languageUpdated(plugin)}
+$.oc.builder.indexController.entityControllers.localization.updateOnScreenStrings(plugin)}
+$.oc.builder.dataRegistry=new DataRegistry()}(window.jQuery);+function($){"use strict";if($.oc.builder===undefined)
+$.oc.builder={}
+if($.oc.builder.entityControllers===undefined)
+$.oc.builder.entityControllers={}
+var Base=$.oc.foundation.base,BaseProto=Base.prototype
+var EntityBase=function(typeName,indexController){if(typeName===undefined){throw new Error('The Builder entity type name should be set in the base constructor call.')}
+if(indexController===undefined){throw new Error('The Builder index controller should be set when creating an entity controller.')}
+this.typeName=typeName
+this.indexController=indexController
+Base.call(this)}
+EntityBase.prototype=Object.create(BaseProto)
+EntityBase.prototype.constructor=EntityBase
+EntityBase.prototype.registerHandlers=function(){}
+EntityBase.prototype.invokeCommand=function(command,ev){if(/^cmd[a-zA-Z0-9]+$/.test(command)){if(this[command]!==undefined){this[command].apply(this,[ev])}
+else{throw new Error('Unknown command: '+command)}}
+else{throw new Error('Invalid command: '+command)}}
+EntityBase.prototype.newTabId=function(){return this.typeName+Math.random()}
+EntityBase.prototype.makeTabId=function(objectName){return this.typeName+'-'+objectName}
+EntityBase.prototype.getMasterTabsActivePane=function(){return this.indexController.getMasterTabActivePane()}
+EntityBase.prototype.getMasterTabsObject=function(){return this.indexController.masterTabsObj}
+EntityBase.prototype.getSelectedPlugin=function(){var activeItem=$('#PluginList-pluginList-plugin-list > ul > li.active')
+return activeItem.data('id')}
+EntityBase.prototype.getIndexController=function(){return this.indexController}
+EntityBase.prototype.updateMasterTabIdAndTitle=function($tabPane,responseData){var tabsObject=this.getMasterTabsObject()
+tabsObject.updateIdentifier($tabPane,responseData.tabId)
+tabsObject.updateTitle($tabPane,responseData.tabTitle)}
+EntityBase.prototype.unhideFormDeleteButton=function($tabPane){$('[data-control=delete-button]',$tabPane).removeClass('hide')}
+EntityBase.prototype.forceCloseTab=function($tabPane){$tabPane.trigger('close.oc.tab',[{force:true}])}
+EntityBase.prototype.unmodifyTab=function($tabPane){this.indexController.unchangeTab($tabPane)}
+$.oc.builder.entityControllers.base=EntityBase;}(window.jQuery);+function($){"use strict";if($.oc.builder===undefined)
+$.oc.builder={}
+if($.oc.builder.entityControllers===undefined)
+$.oc.builder.entityControllers={}
+var Base=$.oc.builder.entityControllers.base,BaseProto=Base.prototype
+var Plugin=function(indexController){Base.call(this,'plugin',indexController)
+this.popupZIndex=5050}
+Plugin.prototype=Object.create(BaseProto)
+Plugin.prototype.constructor=Plugin
+Plugin.prototype.cmdMakePluginActive=function(ev){var $target=$(ev.currentTarget),selectedPluginCode=$target.data('pluginCode')
+this.makePluginActive(selectedPluginCode)}
+Plugin.prototype.cmdCreatePlugin=function(ev){var $target=$(ev.currentTarget)
+$target.one('shown.oc.popup',this.proxy(this.onPluginPopupShown))
+$target.popup({handler:'onPluginLoadPopup',zIndex:this.popupZIndex})}
+Plugin.prototype.cmdApplyPluginSettings=function(ev){var $form=$(ev.currentTarget),self=this
+$.oc.stripeLoadIndicator.show()
+$form.request('onPluginSave').always($.oc.builder.indexController.hideStripeIndicatorProxy).done(function(data){$form.trigger('close.oc.popup')
+self.applyPluginSettingsDone(data)})}
+Plugin.prototype.cmdEditPluginSettings=function(ev){var $target=$(ev.currentTarget)
+$target.one('shown.oc.popup',this.proxy(this.onPluginPopupShown))
+$target.popup({handler:'onPluginLoadPopup',zIndex:this.popupZIndex,extraData:{pluginCode:$target.data('pluginCode')}})}
+Plugin.prototype.onPluginPopupShown=function(ev,button,popup){$(popup).find('input[name=name]').focus()}
+Plugin.prototype.applyPluginSettingsDone=function(data){if(data.responseData!==undefined&&data.responseData.isNewPlugin!==undefined){this.makePluginActive(data.responseData.pluginCode,true)}}
+Plugin.prototype.makePluginActive=function(pluginCode,updatePluginList){var $form=$('#builder-plugin-selector-panel form').first()
+$.oc.stripeLoadIndicator.show()
+$form.request('onPluginSetActive',{data:{pluginCode:pluginCode,updatePluginList:(updatePluginList?1:0)}}).always($.oc.builder.indexController.hideStripeIndicatorProxy).done(this.proxy(this.makePluginActiveDone))}
+Plugin.prototype.makePluginActiveDone=function(data){var pluginCode=data.responseData.pluginCode
+$('#builder-plugin-selector-panel [data-control=filelist]').fileList('markActive',pluginCode)}
+$.oc.builder.entityControllers.plugin=Plugin;}(window.jQuery);+function($){"use strict";if($.oc.builder===undefined)
+$.oc.builder={}
+if($.oc.builder.entityControllers===undefined)
+$.oc.builder.entityControllers={}
+var Base=$.oc.builder.entityControllers.base,BaseProto=Base.prototype
+var DatabaseTable=function(indexController){Base.call(this,'databaseTable',indexController)}
+DatabaseTable.prototype=Object.create(BaseProto)
+DatabaseTable.prototype.constructor=DatabaseTable
+DatabaseTable.prototype.cmdCreateTable=function(ev){var result=this.indexController.openOrLoadMasterTab($(ev.target),'onDatabaseTableCreateOrOpen',this.newTabId())
+if(result!==false){result.done(this.proxy(this.onTableLoaded,this))}}
+DatabaseTable.prototype.cmdOpenTable=function(ev){var table=$(ev.currentTarget).data('id'),result=this.indexController.openOrLoadMasterTab($(ev.target),'onDatabaseTableCreateOrOpen',this.makeTabId(table),{table_name:table})
+if(result!==false){result.done(this.proxy(this.onTableLoaded,this))}}
+DatabaseTable.prototype.cmdSaveTable=function(ev){var $target=$(ev.currentTarget)
+if(!this.validateTable($target)){return}
+var data={'columns':this.getTableData($target)}
+$target.popup({extraData:data,handler:'onDatabaseTableValidateAndShowPopup'})}
+DatabaseTable.prototype.cmdSaveMigration=function(ev){var $target=$(ev.currentTarget)
+$.oc.stripeLoadIndicator.show()
+$target.request('onDatabaseTableMigrationApply').always($.oc.builder.indexController.hideStripeIndicatorProxy).done(this.proxy(this.saveMigrationDone))}
+DatabaseTable.prototype.cmdDeleteTable=function(ev){var $target=$(ev.currentTarget)
+$.oc.confirm($target.data('confirm'),this.proxy(this.deleteConfirmed))}
+DatabaseTable.prototype.cmdUnModifyForm=function(){var $masterTabPane=this.getMasterTabsActivePane()
+this.unmodifyTab($masterTabPane)}
+DatabaseTable.prototype.cmdAddTimestamps=function(ev){var $target=$(ev.currentTarget),added=this.addTimeStampColumns($target,['created_at','updated_at'])
+if(!added){alert($target.closest('form').attr('data-lang-timestamps-exist'))}}
+DatabaseTable.prototype.cmdAddSoftDelete=function(ev){var $target=$(ev.currentTarget),added=this.addTimeStampColumns($target,['deleted_at'])
+if(!added){alert($target.closest('form').attr('data-lang-soft-deleting-exist'))}}
+DatabaseTable.prototype.onTableCellChanged=function(ev,column,value,rowIndex){var $target=$(ev.target)
+if($target.data('alias')!='columns'){return}
+if($target.closest('form').data('entity')!='database'){return}
+var updatedRow={}
+if(column=='auto_increment'&&value){updatedRow.unsigned=1
+updatedRow.primary_key=1}
+if(column=='unsigned'&&!value){updatedRow.auto_increment=0}
+if(column=='primary_key'&&value){updatedRow.allow_null=0}
+if(column=='allow_null'&&value){updatedRow.primary_key=0}
+if(column=='primary_key'&&!value){updatedRow.auto_increment=0}
+$target.table('setRowValues',rowIndex,updatedRow)}
+DatabaseTable.prototype.onTableLoaded=function(){$(document).trigger('render')
+var $masterTabPane=this.getMasterTabsActivePane(),$form=$masterTabPane.find('form'),$toolbar=$masterTabPane.find('div[data-control=table] div.toolbar'),$button=$('<a class="btn oc-icon-clock-o builder-custom-table-button" data-builder-command="databaseTable:cmdAddTimestamps"></a>')
+$button.text($form.attr('data-lang-add-timestamps'));$toolbar.append($button)
+$button=$('<a class="btn oc-icon-refresh builder-custom-table-button" data-builder-command="databaseTable:cmdAddSoftDelete"></a>')
+$button.text($form.attr('data-lang-add-soft-delete'));$toolbar.append($button)}
+DatabaseTable.prototype.registerHandlers=function(){this.indexController.$masterTabs.on('oc.tableCellChanged',this.proxy(this.onTableCellChanged))}
+DatabaseTable.prototype.validateTable=function($target){var tableObj=this.getTableControlObject($target)
+tableObj.unfocusTable()
+return tableObj.validate()}
+DatabaseTable.prototype.getTableData=function($target){var tableObj=this.getTableControlObject($target)
+return tableObj.dataSource.getAllData()}
+DatabaseTable.prototype.getTableControlObject=function($target){var $form=$target.closest('form'),$table=$form.find('[data-control=table]'),tableObj=$table.data('oc.table')
+if(!tableObj){throw new Error('Table object is not found on the database table tab')}
+return tableObj}
+DatabaseTable.prototype.saveMigrationDone=function(data){if(data['builderResponseData']===undefined){throw new Error('Invalid response data')}
+$('#builderTableMigrationPopup').trigger('close.oc.popup')
+var $masterTabPane=this.getMasterTabsActivePane(),tabsObject=this.getMasterTabsObject()
+if(data.builderResponseData.operation!='delete'){$masterTabPane.find('input[name=table_name]').val(data.builderResponseData.builderObjectName)
+this.updateMasterTabIdAndTitle($masterTabPane,data.builderResponseData)
+this.unhideFormDeleteButton($masterTabPane)
+this.getTableList().fileList('markActive',data.builderResponseData.tabId)
+this.getIndexController().unchangeTab($masterTabPane)}
+else{this.forceCloseTab($masterTabPane)}
+$.oc.builder.dataRegistry.clearCache(data.builderResponseData.pluginCode,'model-columns')}
+DatabaseTable.prototype.getTableList=function(){return $('#layout-side-panel form[data-content-id=database] [data-control=filelist]')}
+DatabaseTable.prototype.deleteConfirmed=function(){var $masterTabPane=this.getMasterTabsActivePane()
+$masterTabPane.find('form').popup({handler:'onDatabaseTableShowDeletePopup'})}
+DatabaseTable.prototype.getColumnNames=function($target){var tableObj=this.getTableControlObject($target)
+tableObj.unfocusTable()
+var data=this.getTableData($target),result=[]
+for(var index in data){if(data[index].name!==undefined){result.push($.trim(data[index].name))}}
+return result}
+DatabaseTable.prototype.addTimeStampColumns=function($target,columns)
+{var existingColumns=this.getColumnNames($target),added=false
+for(var index in columns){var column=columns[index]
+if($.inArray(column,existingColumns)==-1){this.addTimeStampColumn($target,column)
+added=true}}
+if(added){$target.trigger('change')}
+return added}
+DatabaseTable.prototype.addTimeStampColumn=function($target,column){var tableObj=this.getTableControlObject($target),currentData=this.getTableData($target),rowData={name:column,type:'timestamp','default':null,allow_null:true}
+tableObj.addRecord('bottom',true)
+tableObj.setRowValues(currentData.length-1,rowData)
+tableObj.addRecord('bottom',false)
+tableObj.deleteRecord()}
+$.oc.builder.entityControllers.databaseTable=DatabaseTable;}(window.jQuery);+function($){"use strict";if($.oc.builder===undefined)
+$.oc.builder={}
+if($.oc.builder.entityControllers===undefined)
+$.oc.builder.entityControllers={}
+var Base=$.oc.builder.entityControllers.base,BaseProto=Base.prototype
+var Model=function(indexController){Base.call(this,'model',indexController)}
+Model.prototype=Object.create(BaseProto)
+Model.prototype.constructor=Model
+Model.prototype.cmdCreateModel=function(ev){var $target=$(ev.currentTarget)
+$target.one('shown.oc.popup',this.proxy(this.onModelPopupShown))
+$target.popup({handler:'onModelLoadPopup'})}
+Model.prototype.cmdApplyModelSettings=function(ev){var $form=$(ev.currentTarget),self=this
+$.oc.stripeLoadIndicator.show()
+$form.request('onModelSave').always($.oc.builder.indexController.hideStripeIndicatorProxy).done(function(data){$form.trigger('close.oc.popup')
+self.applyModelSettingsDone(data)})}
+Model.prototype.onModelPopupShown=function(ev,button,popup){$(popup).find('input[name=className]').focus()}
+Model.prototype.applyModelSettingsDone=function(data){if(data.builderResponseData.registryData!==undefined){var registryData=data.builderResponseData.registryData
+$.oc.builder.dataRegistry.set(registryData.pluginCode,'model-classes',null,registryData.models)}}
+$.oc.builder.entityControllers.model=Model;}(window.jQuery);+function($){"use strict";if($.oc.builder===undefined)
+$.oc.builder={}
+if($.oc.builder.entityControllers===undefined)
+$.oc.builder.entityControllers={}
+var Base=$.oc.builder.entityControllers.base,BaseProto=Base.prototype
+var ModelForm=function(indexController){Base.call(this,'modelForm',indexController)}
+ModelForm.prototype=Object.create(BaseProto)
+ModelForm.prototype.constructor=ModelForm
+ModelForm.prototype.cmdCreateForm=function(ev){var $link=$(ev.currentTarget),data={model_class:$link.data('modelClass')}
+this.indexController.openOrLoadMasterTab($link,'onModelFormCreateOrOpen',this.newTabId(),data)}
+ModelForm.prototype.cmdSaveForm=function(ev){var $target=$(ev.currentTarget),$form=$target.closest('form'),$rootContainer=$('[data-root-control-wrapper] > [data-control-container]',$form),$inspectorContainer=$form.find('.inspector-container'),controls=$.oc.builder.formbuilder.domToPropertyJson.convert($rootContainer.get(0))
+if(!$.oc.inspector.manager.applyValuesFromContainer($inspectorContainer)){return}
+if(controls===false){$.oc.flashMsg({'text':$.oc.builder.formbuilder.domToPropertyJson.getLastError(),'class':'error','interval':5})
+return}
+var data={controls:controls}
+$target.request('onModelFormSave',{data:data}).done(this.proxy(this.saveFormDone))}
+ModelForm.prototype.cmdOpenForm=function(ev){var form=$(ev.currentTarget).data('form'),model=$(ev.currentTarget).data('modelClass')
+this.indexController.openOrLoadMasterTab($(ev.target),'onModelFormCreateOrOpen',this.makeTabId(model+'-'+form),{file_name:form,model_class:model})}
+ModelForm.prototype.cmdDeleteForm=function(ev){var $target=$(ev.currentTarget)
+$.oc.confirm($target.data('confirm'),this.proxy(this.deleteConfirmed))}
+ModelForm.prototype.cmdAddControl=function(ev){$.oc.builder.formbuilder.controlPalette.addControl(ev)}
+ModelForm.prototype.cmdUndockControlPalette=function(ev){$.oc.builder.formbuilder.controlPalette.undockFromContainer(ev)}
+ModelForm.prototype.cmdDockControlPalette=function(ev){$.oc.builder.formbuilder.controlPalette.dockToContainer(ev)}
+ModelForm.prototype.cmdCloseControlPalette=function(ev){$.oc.builder.formbuilder.controlPalette.closeInContainer(ev)}
+ModelForm.prototype.saveFormDone=function(data){if(data['builderResponseData']===undefined){throw new Error('Invalid response data')}
+var $masterTabPane=this.getMasterTabsActivePane()
+$masterTabPane.find('input[name=file_name]').val(data.builderResponseData.builderObjectName)
+this.updateMasterTabIdAndTitle($masterTabPane,data.builderResponseData)
+this.unhideFormDeleteButton($masterTabPane)
+this.getModelList().fileList('markActive',data.builderResponseData.tabId)
+this.getIndexController().unchangeTab($masterTabPane)
+this.updateDataRegistry(data)}
+ModelForm.prototype.updateDataRegistry=function(data){if(data.builderResponseData.registryData!==undefined){var registryData=data.builderResponseData.registryData
+$.oc.builder.dataRegistry.set(registryData.pluginCode,'model-forms',registryData.modelClass,registryData.forms)}}
+ModelForm.prototype.deleteConfirmed=function(){var $masterTabPane=this.getMasterTabsActivePane(),$form=$masterTabPane.find('form')
+$.oc.stripeLoadIndicator.show()
+$form.request('onModelFormDelete').always($.oc.builder.indexController.hideStripeIndicatorProxy).done(this.proxy(this.deleteDone))}
+ModelForm.prototype.deleteDone=function(data){var $masterTabPane=this.getMasterTabsActivePane()
+this.getIndexController().unchangeTab($masterTabPane)
+this.forceCloseTab($masterTabPane)
+this.updateDataRegistry(data)}
+ModelForm.prototype.getModelList=function(){return $('#layout-side-panel form[data-content-id=models] [data-control=filelist]')}
+$.oc.builder.entityControllers.modelForm=ModelForm;}(window.jQuery);+function($){"use strict";if($.oc.builder===undefined)
+$.oc.builder={}
+if($.oc.builder.entityControllers===undefined)
+$.oc.builder.entityControllers={}
+var Base=$.oc.builder.entityControllers.base,BaseProto=Base.prototype
+var ModelList=function(indexController){this.cachedModelFieldsPromises={}
+Base.call(this,'modelList',indexController)}
+ModelList.prototype=Object.create(BaseProto)
+ModelList.prototype.constructor=ModelList
+ModelList.prototype.registerHandlers=function(){$(document).on('autocompleteitems.oc.table','form[data-sub-entity="model-list"] [data-control=table]',this.proxy(this.onAutocompleteItems))}
+ModelList.prototype.cmdCreateList=function(ev){var $link=$(ev.currentTarget),data={model_class:$link.data('modelClass')}
+var result=this.indexController.openOrLoadMasterTab($link,'onModelListCreateOrOpen',this.newTabId(),data)
+if(result!==false){result.done(this.proxy(this.onListLoaded,this))}}
+ModelList.prototype.cmdSaveList=function(ev){var $target=$(ev.currentTarget),$form=$target.closest('form')
+if(!this.validateTable($target)){return}
+$target.request('onModelListSave',{data:{columns:this.getTableData($target)}}).done(this.proxy(this.saveListDone))}
+ModelList.prototype.cmdOpenList=function(ev){var list=$(ev.currentTarget).data('list'),model=$(ev.currentTarget).data('modelClass')
+var result=this.indexController.openOrLoadMasterTab($(ev.target),'onModelListCreateOrOpen',this.makeTabId(model+'-'+list),{file_name:list,model_class:model})
+if(result!==false){result.done(this.proxy(this.onListLoaded,this))}}
+ModelList.prototype.cmdDeleteList=function(ev){var $target=$(ev.currentTarget)
+$.oc.confirm($target.data('confirm'),this.proxy(this.deleteConfirmed))}
+ModelList.prototype.cmdAddDatabaseColumns=function(ev){var $target=$(ev.currentTarget)
+$.oc.stripeLoadIndicator.show()
+$target.request('onModelListLoadDatabaseColumns').done(this.proxy(this.databaseColumnsLoaded)).always($.oc.builder.indexController.hideStripeIndicatorProxy)}
+ModelList.prototype.saveListDone=function(data){if(data['builderResponseData']===undefined){throw new Error('Invalid response data')}
+var $masterTabPane=this.getMasterTabsActivePane()
+$masterTabPane.find('input[name=file_name]').val(data.builderResponseData.builderObjectName)
+this.updateMasterTabIdAndTitle($masterTabPane,data.builderResponseData)
+this.unhideFormDeleteButton($masterTabPane)
+this.getModelList().fileList('markActive',data.builderResponseData.tabId)
+this.getIndexController().unchangeTab($masterTabPane)
+this.updateDataRegistry(data)}
+ModelList.prototype.deleteConfirmed=function(){var $masterTabPane=this.getMasterTabsActivePane(),$form=$masterTabPane.find('form')
+$.oc.stripeLoadIndicator.show()
+$form.request('onModelListDelete').always($.oc.builder.indexController.hideStripeIndicatorProxy).done(this.proxy(this.deleteDone))}
+ModelList.prototype.deleteDone=function(data){var $masterTabPane=this.getMasterTabsActivePane()
+this.getIndexController().unchangeTab($masterTabPane)
+this.forceCloseTab($masterTabPane)
+this.updateDataRegistry(data)}
+ModelList.prototype.getTableControlObject=function($target){var $form=$target.closest('form'),$table=$form.find('[data-control=table]'),tableObj=$table.data('oc.table')
+if(!tableObj){throw new Error('Table object is not found on the model list tab')}
+return tableObj}
+ModelList.prototype.getModelList=function(){return $('#layout-side-panel form[data-content-id=models] [data-control=filelist]')}
+ModelList.prototype.validateTable=function($target){var tableObj=this.getTableControlObject($target)
+tableObj.unfocusTable()
+return tableObj.validate()}
+ModelList.prototype.getTableData=function($target){var tableObj=this.getTableControlObject($target)
+return tableObj.dataSource.getAllData()}
+ModelList.prototype.loadModelFields=function(table,callback){var $form=$(table).closest('form'),modelClass=$form.find('input[name=model_class]').val(),cachedFields=$form.data('oc.model-field-cache')
+if(cachedFields!==undefined){callback(cachedFields)
+return}
+if(this.cachedModelFieldsPromises[modelClass]===undefined){this.cachedModelFieldsPromises[modelClass]=$form.request('onModelFormGetModelFields',{data:{'as_plain_list':1}})}
+if(callback===undefined){return}
+this.cachedModelFieldsPromises[modelClass].done(function(data){$form.data('oc.model-field-cache',data.responseData.options)
+callback(data.responseData.options)})}
+ModelList.prototype.updateDataRegistry=function(data){if(data.builderResponseData.registryData!==undefined){var registryData=data.builderResponseData.registryData
+$.oc.builder.dataRegistry.set(registryData.pluginCode,'model-lists',registryData.modelClass,registryData.lists)
+$.oc.builder.dataRegistry.clearCache(registryData.pluginCode,'plugin-lists')}}
+ModelList.prototype.databaseColumnsLoaded=function(data){if(!$.isArray(data.responseData.columns)){alert('Invalid server response')}
+var $masterTabPane=this.getMasterTabsActivePane(),$form=$masterTabPane.find('form'),existingColumns=this.getColumnNames($form),columnsAdded=false
+for(var i in data.responseData.columns){var column=data.responseData.columns[i],type=this.mapType(column.type)
+if($.inArray(column.name,existingColumns)!==-1){continue}
+this.addColumn($form,column.name,type)
+columnsAdded=true}
+if(!columnsAdded){alert($form.attr('data-lang-all-database-columns-exist'))}
+else{$form.trigger('change')}}
+ModelList.prototype.mapType=function(type){switch(type){case'integer':return'number'
+case'timestamp':return'datetime'
+default:return'text'}}
+ModelList.prototype.addColumn=function($target,column,type){var tableObj=this.getTableControlObject($target),currentData=this.getTableData($target),rowData={field:column,label:column,type:type}
+tableObj.addRecord('bottom',true)
+tableObj.setRowValues(currentData.length-1,rowData)
+tableObj.addRecord('bottom',false)
+tableObj.deleteRecord()}
+ModelList.prototype.getColumnNames=function($target){var tableObj=this.getTableControlObject($target)
+tableObj.unfocusTable()
+var data=this.getTableData($target),result=[]
+for(var index in data){if(data[index].field!==undefined){result.push($.trim(data[index].field))}}
+return result}
+ModelList.prototype.onAutocompleteItems=function(ev,data){if(data.columnConfiguration.fillFrom==='model-fields'){ev.preventDefault()
+this.loadModelFields(ev.target,data.callback)
+return false}}
+ModelList.prototype.onListLoaded=function(){$(document).trigger('render')
+var $masterTabPane=this.getMasterTabsActivePane(),$form=$masterTabPane.find('form'),$toolbar=$masterTabPane.find('div[data-control=table] div.toolbar'),$button=$('<a class="btn oc-icon-magic builder-custom-table-button" data-builder-command="modelList:cmdAddDatabaseColumns"></a>')
+$button.text($form.attr('data-lang-add-database-columns'));$toolbar.append($button)}
+$.oc.builder.entityControllers.modelList=ModelList;}(window.jQuery);+function($){"use strict";if($.oc.builder===undefined)
+$.oc.builder={}
+if($.oc.builder.entityControllers===undefined)
+$.oc.builder.entityControllers={}
+var Base=$.oc.builder.entityControllers.base,BaseProto=Base.prototype
+var Permission=function(indexController){Base.call(this,'permissions',indexController)}
+Permission.prototype=Object.create(BaseProto)
+Permission.prototype.constructor=Permission
+Permission.prototype.registerHandlers=function(){this.indexController.$masterTabs.on('oc.tableNewRow',this.proxy(this.onTableRowCreated))}
+Permission.prototype.cmdOpenPermissions=function(ev){var currentPlugin=this.getSelectedPlugin()
+if(!currentPlugin){alert('Please select a plugin first')
+return}
+this.indexController.openOrLoadMasterTab($(ev.target),'onPermissionsOpen',this.makeTabId(currentPlugin))}
+Permission.prototype.cmdSavePermissions=function(ev){var $target=$(ev.currentTarget),$form=$target.closest('form')
+if(!this.validateTable($target)){return}
+$target.request('onPermissionsSave',{data:{permissions:this.getTableData($target)}}).done(this.proxy(this.savePermissionsDone))}
+Permission.prototype.getTableControlObject=function($target){var $form=$target.closest('form'),$table=$form.find('[data-control=table]'),tableObj=$table.data('oc.table')
+if(!tableObj){throw new Error('Table object is not found on permissions tab')}
+return tableObj}
+Permission.prototype.validateTable=function($target){var tableObj=this.getTableControlObject($target)
+tableObj.unfocusTable()
+return tableObj.validate()}
+Permission.prototype.getTableData=function($target){var tableObj=this.getTableControlObject($target)
+return tableObj.dataSource.getAllData()}
+Permission.prototype.savePermissionsDone=function(data){if(data['builderResponseData']===undefined){throw new Error('Invalid response data')}
+var $masterTabPane=this.getMasterTabsActivePane()
+this.getIndexController().unchangeTab($masterTabPane)
+$.oc.builder.dataRegistry.clearCache(data.builderResponseData.pluginCode,'permissions')}
+Permission.prototype.onTableRowCreated=function(ev,recordData){var $target=$(ev.target)
+if($target.data('alias')!='permissions'){return}
+var $form=$target.closest('form')
+if($form.data('entity')!='permissions'){return}
+var pluginCode=$form.find('input[name=plugin_code]').val()
+recordData.permission=pluginCode.toLowerCase()+'.';}
+$.oc.builder.entityControllers.permission=Permission;}(window.jQuery);+function($){"use strict";if($.oc.builder===undefined)
+$.oc.builder={}
+if($.oc.builder.entityControllers===undefined)
+$.oc.builder.entityControllers={}
+var Base=$.oc.builder.entityControllers.base,BaseProto=Base.prototype
+var Menus=function(indexController){Base.call(this,'menus',indexController)}
+Menus.prototype=Object.create(BaseProto)
+Menus.prototype.constructor=Menus
+Menus.prototype.cmdOpenMenus=function(ev){var currentPlugin=this.getSelectedPlugin()
+if(!currentPlugin){alert('Please select a plugin first')
+return}
+this.indexController.openOrLoadMasterTab($(ev.target),'onMenusOpen',this.makeTabId(currentPlugin))}
+Menus.prototype.cmdSaveMenus=function(ev){var $target=$(ev.currentTarget),$form=$target.closest('form'),$inspectorContainer=$form.find('.inspector-container')
+if(!$.oc.inspector.manager.applyValuesFromContainer($inspectorContainer)){return}
+var menus=$.oc.builder.menubuilder.controller.getJson($form.get(0))
+$target.request('onMenusSave',{data:{menus:menus}}).done(this.proxy(this.saveMenusDone))}
+Menus.prototype.cmdAddMainMenuItem=function(ev){$.oc.builder.menubuilder.controller.addMainMenuItem(ev)}
+Menus.prototype.cmdAddSideMenuItem=function(ev){$.oc.builder.menubuilder.controller.addSideMenuItem(ev)}
+Menus.prototype.cmdDeleteMenuItem=function(ev){$.oc.builder.menubuilder.controller.deleteMenuItem(ev)}
+Menus.prototype.saveMenusDone=function(data){if(data['builderResponseData']===undefined){throw new Error('Invalid response data')}
+var $masterTabPane=this.getMasterTabsActivePane()
+this.getIndexController().unchangeTab($masterTabPane)}
+$.oc.builder.entityControllers.menus=Menus;}(window.jQuery);+function($){"use strict";if($.oc.builder===undefined)
+$.oc.builder={}
+if($.oc.builder.entityControllers===undefined)
+$.oc.builder.entityControllers={}
+var Base=$.oc.builder.entityControllers.base,BaseProto=Base.prototype
+var Version=function(indexController){Base.call(this,'version',indexController)
+this.hiddenHints={}}
+Version.prototype=Object.create(BaseProto)
+Version.prototype.constructor=Version
+Version.prototype.cmdCreateVersion=function(ev){var $link=$(ev.currentTarget),versionType=$link.data('versionType')
+this.indexController.openOrLoadMasterTab($link,'onVersionCreateOrOpen',this.newTabId(),{version_type:versionType})}
+Version.prototype.cmdSaveVersion=function(ev){var $target=$(ev.currentTarget),$form=$target.closest('form')
+$target.request('onVersionSave').done(this.proxy(this.saveVersionDone))}
+Version.prototype.cmdOpenVersion=function(ev){var versionNumber=$(ev.currentTarget).data('id'),pluginCode=$(ev.currentTarget).data('pluginCode')
+this.indexController.openOrLoadMasterTab($(ev.target),'onVersionCreateOrOpen',this.makeTabId(pluginCode+'-'+versionNumber),{original_version:versionNumber})}
+Version.prototype.cmdDeleteVersion=function(ev){var $target=$(ev.currentTarget)
+$.oc.confirm($target.data('confirm'),this.proxy(this.deleteConfirmed))}
+Version.prototype.cmdApplyVersion=function(ev){var $target=$(ev.currentTarget),$pane=$target.closest('div.tab-pane'),self=this
+this.showHintPopup($pane,'builder-version-apply',function(){$target.request('onVersionApply').done(self.proxy(self.applyVersionDone))})}
+Version.prototype.cmdRollbackVersion=function(ev){var $target=$(ev.currentTarget),$pane=$target.closest('div.tab-pane'),self=this
+this.showHintPopup($pane,'builder-version-rollback',function(){$target.request('onVersionRollback').done(self.proxy(self.rollbackVersionDone))})}
+Version.prototype.saveVersionDone=function(data){if(data['builderResponseData']===undefined){throw new Error('Invalid response data')}
+var $masterTabPane=this.getMasterTabsActivePane()
+this.updateUiAfterSave($masterTabPane,data)
+if(!data.builderResponseData.isApplied){this.showSavedNotAppliedHint($masterTabPane)}}
+Version.prototype.showSavedNotAppliedHint=function($masterTabPane){this.showHintPopup($masterTabPane,'builder-version-save-unapplied')}
+Version.prototype.showHintPopup=function($masterTabPane,code,callback){if(this.getDontShowHintAgain(code,$masterTabPane)){if(callback){callback.apply(this)}
+return}
+$masterTabPane.one('hide.oc.popup',this.proxy(this.onHintPopupHide))
+if(callback){$masterTabPane.one('shown.oc.popup',function(ev,$element,$modal){$modal.find('form').one('submit',function(ev){callback.apply(this)
+ev.preventDefault()
+$(ev.target).trigger('close.oc.popup')
+return false})})}
+$masterTabPane.popup({content:this.getPopupContent($masterTabPane,code)})}
+Version.prototype.onHintPopupHide=function(ev,$element,$modal){var cbValue=$modal.find('input[type=checkbox][name=dont_show_again]').is(':checked'),code=$modal.find('input[type=hidden][name=hint_code]').val()
+$modal.find('form').off('submit')
+if(!cbValue){return}
+var $form=this.getMasterTabsActivePane().find('form[data-entity="versions"]')
+$form.request('onHideBackendHint',{data:{name:code}})
+this.setDontShowHintAgain(code)}
+Version.prototype.setDontShowHintAgain=function(code){this.hiddenHints[code]=true}
+Version.prototype.getDontShowHintAgain=function(code,$pane){if(this.hiddenHints[code]!==undefined){return this.hiddenHints[code]}
+return $pane.find('input[type=hidden][data-hint-hidden="'+code+'"]').val()=="true"}
+Version.prototype.getPopupContent=function($pane,code){var template=$pane.find('script[data-version-hint-template="'+code+'"]')
+if(template.length===0){throw new Error('Version popup template not found: '+code)}
+return template.html()}
+Version.prototype.updateUiAfterSave=function($masterTabPane,data){$masterTabPane.find('input[name=original_version]').val(data.builderResponseData.savedVersion)
+this.updateMasterTabIdAndTitle($masterTabPane,data.builderResponseData)
+this.unhideFormDeleteButton($masterTabPane)
+this.getVersionList().fileList('markActive',data.builderResponseData.tabId)
+this.getIndexController().unchangeTab($masterTabPane)}
+Version.prototype.deleteConfirmed=function(){var $masterTabPane=this.getMasterTabsActivePane(),$form=$masterTabPane.find('form')
+$.oc.stripeLoadIndicator.show()
+$form.request('onVersionDelete').always($.oc.builder.indexController.hideStripeIndicatorProxy).done(this.proxy(this.deleteDone))}
+Version.prototype.deleteDone=function(){var $masterTabPane=this.getMasterTabsActivePane()
+this.getIndexController().unchangeTab($masterTabPane)
+this.forceCloseTab($masterTabPane)}
+Version.prototype.applyVersionDone=function(data){if(data['builderResponseData']===undefined){throw new Error('Invalid response data')}
+var $masterTabPane=this.getMasterTabsActivePane()
+this.updateUiAfterSave($masterTabPane,data)
+this.updateVersionsButtons()}
+Version.prototype.rollbackVersionDone=function(data){if(data['builderResponseData']===undefined){throw new Error('Invalid response data')}
+var $masterTabPane=this.getMasterTabsActivePane()
+this.updateUiAfterSave($masterTabPane,data)
+this.updateVersionsButtons()}
+Version.prototype.getVersionList=function(){return $('#layout-side-panel form[data-content-id=version] [data-control=filelist]')}
+Version.prototype.updateVersionsButtons=function(){var tabsObject=this.getMasterTabsObject(),$tabs=tabsObject.$tabsContainer.find('> li'),$versionList=this.getVersionList()
+for(var i=$tabs.length-1;i>=0;i--){var $tab=$($tabs[i]),tabId=$tab.data('tabId')
+if(!tabId||String(tabId).length==0){continue}
+var $versionLi=$versionList.find('li[data-id="'+tabId+'"]')
+if(!$versionLi.length){continue}
+var isApplied=$versionLi.data('applied'),$pane=tabsObject.findPaneFromTab($tab)
+if(isApplied){$pane.find('[data-builder-command="version:cmdApplyVersion"]').addClass('hide')
+$pane.find('[data-builder-command="version:cmdRollbackVersion"]').removeClass('hide')}
+else{$pane.find('[data-builder-command="version:cmdApplyVersion"]').removeClass('hide')
+$pane.find('[data-builder-command="version:cmdRollbackVersion"]').addClass('hide')}}}
+$.oc.builder.entityControllers.version=Version;}(window.jQuery);+function($){"use strict";if($.oc.builder===undefined)
+$.oc.builder={}
+if($.oc.builder.entityControllers===undefined)
+$.oc.builder.entityControllers={}
+var Base=$.oc.builder.entityControllers.base,BaseProto=Base.prototype
+var Localization=function(indexController){Base.call(this,'localization',indexController)}
+Localization.prototype=Object.create(BaseProto)
+Localization.prototype.constructor=Localization
+Localization.prototype.cmdCreateLanguage=function(ev){this.indexController.openOrLoadMasterTab($(ev.target),'onLanguageCreateOrOpen',this.newTabId())}
+Localization.prototype.cmdOpenLanguage=function(ev){var language=$(ev.currentTarget).data('id'),pluginCode=$(ev.currentTarget).data('pluginCode')
+this.indexController.openOrLoadMasterTab($(ev.target),'onLanguageCreateOrOpen',this.makeTabId(pluginCode+'-'+language),{original_language:language})}
+Localization.prototype.cmdSaveLanguage=function(ev){var $target=$(ev.currentTarget),$form=$target.closest('form')
+$target.request('onLanguageSave').done(this.proxy(this.saveLanguageDone))}
+Localization.prototype.cmdDeleteLanguage=function(ev){var $target=$(ev.currentTarget)
+$.oc.confirm($target.data('confirm'),this.proxy(this.deleteConfirmed))}
+Localization.prototype.cmdCopyMissingStrings=function(ev){var $form=$(ev.currentTarget),language=$form.find('select[name=language]').val(),$masterTabPane=this.getMasterTabsActivePane()
+$form.trigger('close.oc.popup')
+$.oc.stripeLoadIndicator.show()
+$masterTabPane.find('form').request('onLanguageCopyStringsFrom',{data:{copy_from:language}}).always($.oc.builder.indexController.hideStripeIndicatorProxy).done(this.proxy(this.copyStringsFromDone))}
+Localization.prototype.languageUpdated=function(plugin){var languageForm=this.findDefaultLanguageForm(plugin)
+if(!languageForm){return}
+var $languageForm=$(languageForm)
+if(!$languageForm.hasClass('oc-data-changed')){this.updateLanguageFromServer($languageForm)}
+else{this.mergeLanguageFromServer($languageForm)}}
+Localization.prototype.updateOnScreenStrings=function(plugin){var stringElements=document.body.querySelectorAll('span[data-localization-key][data-plugin="'+plugin+'"]')
+$.oc.builder.dataRegistry.get($('#builder-plugin-selector-panel form'),plugin,'localization',null,function(data){for(var i=stringElements.length-1;i>=0;i--){var stringElement=stringElements[i],stringKey=stringElement.getAttribute('data-localization-key')
+if(data[stringKey]!==undefined){stringElement.textContent=data[stringKey]}
+else{stringElement.textContent=stringKey}}})}
+Localization.prototype.saveLanguageDone=function(data){if(data['builderResponseData']===undefined){throw new Error('Invalid response data')}
+var $masterTabPane=this.getMasterTabsActivePane()
+$masterTabPane.find('input[name=original_language]').val(data.builderResponseData.language)
+this.updateMasterTabIdAndTitle($masterTabPane,data.builderResponseData)
+this.unhideFormDeleteButton($masterTabPane)
+this.getLanguageList().fileList('markActive',data.builderResponseData.tabId)
+this.getIndexController().unchangeTab($masterTabPane)
+if(data.builderResponseData.registryData!==undefined){var registryData=data.builderResponseData.registryData
+$.oc.builder.dataRegistry.set(registryData.pluginCode,'localization',null,registryData.strings,{suppressLanguageEditorUpdate:true})
+$.oc.builder.dataRegistry.set(registryData.pluginCode,'localization','sections',registryData.sections)}}
+Localization.prototype.getLanguageList=function(){return $('#layout-side-panel form[data-content-id=localization] [data-control=filelist]')}
+Localization.prototype.getCodeEditor=function($tab){return $tab.find('div[data-field-name=strings] div[data-control=codeeditor]').data('oc.codeEditor').editor}
+Localization.prototype.deleteConfirmed=function(){var $masterTabPane=this.getMasterTabsActivePane(),$form=$masterTabPane.find('form')
+$.oc.stripeLoadIndicator.show()
+$form.request('onLanguageDelete').always($.oc.builder.indexController.hideStripeIndicatorProxy).done(this.proxy(this.deleteDone))}
+Localization.prototype.deleteDone=function(){var $masterTabPane=this.getMasterTabsActivePane()
+this.getIndexController().unchangeTab($masterTabPane)
+this.forceCloseTab($masterTabPane)}
+Localization.prototype.copyStringsFromDone=function(data){if(data['builderResponseData']===undefined){throw new Error('Invalid response data')}
+var responseData=data.builderResponseData,$masterTabPane=this.getMasterTabsActivePane(),$form=$masterTabPane.find('form'),codeEditor=this.getCodeEditor($masterTabPane),newStringMessage=$form.data('newStringMessage'),mismatchMessage=$form.data('structureMismatch')
+codeEditor.getSession().setValue(responseData.strings)
+var annotations=[]
+for(var i=responseData.updatedLines.length-1;i>=0;i--){var line=responseData.updatedLines[i]
+annotations.push({row:line,column:0,text:newStringMessage,type:'warning'})}
+codeEditor.getSession().setAnnotations(annotations)
+if(responseData.mismatch){$.oc.alert(mismatchMessage)}}
+Localization.prototype.findDefaultLanguageForm=function(plugin){var forms=document.body.querySelectorAll('form[data-entity=localization]')
+for(var i=forms.length-1;i>=0;i--){var form=forms[i],pluginInput=form.querySelector('input[name=plugin_code]'),languageInput=form.querySelector('input[name=original_language]')
+if(!pluginInput||pluginInput.value!=plugin){continue}
+if(!languageInput){continue}
+if(form.getAttribute('data-default-language')==languageInput.value){return form}}
+return null}
+Localization.prototype.updateLanguageFromServer=function($languageForm){var self=this
+$languageForm.request('onLanguageGetStrings').done(function(data){self.updateLanguageFromServerDone($languageForm,data)})}
+Localization.prototype.updateLanguageFromServerDone=function($languageForm,data){if(data['builderResponseData']===undefined){throw new Error('Invalid response data')}
+var responseData=data.builderResponseData,$tabPane=$languageForm.closest('.tab-pane'),codeEditor=this.getCodeEditor($tabPane)
+if(!responseData.strings){return}
+codeEditor.getSession().setValue(responseData.strings)
+this.unmodifyTab($tabPane)}
+Localization.prototype.mergeLanguageFromServer=function($languageForm){var language=$languageForm.find('input[name=original_language]').val(),self=this
+$languageForm.request('onLanguageCopyStringsFrom',{data:{copy_from:language}}).done(function(data){self.mergeLanguageFromServerDone($languageForm,data)})}
+Localization.prototype.mergeLanguageFromServerDone=function($languageForm,data){if(data['builderResponseData']===undefined){throw new Error('Invalid response data')}
+var responseData=data.builderResponseData,$tabPane=$languageForm.closest('.tab-pane'),codeEditor=this.getCodeEditor($tabPane)
+codeEditor.getSession().setValue(responseData.strings)
+codeEditor.getSession().setAnnotations([])}
+$.oc.builder.entityControllers.localization=Localization;}(window.jQuery);+function($){"use strict";if($.oc.builder===undefined)
+$.oc.builder={}
+if($.oc.builder.entityControllers===undefined)
+$.oc.builder.entityControllers={}
+var Base=$.oc.builder.entityControllers.base,BaseProto=Base.prototype
+var Controller=function(indexController){Base.call(this,'controller',indexController)}
+Controller.prototype=Object.create(BaseProto)
+Controller.prototype.constructor=Controller
+Controller.prototype.cmdCreateController=function(ev){var $form=$(ev.currentTarget),self=this,pluginCode=$form.data('pluginCode'),behaviorsSelected=$form.find('input[name="behaviors[]"]:checked').length,promise=null
+if(behaviorsSelected){promise=this.indexController.openOrLoadMasterTab($form,'onControllerCreate',this.makeTabId(pluginCode+'-new-controller'),{})}
+else{promise=$form.request('onControllerCreate')}
+promise.done(function(data){$form.trigger('close.oc.popup')
+self.updateDataRegistry(data)}).always($.oc.builder.indexController.hideStripeIndicatorProxy)}
+Controller.prototype.cmdOpenController=function(ev){var controller=$(ev.currentTarget).data('id'),pluginCode=$(ev.currentTarget).data('pluginCode')
+this.indexController.openOrLoadMasterTab($(ev.target),'onControllerOpen',this.makeTabId(pluginCode+'-'+controller),{controller:controller})}
+Controller.prototype.cmdSaveController=function(ev){var $target=$(ev.currentTarget),$form=$target.closest('form'),$inspectorContainer=$form.find('.inspector-container')
+if(!$.oc.inspector.manager.applyValuesFromContainer($inspectorContainer)){return}
+$target.request('onControllerSave').done(this.proxy(this.saveControllerDone))}
+Controller.prototype.saveControllerDone=function(data){if(data['builderResponseData']===undefined){throw new Error('Invalid response data')}
+var $masterTabPane=this.getMasterTabsActivePane()
+this.getIndexController().unchangeTab($masterTabPane)}
+Controller.prototype.updateDataRegistry=function(data){if(data.builderResponseData.registryData!==undefined){var registryData=data.builderResponseData.registryData
+$.oc.builder.dataRegistry.set(registryData.pluginCode,'controller-urls',null,registryData.urls)}}
+Controller.prototype.getControllerList=function(){return $('#layout-side-panel form[data-content-id=controller] [data-control=filelist]')}
+$.oc.builder.entityControllers.controller=Controller;}(window.jQuery);+function($){"use strict";if($.oc.builder===undefined)
+$.oc.builder={}
+var Base=$.oc.foundation.base,BaseProto=Base.prototype
+var Builder=function(){Base.call(this)
+this.$masterTabs=null
+this.masterTabsObj=null
+this.hideStripeIndicatorProxy=null
+this.entityControllers={}
+this.init()}
+Builder.prototype=Object.create(BaseProto)
+Builder.prototype.constructor=Builder
+Builder.prototype.dispose=function(){BaseProto.dispose.call(this)}
+Builder.prototype.openOrLoadMasterTab=function($form,serverHandlerName,tabId,data){if(this.masterTabsObj.goTo(tabId))
+return false
+var requestData=data===undefined?{}:data
+$.oc.stripeLoadIndicator.show()
+var promise=$form.request(serverHandlerName,{data:requestData}).done(this.proxy(this.addMasterTab)).always(this.hideStripeIndicatorProxy)
+return promise}
+Builder.prototype.getMasterTabActivePane=function(){return this.$masterTabs.find('> .tab-content > .tab-pane.active')}
+Builder.prototype.unchangeTab=function($pane){$pane.find('form').trigger('unchange.oc.changeMonitor')}
+Builder.prototype.triggerCommand=function(command,ev){var commandParts=command.split(':')
+if(commandParts.length===2){var entity=commandParts[0],commandToExecute=commandParts[1]
+if(this.entityControllers[entity]===undefined){throw new Error('Unknown entity type: '+entity)}
+this.entityControllers[entity].invokeCommand(commandToExecute,ev)}}
+Builder.prototype.init=function(){this.$masterTabs=$('#builder-master-tabs')
+this.$sidePanel=$('#builder-side-panel')
+this.masterTabsObj=this.$masterTabs.data('oc.tab')
+this.hideStripeIndicatorProxy=this.proxy(this.hideStripeIndicator)
+new $.oc.tabFormExpandControls(this.$masterTabs)
+this.createEntityControllers()
+this.registerHandlers()}
+Builder.prototype.createEntityControllers=function(){for(var controller in $.oc.builder.entityControllers){if(controller=="base"){continue}
+this.entityControllers[controller]=new $.oc.builder.entityControllers[controller](this)}}
+Builder.prototype.registerHandlers=function(){$(document).on('click','[data-builder-command]',this.proxy(this.onCommand))
+$(document).on('submit','[data-builder-command]',this.proxy(this.onCommand))
+this.$masterTabs.on('changed.oc.changeMonitor',this.proxy(this.onFormChanged))
+this.$masterTabs.on('unchanged.oc.changeMonitor',this.proxy(this.onFormUnchanged))
+this.$masterTabs.on('shown.bs.tab',this.proxy(this.onTabShown))
+this.$masterTabs.on('afterAllClosed.oc.tab',this.proxy(this.onAllTabsClosed))
+this.$masterTabs.on('closed.oc.tab',this.proxy(this.onTabClosed))
+this.$masterTabs.on('autocompleteitems.oc.inspector',this.proxy(this.onDataRegistryItems))
+this.$masterTabs.on('dropdownoptions.oc.inspector',this.proxy(this.onDataRegistryItems))
+for(var controller in this.entityControllers){if(this.entityControllers[controller].registerHandlers!==undefined){this.entityControllers[controller].registerHandlers()}}}
+Builder.prototype.hideStripeIndicator=function(){$.oc.stripeLoadIndicator.hide()}
+Builder.prototype.addMasterTab=function(data){this.masterTabsObj.addTab(data.tabTitle,data.tab,data.tabId,'oc-'+data.tabIcon)
+if(data.isNewRecord){var $masterTabPane=this.getMasterTabActivePane()
+$masterTabPane.find('form').one('ready.oc.changeMonitor',this.proxy(this.onChangeMonitorReady))}}
+Builder.prototype.updateModifiedCounter=function(){var counters={database:{menu:'database',count:0},models:{menu:'models',count:0},permissions:{menu:'permissions',count:0},menus:{menu:'menus',count:0},versions:{menu:'versions',count:0},localization:{menu:'localization',count:0},controller:{menu:'controllers',count:0}}
+$('> div.tab-content > div.tab-pane[data-modified] > form',this.$masterTabs).each(function(){var entity=$(this).data('entity')
+counters[entity].count++})
+$.each(counters,function(type,data){$.oc.sideNav.setCounter('builder/'+data.menu,data.count);})}
+Builder.prototype.getFormPluginCode=function(formElement){var $form=$(formElement).closest('form'),$input=$form.find('input[name="plugin_code"]'),code=$input.val()
+if(!code){throw new Error('Plugin code input is not found in the form.')}
+return code}
+Builder.prototype.setPageTitle=function(title){$.oc.layout.setPageTitle(title.length?(title+' | '):title)}
+Builder.prototype.getFileLists=function(){return $('[data-control=filelist]',this.$sidePanel)}
+Builder.prototype.dataToInspectorArray=function(data){var result=[]
+for(var key in data){var item={title:data[key],value:key}
+result.push(item)}
+return result}
+Builder.prototype.onCommand=function(ev){if(ev.currentTarget.tagName=='FORM'&&ev.type=='click'){return}
+var command=$(ev.currentTarget).data('builderCommand')
+this.triggerCommand(command,ev)
+var $target=$(ev.currentTarget)
+if(ev.currentTarget.tagName==='A'&&$target.attr('role')=='menuitem'&&$target.attr('href')=='javascript:;'){return}
+ev.preventDefault()
+return false}
+Builder.prototype.onFormChanged=function(ev){$('.form-tabless-fields',ev.target).trigger('modified.oc.tab')
+this.updateModifiedCounter()}
+Builder.prototype.onFormUnchanged=function(ev){$('.form-tabless-fields',ev.target).trigger('unmodified.oc.tab')
+this.updateModifiedCounter()}
+Builder.prototype.onTabShown=function(ev){var $tabControl=$(ev.target).closest('[data-control=tab]')
+if($tabControl.attr('id')!=this.$masterTabs.attr('id')){return}
+var dataId=$(ev.target).closest('li').attr('data-tab-id'),title=$(ev.target).attr('title')
+if(title){this.setPageTitle(title)}
+this.getFileLists().fileList('markActive',dataId)
+$(window).trigger('resize')}
+Builder.prototype.onAllTabsClosed=function(ev){this.setPageTitle('')
+this.getFileLists().fileList('markActive',null)}
+Builder.prototype.onTabClosed=function(ev,tab,pane){$(pane).find('form').off('ready.oc.changeMonitor',this.proxy(this.onChangeMonitorReady))
+this.updateModifiedCounter()}
+Builder.prototype.onChangeMonitorReady=function(ev){$(ev.target).trigger('change')}
+Builder.prototype.onDataRegistryItems=function(ev,data){var self=this
+if(data.propertyDefinition.fillFrom=='model-classes'||data.propertyDefinition.fillFrom=='model-forms'||data.propertyDefinition.fillFrom=='model-lists'||data.propertyDefinition.fillFrom=='controller-urls'||data.propertyDefinition.fillFrom=='model-columns'||data.propertyDefinition.fillFrom=='plugin-lists'||data.propertyDefinition.fillFrom=='permissions'){ev.preventDefault()
+var subtype=null,subtypeProperty=data.propertyDefinition.subtypeFrom
+if(subtypeProperty!==undefined){subtype=data.values[subtypeProperty]}
+$.oc.builder.dataRegistry.get($(ev.target),this.getFormPluginCode(ev.target),data.propertyDefinition.fillFrom,subtype,function(response){data.callback({options:self.dataToInspectorArray(response)})})}}
+$(document).ready(function(){$.oc.builder.indexController=new Builder()})}(window.jQuery);+function($){"use strict";if($.oc.builder===undefined)
+$.oc.builder={}
+var Base=$.oc.foundation.base,BaseProto=Base.prototype
+var LocalizationInput=function(input,form,options){this.input=input
+this.form=form
+this.options=$.extend({},LocalizationInput.DEFAULTS,options)
+this.disposed=false
+this.initialized=false
+this.newStringPopupMarkup=null
+Base.call(this)
+this.init()}
+LocalizationInput.prototype=Object.create(BaseProto)
+LocalizationInput.prototype.constructor=LocalizationInput
+LocalizationInput.prototype.dispose=function(){this.unregisterHandlers()
+this.form=null
+this.options.beforePopupShowCallback=null
+this.options.afterPopupHideCallback=null
+this.options=null
+this.disposed=true
+this.newStringPopupMarkup=null
+if(this.initialized){$(this.input).autocomplete('destroy')}
+$(this.input).removeData('localization-input')
+this.input=null
+BaseProto.dispose.call(this)}
+LocalizationInput.prototype.init=function(){if(!this.options.plugin){throw new Error('The options.plugin value should be set in the localization input object.')}
+var $input=$(this.input)
+$input.data('localization-input',this)
+$input.attr('data-builder-localization-input','true')
+$input.attr('data-builder-localization-plugin',this.options.plugin)
+this.getContainer().addClass('localization-input-container')
+this.registerHandlers()
+this.loadDataAndBuild()}
+LocalizationInput.prototype.buildAddLink=function(){var $container=this.getContainer()
+if($container.find('a.localization-trigger').length>0){return}
+var trigger=document.createElement('a')
+trigger.setAttribute('class','oc-icon-plus localization-trigger')
+trigger.setAttribute('href','#')
+var pos=$container.position()
+$(trigger).css({top:pos.top+4,right:7})
+$container.append(trigger)}
+LocalizationInput.prototype.loadDataAndBuild=function(){this.showLoadingIndicator()
+var result=$.oc.builder.dataRegistry.get(this.form,this.options.plugin,'localization',null,this.proxy(this.dataLoaded)),self=this
+if(result){result.always(function(){self.hideLoadingIndicator()})}}
+LocalizationInput.prototype.reload=function(){$.oc.builder.dataRegistry.get(this.form,this.options.plugin,'localization',null,this.proxy(this.dataLoaded))}
+LocalizationInput.prototype.dataLoaded=function(data){if(this.disposed){return}
+var $input=$(this.input),autocomplete=$input.data('autocomplete')
+if(!autocomplete){this.hideLoadingIndicator()
+var autocompleteOptions={source:this.preprocessData(data),matchWidth:true}
+autocompleteOptions=$.extend(autocompleteOptions,this.options.autocompleteOptions)
+$(this.input).autocomplete(autocompleteOptions)
+this.initialized=true}
+else{autocomplete.source=this.preprocessData(data)}}
+LocalizationInput.prototype.preprocessData=function(data){var dataClone=$.extend({},data)
+for(var key in dataClone){dataClone[key]=key+' - '+dataClone[key]}
+return dataClone}
+LocalizationInput.prototype.getContainer=function(){return $(this.input).closest('.autocomplete-container')}
+LocalizationInput.prototype.showLoadingIndicator=function(){var $container=this.getContainer()
+$container.addClass('loading-indicator-container size-small')
+$container.loadIndicator()}
+LocalizationInput.prototype.hideLoadingIndicator=function(){var $container=this.getContainer()
+$container.loadIndicator('hide')
+$container.loadIndicator('destroy')
+$container.removeClass('loading-indicator-container')}
+LocalizationInput.prototype.loadAndShowPopup=function(){if(this.newStringPopupMarkup===null){$.oc.stripeLoadIndicator.show()
+$(this.input).request('onLanguageLoadAddStringForm').done(this.proxy(this.popupMarkupLoaded)).always(function(){$.oc.stripeLoadIndicator.hide()})}
+else{this.showPopup()}}
+LocalizationInput.prototype.popupMarkupLoaded=function(responseData){this.newStringPopupMarkup=responseData.markup
+this.showPopup()}
+LocalizationInput.prototype.showPopup=function(){var $input=$(this.input)
+$input.popup({content:this.newStringPopupMarkup})
+var $content=$input.data('oc.popup').$content,$keyInput=$content.find('#language_string_key')
+$.oc.builder.dataRegistry.get(this.form,this.options.plugin,'localization','sections',function(data){$keyInput.autocomplete({source:data,matchWidth:true})})
+$content.find('form').on('submit',this.proxy(this.onSubmitPopupForm))}
+LocalizationInput.prototype.stringCreated=function(data){if(data.localizationData===undefined||data.registryData===undefined){throw new Error('Invalid server response.')}
+var $input=$(this.input)
+$input.val(data.localizationData.key)
+$.oc.builder.dataRegistry.set(this.options.plugin,'localization',null,data.registryData.strings)
+$.oc.builder.dataRegistry.set(this.options.plugin,'localization','sections',data.registryData.sections)
+$input.data('oc.popup').hide()
+$input.trigger('change')}
+LocalizationInput.prototype.onSubmitPopupForm=function(ev){var $form=$(ev.target)
+$.oc.stripeLoadIndicator.show()
+$form.request('onLanguageCreateString',{data:{plugin_code:this.options.plugin}}).done(this.proxy(this.stringCreated)).always(function(){$.oc.stripeLoadIndicator.hide()})
+ev.preventDefault()
+return false}
+LocalizationInput.prototype.onPopupHidden=function(ev,link,popup){$(popup).find('#language_string_key').autocomplete('destroy')
+$(popup).find('form').on('submit',this.proxy(this.onSubmitPopupForm))
+if(this.options.afterPopupHideCallback){this.options.afterPopupHideCallback()}}
+LocalizationInput.updatePluginInputs=function(plugin){var inputs=document.body.querySelectorAll('input[data-builder-localization-input][data-builder-localization-plugin="'+plugin+'"]')
+for(var i=inputs.length-1;i>=0;i--){$(inputs[i]).data('localization-input').reload()}}
+LocalizationInput.prototype.unregisterHandlers=function(){this.input.removeEventListener('focus',this.proxy(this.onInputFocus))
+this.getContainer().off('click','a.localization-trigger',this.proxy(this.onTriggerClick))
+$(this.input).off('hidden.oc.popup',this.proxy(this.onPopupHidden))}
+LocalizationInput.prototype.registerHandlers=function(){this.input.addEventListener('focus',this.proxy(this.onInputFocus))
+this.getContainer().on('click','a.localization-trigger',this.proxy(this.onTriggerClick))
+$(this.input).on('hidden.oc.popup',this.proxy(this.onPopupHidden))}
+LocalizationInput.prototype.onInputFocus=function(){this.buildAddLink()}
+LocalizationInput.prototype.onTriggerClick=function(ev){if(this.options.beforePopupShowCallback){this.options.beforePopupShowCallback()}
+this.loadAndShowPopup()
+ev.preventDefault()
+return false}
+LocalizationInput.DEFAULTS={plugin:null,autocompleteOptions:{},beforePopupShowCallback:null,afterPopupHideCallback:null}
+$.oc.builder.localizationInput=LocalizationInput}(window.jQuery);+function($){"use strict";var Base=$.oc.inspector.propertyEditors.string,BaseProto=Base.prototype
+var LocalizationEditor=function(inspector,propertyDefinition,containerCell,group){this.localizationInput=null
+Base.call(this,inspector,propertyDefinition,containerCell,group)}
+LocalizationEditor.prototype=Object.create(BaseProto)
+LocalizationEditor.prototype.constructor=Base
+LocalizationEditor.prototype.dispose=function(){this.removeLocalizationInput()
+BaseProto.dispose.call(this)}
+LocalizationEditor.prototype.build=function(){var container=document.createElement('div'),editor=document.createElement('input'),placeholder=this.propertyDefinition.placeholder!==undefined?this.propertyDefinition.placeholder:'',value=this.inspector.getPropertyValue(this.propertyDefinition.property)
+editor.setAttribute('type','text')
+editor.setAttribute('class','string-editor')
+editor.setAttribute('placeholder',placeholder)
+container.setAttribute('class','autocomplete-container')
+if(value===undefined){value=this.propertyDefinition.default}
+if(value===undefined){value=''}
+editor.value=value
+$.oc.foundation.element.addClass(this.containerCell,'text autocomplete')
+container.appendChild(editor)
+this.containerCell.appendChild(container)
+this.buildLocalizationEditor()}
+LocalizationEditor.prototype.buildLocalizationEditor=function(){this.localizationInput=new $.oc.builder.localizationInput(this.getInput(),this.getForm(),{plugin:this.getPluginCode(),beforePopupShowCallback:this.proxy(this.onPopupShown,this),afterPopupHideCallback:this.proxy(this.onPopupHidden,this)})}
+LocalizationEditor.prototype.removeLocalizationInput=function(){this.localizationInput.dispose()
+this.localizationInput=null}
+LocalizationEditor.prototype.supportsExternalParameterEditor=function(){return false}
+LocalizationEditor.prototype.registerHandlers=function(){BaseProto.registerHandlers.call(this)
+$(this.getInput()).on('change',this.proxy(this.onInputKeyUp))}
+LocalizationEditor.prototype.unregisterHandlers=function(){BaseProto.unregisterHandlers.call(this)
+$(this.getInput()).off('change',this.proxy(this.onInputKeyUp))}
+LocalizationEditor.prototype.getForm=function(){var inspectableElement=this.getRootSurface().getInspectableElement()
+if(!inspectableElement){throw new Error('Cannot determine inspectable element in the Builder localization editor.')}
+return $(inspectableElement).closest('form')}
+LocalizationEditor.prototype.getPluginCode=function(){var $form=this.getForm(),$input=$form.find('input[name=plugin_code]')
+if(!$input.length){throw new Error('The input "plugin_code" should be defined in the form in order to use the localization Inspector editor.')}
+return $input.val()}
+LocalizationEditor.prototype.onPopupShown=function(){this.getRootSurface().popupDisplayed()}
+LocalizationEditor.prototype.onPopupHidden=function(){this.getRootSurface().popupHidden()}
+$.oc.inspector.propertyEditors.builderLocalization=LocalizationEditor}(window.jQuery);+function($){"use strict";if($.oc.table===undefined)
+throw new Error("The $.oc.table namespace is not defined. Make sure that the table.js script is loaded.");if($.oc.table.processor===undefined)
+throw new Error("The $.oc.table.processor namespace is not defined. Make sure that the table.processor.base.js script is loaded.");var Base=$.oc.table.processor.string,BaseProto=Base.prototype
+var LocalizationProcessor=function(tableObj,columnName,columnConfiguration){this.localizationInput=null
+this.popupDisplayed=false
+Base.call(this,tableObj,columnName,columnConfiguration)}
+LocalizationProcessor.prototype=Object.create(BaseProto)
+LocalizationProcessor.prototype.constructor=LocalizationProcessor
+LocalizationProcessor.prototype.dispose=function(){this.removeLocalizationInput()
+BaseProto.dispose.call(this)}
+LocalizationProcessor.prototype.onUnfocus=function(){if(!this.activeCell||this.popupDisplayed)
+return
+this.removeLocalizationInput()
+BaseProto.onUnfocus.call(this)}
+LocalizationProcessor.prototype.onBeforePopupShow=function(){this.popupDisplayed=true}
+LocalizationProcessor.prototype.onAfterPopupHide=function(){this.popupDisplayed=false}
+LocalizationProcessor.prototype.renderCell=function(value,cellContentContainer){BaseProto.renderCell.call(this,value,cellContentContainer)}
+LocalizationProcessor.prototype.buildEditor=function(cellElement,cellContentContainer,isClick){BaseProto.buildEditor.call(this,cellElement,cellContentContainer,isClick)
+$.oc.foundation.element.addClass(cellContentContainer,'autocomplete-container')
+this.buildLocalizationEditor()}
+LocalizationProcessor.prototype.buildLocalizationEditor=function(){var input=this.getInput()
+this.localizationInput=new $.oc.builder.localizationInput(input,$(input),{plugin:this.getPluginCode(input),beforePopupShowCallback:$.proxy(this.onBeforePopupShow,this),afterPopupHideCallback:$.proxy(this.onAfterPopupHide,this),autocompleteOptions:{menu:'<ul class="autocomplete dropdown-menu table-widget-autocomplete localization"></ul>',bodyContainer:true}})}
+LocalizationProcessor.prototype.getInput=function(){if(!this.activeCell){return null}
+return this.activeCell.querySelector('.string-input')}
+LocalizationProcessor.prototype.getPluginCode=function(input){var $form=$(input).closest('form'),$input=$form.find('input[name=plugin_code]')
+if(!$input.length){throw new Error('The input "plugin_code" should be defined in the form in order to use the localization table processor.')}
+return $input.val()}
+LocalizationProcessor.prototype.removeLocalizationInput=function(){if(!this.localizationInput){return}
+this.localizationInput.dispose()
+this.localizationInput=null}
+$.oc.table.processor.builderLocalization=LocalizationProcessor;}(window.jQuery);

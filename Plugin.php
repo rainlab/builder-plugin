@@ -3,6 +3,7 @@
 use Event;
 use Backend;
 use System\Classes\PluginBase;
+use System\Classes\CombineAssets;
 use RainLab\Builder\Classes\StandardControlsRegistry;
 use RainLab\Builder\Classes\StandardBehaviorsRegistry;
 
@@ -31,7 +32,7 @@ class Plugin extends PluginBase
     {
         return [
             'rainlab.builder.manage_plugins' => [
-                'tab' => 'rainlab.builder::lang.plugin.name', 
+                'tab' => 'rainlab.builder::lang.plugin.name',
                 'label' => 'rainlab.builder::lang.plugin.manage_plugins']
         ];
     }
@@ -126,6 +127,15 @@ class Plugin extends PluginBase
         Event::listen('pages.builder.registerControllerBehaviors', function($behaviorLibrary) {
             new StandardBehaviorsRegistry($behaviorLibrary);
         });
+    }
 
+    public function register()
+    {
+        /*
+         * Register asset bundles
+         */
+        CombineAssets::registerCallback(function ($combiner) {
+            $combiner->registerBundle('$/rainlab/builder/assets/js/build.js');
+        });
     }
 }
