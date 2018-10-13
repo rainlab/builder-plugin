@@ -32,13 +32,13 @@ class ControlLibrary
             return $returnGrouped ? $this->groupedControls : $this->controls;
         }
 
-        Event::fire('pages.builder.registerControls', [$this]);
-
         $this->groupedControls = [
             $this->resolveControlGroupName(self::GROUP_STANDARD) => [],
             $this->resolveControlGroupName(self::GROUP_WIDGETS) => []
         ];
 
+        Event::fire('pages.builder.registerControls', [$this]);
+        
         foreach ($this->controls as $controlType=>$controlInfo) {
             $controlGroup = $this->resolveControlGroupName($controlInfo['group']);
 
