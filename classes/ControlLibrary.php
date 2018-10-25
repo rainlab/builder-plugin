@@ -299,11 +299,11 @@ class ControlLibrary
 
     protected function resolveControlGroupName($group)
     {
-        if ($group == self::GROUP_STANDARD) {
+        if ($group === self::GROUP_STANDARD) {
             return Lang::get('rainlab.builder::lang.form.control_group_standard');
         }
 
-        if ($group == self::GROUP_WIDGETS) {
+        if ($group === self::GROUP_WIDGETS) {
             return Lang::get('rainlab.builder::lang.form.control_group_widgets');
         }
 
