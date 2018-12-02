@@ -1,6 +1,8 @@
 <?php namespace RainLab\Builder\Models;
 
 use October\Rain\Database\Model;
+use Doctrine\DBAL\Platforms\Keywords\ReservedKeywordsValidator;
+use Rainlab\Builder\Rules\Reserved as ReservedRule;
 
 /**
  * Builder settings model
@@ -24,6 +26,6 @@ class Settings extends Model
      */
     public $rules = [
         'author_name' => 'required',
-        'author_namespace' => ['required', 'regex:/^[a-z]+[a-z0-9]+$/i']
+        'author_namespace' => ['required', 'regex:/^[a-z]+[a-z0-9]+$/i', 'reserved']
     ];
 }
