@@ -47,8 +47,8 @@ class PluginBaseModel extends PluginYamlModel
     protected $validationRules = [
         'name' => 'required',
         'author'   => ['required'],
-        'namespace'   => ['required', 'regex:/^[a-z]+[a-z0-9]+$/i'],
-        'author_namespace' => ['required', 'regex:/^[a-z]+[a-z0-9]+$/i'],
+        'namespace'   => ['required', 'regex:/^[a-z]+[a-z0-9]+$/i', 'reserved'],
+        'author_namespace' => ['required', 'regex:/^[a-z]+[a-z0-9]+$/i', 'reserved'],
         'homepage' => 'url'
     ];
 

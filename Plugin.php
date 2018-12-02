@@ -6,6 +6,8 @@ use System\Classes\PluginBase;
 use System\Classes\CombineAssets;
 use RainLab\Builder\Classes\StandardControlsRegistry;
 use RainLab\Builder\Classes\StandardBehaviorsRegistry;
+use RainLab\Builder\Validation\ReservedValidator;
+use Illuminate\Support\Facades\Validator;
 
 class Plugin extends PluginBase
 {
@@ -126,6 +128,15 @@ class Plugin extends PluginBase
 
         Event::listen('pages.builder.registerControllerBehaviors', function($behaviorLibrary) {
             new StandardBehaviorsRegistry($behaviorLibrary);
+        });
+
+        // Register reserved keyword validation
+        Validator::resolver(function ($translator, $data, $rules, $messages, $customAttributes) {
+            $messages = [
+                'reserved' => e(trans('rainlab.builder::lang.validation.reserved'))
+            ];
+
+            return new ReservedValidator($translator, $data, $rules, $messages, $customAttributes);
         });
     }
 
