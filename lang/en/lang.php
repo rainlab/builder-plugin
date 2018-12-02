@@ -678,4 +678,7 @@ return [
         'details_not_found_message_description' => 'Message to display if the record is not found. Used in the default component\'s partial.',
         'details_not_found_message_default' => 'Record not found',
     ],
+    'validation' => [
+        'reserved' => ':attribute cannot be a PHP reserved keyword'
+    ]
 ];
