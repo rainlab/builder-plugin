@@ -1,7 +1,6 @@
 <?php namespace RainLab\Builder\Models;
 
 use October\Rain\Database\Model;
-use Rainlab\Builder\Rules\Reserved as ReservedRule;
 
 /**
  * Builder settings model
