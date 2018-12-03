@@ -6,7 +6,8 @@ use Illuminate\Validation\Validator;
  * Reserved keyword validation.
  *
  * Validates for the use of any PHP-reserved keywords or constants, as specified from the PHP Manual
- * here: http://php.net/manual/en/reserved.keywords.php
+ * http://php.net/manual/en/reserved.keywords.php
+ * http://php.net/manual/en/reserved.other-reserved-words.php
  */
 class ReservedValidator extends Validator
 {
@@ -24,6 +25,7 @@ class ReservedValidator extends Validator
         'and',
         'array',
         'as',
+        'bool',
         'break',
         'callable',
         'case',
@@ -49,8 +51,10 @@ class ReservedValidator extends Validator
         'eval',
         'exit',
         'extends',
+        'false',
         'final',
         'finally',
+        'float',
         'for',
         'foreach',
         'function',
@@ -62,11 +66,17 @@ class ReservedValidator extends Validator
         'include_once',
         'instanceof',
         'insteadof',
+        'int',
         'interface',
         'isset',
+        'iterable',
         'list',
+        'mixed',
         'namespace',
         'new',
+        'null',
+        'numeric',
+        'object',
         'or',
         'print',
         'private',
@@ -74,15 +84,19 @@ class ReservedValidator extends Validator
         'public',
         'require',
         'require_once',
+        'resource',
         'return',
         'static',
+        'string',
         'switch',
         'throw',
         'trait',
+        'true',
         'try',
         'unset',
         'use',
         'var',
+        'void',
         'while',
         'xor',
         'yield'
