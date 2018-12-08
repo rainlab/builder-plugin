@@ -114,4 +114,16 @@ class ReservedValidator extends Validator
     {
         return !in_array(strtolower($value), $this->reserved);
     }
+
+    /**
+     * @param $message
+     * @param $attribute
+     * @param $rule
+     * @param $parameters
+     * @return mixed
+     */
+    public function replaceReserved($message, $attribute, $rule, $parameters)
+    {
+        return str_replace(':attribute', $attribute, e(trans('rainlab.builder::lang.validation.reserved')));
+    }
 }

@@ -132,10 +132,6 @@ class Plugin extends PluginBase
 
         // Register reserved keyword validation
         Validator::resolver(function ($translator, $data, $rules, $messages, $customAttributes) {
-            $messages = [
-                'reserved' => e(trans('rainlab.builder::lang.validation.reserved'))
-            ];
-
             return new ReservedValidator($translator, $data, $rules, $messages, $customAttributes);
         });
     }
