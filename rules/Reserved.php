@@ -1,15 +1,16 @@
-<?php namespace RainLab\Builder\Validation;
+<?php namespace RainLab\Builder\Rules;
 
-use Illuminate\Validation\Validator;
+use Lang;
+use Illuminate\Contracts\Validation\Rule;
 
 /**
- * Reserved keyword validation.
+ * Reserved keyword rule.
  *
  * Validates for the use of any PHP-reserved keywords or constants, as specified from the PHP Manual
  * http://php.net/manual/en/reserved.keywords.php
  * http://php.net/manual/en/reserved.other-reserved-words.php
  */
-class ReservedValidator extends Validator
+class Reserved implements Rule
 {
     protected $reserved = [
         '__class__',
@@ -103,27 +104,37 @@ class ReservedValidator extends Validator
     ];
 
     /**
-     * Reserved keyword validator.
+     * Validate the provided value
+     *
+     * @param string $attribute The attribute being tested
+     * @param string $value The value being tested
+     * @param array $params The parameters passed to the rule
+     * @return bool
+     */
+    public function validate($attribute, $value, $params)
+    {
+        return $this->passes($attribute, $value);
+    }
+
+    /**
+     * Determine if the validation rule passes.
      *
      * @param  string  $attribute
      * @param  mixed  $value
-     * @param  array  $parameters
      * @return bool
      */
-    public function validateReserved($attribute, $value, $parameters)
+    public function passes($attribute, $value)
     {
         return !in_array(strtolower($value), $this->reserved);
     }
 
     /**
-     * @param $message
-     * @param $attribute
-     * @param $rule
-     * @param $parameters
-     * @return mixed
+     * Get the validation error message.
+     *
+     * @return string
      */
-    public function replaceReserved($message, $attribute, $rule, $parameters)
+    public function message()
     {
-        return $this->replaceAttributePlaceholder(e(trans('rainlab.builder::lang.validation.reserved')), ucfirst($this->getDisplayableAttribute($attribute)));
+        return Lang::get('rainlab.builder::lang.validation.reserved');
     }
 }
