@@ -206,7 +206,8 @@ class RecordList extends ComponentBase
             '-' => Lang::get('rainlab.builder::lang.components.list_scope_default')
         ];
         try {
-            $methods = get_class_methods($modelClass);
+            $model = new $modelClass;
+            $methods = $model->getClassMethods();
 
             foreach ($methods as $method) {
                 if (preg_match('/scope[A-Z].*/', $method)) {
@@ -295,7 +296,7 @@ class RecordList extends ComponentBase
             throw new SystemException('Invalid scope method name.');
         }
 
-        if (!method_exists($model, $scopeMethod)) {
+        if (!$model->methodExists($scopeMethod)) {
             throw new SystemException('Scope method not found.');
         }
 
