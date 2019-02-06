@@ -1,13 +1,14 @@
 <?php namespace RainLab\Builder;
 
 use Event;
+use Lang;
 use Backend;
 use System\Classes\PluginBase;
 use System\Classes\CombineAssets;
 use RainLab\Builder\Classes\StandardControlsRegistry;
 use RainLab\Builder\Classes\StandardBehaviorsRegistry;
-use RainLab\Builder\Validation\ReservedValidator;
 use Illuminate\Support\Facades\Validator;
+use RainLab\Builder\Rules\Reserved;
 
 class Plugin extends PluginBase
 {
@@ -131,8 +132,16 @@ class Plugin extends PluginBase
         });
 
         // Register reserved keyword validation
-        Validator::resolver(function ($translator, $data, $rules, $messages, $customAttributes) {
-            return new ReservedValidator($translator, $data, $rules, $messages, $customAttributes);
+        Event::listen('translator.beforeResolve', function ($key, $replaces, $locale) {
+            if ($key === 'validation.reserved') {
+                return Lang::get('rainlab.builder::lang.validation.reserved');
+            }
+        });
+
+        Validator::extend('reserved', Reserved::class);
+        Validator::replacer('reserved', function ($message, $attribute, $rule, $parameters) {
+            // Fixes lowercase attribute names in the new plugin modal form
+            return ucfirst($message);
         });
     }
 
