@@ -455,7 +455,7 @@ return [
         'error_controller_name_invalid' => 'Invalid controller name format. The name can only contain digits and Latin letters. The first symbol should be a capital Latin letter.',
         'error_behavior_view_file_exists' => 'Controller view file already exists: :view.',
         'error_behavior_config_file_exists' => 'Behavior configuration file already exists: :file.',
-        'error_save_file' => 'Error saving conroller file: :file',
+        'error_save_file' => 'Error saving controller file: :file',
         'error_behavior_requires_base_model' => 'Behavior :behavior requires a base model class to be selected.',
         'error_model_doesnt_have_lists' => 'The selected model doesn\'t have any lists. Please create a list first.',
         'error_model_doesnt_have_forms' => 'The selected model doesn\'t have any forms. Please create a form first.'
