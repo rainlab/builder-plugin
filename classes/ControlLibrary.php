@@ -38,7 +38,7 @@ class ControlLibrary
         ];
 
         Event::fire('pages.builder.registerControls', [$this]);
-        
+
         foreach ($this->controls as $controlType=>$controlInfo) {
             $controlGroup = $this->resolveControlGroupName($controlInfo['group']);
 
@@ -159,6 +159,10 @@ class ControlLibrary
             ],
             'disabled' => [
                 'title' => Lang::get('rainlab.builder::lang.form.property_disabled_title'),
+                'type' => 'checkbox'
+            ],
+            'readOnly' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_read_only_title'),
                 'type' => 'checkbox'
             ],
             'hidden' => [

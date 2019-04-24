@@ -114,6 +114,7 @@ return [
         'property_css_class_title' => 'CSS class',
         'property_css_class_description' => 'Optional CSS class to assign to the field container.',
         'property_disabled_title' => 'Disabled',
+        'property_read_only_title' => 'Read only',
         'property_hidden_title' => 'Hidden',
         'property_required_title' => 'Required',
         'property_field_name_title' => 'Field name',
