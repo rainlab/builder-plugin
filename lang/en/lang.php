@@ -266,6 +266,8 @@ return [
         'property_relation_prompt_description' => 'Text to display when there is no available selections.',
         'property_empty_option' => 'Empty option',
         'property_empty_option_description' => 'The empty option corresponds to the empty selection, but unlike the placeholder it can be reselected.',
+        'property_show_search' => 'Show search',
+        'property_show_search_description' => 'Enables the search feature for this dropdown.',
         'property_max_items' => 'Max items',
         'property_max_items_description' => 'Maximum number of items to allow within the repeater.',
         'control_group_standard' => 'Standard',

@@ -140,6 +140,13 @@ class StandardControlsRegistry
                 'type' => 'dictionary',
                 'ignoreIfEmpty' => true,
                 'sortOrder' => 81
+            ],
+            'showSearch' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_show_search'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_show_search_description'),
+                'type' => 'checkbox',
+                'sortOrder' => 83,
+                'default' => true
             ]
         ];
 
