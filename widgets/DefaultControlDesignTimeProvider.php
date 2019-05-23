@@ -32,6 +32,7 @@ class DefaultControlDesignTimeProvider extends ControlDesignTimeProviderBase
         'datepicker',
         'richeditor',
         'markdown',
+        'taglist',
         'fileupload',
         'recordfinder',
         'mediafinder',

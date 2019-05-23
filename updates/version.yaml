@@ -21,3 +21,4 @@
 1.0.21: Back-end navigation sort order updated.
 1.0.22: Added scopeValue property to the RecordList component.
 1.0.23: Added support for balloon-selector field type, added Brazilian Portuguese translation, fixed some bugs
+1.0.24: Added support for tag list field type, added read only toggle for fields. Prevent plugins from using reserved PHP keywords for class names and namespaces

@@ -44,6 +44,7 @@ class StandardControlsRegistry
         $this->registerDatepickerWidget();
         $this->registerRichEditorWidget();
         $this->registerMarkdownWidget();
+        $this->registerTagListWidget();
         $this->registerFileUploadWidget();
         $this->registerRecordFinderWidget();
         $this->registerMediaFinderWidget();
@@ -140,6 +141,13 @@ class StandardControlsRegistry
                 'type' => 'dictionary',
                 'ignoreIfEmpty' => true,
                 'sortOrder' => 81
+            ],
+            'showSearch' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_show_search'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_show_search_description'),
+                'type' => 'checkbox',
+                'sortOrder' => 83,
+                'default' => true
             ]
         ];
 
@@ -745,6 +753,83 @@ class StandardControlsRegistry
             ControlLibrary::GROUP_WIDGETS,
             'icon-columns',
             $this->controlLibrary->getStandardProperties([], $properties),
+            null
+        );
+    }
+
+    protected function registerTagListWidget()
+    {
+        $ignoreProperties = [
+            'stretch',
+            'readOnly'
+        ];
+
+        $properties = [
+            'mode' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_taglist_mode'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_taglist_mode_description'),
+                'group' => Lang::get('rainlab.builder::lang.form.property_group_taglist'),
+                'type' => 'dropdown',
+                'options' => [
+                    'string' => Lang::get('rainlab.builder::lang.form.property_taglist_mode_string'),
+                    'array' => Lang::get('rainlab.builder::lang.form.property_taglist_mode_array'),
+                    'relation' => Lang::get('rainlab.builder::lang.form.property_taglist_mode_relation')
+                ],
+                'default' => 'string',
+                'sortOrder' => 83
+            ],
+            'separator' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_taglist_separator'),
+                'group' => Lang::get('rainlab.builder::lang.form.property_group_taglist'),
+                'type' => 'dropdown',
+                'options' => [
+                    'comma' => Lang::get('rainlab.builder::lang.form.property_taglist_separator_comma'),
+                    'space' => Lang::get('rainlab.builder::lang.form.property_taglist_separator_space')
+                ],
+                'default' => 'comma',
+                'sortOrder' => 84
+            ],
+            'customTags' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_taglist_custom_tags'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_taglist_custom_tags_description'),
+                'group' => Lang::get('rainlab.builder::lang.form.property_group_taglist'),
+                'type' => 'checkbox',
+                'default' => true,
+                'sortOrder' => 86
+            ],
+            'options' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_taglist_options'),
+                'group' => Lang::get('rainlab.builder::lang.form.property_group_taglist'),
+                'type' => 'stringList',
+                'ignoreIfEmpty' => true,
+                'sortOrder' => 85
+            ],
+            'nameFrom' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_taglist_name_from'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_taglist_name_from_description'),
+                'group' => Lang::get('rainlab.builder::lang.form.property_group_taglist'),
+                'type' => 'string',
+                'ignoreIfEmpty' => true,
+                'sortOrder' => 87
+            ],
+            'useKey' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_taglist_use_key'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_taglist_use_key_description'),
+                'group' => Lang::get('rainlab.builder::lang.form.property_group_taglist'),
+                'type' => 'checkbox',
+                'default' => false,
+                'ignoreIfEmpty' => true,
+                'sortOrder' => 88
+            ]
+        ];
+
+        $this->controlLibrary->registerControl(
+            'taglist',
+            'rainlab.builder::lang.form.control_taglist',
+            'rainlab.builder::lang.form.control_taglist_description',
+            ControlLibrary::GROUP_WIDGETS,
+            'icon-tags',
+            $this->controlLibrary->getStandardProperties($ignoreProperties, $properties),
             null
         );
     }
