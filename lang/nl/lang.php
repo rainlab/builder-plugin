@@ -590,7 +590,6 @@ return [
         'field_version' => 'Versie',
         'field_description' => 'Omschrijving',
         'field_code' => 'Code',
-        'field_code_comment' => 'De migratie-code in alleen-lezen en alleen voor voorbeeldweergave. Je kan handmatig migraties aanmaken in het Versies onderdeel van Builder.',
         'save_and_apply' => 'Opslaan & toepassen',
         'error_version_exists' => 'De migratie-versie bestaat reeds.',
         'error_script_filename_invalid' => 'De bestandsnaam van de migratie kan alleen letters, getallen en underscores bevatten. De naam moet beginnen met een letter en mag geen spaties bevatten.',

@@ -615,7 +615,6 @@ return [
         'field_version' => 'Versão',
         'field_description' => 'Descrição',
         'field_code' => 'Código',
-        'field_code_comment' => 'O código da migration é apenas leitura e apenas para o propósito de preview. Você pode criar migrations customizadas manualmente na seção Versões do Builder.',
         'save_and_apply' => 'Salvar e aplicar',
         'error_version_exists' => 'A versão da migration já existe.',
         'error_script_filename_invalid' => 'O nome do arquivo de script do migration pode conter apenas letras latinas, números e underlines. O nome deve começar com uma letra latina e não pode conter espaços.',
