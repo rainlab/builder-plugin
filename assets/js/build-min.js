@@ -179,7 +179,9 @@ tableObj.addRecord('bottom',true)
 tableObj.setRowValues(currentData.length-1,rowData)
 tableObj.addRecord('bottom',false)
 tableObj.deleteRecord()}
-DatabaseTable.prototype.updateTable=function(data){var tabsObject=this.getMasterTabsObject(),tabs=$('#builder-master-tabs').data('oc.tab'),tab=tabs.findByIdentifier(data.tabId);tabsObject.updateTab(tab,data.tableName,data.tab)}
+DatabaseTable.prototype.updateTable=function(data){var tabsObject=this.getMasterTabsObject(),tabs=$('#builder-master-tabs').data('oc.tab'),tab=tabs.findByIdentifier(data.tabId)
+tabsObject.updateTab(tab,data.tableName,data.tab)
+this.onTableLoaded()}
 $.oc.builder.entityControllers.databaseTable=DatabaseTable;}(window.jQuery);+function($){"use strict";if($.oc.builder===undefined)
 $.oc.builder={}
 if($.oc.builder.entityControllers===undefined)

@@ -300,9 +300,10 @@
     DatabaseTable.prototype.updateTable = function(data) {
         var tabsObject = this.getMasterTabsObject(),
             tabs = $('#builder-master-tabs').data('oc.tab'),
-            tab = tabs.findByIdentifier(data.tabId);
+            tab = tabs.findByIdentifier(data.tabId)
 
         tabsObject.updateTab(tab, data.tableName, data.tab)
+        this.onTableLoaded()
     }
 
     // REGISTRATION
