@@ -103,13 +103,21 @@ class IndexDatabaseTableOperations extends IndexOperationsBehaviorBase
             $this->controller->widget->versionList->refreshActivePlugin()
         );
 
+        $widget = $this->makeBaseFormWidget($table);
+        $this->vars['tableName'] = $table;
+
         $result['builderResponseData'] = [
             'builderObjectName'=>$table,
             'tabId' => $this->getTabId($table),
             'tabTitle' => $table,
             'tableName' => $table,
             'operation' => $operation,
-            'pluginCode' => $pluginCode->toCode()
+            'pluginCode' => $pluginCode->toCode(),
+            'tab' => $this->makePartial('tab', [
+                'form'  => $widget,
+                'pluginCode' => $this->getPluginCode()->toCode(),
+                'tableName' => $table
+            ])
         ];
 
         return $result;

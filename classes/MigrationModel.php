@@ -11,6 +11,7 @@ use ApplicationException;
 use ValidationException;
 use SystemException;
 use Exception;
+use Throwable;
 
 /**
  * Manages plugin migrations
@@ -133,12 +134,12 @@ class MigrationModel extends BaseModel
                 VersionManager::instance()->updatePlugin($this->getPluginCodeObj()->toCode(), $this->version);
             }
         }
-        catch (Exception $ex) {
-            // Remove the script file, and rollback 
+        catch (Throwable $e) {
+            // Remove the script file, and rollback
             // the version.yaml.
             $this->rollbackSaving($originalVersionData, $originalFileContents);
 
-            throw $ex;
+            throw $e;
         }
 
         $this->originalVersion = $this->version;

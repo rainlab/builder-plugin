@@ -155,7 +155,8 @@ if(data.builderResponseData.operation!='delete'){$masterTabPane.find('input[name
 this.updateMasterTabIdAndTitle($masterTabPane,data.builderResponseData)
 this.unhideFormDeleteButton($masterTabPane)
 this.getTableList().fileList('markActive',data.builderResponseData.tabId)
-this.getIndexController().unchangeTab($masterTabPane)}
+this.getIndexController().unchangeTab($masterTabPane)
+this.updateTable(data.builderResponseData)}
 else{this.forceCloseTab($masterTabPane)}
 $.oc.builder.dataRegistry.clearCache(data.builderResponseData.pluginCode,'model-columns')}
 DatabaseTable.prototype.getTableList=function(){return $('#layout-side-panel form[data-content-id=database] [data-control=filelist]')}
@@ -178,6 +179,9 @@ tableObj.addRecord('bottom',true)
 tableObj.setRowValues(currentData.length-1,rowData)
 tableObj.addRecord('bottom',false)
 tableObj.deleteRecord()}
+DatabaseTable.prototype.updateTable=function(data){var tabsObject=this.getMasterTabsObject(),tabs=$('#builder-master-tabs').data('oc.tab'),tab=tabs.findByIdentifier(data.tabId)
+tabsObject.updateTab(tab,data.tableName,data.tab)
+this.onTableLoaded()}
 $.oc.builder.entityControllers.databaseTable=DatabaseTable;}(window.jQuery);+function($){"use strict";if($.oc.builder===undefined)
 $.oc.builder={}
 if($.oc.builder.entityControllers===undefined)

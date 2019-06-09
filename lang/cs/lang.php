@@ -573,7 +573,6 @@ return [
         'field_version' => 'Verze',
         'field_description' => 'Popis migrace',
         'field_code' => 'Kód migrace',
-        'field_code_comment' => 'Kód migrace je pouze pro čtení a slouží pouze pro náhled. Vlastní migraci můžete vytvořit v sekci Verze v levém menu.',
         'save_and_apply' => 'Uložit a aplikovat',
         'error_version_exists' => 'Tato verze migrace již existuje.',
         'error_script_filename_invalid' => 'The migration script file name can contain only Latin letters, digits and underscores. The name should start with a Latin letter and could not contain spaces.',

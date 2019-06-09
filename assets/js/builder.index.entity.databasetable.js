@@ -218,6 +218,8 @@
 
             this.getTableList().fileList('markActive', data.builderResponseData.tabId)
             this.getIndexController().unchangeTab($masterTabPane)
+
+            this.updateTable(data.builderResponseData)
         }
         else {
             this.forceCloseTab($masterTabPane)
@@ -293,6 +295,15 @@
         // from the data source
         tableObj.addRecord('bottom', false)
         tableObj.deleteRecord()
+    }
+
+    DatabaseTable.prototype.updateTable = function(data) {
+        var tabsObject = this.getMasterTabsObject(),
+            tabs = $('#builder-master-tabs').data('oc.tab'),
+            tab = tabs.findByIdentifier(data.tabId)
+
+        tabsObject.updateTab(tab, data.tableName, data.tab)
+        this.onTableLoaded()
     }
 
     // REGISTRATION

@@ -589,7 +589,6 @@ return [
         'field_version' => 'Versión',
         'field_description' => 'Descripción',
         'field_code' => 'Code',
-        'field_code_comment' => 'The migration code is read-only and for the preview purpose only. You can create custom migrations manually in the Versions section of the Builder.',
         'save_and_apply' => 'Salvar y Aplicar',
         'error_version_exists' => 'The migration version already exists.',
         'error_script_filename_invalid' => 'The migration script file name can contain only Latin letters, digits and underscores. The name should start with a Latin letter and could not contain spaces.',
