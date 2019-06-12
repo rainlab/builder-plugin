@@ -174,8 +174,8 @@ class DatabaseTableModel extends BaseModel
     protected function validateColumns()
     {
         $this->validateColumnNameLengths();
-        $this->validateDupicateColumns();
-        $this->validateDubplicatePrimaryKeys();
+        $this->validateDuplicateColumns();
+        $this->validateDuplicatePrimaryKeys();
         $this->validateAutoIncrementColumns();
         $this->validateColumnsLengthParameter();
         $this->validateUnsignedColumns();
@@ -197,7 +197,7 @@ class DatabaseTableModel extends BaseModel
         }
     }
 
-    protected function validateDupicateColumns()
+    protected function validateDuplicateColumns()
     {
         foreach ($this->columns as $outerIndex=>$outerColumn) {
             foreach ($this->columns as $innerIndex=>$innerColumn) {
@@ -212,7 +212,7 @@ class DatabaseTableModel extends BaseModel
         }
     }
 
-    protected function validateDubplicatePrimaryKeys()
+    protected function validateDuplicatePrimaryKeys()
     {
         $keysFound = 0;
         $autoIncrementsFound = 0;
