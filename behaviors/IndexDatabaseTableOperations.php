@@ -54,7 +54,11 @@ class IndexDatabaseTableOperations extends IndexOperationsBehaviorBase
 
         $pluginCode = Request::input('plugin_code');
         $model->setPluginCode($pluginCode);
-        $model->validate();
+        try {
+            $model->validate();
+        } catch (Exception $ex) {
+            throw new ApplicationException($ex->getMessage());
+        }
 
         $migration = $model->generateCreateOrUpdateMigration();
 
@@ -91,7 +95,7 @@ class IndexDatabaseTableOperations extends IndexOperationsBehaviorBase
 
         try {
             $model->save();
-        } 
+        }
         catch (Exception $ex) {
             throw new ApplicationException($ex->getMessage());
         }
