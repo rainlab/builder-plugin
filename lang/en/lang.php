@@ -213,6 +213,8 @@ return [
         'property_datepicker_year_range' => 'Year range',
         'property_datepicker_year_range_description' => 'Number of years either side (eg 10) or array of upper/lower range (eg [1900,2015]). Leave empty for the default value (10).',
         'property_datepicker_year_range_invalid_format' => 'Invalid year range format. Use number (eg "10") or array of upper/lower range (eg "[1900,2015]")',
+        'property_datepicker_format' => 'Format',
+        'property_datepicker_year_format_description' => 'Define a custom date format. The default format is "Y-m-d"',
         'property_markdown_mode' => 'Mode',
         'property_markdown_mode_split' => 'Split',
         'property_markdown_mode_tab' => 'Tab',
