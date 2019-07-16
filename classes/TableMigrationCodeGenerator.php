@@ -492,7 +492,7 @@ class TableMigrationCodeGenerator extends BaseModel
 
         // Allow `null` value for nullable columns
         if ($column->getNotnull() === false) {
-            if (strtolower($default) === 'null' && $column->getNotnull() === false) {
+            if (strtolower($default) === 'null') {
                 return '->default(null)';
             } elseif (preg_match('/^[\'"]null[\'"]$/i', $default)) {
                 return '->default(\'null\')';
