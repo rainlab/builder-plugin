@@ -54,11 +54,21 @@ class DatabaseTableSchemaCreator extends BaseModel
 
         $default = trim($options['default']);
 
-        // Note - this code doesn't allow to set empty string as default. 
+        // Note - this code doesn't allow to set empty string as default.
         // But converting empty strings to NULLs is required for the further
         // work with Doctrine types. As an option - empty strings could be specified
         // as '' in the editor UI (table column editor).
-        $result['default'] = $default === '' ? null : $default;
+        if ($result['notnull'] === false) {
+            if (strtolower($default) === 'null') {
+                $result['default'] = null;
+            } elseif (preg_match('/^[\'"]null[\'"]$/i', $default)) {
+                $result['default'] = 'null';
+            } else {
+                $result['default'] = $default === '' ? null : $default;
+            }
+        } else {
+            $result['default'] = $default === '' ? null : $default;
+        }
 
         return $result;
     }

@@ -74,7 +74,7 @@ return [
         'error_unsigned_type_not_int' => "Error in the ':column' column. The Unsigned flag can be applied only to integer type columns.",
         'error_integer_default_value' => "Invalid default value for the integer column ':column'. The allowed formats are '10', '-10'.",
         'error_decimal_default_value' => "Invalid default value for the decimal or double column ':column'. The allowed formats are '1.00', '-1.00'.",
-        'error_boolean_default_value' => "Invalid default value for the boolean column ':column'. The allowed values are '0' and '1'.",
+        'error_boolean_default_value' => "Invalid default value for the boolean column ':column'. The allowed values are '0' and '1', or 'true' and 'false'.",
         'error_unsigned_negative_value' => "The default value for the unsigned column ':column' can't be negative.",
         'error_table_already_exists' => "The table ':name' already exists in the database.",
         'error_table_name_too_long' => "The table name should not be longer than 64 characters.",
