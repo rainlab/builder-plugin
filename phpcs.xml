@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<ruleset name="October CMS Plugins">
+    <description>The coding standard for October CMS Plugins.</description>
+    <rule ref="PSR2">
+        <!--
+        Exceptions to the PSR-2 guidelines as per our Developer Guide:
+        https://octobercms.com/help/guidelines/developer#psr-exceptions
+        -->
+        <exclude name="PSR1.Methods.CamelCapsMethodName.NotCamelCaps" />
+        <exclude name="Squiz.ControlStructures.ControlSignature.SpaceAfterCloseBrace" />
+        <exclude name="PSR2.ControlStructures.ControlStructureSpacing.SpacingAfterOpenBrace" />
+    </rule>
+
+
+    <rule ref="PSR1.Classes.ClassDeclaration.MissingNamespace">
+        <!--
+        Tests do not need a namespace defined
+        -->
+        <exclude-pattern>*/tests/*</exclude-pattern>
+    </rule>
+
+    <arg name="extensions" value="php" />
+    <arg name="colors" />
+    <arg value="nq" />
+
+    <file>.</file>
+    <exclude-pattern>*/assets/*</exclude-pattern>
+</ruleset>
