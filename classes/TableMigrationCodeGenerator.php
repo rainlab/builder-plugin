@@ -490,15 +490,6 @@ class TableMigrationCodeGenerator extends BaseModel
             return sprintf('->default(%s)', $default);
         }
 
-        // Allow `null` value for nullable columns
-        if ($column->getNotnull() === false) {
-            if (strtolower($default) === 'null') {
-                return '->default(null)';
-            } elseif (preg_match('/^[\'"]null[\'"]$/i', $default)) {
-                return '->default(\'null\')';
-            }
-        }
-
         return sprintf('->default(\'%s\')', $this->quoteParameter($default));
     }
 
