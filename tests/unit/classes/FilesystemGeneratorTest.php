@@ -1,9 +1,7 @@
 <?php
-
 use RainLab\Builder\Classes\FilesystemGenerator;
 
-
-class FilesystemGeneratorTest extends TestCase 
+class FilesystemGeneratorTest extends TestCase
 {
     public function setUp()
     {
@@ -34,7 +32,7 @@ class FilesystemGeneratorTest extends TestCase
 
         $templatesDir = $this->getFixturesDir('templates');
         $generator = new FilesystemGenerator($generatedDir, $structure, $templatesDir);
-        
+
         $variables = [
             'authorNamespace' => 'Author',
             'pluginNamespace' => 'Plugin'

@@ -61,7 +61,7 @@ class PluginList extends WidgetBase
                 }
 
                 $plugins = PluginManager::instance()->getPlugins();
-                foreach ($plugins as $code=>$plugin) {
+                foreach ($plugins as $code => $plugin) {
                     if ($code == $pluginCode) {
                         return new PluginVector($plugin, $pluginCodeObj);
                     }
@@ -121,7 +121,7 @@ class PluginList extends WidgetBase
             $words = explode(' ', $searchTerm);
             $result = [];
 
-            foreach ($plugins as $code=>$plugin) {
+            foreach ($plugins as $code => $plugin) {
                 if ($this->textMatchesSearch($words, $plugin['full-text'])) {
                     $result[$code] = $plugin;
                 }
@@ -137,7 +137,7 @@ class PluginList extends WidgetBase
             $namespace = PluginSettings::instance()->author_namespace;
 
             $result = [];
-            foreach ($plugins as $code=>$plugin) {
+            foreach ($plugins as $code => $plugin) {
                 if (strcasecmp($plugin['namespace'], $namespace) === 0) {
                     $result[$code] = $plugin;
                 }
@@ -154,7 +154,7 @@ class PluginList extends WidgetBase
         $plugins = PluginManager::instance()->getPlugins();
 
         $result = [];
-        foreach ($plugins as $code=>$plugin) {
+        foreach ($plugins as $code => $plugin) {
             $pluginInfo = $plugin->pluginDetails();
 
             $itemInfo = [
@@ -170,7 +170,7 @@ class PluginList extends WidgetBase
             $result[$code] = $itemInfo;
         }
 
-        uasort($result, function($a, $b) {
+        uasort($result, function ($a, $b) {
             return strcmp(trans($a['name']), trans($b['name']));
         });
 

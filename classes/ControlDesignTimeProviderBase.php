@@ -2,7 +2,7 @@
 
 use Backend\Classes\WidgetBase;
 
-abstract class ControlDesignTimeProviderBase extends WidgetBase 
+abstract class ControlDesignTimeProviderBase extends WidgetBase
 {
     /**
      * Renders conrol body.

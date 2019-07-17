@@ -12,7 +12,7 @@ use Lang;
  * Doctrine boolean could be boolean and tinyInteger in migrations.
  * To eliminate the the necessity of guessing, the following migration column
  * types are removed from the list:
- * 
+ *
  *  - tinyInteger
  *  - mediumInteger
  *  - char
@@ -113,7 +113,7 @@ class MigrationColumnType extends BaseModel
         // 100% reliable.
 
         if ($type == DoctrineType::DATETIME) {
-            // The datetime type maps to datetime and timestamp. Use the name 
+            // The datetime type maps to datetime and timestamp. Use the name
             // guessing as the only possible solution.
 
             if (in_array($columnName, ['created_at', 'updated_at', 'deleted_at', 'published_at', 'deleted_at'])) {

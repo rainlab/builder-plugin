@@ -54,7 +54,8 @@ class StandardControlsRegistry
 
     protected function registerTextControl()
     {
-        $this->controlLibrary->registerControl('text',
+        $this->controlLibrary->registerControl(
+            'text',
             'rainlab.builder::lang.form.control_text',
             'rainlab.builder::lang.form.control_text_description',
             ControlLibrary::GROUP_STANDARD,
@@ -66,7 +67,8 @@ class StandardControlsRegistry
 
     protected function registerPasswordControl()
     {
-        $this->controlLibrary->registerControl('password',
+        $this->controlLibrary->registerControl(
+            'password',
             'rainlab.builder::lang.form.control_password',
             'rainlab.builder::lang.form.control_password_description',
             ControlLibrary::GROUP_STANDARD,
@@ -78,7 +80,8 @@ class StandardControlsRegistry
 
     protected function registerNumberControl()
     {
-        $this->controlLibrary->registerControl('number',
+        $this->controlLibrary->registerControl(
+            'number',
             'rainlab.builder::lang.form.control_number',
             'rainlab.builder::lang.form.control_number_description',
             ControlLibrary::GROUP_STANDARD,
@@ -90,7 +93,8 @@ class StandardControlsRegistry
 
     protected function registerCheckboxControl()
     {
-        $this->controlLibrary->registerControl('checkbox',
+        $this->controlLibrary->registerControl(
+            'checkbox',
             'rainlab.builder::lang.form.control_checkbox',
             'rainlab.builder::lang.form.control_checkbox_description',
             ControlLibrary::GROUP_STANDARD,
@@ -102,7 +106,8 @@ class StandardControlsRegistry
 
     protected function registerSwitchControl()
     {
-        $this->controlLibrary->registerControl('switch',
+        $this->controlLibrary->registerControl(
+            'switch',
             'rainlab.builder::lang.form.control_switch',
             'rainlab.builder::lang.form.control_switch_description',
             ControlLibrary::GROUP_STANDARD,
@@ -116,7 +121,8 @@ class StandardControlsRegistry
     {
         $properties = $this->getFieldSizeProperties();
 
-        $this->controlLibrary->registerControl('textarea',
+        $this->controlLibrary->registerControl(
+            'textarea',
             'rainlab.builder::lang.form.control_textarea',
             'rainlab.builder::lang.form.control_textarea_description',
             ControlLibrary::GROUP_STANDARD,
@@ -151,7 +157,8 @@ class StandardControlsRegistry
             ]
         ];
 
-        $this->controlLibrary->registerControl('dropdown',
+        $this->controlLibrary->registerControl(
+            'dropdown',
             'rainlab.builder::lang.form.control_dropdown',
             'rainlab.builder::lang.form.control_dropdown_description',
             ControlLibrary::GROUP_STANDARD,
@@ -172,7 +179,8 @@ class StandardControlsRegistry
             ]
         ];
 
-        $this->controlLibrary->registerControl('balloon-selector',
+        $this->controlLibrary->registerControl(
+            'balloon-selector',
             'rainlab.builder::lang.form.control_balloon-selector',
             'rainlab.builder::lang.form.control_balloon-selector_description',
             ControlLibrary::GROUP_STANDARD,
@@ -198,7 +206,8 @@ class StandardControlsRegistry
             ]
         ];
 
-        $this->controlLibrary->registerControl('hint',
+        $this->controlLibrary->registerControl(
+            'hint',
             'rainlab.builder::lang.form.control_hint',
             'rainlab.builder::lang.form.control_hint_description',
             ControlLibrary::GROUP_STANDARD,
@@ -224,7 +233,8 @@ class StandardControlsRegistry
             ]
         ];
 
-        $this->controlLibrary->registerControl('partial',
+        $this->controlLibrary->registerControl(
+            'partial',
             'rainlab.builder::lang.form.control_partial',
             'rainlab.builder::lang.form.control_partial_description',
             ControlLibrary::GROUP_STANDARD,
@@ -249,7 +259,8 @@ class StandardControlsRegistry
             'disabled'
         ];
 
-        $this->controlLibrary->registerControl('section',
+        $this->controlLibrary->registerControl(
+            'section',
             'rainlab.builder::lang.form.control_section',
             'rainlab.builder::lang.form.control_section_description',
             ControlLibrary::GROUP_STANDARD,
@@ -278,7 +289,8 @@ class StandardControlsRegistry
             'preset'
         ];
 
-        $this->controlLibrary->registerControl('radio',
+        $this->controlLibrary->registerControl(
+            'radio',
             'rainlab.builder::lang.form.control_radio',
             'rainlab.builder::lang.form.control_radio_description',
             ControlLibrary::GROUP_STANDARD,
@@ -307,7 +319,8 @@ class StandardControlsRegistry
             'preset'
         ];
 
-        $this->controlLibrary->registerControl('checkboxlist',
+        $this->controlLibrary->registerControl(
+            'checkboxlist',
             'rainlab.builder::lang.form.control_checkboxlist',
             'rainlab.builder::lang.form.control_checkboxlist_description',
             ControlLibrary::GROUP_STANDARD,
@@ -379,7 +392,8 @@ class StandardControlsRegistry
             'attributes'
         ];
 
-        $this->controlLibrary->registerControl('repeater',
+        $this->controlLibrary->registerControl(
+            'repeater',
             'rainlab.builder::lang.form.control_repeater',
             'rainlab.builder::lang.form.control_repeater_description',
             ControlLibrary::GROUP_WIDGETS,
@@ -593,7 +607,8 @@ class StandardControlsRegistry
             ]
         ]);
 
-        $this->controlLibrary->registerControl('codeeditor',
+        $this->controlLibrary->registerControl(
+            'codeeditor',
             'rainlab.builder::lang.form.control_codeeditor',
             'rainlab.builder::lang.form.control_codeeditor_description',
             ControlLibrary::GROUP_WIDGETS,
@@ -619,7 +634,8 @@ class StandardControlsRegistry
             ]
         ];
 
-        $this->controlLibrary->registerControl('colorpicker',
+        $this->controlLibrary->registerControl(
+            'colorpicker',
             'rainlab.builder::lang.form.control_colorpicker',
             'rainlab.builder::lang.form.control_colorpicker_description',
             ControlLibrary::GROUP_WIDGETS,
@@ -695,7 +711,8 @@ class StandardControlsRegistry
             ]
         ];
 
-        $this->controlLibrary->registerControl('datepicker',
+        $this->controlLibrary->registerControl(
+            'datepicker',
             'rainlab.builder::lang.form.control_datepicker',
             'rainlab.builder::lang.form.control_datepicker_description',
             ControlLibrary::GROUP_WIDGETS,
@@ -709,7 +726,8 @@ class StandardControlsRegistry
     {
         $properties = $this->getFieldSizeProperties();
 
-        $this->controlLibrary->registerControl('richeditor',
+        $this->controlLibrary->registerControl(
+            'richeditor',
             'rainlab.builder::lang.form.control_richeditor',
             'rainlab.builder::lang.form.control_richeditor_description',
             ControlLibrary::GROUP_WIDGETS,
@@ -754,7 +772,8 @@ class StandardControlsRegistry
             ]
         ]);
 
-        $this->controlLibrary->registerControl('markdown',
+        $this->controlLibrary->registerControl(
+            'markdown',
             'rainlab.builder::lang.form.control_markdown',
             'rainlab.builder::lang.form.control_markdown_description',
             ControlLibrary::GROUP_WIDGETS,
@@ -961,7 +980,8 @@ class StandardControlsRegistry
             ]
         ];
 
-        $this->controlLibrary->registerControl('fileupload',
+        $this->controlLibrary->registerControl(
+            'fileupload',
             'rainlab.builder::lang.form.control_fileupload',
             'rainlab.builder::lang.form.control_fileupload_description',
             ControlLibrary::GROUP_WIDGETS,
@@ -1024,7 +1044,8 @@ class StandardControlsRegistry
             ]
         ];
 
-        $this->controlLibrary->registerControl('recordfinder',
+        $this->controlLibrary->registerControl(
+            'recordfinder',
             'rainlab.builder::lang.form.control_recordfinder',
             'rainlab.builder::lang.form.control_recordfinder_description',
             ControlLibrary::GROUP_WIDGETS,
@@ -1093,7 +1114,8 @@ class StandardControlsRegistry
             ],
         ];
 
-        $this->controlLibrary->registerControl('mediafinder',
+        $this->controlLibrary->registerControl(
+            'mediafinder',
             'rainlab.builder::lang.form.control_mediafinder',
             'rainlab.builder::lang.form.control_mediafinder_description',
             ControlLibrary::GROUP_WIDGETS,
@@ -1153,7 +1175,8 @@ class StandardControlsRegistry
             ]
         ];
 
-        $this->controlLibrary->registerControl('relation',
+        $this->controlLibrary->registerControl(
+            'relation',
             'rainlab.builder::lang.form.control_relation',
             'rainlab.builder::lang.form.control_relation_description',
             ControlLibrary::GROUP_WIDGETS,

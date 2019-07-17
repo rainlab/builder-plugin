@@ -62,7 +62,7 @@ class IndexControllerOperations extends IndexOperationsBehaviorBase
         $result = $this->controller->widget->controllerList->updateList();
 
         if ($model->behaviors) {
-            // Create a new tab only for controllers 
+            // Create a new tab only for controllers
             // with behaviors.
 
             $widget = $this->makeBaseFormWidget($model->controller, $options);

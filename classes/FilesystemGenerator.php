@@ -7,7 +7,7 @@ use ApplicationException;
 use SystemException;
 
 /**
- * Generates filesystem objects basing on a structure provided with an array 
+ * Generates filesystem objects basing on a structure provided with an array
  * and using file templates and variables. Variables in template files use
  * the Twig syntax, but processed with October\Rain\Syntax\Bracket.
  *
@@ -20,7 +20,7 @@ use SystemException;
  *     'author/plugin/plugin.php' => 'plugin.php.tpl'
  * ];
  * $generator = new FilesystemGenerator('$', $structure, '$/Author/Plugin/templates/plugin');
- * 
+ *
  * $variables = [
  *     'namespace' => 'Author/Plugin'
  * ];
@@ -46,7 +46,7 @@ class FilesystemGenerator
      * The path can contain filesystem symbols.
      * @param array $structure Specifies the structure as array.
      * @param string $templatesPath Path to the directory that contains file templates.
-     * The parameter is required only in case any files should be created. The path can 
+     * The parameter is required only in case any files should be created. The path can
      * contain filesystem symbols.
      */
     public function __construct($destinationPath, array $structure, $templatesPath = null)
@@ -61,7 +61,7 @@ class FilesystemGenerator
 
     public function setVariables($variables)
     {
-        foreach ($variables as $key=>$value) {
+        foreach ($variables as $key => $value) {
             $this->setVariable($key, $value);
         }
     }
@@ -77,7 +77,7 @@ class FilesystemGenerator
             throw new SystemException(Lang::get('rainlab.builder::lang.common.destination_dir_not_exists', ['path'=>$this->destinationPath]));
         }
 
-        foreach ($this->structure as $key=>$value) {
+        foreach ($this->structure as $key => $value) {
             if (is_numeric($key)) {
                 $this->makeDirectory($value);
             }

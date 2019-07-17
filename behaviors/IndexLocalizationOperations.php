@@ -139,7 +139,7 @@ class IndexLocalizationOperations extends IndexOperationsBehaviorBase
         $defaultLanguage = LocalizationModel::getDefaultLanguage();
         if (LocalizationModel::languageFileExists($pluginCode, $defaultLanguage)) {
             $model = $this->loadOrCreateBaseModel($defaultLanguage, $options);
-        } 
+        }
         else {
             $model = LocalizationModel::initModel($pluginCode, $defaultLanguage);
         }

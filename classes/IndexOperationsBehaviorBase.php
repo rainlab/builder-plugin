@@ -19,7 +19,7 @@ abstract class IndexOperationsBehaviorBase extends ControllerBehavior
         if (!strlen($this->baseFormConfigFile)) {
             throw new ApplicationException(sprintf('Base form configuration file is not specified for %s behavior', get_class($this)));
         }
-        
+
         $widgetConfig = $this->makeConfig($this->baseFormConfigFile);
 
         $widgetConfig->model = $this->loadOrCreateBaseModel($modelCode, $options);

@@ -66,7 +66,7 @@ class LocalizationModel extends BaseModel
         else {
             $this->strings = '';
         }
-        
+
         $this->exists = true;
     }
 
@@ -174,7 +174,7 @@ class LocalizationModel extends BaseModel
         $srcArray = $sourceLanguageModel->getOriginalStringsArray();
 
         $languageMixer = new LanguageMixer();
-        
+
         return $languageMixer->addStringsFromAnotherLanguage($destinationText, $srcArray);
     }
 
@@ -268,7 +268,8 @@ class LocalizationModel extends BaseModel
         return File::isFile($filePath);
     }
 
-    protected static function createStringSections(&$arr, $path, $value) {
+    protected static function createStringSections(&$arr, $path, $value)
+    {
         $keys = explode('.', $path);
 
         while ($key = array_shift($keys)) {
@@ -282,7 +283,7 @@ class LocalizationModel extends BaseModel
     {
         $result = [];
 
-        foreach ($stringsArray as $key=>$value) {
+        foreach ($stringsArray as $key => $value) {
             $newKey = strlen($currentKey) ? $currentKey.'.'.$key : $key;
 
             if (is_scalar($value)) {
@@ -300,7 +301,7 @@ class LocalizationModel extends BaseModel
     {
         $result = [];
 
-        foreach ($stringsArray as $key=>$value) {
+        foreach ($stringsArray as $key => $value) {
             $newKey = strlen($currentKey) ? $currentKey.'.'.$key : $key;
 
             if (is_scalar($value)) {
@@ -353,7 +354,7 @@ class LocalizationModel extends BaseModel
             $phpData = var_export($data, true);
             $phpData = preg_replace('/^(\s+)\),/m', '$1],', $phpData);
             $phpData = preg_replace('/^(\s+)array\s+\(/m', '$1[', $phpData);
-            $phpData = preg_replace_callback('/^(\s+)/m', function($matches) {
+            $phpData = preg_replace_callback('/^(\s+)/m', function ($matches) {
                 return str_repeat($matches[1], 2); // Increase indentation
             }, $phpData);
             $phpData = preg_replace('/\n\s+\[/m', '[', $phpData);
@@ -361,7 +362,7 @@ class LocalizationModel extends BaseModel
             $phpData = preg_replace('/^\)\Z/m', ']', $phpData);
 
             return "<?php return ".$phpData.";";
-        } 
+        }
         catch (Exception $ex) {
             throw new ApplicationException(sprintf('Cannot parse the YAML content: %s', $ex->getMessage()));
         }
@@ -400,14 +401,14 @@ class LocalizationModel extends BaseModel
 
     protected function getSanitizedPHPStrings($strings)
     {
-        array_walk_recursive($strings, function(&$item, $key){
+        array_walk_recursive($strings, function (&$item, $key) {
             if (!is_scalar($item)) {
                 return;
             }
 
             // In YAML single quotes are escaped with two single quotes
             // http://yaml.org/spec/current.html#id2534365
-            $item = str_replace("''", "'", $item); 
+            $item = str_replace("''", "'", $item);
         });
 
         return $strings;

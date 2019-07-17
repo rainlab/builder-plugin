@@ -123,11 +123,11 @@ class Plugin extends PluginBase
 
     public function boot()
     {
-        Event::listen('pages.builder.registerControls', function($controlLibrary) {
+        Event::listen('pages.builder.registerControls', function ($controlLibrary) {
             new StandardControlsRegistry($controlLibrary);
         });
 
-        Event::listen('pages.builder.registerControllerBehaviors', function($behaviorLibrary) {
+        Event::listen('pages.builder.registerControllerBehaviors', function ($behaviorLibrary) {
             new StandardBehaviorsRegistry($behaviorLibrary);
         });
 

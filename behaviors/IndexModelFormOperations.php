@@ -27,7 +27,7 @@ class IndexModelFormOperations extends IndexOperationsBehaviorBase
     {
         parent::__construct($controller);
 
-        // Create the form builder instance to handle AJAX 
+        // Create the form builder instance to handle AJAX
         // requests.
         $defaultBuilderField = new FormField('default', 'default');
         $formBulder = new FormBuilder($controller, $defaultBuilderField);

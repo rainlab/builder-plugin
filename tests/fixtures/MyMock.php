@@ -2,5 +2,5 @@
 
 class MyMock
 {
-  public $table = 'my_mock_table';
+    public $table = 'my_mock_table';
 }

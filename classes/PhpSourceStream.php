@@ -16,7 +16,8 @@ class PhpSourceStream
 
     protected $headBookmarks = [];
 
-    public function __construct($fileContents) {
+    public function __construct($fileContents)
+    {
         $this->tokens = token_get_all($fileContents);
     }
 
@@ -181,7 +182,7 @@ class PhpSourceStream
                 return $buffer;
             }
 
-            // The token should be either expected or termination. 
+            // The token should be either expected or termination.
             // If something else is found, return null.
             return null;
         }
@@ -232,7 +233,7 @@ class PhpSourceStream
 
     public function unquotePhpString($string)
     {
-        if ((substr($string, 0, 1) === '\'' && substr($string, -1) === '\'') || 
+        if ((substr($string, 0, 1) === '\'' && substr($string, -1) === '\'') ||
             (substr($string, 0, 1) === '"' && substr($string, -1) === '"')) {
             return substr($string, 1, -1);
         }

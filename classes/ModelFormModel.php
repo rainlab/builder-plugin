@@ -25,7 +25,7 @@ class ModelFormModel extends ModelYamlModel
     public function loadForm($path)
     {
         $this->fileName = $path;
-        
+
         return parent::load($this->getFilePath());
     }
 

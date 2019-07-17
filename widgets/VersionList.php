@@ -83,7 +83,7 @@ class VersionList extends WidgetBase
             $words = explode(' ', $searchTerm);
             $result = [];
 
-            foreach ($items as $version=>$versionInfo) {
+            foreach ($items as $version => $versionInfo) {
                 $description = $this->getVersionDescription($versionInfo);
 
                 if (

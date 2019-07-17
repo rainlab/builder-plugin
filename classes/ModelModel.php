@@ -125,11 +125,11 @@ class ModelModel extends BaseModel
             'addSoftDeleting.deleted_at_column_must_exist' => Lang::get('rainlab.builder::lang.model.error_deleted_at_column_must_exist')
         ];
 
-        Validator::extend('uniqModelName', function($attribute, $value, $parameters) use ($path) {
+        Validator::extend('uniqModelName', function ($attribute, $value, $parameters) use ($path) {
             $value = trim($value);
 
             if (!$this->isNewModel()) {
-                // Editing models is not supported at the moment, 
+                // Editing models is not supported at the moment,
                 // so no validation is required.
                 return true;
             }
@@ -138,11 +138,11 @@ class ModelModel extends BaseModel
         });
 
         $columns = $this->isNewModel() ? Schema::getColumnListing($this->databaseTable) : [];
-        Validator::extend('timestampColumnsMustExist', function($attribute, $value, $parameters) use ($columns) {
+        Validator::extend('timestampColumnsMustExist', function ($attribute, $value, $parameters) use ($columns) {
             return $this->validateColumnsExist($value, $columns, ['created_at', 'updated_at']);
         });
 
-        Validator::extend('deletedAtColumnMustExist', function($attribute, $value, $parameters) use ($columns) {
+        Validator::extend('deletedAtColumnMustExist', function ($attribute, $value, $parameters) use ($columns) {
             return $this->validateColumnsExist($value, $columns, ['deleted_at']);
         });
 
@@ -254,7 +254,7 @@ class ModelModel extends BaseModel
 
         $pluginCodeObj = new PluginCode($pluginCode);
         $columnNames = self::getModelFields($pluginCodeObj, $modelClassName);
-        
+
         $result = [];
         foreach ($columnNames as $columnName) {
             $result[$columnName] = $columnName;
@@ -265,7 +265,7 @@ class ModelModel extends BaseModel
 
     public static function validateModelClassName($modelClassName)
     {
-      return class_exists($modelClassName) || !!preg_match(self::UNQUALIFIED_CLASS_NAME_PATTERN, $modelClassName);
+        return class_exists($modelClassName) || !!preg_match(self::UNQUALIFIED_CLASS_NAME_PATTERN, $modelClassName);
     }
 
     protected function getFilePath()
@@ -280,7 +280,7 @@ class ModelModel extends BaseModel
         }
 
         if (!$this->isNewModel()) {
-            // Editing models is not supported at the moment, 
+            // Editing models is not supported at the moment,
             // so no validation is required.
             return true;
         }

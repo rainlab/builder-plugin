@@ -65,7 +65,7 @@ class FormBuilder extends FormWidgetBase
     public function renderControlList($controls, $listName = '')
     {
         return $this->makePartial('controllist', [
-            'controls' => $controls, 
+            'controls' => $controls,
             'listName' => $listName
         ]);
     }
@@ -172,7 +172,7 @@ class FormBuilder extends FormWidgetBase
 
         $result[] = $fieldNameProperty;
 
-        foreach ($propertyConfiguration as $property=>$propertyData) {
+        foreach ($propertyConfiguration as $property => $propertyData) {
             $propertyData['property'] = $property;
 
             if ($propertyData['type'] === 'control-container') {
@@ -229,7 +229,7 @@ class FormBuilder extends FormWidgetBase
 
     protected function renderControlWrapper($type, $properties = [], $controlConfiguration = [])
     {
-        // This method renders the entire control, including 
+        // This method renders the entire control, including
         // the wrapping element.
 
         $controlInfo = $this->getControlInfo($type);
@@ -251,7 +251,7 @@ class FormBuilder extends FormWidgetBase
         return $this->makePartial('controlwrapper', [
             'fieldsConfiguration' => $this->propertiesToInspectorSchema($controlInfo['properties']),
             'controlConfiguration' => $controlConfiguration,
-            'type' => $type, 
+            'type' => $type,
             'properties' => $properties
         ]);
     }
@@ -277,7 +277,7 @@ class FormBuilder extends FormWidgetBase
         // Remove the control container type property values.
         //
         if (isset($controlInfo['properties'])) {
-            foreach ($controlInfo['properties'] as $property=>$propertyConfig) {
+            foreach ($controlInfo['properties'] as $property => $propertyConfig) {
                 if (isset($propertyConfig['type']) && $propertyConfig['type'] === 'control-container' && isset($properties[$property])) {
                     unset($properties[$property]);
                 }
@@ -325,7 +325,7 @@ class FormBuilder extends FormWidgetBase
                 'type' => 'builderLocalization',
                 'validation' => [
                     'required' => [
-                        'message' => Lang::get('rainlab.builder::lang.form.property_tab_title_required')    
+                        'message' => Lang::get('rainlab.builder::lang.form.property_tab_title_required')
                     ]
                 ]
             ]
@@ -393,7 +393,7 @@ class FormBuilder extends FormWidgetBase
             $defaultTab = Lang::get($fields[$tabsName]['defaultTab']);
         }
 
-        foreach ($fields[$tabsName]['fields'] as $fieldName=>$fieldConfiguration) {
+        foreach ($fields[$tabsName]['fields'] as $fieldName => $fieldConfiguration) {
             if (!isset($fieldConfiguration['tab'])) {
                 $fieldConfiguration['tab'] = $defaultTab;
             }

@@ -71,7 +71,7 @@ class MigrationModel extends BaseModel
 
         $versionInformation = $this->getPluginVersionInformation();
 
-        Validator::extend('uniqueVersion', function($attribute, $value, $parameters) use ($versionInformation, $isNewModel) {
+        Validator::extend('uniqueVersion', function ($attribute, $value, $parameters) use ($versionInformation, $isNewModel) {
             if ($isNewModel || $this->version != $this->originalVersion) {
                 return !array_key_exists($value, $versionInformation);
             }
@@ -122,7 +122,7 @@ class MigrationModel extends BaseModel
         try {
             $originalVersionData = $this->insertOrUpdateVersion();
         } catch (Exception $ex) {
-            // Remove the script file, but don't rollback 
+            // Remove the script file, but don't rollback
             // the version.yaml.
             $this->rollbackSaving(null, $originalFileContents);
 
@@ -289,7 +289,7 @@ class MigrationModel extends BaseModel
         }
 
         /*
-         * The file name is based on the migration class name. 
+         * The file name is based on the migration class name.
          */
         $parser = new MigrationFileParser();
         $migrationInfo = $parser->extractMigrationInfoFromSource($code);

@@ -105,7 +105,7 @@ class MenuEditor extends FormWidgetBase
         $icons = IconList::getList();
         $this->iconList = [];
 
-        foreach ($icons as $iconCode=>$iconInfo) {
+        foreach ($icons as $iconCode => $iconInfo) {
             $iconCode = preg_replace('/^oc\-/', '', $iconCode);
 
             $this->iconList[$iconCode] = $iconInfo;

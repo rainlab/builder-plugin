@@ -39,7 +39,7 @@ class ControlLibrary
 
         Event::fire('pages.builder.registerControls', [$this]);
 
-        foreach ($this->controls as $controlType=>$controlInfo) {
+        foreach ($this->controls as $controlType => $controlInfo) {
             $controlGroup = $this->resolveControlGroupName($controlInfo['group']);
 
             if (!array_key_exists($controlGroup, $this->groupedControls)) {
