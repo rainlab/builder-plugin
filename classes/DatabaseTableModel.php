@@ -385,8 +385,12 @@ class DatabaseTableModel extends BaseModel
             ];
 
             // Format quoted "null" values with quotes
-            if ($column->getNotnull() === false && strtolower($item['default']) === 'null') {
-                $item['default'] = sprintf("'%s'", $item['default']);
+            if ($column->getNotnull() === false) {
+                if ($item['default'] === null) {
+                    $item['default'] = 'null';
+                } elseif (strtolower($item['default']) === 'null') {
+                    $item['default'] = "'null'";
+                }
             }
 
             $this->columns[] = $item;
