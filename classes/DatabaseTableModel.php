@@ -297,6 +297,10 @@ class DatabaseTableModel extends BaseModel
             if (!strlen($column['default'])) {
                 continue;
             }
+            // Allow null value for all nullable columns
+            if (strtolower($column['default']) === 'null' && (bool) $column['allow_null'] === true) {
+                continue;
+            }
 
             $default = trim($column['default']);
 
