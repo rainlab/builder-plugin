@@ -691,7 +691,7 @@ class StandardControlsRegistry
                 'description' => Lang::get('rainlab.builder::lang.form.property_datepicker_year_format_description'),
                 'type' => 'string',
                 'ignoreIfEmpty' => true,
-                'sortOrder' => 85			
+                'sortOrder' => 85
             ]
         ];
 
