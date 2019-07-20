@@ -134,8 +134,8 @@ class ControlLibrary
                 'ignoreIfEmpty' => true,
             ],
             'span' => [
-                'title' => Lang::get('rainlab.builder::lang.form.property_span_title'),
-                'type' => 'dropdown',
+                'title'   => Lang::get('rainlab.builder::lang.form.property_span_title'),
+                'type'    => 'dropdown',
                 'default' => 'full',
                 'options' => [
                     'left'            => Lang::get('rainlab.builder::lang.form.span_left'),
