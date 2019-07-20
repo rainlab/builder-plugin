@@ -86,6 +86,15 @@
         this.unmodifyTab($masterTabPane)
     }
 
+    DatabaseTable.prototype.cmdAddId = function(ev) {
+        var $target = $(ev.currentTarget),
+            added = this.addIdColumn($target)
+
+        if (!added) {
+            alert($target.closest('form').attr('data-lang-id-exists'))
+        }
+    }
+
     DatabaseTable.prototype.cmdAddTimestamps = function(ev) {
         var $target = $(ev.currentTarget),
             added = this.addTimeStampColumns($target, ['created_at', 'updated_at'])
@@ -159,8 +168,12 @@
         var $masterTabPane = this.getMasterTabsActivePane(),
             $form = $masterTabPane.find('form'),
             $toolbar = $masterTabPane.find('div[data-control=table] div.toolbar'),
-            $button = $('<a class="btn oc-icon-clock-o builder-custom-table-button" data-builder-command="databaseTable:cmdAddTimestamps"></a>')
+            $button = $('<a class="btn oc-icon-clock-o builder-custom-table-button" data-builder-command="databaseTable:cmdAddId"></a>')
 
+        $button.text($form.attr('data-lang-add-id'));
+        $toolbar.append($button)
+
+        $button = $('<a class="btn oc-icon-clock-o builder-custom-table-button" data-builder-command="databaseTable:cmdAddTimestamps"></a>')
         $button.text($form.attr('data-lang-add-timestamps'));
         $toolbar.append($button)
 
@@ -255,6 +268,42 @@
         }
 
         return result
+    }
+
+    DatabaseTable.prototype.addIdColumn = function($target) {
+        var existingColumns = this.getColumnNames($target),
+            added = false
+
+        if ($.inArray('id', existingColumns) == -1) {
+            var tableObj = this.getTableControlObject($target),
+                currentData = this.getTableData($target),
+                rowData = {
+                    name: 'id',
+                    type: 'integer',
+                    unsigned: true,
+                    auto_increment: true,
+                    primary_key: true,
+                }
+
+            if (currentData.length-1) {
+                tableObj.addRecord('bottom', true)
+            }
+
+            tableObj.setRowValues(currentData.length-1, rowData)
+
+            // Forces the table to apply values
+            // from the data source
+            tableObj.addRecord('bottom', false)
+            tableObj.deleteRecord()
+
+            added = true
+        }
+
+        if (added) {
+            $target.trigger('change')
+        }
+
+        return added
     }
 
     DatabaseTable.prototype.addTimeStampColumns = function($target, columns)
