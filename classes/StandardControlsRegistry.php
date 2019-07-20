@@ -59,7 +59,7 @@ class StandardControlsRegistry
             'rainlab.builder::lang.form.control_text_description',
             ControlLibrary::GROUP_STANDARD,
             'icon-terminal',
-            $this->controlLibrary->getStandardProperties(['stretch']),
+            $this->controlLibrary->getStandardProperties(['dynamic']),
             null
         );
     }
@@ -71,7 +71,7 @@ class StandardControlsRegistry
             'rainlab.builder::lang.form.control_password_description',
             ControlLibrary::GROUP_STANDARD,
             'icon-lock',
-            $this->controlLibrary->getStandardProperties(['stretch']),
+            $this->controlLibrary->getStandardProperties(['dynamic']),
             null
         );
     }
@@ -83,7 +83,7 @@ class StandardControlsRegistry
             'rainlab.builder::lang.form.control_number_description',
             ControlLibrary::GROUP_STANDARD,
             'icon-superscript',
-            $this->controlLibrary->getStandardProperties(['stretch']),
+            $this->controlLibrary->getStandardProperties(['dynamic']),
             null
         );
     }
@@ -95,7 +95,7 @@ class StandardControlsRegistry
             'rainlab.builder::lang.form.control_checkbox_description',
             ControlLibrary::GROUP_STANDARD,
             'icon-check-square-o',
-            $this->controlLibrary->getStandardProperties(['oc.commentPosition', 'stretch'], $this->getCheckboxTypeProperties()),
+            $this->controlLibrary->getStandardProperties(['oc.commentPosition', 'dynamic'], $this->getCheckboxTypeProperties()),
             null
         );
     }
@@ -107,7 +107,7 @@ class StandardControlsRegistry
             'rainlab.builder::lang.form.control_switch_description',
             ControlLibrary::GROUP_STANDARD,
             'icon-toggle-on',
-            $this->controlLibrary->getStandardProperties(['oc.commentPosition', 'stretch'], $this->getCheckboxTypeProperties()),
+            $this->controlLibrary->getStandardProperties(['oc.commentPosition', 'dynamic'], $this->getCheckboxTypeProperties()),
             null
         );
     }
@@ -121,7 +121,7 @@ class StandardControlsRegistry
             'rainlab.builder::lang.form.control_textarea_description',
             ControlLibrary::GROUP_STANDARD,
             'icon-pencil-square-o',
-            $this->controlLibrary->getStandardProperties(['stretch'], $properties),
+            $this->controlLibrary->getStandardProperties([], $properties),
             null
         );
     }
@@ -156,7 +156,7 @@ class StandardControlsRegistry
             'rainlab.builder::lang.form.control_dropdown_description',
             ControlLibrary::GROUP_STANDARD,
             'icon-angle-double-down',
-            $this->controlLibrary->getStandardProperties(['stretch'], $properties),
+            $this->controlLibrary->getStandardProperties(['dynamic'], $properties),
             null
         );
     }
@@ -177,7 +177,7 @@ class StandardControlsRegistry
             'rainlab.builder::lang.form.control_balloon-selector_description',
             ControlLibrary::GROUP_STANDARD,
             'icon-ellipsis-h',
-            $this->controlLibrary->getStandardProperties(['stretch'], $properties),
+            $this->controlLibrary->getStandardProperties(['dynamic'], $properties),
             null
         );
     }
@@ -237,7 +237,7 @@ class StandardControlsRegistry
     protected function registerSectionControl()
     {
         $ignoreProperties = [
-            'stretch',
+            'dynamic',
             'default',
             'placeholder',
             'required',
@@ -271,7 +271,7 @@ class StandardControlsRegistry
         ];
 
         $ignoreProperties = [
-            'stretch',
+            'dynamic',
             'default',
             'placeholder',
             'defaultFrom',
@@ -300,7 +300,7 @@ class StandardControlsRegistry
         ];
 
         $ignoreProperties = [
-            'stretch',
+            'dynamic',
             'default',
             'placeholder',
             'defaultFrom',
@@ -330,7 +330,7 @@ class StandardControlsRegistry
     protected function getPartialIgnoreProperties()
     {
         return [
-            'stretch',
+            'dynamic',
             'default',
             'placeholder',
             'required',
@@ -369,7 +369,7 @@ class StandardControlsRegistry
         ];
 
         $ignoreProperties = [
-            'stretch',
+            'dynamic',
             'placeholder',
             'default',
             'required',
@@ -606,7 +606,7 @@ class StandardControlsRegistry
     protected function registerColorPickerWidget()
     {
         $ignoreProperties = [
-            'stretch'
+            'dynamic'
         ];
 
         $properties = [
@@ -632,7 +632,7 @@ class StandardControlsRegistry
     protected function registerDatepickerWidget()
     {
         $ignoreProperties = [
-            'stretch'
+            'dynamic'
         ];
 
         $properties = [
@@ -685,13 +685,6 @@ class StandardControlsRegistry
                     ]
                 ],
                 'sortOrder' => 84
-            ],
-            'format' => [
-                'title' => Lang::get('rainlab.builder::lang.form.property_datepicker_format'),
-                'description' => Lang::get('rainlab.builder::lang.form.property_datepicker_year_format_description'),
-                'type' => 'string',
-                'ignoreIfEmpty' => true,
-                'sortOrder' => 85
             ]
         ];
 
@@ -767,7 +760,7 @@ class StandardControlsRegistry
     protected function registerTagListWidget()
     {
         $ignoreProperties = [
-            'stretch',
+            'dynamic',
             'readOnly'
         ];
 
@@ -844,7 +837,7 @@ class StandardControlsRegistry
     protected function registerFileUploadWidget()
     {
         $ignoreProperties = [
-            'stretch',
+            'dynamic',
             'default',
             'placeholder',
             'defaultFrom',
@@ -974,7 +967,7 @@ class StandardControlsRegistry
     protected function registerRecordFinderWidget()
     {
         $ignoreProperties = [
-            'stretch',
+            'dynamic',
             'default',
             'placeholder',
             'defaultFrom',
@@ -1037,7 +1030,7 @@ class StandardControlsRegistry
     protected function registerMediaFinderWidget()
     {
         $ignoreProperties = [
-            'stretch',
+            'dynamic',
             'default',
             'placeholder',
             'defaultFrom',
@@ -1106,7 +1099,7 @@ class StandardControlsRegistry
     protected function registerRelationWidget()
     {
         $ignoreProperties = [
-            'stretch',
+            'dynamic',
             'default',
             'placeholder',
             'defaultFrom',
