@@ -119,6 +119,8 @@ DatabaseTable.prototype.cmdDeleteTable=function(ev){var $target=$(ev.currentTarg
 $.oc.confirm($target.data('confirm'),this.proxy(this.deleteConfirmed))}
 DatabaseTable.prototype.cmdUnModifyForm=function(){var $masterTabPane=this.getMasterTabsActivePane()
 this.unmodifyTab($masterTabPane)}
+DatabaseTable.prototype.cmdAddId=function(ev){var $target=$(ev.currentTarget),added=this.addIdColumn($target)
+if(!added){alert($target.closest('form').attr('data-lang-id-exists'))}}
 DatabaseTable.prototype.cmdAddTimestamps=function(ev){var $target=$(ev.currentTarget),added=this.addTimeStampColumns($target,['created_at','updated_at'])
 if(!added){alert($target.closest('form').attr('data-lang-timestamps-exist'))}}
 DatabaseTable.prototype.cmdAddSoftDelete=function(ev){var $target=$(ev.currentTarget),added=this.addTimeStampColumns($target,['deleted_at'])
@@ -135,7 +137,9 @@ if(column=='allow_null'&&value){updatedRow.primary_key=0}
 if(column=='primary_key'&&!value){updatedRow.auto_increment=0}
 $target.table('setRowValues',rowIndex,updatedRow)}
 DatabaseTable.prototype.onTableLoaded=function(){$(document).trigger('render')
-var $masterTabPane=this.getMasterTabsActivePane(),$form=$masterTabPane.find('form'),$toolbar=$masterTabPane.find('div[data-control=table] div.toolbar'),$button=$('<a class="btn oc-icon-clock-o builder-custom-table-button" data-builder-command="databaseTable:cmdAddTimestamps"></a>')
+var $masterTabPane=this.getMasterTabsActivePane(),$form=$masterTabPane.find('form'),$toolbar=$masterTabPane.find('div[data-control=table] div.toolbar'),$button=$('<a class="btn oc-icon-clock-o builder-custom-table-button" data-builder-command="databaseTable:cmdAddId"></a>')
+$button.text($form.attr('data-lang-add-id'));$toolbar.append($button)
+$button=$('<a class="btn oc-icon-clock-o builder-custom-table-button" data-builder-command="databaseTable:cmdAddTimestamps"></a>')
 $button.text($form.attr('data-lang-add-timestamps'));$toolbar.append($button)
 $button=$('<a class="btn oc-icon-refresh builder-custom-table-button" data-builder-command="databaseTable:cmdAddSoftDelete"></a>')
 $button.text($form.attr('data-lang-add-soft-delete'));$toolbar.append($button)}
@@ -167,6 +171,15 @@ tableObj.unfocusTable()
 var data=this.getTableData($target),result=[]
 for(var index in data){if(data[index].name!==undefined){result.push($.trim(data[index].name))}}
 return result}
+DatabaseTable.prototype.addIdColumn=function($target){var existingColumns=this.getColumnNames($target),added=false
+if($.inArray('id',existingColumns)==-1){var tableObj=this.getTableControlObject($target),currentData=this.getTableData($target),rowData={name:'id',type:'integer',unsigned:true,auto_increment:true,primary_key:true,}
+if(currentData.length-1){tableObj.addRecord('bottom',true)}
+tableObj.setRowValues(currentData.length-1,rowData)
+tableObj.addRecord('bottom',false)
+tableObj.deleteRecord()
+added=true}
+if(added){$target.trigger('change')}
+return added}
 DatabaseTable.prototype.addTimeStampColumns=function($target,columns)
 {var existingColumns=this.getColumnNames($target),added=false
 for(var index in columns){var column=columns[index]
