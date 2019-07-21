@@ -86,7 +86,7 @@
         this.unmodifyTab($masterTabPane)
     }
 
-    DatabaseTable.prototype.cmdAddId = function(ev) {
+    DatabaseTable.prototype.cmdAddIdColumn = function(ev) {
         var $target = $(ev.currentTarget),
             added = this.addIdColumn($target)
 
@@ -168,18 +168,18 @@
         var $masterTabPane = this.getMasterTabsActivePane(),
             $form = $masterTabPane.find('form'),
             $toolbar = $masterTabPane.find('div[data-control=table] div.toolbar'),
-            $button = $('<a class="btn oc-icon-clock-o builder-custom-table-button" data-builder-command="databaseTable:cmdAddId"></a>')
+            $addIdButton = $('<a class="btn oc-icon-clock-o builder-custom-table-button" data-builder-command="databaseTable:cmdAddIdColumn"></a>'),
+            $addTimestampsButton = $('<a class="btn oc-icon-clock-o builder-custom-table-button" data-builder-command="databaseTable:cmdAddTimestamps"></a>'),
+            $addSoftDeleteButton = $('<a class="btn oc-icon-refresh builder-custom-table-button" data-builder-command="databaseTable:cmdAddSoftDelete"></a>')
 
-        $button.text($form.attr('data-lang-add-id'));
-        $toolbar.append($button)
+        $addIdButton.text($form.attr('data-lang-add-id'));
+        $toolbar.append($addIdButton)
 
-        $button = $('<a class="btn oc-icon-clock-o builder-custom-table-button" data-builder-command="databaseTable:cmdAddTimestamps"></a>')
-        $button.text($form.attr('data-lang-add-timestamps'));
-        $toolbar.append($button)
+        $addTimestampsButton.text($form.attr('data-lang-add-timestamps'));
+        $toolbar.append($addTimestampsButton)
 
-        $button = $('<a class="btn oc-icon-refresh builder-custom-table-button" data-builder-command="databaseTable:cmdAddSoftDelete"></a>')
-        $button.text($form.attr('data-lang-add-soft-delete'));
-        $toolbar.append($button)
+        $addSoftDeleteButton.text($form.attr('data-lang-add-soft-delete'));
+        $toolbar.append($addSoftDeleteButton)
     }
 
     // INTERNAL METHODS
@@ -274,7 +274,7 @@
         var existingColumns = this.getColumnNames($target),
             added = false
 
-        if ($.inArray('id', existingColumns) == -1) {
+        if (existingColumns.indexOf('id') == -1) {
             var tableObj = this.getTableControlObject($target),
                 currentData = this.getTableData($target),
                 rowData = {
@@ -314,7 +314,7 @@
         for (var index in columns) {
             var column = columns[index]
 
-            if ($.inArray(column, existingColumns) == -1) {
+            if (existingColumns.indexOf(column) == -1) {
                 this.addTimeStampColumn($target, column)
                 added = true
             }
@@ -338,7 +338,7 @@
             }
 
         tableObj.addRecord('bottom', true)
-        tableObj.setRowValues(currentData.length-1, rowData)
+        tableObj.setRowValues(currentData.length - 1, rowData)
 
         // Forces the table to apply values
         // from the data source
