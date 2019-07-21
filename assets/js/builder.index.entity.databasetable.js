@@ -285,7 +285,7 @@
                     primary_key: true,
                 }
 
-            if (currentData.length-1) {
+            if (currentData.length - 1) {
                 tableObj.addRecord('bottom', true)
             }
 
