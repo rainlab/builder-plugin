@@ -289,7 +289,7 @@
                 tableObj.addRecord('bottom', true)
             }
 
-            tableObj.setRowValues(currentData.length-1, rowData)
+            tableObj.setRowValues(currentData.length - 1, rowData)
 
             // Forces the table to apply values
             // from the data source
