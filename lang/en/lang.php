@@ -60,7 +60,7 @@ return [
         'btn_add_id' => 'Add ID',
         'btn_add_timestamps' => 'Add timestamps',
         'btn_add_soft_deleting' => 'Add soft deleting support',
-        'id_exists' => 'id column already exists in the table.',
+        'id_exists' => 'ID column already exists in the table.',
         'timestamps_exist' => 'created_at and deleted_at columns already exist in the table.',
         'soft_deleting_exist' => 'deleted_at column already exists in the table.',
         'confirm_delete' => 'Delete the table?',
