@@ -285,7 +285,7 @@
                     primary_key: true,
                 }
 
-            if (currentData.length - 1) {
+            if (currentData.length - 1 || currentData[0].name || currentData[0].type || currentData[0].length || currentData[0].unsigned || currentData[0].nullable || currentData[0].auto_increment || currentData[0].primary_key || currentData[0].default) {
                 tableObj.addRecord('bottom', true)
             }
 
