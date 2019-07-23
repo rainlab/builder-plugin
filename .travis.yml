@@ -20,8 +20,9 @@ cache:
     - $HOME/.composer/cache/files
 
 install:
-  - git clone https://github.com/octobercms/october.git
-  - git checkout develop
+  - wget https://github.com/octobercms/october/archive/develop.zip
+  - unzip develop.zip
+  - mv october-develop october
   - mkdir -p ./october/plugins/rainlab/builder
   - mv !(october) october/plugins/rainlab/builder
   - cd october
