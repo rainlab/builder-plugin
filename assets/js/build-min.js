@@ -171,7 +171,7 @@ for(var index in data){if(data[index].name!==undefined){result.push($.trim(data[
 return result}
 DatabaseTable.prototype.addIdColumn=function($target){var existingColumns=this.getColumnNames($target),added=false
 if(existingColumns.indexOf('id')==-1){var tableObj=this.getTableControlObject($target),currentData=this.getTableData($target),rowData={name:'id',type:'integer',unsigned:true,auto_increment:true,primary_key:true,}
-if(currentData.length-1){tableObj.addRecord('bottom',true)}
+console.log(currentData);if(currentData.length-1||currentData[0].name||currentData[0].type||currentData[0].length||currentData[0].unsigned||currentData[0].nullable||currentData[0].auto_increment||currentData[0].primary_key||currentData[0].default){tableObj.addRecord('bottom',true)}
 tableObj.setRowValues(currentData.length-1,rowData)
 tableObj.addRecord('bottom',false)
 tableObj.deleteRecord()
