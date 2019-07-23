@@ -59,7 +59,7 @@ class StandardControlsRegistry
             'rainlab.builder::lang.form.control_text_description',
             ControlLibrary::GROUP_STANDARD,
             'icon-terminal',
-            $this->controlLibrary->getStandardProperties(['dynamic']),
+            $this->controlLibrary->getStandardProperties(['stretch', 'grow']),
             null
         );
     }
@@ -71,7 +71,7 @@ class StandardControlsRegistry
             'rainlab.builder::lang.form.control_password_description',
             ControlLibrary::GROUP_STANDARD,
             'icon-lock',
-            $this->controlLibrary->getStandardProperties(['dynamic']),
+            $this->controlLibrary->getStandardProperties(['stretch', 'grow']),
             null
         );
     }
@@ -83,7 +83,7 @@ class StandardControlsRegistry
             'rainlab.builder::lang.form.control_number_description',
             ControlLibrary::GROUP_STANDARD,
             'icon-superscript',
-            $this->controlLibrary->getStandardProperties(['dynamic']),
+            $this->controlLibrary->getStandardProperties(['stretch', 'grow']),
             null
         );
     }
@@ -95,7 +95,7 @@ class StandardControlsRegistry
             'rainlab.builder::lang.form.control_checkbox_description',
             ControlLibrary::GROUP_STANDARD,
             'icon-check-square-o',
-            $this->controlLibrary->getStandardProperties(['oc.commentPosition', 'dynamic'], $this->getCheckboxTypeProperties()),
+            $this->controlLibrary->getStandardProperties(['oc.commentPosition', 'stretch', 'grow'], $this->getCheckboxTypeProperties()),
             null
         );
     }
@@ -107,7 +107,7 @@ class StandardControlsRegistry
             'rainlab.builder::lang.form.control_switch_description',
             ControlLibrary::GROUP_STANDARD,
             'icon-toggle-on',
-            $this->controlLibrary->getStandardProperties(['oc.commentPosition', 'dynamic'], $this->getCheckboxTypeProperties()),
+            $this->controlLibrary->getStandardProperties(['oc.commentPosition', 'stretch', 'grow'], $this->getCheckboxTypeProperties()),
             null
         );
     }
@@ -156,7 +156,7 @@ class StandardControlsRegistry
             'rainlab.builder::lang.form.control_dropdown_description',
             ControlLibrary::GROUP_STANDARD,
             'icon-angle-double-down',
-            $this->controlLibrary->getStandardProperties(['dynamic'], $properties),
+            $this->controlLibrary->getStandardProperties(['stretch', 'grow'], $properties),
             null
         );
     }
@@ -177,7 +177,7 @@ class StandardControlsRegistry
             'rainlab.builder::lang.form.control_balloon-selector_description',
             ControlLibrary::GROUP_STANDARD,
             'icon-ellipsis-h',
-            $this->controlLibrary->getStandardProperties(['dynamic'], $properties),
+            $this->controlLibrary->getStandardProperties(['stretch', 'grow'], $properties),
             null
         );
     }
@@ -237,7 +237,8 @@ class StandardControlsRegistry
     protected function registerSectionControl()
     {
         $ignoreProperties = [
-            'dynamic',
+            'stretch',
+            'grow',
             'default',
             'placeholder',
             'required',
@@ -271,7 +272,8 @@ class StandardControlsRegistry
         ];
 
         $ignoreProperties = [
-            'dynamic',
+            'stretch',
+            'grow',
             'default',
             'placeholder',
             'defaultFrom',
@@ -300,7 +302,8 @@ class StandardControlsRegistry
         ];
 
         $ignoreProperties = [
-            'dynamic',
+            'stretch',
+            'grow',
             'default',
             'placeholder',
             'defaultFrom',
@@ -330,7 +333,8 @@ class StandardControlsRegistry
     protected function getPartialIgnoreProperties()
     {
         return [
-            'dynamic',
+            'stretch',
+            'grow',
             'default',
             'placeholder',
             'required',
@@ -369,7 +373,8 @@ class StandardControlsRegistry
         ];
 
         $ignoreProperties = [
-            'dynamic',
+            'stretch',
+            'grow',
             'placeholder',
             'default',
             'required',
@@ -606,7 +611,8 @@ class StandardControlsRegistry
     protected function registerColorPickerWidget()
     {
         $ignoreProperties = [
-            'dynamic'
+            'stretch',
+            'grow'
         ];
 
         $properties = [
@@ -632,7 +638,8 @@ class StandardControlsRegistry
     protected function registerDatepickerWidget()
     {
         $ignoreProperties = [
-            'dynamic'
+            'stretch',
+            'grow'
         ];
 
         $properties = [
@@ -767,7 +774,8 @@ class StandardControlsRegistry
     protected function registerTagListWidget()
     {
         $ignoreProperties = [
-            'dynamic',
+            'stretch',
+            'grow',
             'readOnly'
         ];
 
@@ -844,7 +852,8 @@ class StandardControlsRegistry
     protected function registerFileUploadWidget()
     {
         $ignoreProperties = [
-            'dynamic',
+            'stretch',
+            'grow',
             'default',
             'placeholder',
             'defaultFrom',
@@ -974,7 +983,8 @@ class StandardControlsRegistry
     protected function registerRecordFinderWidget()
     {
         $ignoreProperties = [
-            'dynamic',
+            'stretch',
+            'grow',
             'default',
             'placeholder',
             'defaultFrom',
@@ -1037,7 +1047,8 @@ class StandardControlsRegistry
     protected function registerMediaFinderWidget()
     {
         $ignoreProperties = [
-            'dynamic',
+            'stretch',
+            'grow',
             'default',
             'placeholder',
             'defaultFrom',
@@ -1106,7 +1117,8 @@ class StandardControlsRegistry
     protected function registerRelationWidget()
     {
         $ignoreProperties = [
-            'dynamic',
+            'stretch',
+            'grow',
             'default',
             'placeholder',
             'defaultFrom',

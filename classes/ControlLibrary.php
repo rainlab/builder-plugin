@@ -142,17 +142,9 @@ class ControlLibrary
                     'right'           => Lang::get('rainlab.builder::lang.form.span_right'),
                     'full'            => Lang::get('rainlab.builder::lang.form.span_full'),
                     'auto'            => Lang::get('rainlab.builder::lang.form.span_auto'),
-                    '3-1'             => Lang::get('rainlab.builder::lang.form.span_3-1'),
-                    '3-2'             => Lang::get('rainlab.builder::lang.form.span_3-2'),
-                    '3-3'             => Lang::get('rainlab.builder::lang.form.span_3-3'),
-                    '4-1'             => Lang::get('rainlab.builder::lang.form.span_4-1'),
-                    '4-2'             => Lang::get('rainlab.builder::lang.form.span_4-2'),
-                    '4-3'             => Lang::get('rainlab.builder::lang.form.span_4-3'),
-                    '4-4'             => Lang::get('rainlab.builder::lang.form.span_4-4'),
-                    'left-75'         => Lang::get('rainlab.builder::lang.form.span_left-75'),
-                    'right-75'        => Lang::get('rainlab.builder::lang.form.span_right-75'),
-                    'left-25'         => Lang::get('rainlab.builder::lang.form.span_left-25'),
-                    'right-25'        => Lang::get('rainlab.builder::lang.form.span_right-25')
+                    'third'           => Lang::get('rainlab.builder::lang.form.span_third'),
+                    'quarter'         => Lang::get('rainlab.builder::lang.form.span_quarter'),
+                    'three-quarters'  => Lang::get('rainlab.builder::lang.form.span_three-quarters')
                 ]
             ],
             'placeholder' => [
@@ -184,16 +176,15 @@ class ControlLibrary
                 'title' => Lang::get('rainlab.builder::lang.form.property_required_title'),
                 'type'  => 'checkbox'
             ],
-            'dynamic' => [
-                'title'       => Lang::get('rainlab.builder::lang.form.property_dynamic_title'),
-                'description' => Lang::get('rainlab.builder::lang.form.property_dynamic_description'),			
-                'type'        => 'dropdown',
-                'default'     => 'nothing',			
-                'options' => [
-                    'nothing' => '---',
-                    'stretch' => Lang::get('rainlab.builder::lang.form.property_dynamic_stretch'),
-                    'grow'    => Lang::get('rainlab.builder::lang.form.property_dynamic_grow')
-                ]
+            'stretch' => [
+                'title'       => Lang::get('rainlab.builder::lang.form.property_stretch_title'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_stretch_description'),
+                'type'        => 'checkbox'
+            ],
+            'grow' => [
+                'title'       => Lang::get('rainlab.builder::lang.form.property_grow_title'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_grow_description'),
+                'type'        => 'checkbox'
             ],
             'context' => [
                 'title'       => Lang::get('rainlab.builder::lang.form.property_context_title'),
