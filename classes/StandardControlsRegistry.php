@@ -60,7 +60,7 @@ class StandardControlsRegistry
             'rainlab.builder::lang.form.control_text_description',
             ControlLibrary::GROUP_STANDARD,
             'icon-terminal',
-            $this->controlLibrary->getStandardProperties(['stretch']),
+            $this->controlLibrary->getStandardProperties(['stretch', 'grow']),
             null
         );
     }
@@ -73,7 +73,7 @@ class StandardControlsRegistry
             'rainlab.builder::lang.form.control_password_description',
             ControlLibrary::GROUP_STANDARD,
             'icon-lock',
-            $this->controlLibrary->getStandardProperties(['stretch']),
+            $this->controlLibrary->getStandardProperties(['stretch', 'grow']),
             null
         );
     }
@@ -86,7 +86,7 @@ class StandardControlsRegistry
             'rainlab.builder::lang.form.control_number_description',
             ControlLibrary::GROUP_STANDARD,
             'icon-superscript',
-            $this->controlLibrary->getStandardProperties(['stretch']),
+            $this->controlLibrary->getStandardProperties(['stretch', 'grow']),
             null
         );
     }
@@ -99,7 +99,7 @@ class StandardControlsRegistry
             'rainlab.builder::lang.form.control_checkbox_description',
             ControlLibrary::GROUP_STANDARD,
             'icon-check-square-o',
-            $this->controlLibrary->getStandardProperties(['oc.commentPosition', 'stretch'], $this->getCheckboxTypeProperties()),
+            $this->controlLibrary->getStandardProperties(['oc.commentPosition', 'stretch', 'grow'], $this->getCheckboxTypeProperties()),
             null
         );
     }
@@ -112,7 +112,7 @@ class StandardControlsRegistry
             'rainlab.builder::lang.form.control_switch_description',
             ControlLibrary::GROUP_STANDARD,
             'icon-toggle-on',
-            $this->controlLibrary->getStandardProperties(['oc.commentPosition', 'stretch'], $this->getCheckboxTypeProperties()),
+            $this->controlLibrary->getStandardProperties(['oc.commentPosition', 'stretch', 'grow'], $this->getCheckboxTypeProperties()),
             null
         );
     }
@@ -127,7 +127,7 @@ class StandardControlsRegistry
             'rainlab.builder::lang.form.control_textarea_description',
             ControlLibrary::GROUP_STANDARD,
             'icon-pencil-square-o',
-            $this->controlLibrary->getStandardProperties(['stretch'], $properties),
+            $this->controlLibrary->getStandardProperties([], $properties),
             null
         );
     }
@@ -163,7 +163,7 @@ class StandardControlsRegistry
             'rainlab.builder::lang.form.control_dropdown_description',
             ControlLibrary::GROUP_STANDARD,
             'icon-angle-double-down',
-            $this->controlLibrary->getStandardProperties(['stretch'], $properties),
+            $this->controlLibrary->getStandardProperties(['stretch', 'grow'], $properties),
             null
         );
     }
@@ -185,7 +185,7 @@ class StandardControlsRegistry
             'rainlab.builder::lang.form.control_balloon-selector_description',
             ControlLibrary::GROUP_STANDARD,
             'icon-ellipsis-h',
-            $this->controlLibrary->getStandardProperties(['stretch'], $properties),
+            $this->controlLibrary->getStandardProperties(['stretch', 'grow'], $properties),
             null
         );
     }
@@ -248,6 +248,7 @@ class StandardControlsRegistry
     {
         $ignoreProperties = [
             'stretch',
+            'grow',
             'default',
             'placeholder',
             'required',
@@ -283,6 +284,7 @@ class StandardControlsRegistry
 
         $ignoreProperties = [
             'stretch',
+            'grow',
             'default',
             'placeholder',
             'defaultFrom',
@@ -313,6 +315,7 @@ class StandardControlsRegistry
 
         $ignoreProperties = [
             'stretch',
+            'grow',
             'default',
             'placeholder',
             'defaultFrom',
@@ -344,6 +347,7 @@ class StandardControlsRegistry
     {
         return [
             'stretch',
+            'grow',
             'default',
             'placeholder',
             'required',
@@ -383,6 +387,7 @@ class StandardControlsRegistry
 
         $ignoreProperties = [
             'stretch',
+            'grow',
             'placeholder',
             'default',
             'required',
@@ -621,7 +626,8 @@ class StandardControlsRegistry
     protected function registerColorPickerWidget()
     {
         $ignoreProperties = [
-            'stretch'
+            'stretch',
+            'grow'
         ];
 
         $properties = [
@@ -648,7 +654,8 @@ class StandardControlsRegistry
     protected function registerDatepickerWidget()
     {
         $ignoreProperties = [
-            'stretch'
+            'stretch',
+            'grow'
         ];
 
         $properties = [
@@ -787,6 +794,7 @@ class StandardControlsRegistry
     {
         $ignoreProperties = [
             'stretch',
+            'grow',
             'readOnly'
         ];
 
@@ -864,6 +872,7 @@ class StandardControlsRegistry
     {
         $ignoreProperties = [
             'stretch',
+            'grow',
             'default',
             'placeholder',
             'defaultFrom',
@@ -995,6 +1004,7 @@ class StandardControlsRegistry
     {
         $ignoreProperties = [
             'stretch',
+            'grow',
             'default',
             'placeholder',
             'defaultFrom',
@@ -1059,6 +1069,7 @@ class StandardControlsRegistry
     {
         $ignoreProperties = [
             'stretch',
+            'grow',
             'default',
             'placeholder',
             'defaultFrom',
@@ -1129,6 +1140,7 @@ class StandardControlsRegistry
     {
         $ignoreProperties = [
             'stretch',
+            'grow',
             'default',
             'placeholder',
             'defaultFrom',
