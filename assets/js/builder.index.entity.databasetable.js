@@ -274,7 +274,7 @@
         var existingColumns = this.getColumnNames($target),
             added = false
 
-        if (existingColumns.indexOf('id') == -1) {
+        if (existingColumns.indexOf('id') === -1) {
             var tableObj = this.getTableControlObject($target),
                 currentData = this.getTableData($target),
                 rowData = {
@@ -314,7 +314,7 @@
         for (var index in columns) {
             var column = columns[index]
 
-            if (existingColumns.indexOf(column) == -1) {
+            if (existingColumns.indexOf(column) === -1) {
                 this.addTimeStampColumn($target, column)
                 added = true
             }
