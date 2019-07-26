@@ -86,6 +86,15 @@
         this.unmodifyTab($masterTabPane)
     }
 
+    DatabaseTable.prototype.cmdAddIdColumn = function(ev) {
+        var $target = $(ev.currentTarget),
+            added = this.addIdColumn($target)
+
+        if (!added) {
+            alert($target.closest('form').attr('data-lang-id-exists'))
+        }
+    }
+
     DatabaseTable.prototype.cmdAddTimestamps = function(ev) {
         var $target = $(ev.currentTarget),
             added = this.addTimeStampColumns($target, ['created_at', 'updated_at'])
@@ -159,14 +168,18 @@
         var $masterTabPane = this.getMasterTabsActivePane(),
             $form = $masterTabPane.find('form'),
             $toolbar = $masterTabPane.find('div[data-control=table] div.toolbar'),
-            $button = $('<a class="btn oc-icon-clock-o builder-custom-table-button" data-builder-command="databaseTable:cmdAddTimestamps"></a>')
+            $addIdButton = $('<a class="btn oc-icon-clock-o builder-custom-table-button" data-builder-command="databaseTable:cmdAddIdColumn"></a>'),
+            $addTimestampsButton = $('<a class="btn oc-icon-clock-o builder-custom-table-button" data-builder-command="databaseTable:cmdAddTimestamps"></a>'),
+            $addSoftDeleteButton = $('<a class="btn oc-icon-refresh builder-custom-table-button" data-builder-command="databaseTable:cmdAddSoftDelete"></a>')
 
-        $button.text($form.attr('data-lang-add-timestamps'));
-        $toolbar.append($button)
+        $addIdButton.text($form.attr('data-lang-add-id'));
+        $toolbar.append($addIdButton)
 
-        $button = $('<a class="btn oc-icon-refresh builder-custom-table-button" data-builder-command="databaseTable:cmdAddSoftDelete"></a>')
-        $button.text($form.attr('data-lang-add-soft-delete'));
-        $toolbar.append($button)
+        $addTimestampsButton.text($form.attr('data-lang-add-timestamps'));
+        $toolbar.append($addTimestampsButton)
+
+        $addSoftDeleteButton.text($form.attr('data-lang-add-soft-delete'));
+        $toolbar.append($addSoftDeleteButton)
     }
 
     // INTERNAL METHODS
@@ -257,6 +270,42 @@
         return result
     }
 
+    DatabaseTable.prototype.addIdColumn = function($target) {
+        var existingColumns = this.getColumnNames($target),
+            added = false
+
+        if (existingColumns.indexOf('id') === -1) {
+            var tableObj = this.getTableControlObject($target),
+                currentData = this.getTableData($target),
+                rowData = {
+                    name: 'id',
+                    type: 'integer',
+                    unsigned: true,
+                    auto_increment: true,
+                    primary_key: true,
+                }
+
+            if (currentData.length - 1 || currentData[0].name || currentData[0].type || currentData[0].length || currentData[0].unsigned || currentData[0].nullable || currentData[0].auto_increment || currentData[0].primary_key || currentData[0].default) {
+                tableObj.addRecord('bottom', true)
+            }
+
+            tableObj.setRowValues(currentData.length - 1, rowData)
+
+            // Forces the table to apply values
+            // from the data source
+            tableObj.addRecord('bottom', false)
+            tableObj.deleteRecord()
+
+            added = true
+        }
+
+        if (added) {
+            $target.trigger('change')
+        }
+
+        return added
+    }
+
     DatabaseTable.prototype.addTimeStampColumns = function($target, columns)
     {
         var existingColumns = this.getColumnNames($target),
@@ -265,7 +314,7 @@
         for (var index in columns) {
             var column = columns[index]
 
-            if ($.inArray(column, existingColumns) == -1) {
+            if (existingColumns.indexOf(column) === -1) {
                 this.addTimeStampColumn($target, column)
                 added = true
             }
@@ -289,7 +338,7 @@
             }
 
         tableObj.addRecord('bottom', true)
-        tableObj.setRowValues(currentData.length-1, rowData)
+        tableObj.setRowValues(currentData.length - 1, rowData)
 
         // Forces the table to apply values
         // from the data source
