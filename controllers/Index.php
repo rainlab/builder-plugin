@@ -8,7 +8,9 @@ use RainLab\Builder\Widgets\ModelList;
 use RainLab\Builder\Widgets\VersionList;
 use RainLab\Builder\Widgets\LanguageList;
 use RainLab\Builder\Widgets\ControllerList;
+use Backend;
 use BackendMenu;
+use Config;
 
 /**
  * Builder index controller
@@ -62,7 +64,17 @@ class Index extends Controller
 
         // The table widget scripts should be preloaded
         $this->addJs('/modules/backend/widgets/table/assets/js/build-min.js', 'core');
-        $this->addJs('/plugins/rainlab/builder/assets/js/build-min.js', 'RainLab.Builder');
+
+        if (Config::get('develop.decompileBackendAssets', false)) {
+            // Allow decompiled backend assets for RainLab Builder
+            $assets = Backend::decompileAsset('../../plugins/rainlab/builder/assets/js/build.js', true);
+
+            foreach ($assets as $asset) {
+                $this->addJs($asset, 'RainLab.Builder');
+            }
+        } else {
+            $this->addJs('/plugins/rainlab/builder/assets/js/build-min.js', 'RainLab.Builder');
+        }
 
         $this->pageTitleTemplate = '%s Builder';
     }
