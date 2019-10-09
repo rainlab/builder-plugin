@@ -668,12 +668,6 @@ class StandardControlsRegistry
                 'description' => Lang::get('rainlab.builder::lang.form.property_datepicker_min_date_description'),
                 'type' => 'string',
                 'ignoreIfEmpty' => true,
-                'validation' => [
-                    'regex' => [
-                        'pattern' => '^[0-9]{4}-[0-9]{2}-[0-9]{2}$',
-                        'message' => Lang::get('rainlab.builder::lang.form.property_datepicker_date_invalid_format')
-                    ]
-                ],
                 'sortOrder' => 82
             ],
             'maxDate' => [
@@ -681,12 +675,6 @@ class StandardControlsRegistry
                 'description' => Lang::get('rainlab.builder::lang.form.property_datepicker_max_date_description'),
                 'type' => 'string',
                 'ignoreIfEmpty' => true,
-                'validation' => [
-                    'regex' => [
-                        'pattern' => '^[0-9]{4}-[0-9]{2}-[0-9]{2}$',
-                        'message' => Lang::get('rainlab.builder::lang.form.property_datepicker_date_invalid_format')
-                    ]
-                ],
                 'sortOrder' => 83
             ],
             'yearRange' => [
