@@ -204,6 +204,7 @@ return [
         'property_datepicker_min_date_description' => 'The minimum/earliest date that can be selected. This may be any string accepted by Carbon. Leave empty for no minimum date.',
         'property_datepicker_max_date' => 'Najpóźniejsza data',
         'property_datepicker_max_date_description' => 'The maximum/latest date that can be selected. This may be any string accepted by Carbon. Leave empty for no maximum date.',        'property_datepicker_year_range' => 'Zakres lat',
+        'property_datepicker_year_range' => 'Zakres lat',
         'property_datepicker_year_range_description' => 'Liczba lat z obu stron zakresu (np. "10") lub dolny i górny zakres w tablicy (np. "[1900,2015]"). Pozostaw puste dla wartości domyślnej (10).',
         'property_datepicker_year_range_invalid_format' => 'Nieprawidłowy format zakresu lat. Użyj liczby (np. "10") lub dolnego i górnego zakresu w tablicy (np. "[1900,2015]")',
         'property_datepicker_format' => 'Format',
