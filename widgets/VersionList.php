@@ -69,7 +69,7 @@ class VersionList extends WidgetBase
 
         $this->putSession('sort', $this->config->sort);
 
-        return ['#'.$this->getId('body') => $this->makePartial('widget-contents', $this->getRenderData())];
+        return ['#' . $this->getId('body') => $this->makePartial('widget-contents', $this->getRenderData())];
     }
 
     /*
