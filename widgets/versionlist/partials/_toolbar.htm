@@ -2,7 +2,7 @@
     <div class="control-toolbar toolbar-padded">
         <div class="toolbar-item" data-calculate-width>
             <div class="btn-group">
-                <div class="dropdown last">
+                <div class="dropdown">
                     <button type="button" class="btn btn-default oc-icon-plus"
                         data-toggle="dropdown"
                         ><?= e(trans('rainlab.builder::lang.common.add')) ?></button>
@@ -11,10 +11,11 @@
                         <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:;" data-builder-command="version:cmdCreateVersion" data-version-type="custom" class="oc-icon-repeat"><?= e(trans('rainlab.builder::lang.version.custom')) ?></a></li>
 
                         <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:;" data-builder-command="version:cmdCreateVersion" data-version-type="migration" class="oc-icon-table"><?= e(trans('rainlab.builder::lang.version.migration')) ?></a></li>
-                        
+
                         <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:;" data-builder-command="version:cmdCreateVersion" data-version-type="seeder" class="oc-icon-th"><?= e(trans('rainlab.builder::lang.version.seeder')) ?></a></li>
                     </ul>
                 </div>
+                <?= $this->makePartial('sort'); ?>
             </div>
         </div>
         <div class="relative toolbar-item loading-indicator-container size-input-text">

@@ -1,8 +1,11 @@
-<div class="pull-right">
-    <?php if($this->getConfig('sort', 'asc') === 'asc'): ?>
-    <a href="javascript:;" data-request="<?= $this->getEventHandler('onSort') ?>" data-request-data="sort: 'desc'" class="white oc-icon-sort-numeric-desc" title="<?= e(trans('rainlab.builder::lang.version.sort_descending')) ?>"></a>
-    <?php else: ?>
-    <a href="javascript:;" data-request="<?= $this->getEventHandler('onSort') ?>" data-request-data="sort: 'asc'" class="white oc-icon-sort-numeric-asc"
-       title="<?= e(trans('rainlab.builder::lang.version.sort_ascending')) ?>"></a>
-    <?php endif; ?>
-</div>
+<?php if ($this->getConfig('sort', 'asc') === 'asc'): ?>
+    <button data-request="<?= $this->getEventHandler('onSort') ?>"
+            data-request-data="sort: 'desc'"
+            class="btn btn-default empty last oc-icon-sort-numeric-desc"
+            title="<?= e(trans('rainlab.builder::lang.version.sort_descending')) ?>"></button>
+<?php else: ?>
+    <button data-request="<?= $this->getEventHandler('onSort') ?>"
+            data-request-data="sort: 'asc'"
+            class="btn btn-default empty last oc-icon-sort-numeric-asc"
+            title="<?= e(trans('rainlab.builder::lang.version.sort_ascending')) ?>"></button>
+<?php endif; ?>
