@@ -109,7 +109,7 @@ class VersionList extends WidgetBase
             $items = $result;
         }
 
-        if ($this->getConfig('sort', 'asc') == 'desc') {
+        if ($this->getConfig('sort', 'asc') === 'desc') {
             $items = array_reverse($items, false);
         }
 
