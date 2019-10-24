@@ -1172,6 +1172,14 @@ class StandardControlsRegistry
                 'type' => 'string',
                 'ignoreIfEmpty' => true,
                 'sortOrder' => 84
+            ],
+            'scope' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_relation_scope'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_relation_scope_description'),
+                'group' => Lang::get('rainlab.builder::lang.form.property_group_relation'),
+                'type' => 'string',
+                'ignoreIfEmpty' => true,
+                'sortOrder' => 85
             ]
         ];
 
