@@ -251,7 +251,7 @@ return [
         'property_relation_select' => 'Select',
         'property_relation_select_description' => 'CONCAT multiple columns together for displaying a name',
         'property_relation_scope' => 'Scope',
-        'property_relation_scope_description' => 'Specifies a query scope method defined in the related form model to apply to the list query always.',
+        'property_relation_scope_description' => 'Specifies a query scope method that\'s defined in the related form model to always apply to the list query.',
         'property_description_from' => 'Description column',
         'property_description_from_description' => 'Relation column name to use for displaying a description.',
         'property_recordfinder_prompt' => 'Prompt',
