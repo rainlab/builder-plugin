@@ -194,7 +194,7 @@ return [
         'property_datepicker_min_date' => 'Minimale datum',
         'property_datepicker_min_date_description' => 'The minimum/earliest date that can be selected. This may be any string accepted by Carbon. Leave empty for no minimum date.',
         'property_datepicker_max_date' => 'Maximale datum',
-        'property_datepicker_max_date_description' => 'The maximum/latest date that can be selected. This may be any string accepted by Carbon. Leave empty for no maximum date.',        'property_markdown_mode' => 'Modus',
+        'property_datepicker_max_date_description' => 'The maximum/latest date that can be selected. This may be any string accepted by Carbon. Leave empty for no maximum date.',
         'property_markdown_mode' => 'Modus',
         'property_markdown_mode_split' => 'Gesplitst',
         'property_markdown_mode_tab' => 'Tabblad',
