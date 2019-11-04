@@ -23,6 +23,9 @@ class VersionList extends WidgetBase
         $this->alias = $alias;
 
         parent::__construct($controller, []);
+
+        $this->config->sort = $this->getSession('sort', 'asc');
+
         $this->bindToController();
     }
 
@@ -60,6 +63,15 @@ class VersionList extends WidgetBase
         return $this->updateList();
     }
 
+    public function onSort()
+    {
+        $this->config->sort = Input::input('sort');
+
+        $this->putSession('sort', $this->config->sort);
+
+        return ['#' . $this->getId('body') => $this->makePartial('widget-contents', $this->getRenderData())];
+    }
+
     /*
      * Methods for the internal use
      */
@@ -95,6 +107,10 @@ class VersionList extends WidgetBase
             }
 
             $items = $result;
+        }
+
+        if ($this->getConfig('sort', 'asc') === 'desc') {
+            $items = array_reverse($items, false);
         }
 
         $versionManager = VersionManager::instance();
