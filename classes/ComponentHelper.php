@@ -53,7 +53,8 @@ class ComponentHelper
             }
         }
 
-        Cache::put($key, serialize($result), 1);
+        $expiresAt = now()->addMinutes(1);
+        Cache::put($key, serialize($result), $expiresAt);
 
         return $this->modelListCache = $result;
     }
@@ -61,7 +62,7 @@ class ComponentHelper
     public function getModelClassDesignTime()
     {
         $modelClass = trim(Input::get('modelClass'));
-        
+
         if ($modelClass && !is_scalar($modelClass)) {
             throw new ApplicationException('Model class name should be a string.');
         }
@@ -95,13 +96,14 @@ class ComponentHelper
         $modelClass = array_pop($modelClassParts);
 
         $columnNames = ModelModel::getModelFields($pluginCodeObj, $modelClass);
-        
+
         $result = [];
         foreach ($columnNames as $columnName) {
             $result[$columnName] = $columnName;
         }
 
-        Cache::put($key, serialize($result), 1);
+        $expiresAt = now()->addMinutes(1);
+        Cache::put($key, serialize($result), $expiresAt);
 
         return $result;
     }
