@@ -549,6 +549,8 @@ return [
         'hint_apply' => 'Applying a version will also apply all older unapplied versions of the plugin.',
         'dont_show_again' => 'Don\'t show again',
         'save_unapplied_version' => 'Save unapplied version',
+        'sort_ascending' => 'Sort ascending',
+        'sort_descending' => 'Sort descending',
     ],
     'menu' => [
         'menu_label' => 'Backend Menu',
