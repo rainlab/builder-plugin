@@ -125,7 +125,8 @@ class StandardControlsRegistry
 
         $properties = array_merge($properties, $this->getCheckboxTypeProperties());
 
-        $this->controlLibrary->registerControl('switch',
+        $this->controlLibrary->registerControl(
+            'switch',
             'rainlab.builder::lang.form.control_switch',
             'rainlab.builder::lang.form.control_switch_description',
             ControlLibrary::GROUP_STANDARD,
