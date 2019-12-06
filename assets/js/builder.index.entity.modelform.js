@@ -63,6 +63,79 @@
         )
     }
 
+    ModelForm.prototype.cmdAddDatabaseColumns = function (ev) {
+        var $target = $(ev.currentTarget)
+
+        // Always use the first placeholder to add controls
+        var $placeholder = this.getMasterTabsActivePane().find('.builder-control-list .control.placeholder:first')[0]
+
+        // Filter all fields from the DataTable that have the "add" checkbox checked.
+        var fields = $target.find('.control-table').data('oc.table').dataSource.data.filter(function (column) {
+            return column.add
+        }).reverse()
+
+        // Hide the poup and initialize the load indicator.
+        $target.closest('.control-popup').data('oc.popup').hide()
+        $.oc.stripeLoadIndicator.show()
+
+        // When a control is added, an AJAX request is made which returns the widget's markup.
+        // We need to wait for each request to finish before we can add another field, since the
+        // addControlToPlaceholder requires a proper reflow of the whole form layout before
+        // a new field can be added. This addField helper function makes sure that all
+        // Promises are run in sequence to achieve this.
+        function addField (column) {
+            return function () {
+                var defer = $.Deferred()
+                $.oc.builder.formbuilder.controller.addControlToPlaceholder(
+                    $placeholder,
+                    column.type,
+                    column.label ? column.label : column.column
+                ).complete(function () {
+                    defer.resolve()
+                })
+                return defer.promise()
+            };
+        }
+
+        /// Add all fields in sequence.
+        var allFields = $.when({})
+        $.each(fields, function (index, column) {
+            allFields = allFields.then(addField(column))
+        });
+
+        // Once everything is done, hide the load indicator.
+        $.when(allFields).always($.oc.builder.indexController.hideStripeIndicatorProxy)
+    }
+
+    ModelForm.prototype.databaseColumnsLoaded = function (data) {
+        if (!$.isArray(data.responseData.columns)) {
+            alert('Invalid server response')
+        }
+
+        var $masterTabPane = this.getMasterTabsActivePane(),
+            $form = $masterTabPane.find('form'),
+            existingColumns = this.getColumnNames($form),
+            columnsAdded = false
+
+        for (var i in data.responseData.columns) {
+            var column = data.responseData.columns[i],
+                type = this.mapType(column.type)
+
+            if ($.inArray(column.name, existingColumns) !== - 1) {
+                continue
+            }
+
+            this.addColumn($form, column.name, type)
+            columnsAdded = true
+        }
+
+        if (!columnsAdded) {
+            alert($form.attr('data-lang-all-database-columns-exist'))
+        } else {
+            $form.trigger('change')
+        }
+    }
+
     ModelForm.prototype.cmdOpenForm = function(ev) {
         var form = $(ev.currentTarget).data('form'),
             model = $(ev.currentTarget).data('modelClass')
