@@ -129,19 +129,19 @@ class IndexModelFormOperations extends IndexOperationsBehaviorBase
         ];
     }
 
-    public function onModelShowAddDatabaseColumnsPopup()
+    public function onModelShowAddFieldsFromDatabasePopup()
     {
         $columns = ModelModel::getModelColumnsAndTypes($this->getPluginCode(), Input::get('model_class'));
-        $config  = $this->makeConfig($this->getAddDatabaseColumnsDataTableConfig());
+        $config = $this->makeConfig($this->getAddFieldsFromDatabaseDataTableConfig());
 
-        $field        = new FormField('add_database_columns', 'add_database_columns');
-        $field->value = $this->getAddDatabaseColumnsDataTableValue($columns);
+        $field = new FormField('add_fields_from_database', 'add_fields_from_database');
+        $field->value = $this->getAddFieldsFromDatabaseDataTableValue($columns);
 
-        $datatable        = new DataTable($this->controller, $field, $config);
-        $datatable->alias = 'add_database_columns_datatable';
+        $datatable = new DataTable($this->controller, $field, $config);
+        $datatable->alias = 'add_fields_from_database_datatable';
         $datatable->bindToController();
 
-        return $this->makePartial('add-database-columns-popup-form', [
+        return $this->makePartial('add-fields-from-database-popup-form', [
             'datatable'  => $datatable,
             'pluginCode' => $this->getPluginCode()->toCode(),
         ]);
@@ -206,11 +206,11 @@ class IndexModelFormOperations extends IndexOperationsBehaviorBase
 
     /**
      * Returns the configuration for the DataTable widget that
-     * is used in the "add database columns" popup.
+     * is used in the "add fields from database" popup.
      *
      * @return array
      */
-    protected function getAddDatabaseColumnsDataTableConfig()
+    protected function getAddFieldsFromDatabaseDataTableConfig()
     {
         // Get all registered controls and build an array that uses the control types as key and value for each entry.
         $controls   = ControlLibrary::instance()->listControls();
@@ -249,7 +249,7 @@ class IndexModelFormOperations extends IndexOperationsBehaviorBase
      *
      * @return array
      */
-    protected function getAddDatabaseColumnsDataTableValue(array $columns)
+    protected function getAddFieldsFromDatabaseDataTableValue(array $columns)
     {
         // Map database column types to widget types.
         $typeMap = [

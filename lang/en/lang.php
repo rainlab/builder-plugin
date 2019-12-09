@@ -106,6 +106,7 @@ return [
         'saved' => 'Form saved',
         'confirm_delete' => 'Delete the form?',
         'tab_new_form' => 'New form',
+        'btn_add_fields_from_database' => 'Add fields from database',
         'property_label_title' => 'Label',
         'property_label_required' => 'Please specify the control label.',
         'property_span_title' => 'Span',

@@ -63,7 +63,7 @@
         )
     }
 
-    ModelForm.prototype.cmdAddDatabaseColumns = function (ev) {
+    ModelForm.prototype.cmdAddFieldsFromDatabase = function (ev) {
         var $target = $(ev.currentTarget)
 
         // Always use the first placeholder to add controls
