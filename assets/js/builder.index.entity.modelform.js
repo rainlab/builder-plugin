@@ -107,35 +107,6 @@
         $.when(allFields).always($.oc.builder.indexController.hideStripeIndicatorProxy)
     }
 
-    ModelForm.prototype.databaseColumnsLoaded = function (data) {
-        if (!$.isArray(data.responseData.columns)) {
-            alert('Invalid server response')
-        }
-
-        var $masterTabPane = this.getMasterTabsActivePane(),
-            $form = $masterTabPane.find('form'),
-            existingColumns = this.getColumnNames($form),
-            columnsAdded = false
-
-        for (var i in data.responseData.columns) {
-            var column = data.responseData.columns[i],
-                type = this.mapType(column.type)
-
-            if ($.inArray(column.name, existingColumns) !== - 1) {
-                continue
-            }
-
-            this.addColumn($form, column.name, type)
-            columnsAdded = true
-        }
-
-        if (!columnsAdded) {
-            alert($form.attr('data-lang-all-database-columns-exist'))
-        } else {
-            $form.trigger('change')
-        }
-    }
-
     ModelForm.prototype.cmdOpenForm = function(ev) {
         var form = $(ev.currentTarget).data('form'),
             model = $(ev.currentTarget).data('modelClass')
