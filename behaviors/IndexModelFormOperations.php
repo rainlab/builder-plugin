@@ -271,7 +271,7 @@ class IndexModelFormOperations extends IndexOperationsBehaviorBase
         return array_map(function ($column) use ($typeMap) {
             return [
                 'column' => $column['name'],
-                'label'  => ucfirst($column['name']),
+                'label'  => str_replace('_', ' ', ucfirst($column['name'])),
                 'type'   => $typeMap[$column['type']] ?? $column['type'],
                 'add'    => false,
             ];
