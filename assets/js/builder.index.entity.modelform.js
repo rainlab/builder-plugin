@@ -83,13 +83,15 @@
         // addControlToPlaceholder requires a proper reflow of the whole form layout before
         // a new field can be added. This addField helper function makes sure that all
         // Promises are run in sequence to achieve this.
-        function addField (column) {
+        function addField (field) {
             return function () {
                 var defer = $.Deferred()
                 $.oc.builder.formbuilder.controller.addControlToPlaceholder(
                     $placeholder,
-                    column.type,
-                    column.label ? column.label : column.column
+                    field.type,
+                    field.label ? field.label : field.column,
+                    false,
+                    field.column
                 ).complete(function () {
                     defer.resolve()
                 })
@@ -99,8 +101,8 @@
 
         /// Add all fields in sequence.
         var allFields = $.when({})
-        $.each(fields, function (index, column) {
-            allFields = allFields.then(addField(column))
+        $.each(fields, function (index, field) {
+            allFields = allFields.then(addField(field))
         });
 
         // Once everything is done, hide the load indicator.
