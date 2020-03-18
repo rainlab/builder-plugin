@@ -25,6 +25,8 @@ tabs:
             type: datatable
             btnAddRowLabel: rainlab.builder::lang.list.btn_add_column
             btnDeleteRowLabel: rainlab.builder::lang.list.btn_delete_column
+            height: 100
+            dynamicHeight: true
             columns:
                 field: 
                     title: rainlab.builder::lang.list.column_dbfield_label
