@@ -137,7 +137,7 @@ if(column=='allow_null'&&value){updatedRow.primary_key=0}
 if(column=='primary_key'&&!value){updatedRow.auto_increment=0}
 $target.table('setRowValues',rowIndex,updatedRow)}
 DatabaseTable.prototype.onTableLoaded=function(){$(document).trigger('render')
-var $masterTabPane=this.getMasterTabsActivePane(),$form=$masterTabPane.find('form'),$toolbar=$masterTabPane.find('div[data-control=table] div.toolbar'),$addIdButton=$('<a class="btn oc-icon-clock-o builder-custom-table-button" data-builder-command="databaseTable:cmdAddIdColumn"></a>'),$addTimestampsButton=$('<a class="btn oc-icon-clock-o builder-custom-table-button" data-builder-command="databaseTable:cmdAddTimestamps"></a>'),$addSoftDeleteButton=$('<a class="btn oc-icon-refresh builder-custom-table-button" data-builder-command="databaseTable:cmdAddSoftDelete"></a>')
+var $masterTabPane=this.getMasterTabsActivePane(),$form=$masterTabPane.find('form'),$toolbar=$masterTabPane.find('div[data-control=table] div.toolbar'),$addIdButton=$('<a class="btn oc-icon-hashtag builder-custom-table-button" data-builder-command="databaseTable:cmdAddIdColumn"></a>'),$addTimestampsButton=$('<a class="btn oc-icon-clock-o builder-custom-table-button" data-builder-command="databaseTable:cmdAddTimestamps"></a>'),$addSoftDeleteButton=$('<a class="btn oc-icon-refresh builder-custom-table-button" data-builder-command="databaseTable:cmdAddSoftDelete"></a>')
 $addIdButton.text($form.attr('data-lang-add-id'));$toolbar.append($addIdButton)
 $addTimestampsButton.text($form.attr('data-lang-add-timestamps'));$toolbar.append($addTimestampsButton)
 $addSoftDeleteButton.text($form.attr('data-lang-add-soft-delete'));$toolbar.append($addSoftDeleteButton)}

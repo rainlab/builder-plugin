@@ -168,7 +168,7 @@
         var $masterTabPane = this.getMasterTabsActivePane(),
             $form = $masterTabPane.find('form'),
             $toolbar = $masterTabPane.find('div[data-control=table] div.toolbar'),
-            $addIdButton = $('<a class="btn oc-icon-clock-o builder-custom-table-button" data-builder-command="databaseTable:cmdAddIdColumn"></a>'),
+            $addIdButton = $('<a class="btn oc-icon-hashtag builder-custom-table-button" data-builder-command="databaseTable:cmdAddIdColumn"></a>'),
             $addTimestampsButton = $('<a class="btn oc-icon-clock-o builder-custom-table-button" data-builder-command="databaseTable:cmdAddTimestamps"></a>'),
             $addSoftDeleteButton = $('<a class="btn oc-icon-refresh builder-custom-table-button" data-builder-command="databaseTable:cmdAddSoftDelete"></a>')
 
