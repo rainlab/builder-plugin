@@ -369,16 +369,54 @@ class StandardControlsRegistry
                 'default' => Lang::get('rainlab.builder::lang.form.property_prompt_default'),
                 'sortOrder' => 81
             ],
+            'titleFrom' =>  [
+                'title' => Lang::get('rainlab.builder::lang.form.property_title_from'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_title_from_description'),
+                'type' => 'string',
+                'ignoreIfEmpty' => true,
+                'sortOrder' => 82
+            ],
             'form' => [
                 'type' => 'control-container'
+            ],
+            'minItems' =>  [
+                'title' => Lang::get('rainlab.builder::lang.form.property_min_items'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_min_items_description'),
+                'type' => 'string',
+                'ignoreIfEmpty' => true,
+                'sortOrder' => 83,
+                'validation' => [
+                    'integer' => [
+                        'message' => Lang::get('rainlab.builder::lang.form.property_min_items_integer'),
+                        'allowNegative' => false,
+                    ]
+                ],
             ],
             'maxItems' =>  [
                 'title' => Lang::get('rainlab.builder::lang.form.property_max_items'),
                 'description' => Lang::get('rainlab.builder::lang.form.property_max_items_description'),
                 'type' => 'string',
                 'ignoreIfEmpty' => true,
-                'sortOrder' => 82
+                'sortOrder' => 84,
+                'validation' => [
+                    'integer' => [
+                        'message' => Lang::get('rainlab.builder::lang.form.property_max_items_integer'),
+                        'allowNegative' => false,
+                    ]
+                ],
             ],
+            'style' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_style'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_style_description'),
+                'type' => 'dropdown',
+                'default' => 'default',
+                'options' => [
+                    'default' => Lang::get('rainlab.builder::lang.form.style_default'),
+                    'collapsed' => Lang::get('rainlab.builder::lang.form.style_collapsed'),
+                    'accordion' => Lang::get('rainlab.builder::lang.form.style_accordion'),
+                ],
+                'sortOrder' => 85,
+            ]
         ];
 
         $ignoreProperties = [
