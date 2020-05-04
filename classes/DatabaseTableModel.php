@@ -297,10 +297,6 @@ class DatabaseTableModel extends BaseModel
             if (!strlen($column['default'])) {
                 continue;
             }
-            // Allow null value for all nullable columns
-            if (strtolower($column['default']) === 'null' && (bool) $column['allow_null'] === true) {
-                continue;
-            }
 
             $default = trim($column['default']);
 
@@ -387,15 +383,6 @@ class DatabaseTableModel extends BaseModel
                 'default' => $column->getDefault(),
                 'id' => $columnName,
             ];
-
-            // Format quoted "null" values with quotes
-            if ($column->getNotnull() === false) {
-                if ($item['default'] === null) {
-                    $item['default'] = 'null';
-                } elseif (strtolower($item['default']) === 'null') {
-                    $item['default'] = "'null'";
-                }
-            }
 
             $this->columns[] = $item;
         }
