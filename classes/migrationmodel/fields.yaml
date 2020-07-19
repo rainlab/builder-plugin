@@ -5,7 +5,5 @@ fields:
         label: rainlab.builder::lang.migration.field_description
     code:
         label: rainlab.builder::lang.migration.field_code
-        commentAbove: rainlab.builder::lang.migration.field_code_comment
         type: codeeditor
         language: php
-        readOnly: true

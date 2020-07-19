@@ -14,7 +14,7 @@ use Doctrine\DBAL\Platforms\AbstractPlatform;
  */
 class EnumDbType extends Type
 {
-    const TYPENAME = 'EnumDbType'; 
+    const TYPENAME = 'EnumDbType';
 
     public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {

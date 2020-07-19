@@ -1,0 +1,51 @@
+language: php
+
+php:
+  - 7.0
+  - 7.1
+  - 7.2
+  - 7.3
+  - nightly
+
+matrix:
+  allow_failures:
+    - php: nightly
+
+sudo: false
+
+if: type = pull_request OR (type = push AND (branch = develop OR branch = master))
+
+cache:
+  directories:
+    - $HOME/.composer/cache/files
+
+install:
+  - wget https://github.com/octobercms/october/archive/develop.zip
+  - unzip develop.zip && rm develop.zip
+  - mv october-develop october
+  - mkdir -p ./october/plugins/rainlab/builder
+  - mv !(october) october/plugins/rainlab/builder
+  - mv .travis.yml october/plugins/rainlab/builder
+  - cd october
+  - composer install --no-interaction --no-progress --no-suggest
+  - cp config/cms.php config/testing/cms.php
+
+before_script:
+  - cd ./plugins/rainlab/builder
+
+script:
+  - ../../../vendor/bin/parallel-lint .
+  - ../../../vendor/bin/phpunit
+
+jobs:
+  include:
+    - stage: code quality
+      if: type = pull_request
+      php: 7.1
+      script:
+        - git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*" && git fetch
+        - ../../../vendor/bin/phpcs --colors -nq --report="full" --extensions="php" $(git diff --name-only HEAD origin/$TRAVIS_BRANCH)
+    - stage: code quality
+      if: type = push AND (branch = develop OR branch = master)
+      php: 7.1
+      script: ../../../vendor/bin/phpcs --colors -nq --report="full" --extensions="php" $(git show --name-only --pretty="" $TRAVIS_COMMIT)

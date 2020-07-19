@@ -9,6 +9,7 @@ fields:
         cssClass: collapse-visible
 
 tabs:
+    cssClass: master-area
     stretch: true
     fields:
         permissions:
@@ -19,7 +20,7 @@ tabs:
             btnAddRowLabel: rainlab.builder::lang.permission.btn_add_permission
             btnDeleteRowLabel: rainlab.builder::lang.permission.btn_delete_permission
             columns:
-                permission: 
+                permission:
                     title: rainlab.builder::lang.permission.column_permission_label
                     type: string
                 tab:

@@ -26,8 +26,8 @@ class TableMigrationCodeGenerator extends BaseModel
      * Generates code for creating or updating a database table.
      * @param \Doctrine\DBAL\Schema\Table $updatedTable Specifies the updated table schema.
      * @param \Doctrine\DBAL\Schema\Table $existingTable Specifies the existing table schema, if applicable.
-     * @param string $newTableName An updated name of the theme. 
-     * @return string|boolean Returns the migration up() and down() methods code. 
+     * @param string $newTableName An updated name of the theme.
+     * @return string|boolean Returns the migration up() and down() methods code.
      * Returns false if there the table was not changed.
      */
     public function createOrUpdateTable($updatedTable, $existingTable, $newTableName)
@@ -48,8 +48,7 @@ class TableMigrationCodeGenerator extends BaseModel
 
                 $tableDiff->newName = $newTableName;
             }
-        }
-        else {
+        } else {
             /*
              * The table doesn't exist
              */
@@ -99,7 +98,7 @@ class TableMigrationCodeGenerator extends BaseModel
     /**
      * Generates code for dropping a database table.
      * @param \Doctrine\DBAL\Schema\Table $existingTable Specifies the existing table schema.
-     * @return string Returns the migration up() and down() methods code. 
+     * @return string Returns the migration up() and down() methods code.
      */
     public function dropTable($existingTable)
     {
@@ -113,7 +112,7 @@ class TableMigrationCodeGenerator extends BaseModel
     {
         /*
          * Although it might seem that a reverse diff could be used
-         * for the down() method, that's not so. The up and down operations 
+         * for the down() method, that's not so. The up and down operations
          * are not fully symmetrical.
          */
 
@@ -171,16 +170,16 @@ class TableMigrationCodeGenerator extends BaseModel
             $result .= $this->generateColumnCode($columnDiff, self::COLUMN_MODE_CHANGE);
         }
 
-        foreach ($tableDiff->renamedColumns as $oldName=>$column) {
+        foreach ($tableDiff->renamedColumns as $oldName => $column) {
             $result .= $this->generateColumnRenameCode($oldName, $column->getName());
         }
 
-        foreach ($tableDiff->removedColumns as $name=>$column) {
+        foreach ($tableDiff->removedColumns as $name => $column) {
             $result .= $this->generateColumnRemoveCode($name);
         }
 
         $primaryKey = $changedPrimaryKey ?
-            $this->findPrimaryKeyIndex($tableDiff->changedIndexes, $newOrUpdatedTable) : 
+            $this->findPrimaryKeyIndex($tableDiff->changedIndexes, $newOrUpdatedTable) :
             $this->findPrimaryKeyIndex($tableDiff->addedIndexes, $newOrUpdatedTable);
 
         if ($primaryKey) {
@@ -198,8 +197,7 @@ class TableMigrationCodeGenerator extends BaseModel
 
         if ($isNewTable) {
             $result = $this->generateTableDropCode($tableDiff->name);
-        }
-        else {
+        } else {
             $changedPrimaryKey = $this->getChangedOrRemovedPrimaryKey($tableDiff);
             $addedPrimaryKey = $this->findPrimaryKeyIndex($tableDiff->addedIndexes, $newOrUpdatedTable);
 
@@ -232,11 +230,11 @@ class TableMigrationCodeGenerator extends BaseModel
                     $result .= $this->generateColumnCode($columnDiff, self::COLUMN_MODE_REVERT);
                 }
 
-                foreach ($tableDiff->renamedColumns as $oldName=>$column) {
+                foreach ($tableDiff->renamedColumns as $oldName => $column) {
                     $result .= $this->generateColumnRenameCode($column->getName(), $oldName);
                 }
 
-                foreach ($tableDiff->removedColumns as $name=>$column) {
+                foreach ($tableDiff->removedColumns as $name => $column) {
                     $result .= $this->generateColumnCode($column, self::COLUMN_MODE_CREATE);
                 }
 
@@ -361,22 +359,22 @@ class TableMigrationCodeGenerator extends BaseModel
         $forceFlagsChange = false;
 
         switch ($mode) {
-            case self::COLUMN_MODE_CREATE: 
+            case self::COLUMN_MODE_CREATE:
                 $column = $columnData;
                 $changeMode = false;
-            break;
-            case self::COLUMN_MODE_CHANGE: 
+                break;
+            case self::COLUMN_MODE_CHANGE:
                 $column = $columnData->column;
                 $changeMode = true;
 
                 $forceFlagsChange = in_array('type', $columnData->changedProperties);
-            break;
-            case self::COLUMN_MODE_REVERT: 
+                break;
+            case self::COLUMN_MODE_REVERT:
                 $column = $columnData->fromColumn;
                 $changeMode = true;
 
                 $forceFlagsChange = in_array('type', $columnData->changedProperties);
-            break;
+                break;
         }
 
         $result = $this->generateColumnMethodCall($column);
@@ -433,8 +431,7 @@ class TableMigrationCodeGenerator extends BaseModel
             if (!$column->getNotnull()) {
                 $result = $this->generateBooleanMethod('nullable', true);
             }
-        }
-        elseif (in_array('notnull', $columnData->changedProperties) || $forceFlagsChange) {
+        } elseif (in_array('notnull', $columnData->changedProperties) || $forceFlagsChange) {
             $result = $this->generateBooleanMethod('nullable', !$column->getNotnull());
         }
 
@@ -449,8 +446,7 @@ class TableMigrationCodeGenerator extends BaseModel
             if ($column->getUnsigned()) {
                 $result = $this->generateBooleanMethod('unsigned', true);
             }
-        }
-        elseif (in_array('unsigned', $columnData->changedProperties) || $forceFlagsChange) {
+        } elseif (in_array('unsigned', $columnData->changedProperties) || $forceFlagsChange) {
             $result = $this->generateBooleanMethod('unsigned', $column->getUnsigned());
         }
 
@@ -470,12 +466,10 @@ class TableMigrationCodeGenerator extends BaseModel
             if (strlen($default)) {
                 $result = $this->generateDefaultMethodCall($default, $column);
             }
-        }
-        elseif (in_array('default', $columnData->changedProperties) || $forceFlagsChange) {
+        } elseif (in_array('default', $columnData->changedProperties) || $forceFlagsChange) {
             if (strlen($default)) {
                 $result = $this->generateDefaultMethodCall($default, $column);
-            }
-            elseif ($changeMode) {
+            } elseif ($changeMode) {
                 $result = sprintf('->default(null)');
             }
         }
@@ -490,7 +484,7 @@ class TableMigrationCodeGenerator extends BaseModel
 
         $type = MigrationColumnType::toMigrationMethodName($typeName, $columnName);
 
-        if (in_array($type, MigrationColumnType::getIntegerTypes()) || 
+        if (in_array($type, MigrationColumnType::getIntegerTypes()) ||
             in_array($type, MigrationColumnType::getDecimalTypes()) ||
             $type == MigrationColumnType::TYPE_BOOLEAN) {
             return sprintf('->default(%s)', $default);
@@ -548,9 +542,9 @@ class TableMigrationCodeGenerator extends BaseModel
 
     protected function tableHasNameOrColumnChanges($tableDiff, $columnChangesOnly = false)
     {
-        $result = $tableDiff->addedColumns 
-                || $tableDiff->changedColumns 
-                || $tableDiff->removedColumns 
+        $result = $tableDiff->addedColumns
+                || $tableDiff->changedColumns
+                || $tableDiff->removedColumns
                 || $tableDiff->renamedColumns;
 
         if ($columnChangesOnly) {
@@ -562,7 +556,7 @@ class TableMigrationCodeGenerator extends BaseModel
 
     protected function tableHasPrimaryKeyChanges($tableDiff)
     {
-        return $this->findPrimaryKeyIndex($tableDiff->addedIndexes, $tableDiff->fromTable) || 
+        return $this->findPrimaryKeyIndex($tableDiff->addedIndexes, $tableDiff->fromTable) ||
                 $this->findPrimaryKeyIndex($tableDiff->changedIndexes, $tableDiff->fromTable) ||
                 $this->findPrimaryKeyIndex($tableDiff->removedIndexes, $tableDiff->fromTable);
     }

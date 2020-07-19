@@ -24,8 +24,7 @@ class LanguageMixer
             'updatedLines' => [],
         ];
 
-        try
-        {
+        try {
             $destArray = Yaml::parse($destContents);
         }
         catch (Exception $ex) {
@@ -54,19 +53,15 @@ class LanguageMixer
     public static function arrayMergeRecursive(&$array1, &$array2)
     {
         // The native PHP implementation of array_merge_recursive
-        // generates unexpected results when two scalar elements with a 
+        // generates unexpected results when two scalar elements with a
         // same key is found, so we use a custom one.
 
         $result = $array1;
 
-        foreach ($array2 as $key=>&$value)
-        {
-            if (is_array ($value) && isset($result[$key]) && is_array($result[$key]))
-            {
+        foreach ($array2 as $key => &$value) {
+            if (is_array($value) && isset($result[$key]) && is_array($result[$key])) {
                 $result[$key] = self::arrayMergeRecursive($result[$key], $value);
-            }
-            else
-            {
+            } else {
                 $result[$key] = $value;
             }
         }
@@ -85,7 +80,7 @@ class LanguageMixer
 
     protected function findMissingPathsRecursive($destArray, $srcArray, &$result, $currentPath, &$mismatch)
     {
-        foreach ($srcArray as $key=>$value) {
+        foreach ($srcArray as $key => $value) {
             $newPath = array_merge($currentPath, [$key]);
             $pathValue = null;
             $pathExists = $this->pathExistsInArray($destArray, $newPath, $pathValue);
@@ -147,7 +142,7 @@ class LanguageMixer
 
             if ($line !== false) {
                 $result['lines'][] = $line;
-            } 
+            }
             else {
                 $result['mismatch'] = true;
             }
@@ -163,7 +158,7 @@ class LanguageMixer
 
         $lineCount = count($lines);
         $currentLineIndex = 0;
-        foreach ($path as $indentaion=>$key) {
+        foreach ($path as $indentaion => $key) {
             $expectedKeyDefinition = str_repeat('    ', $indentaion).$key.':';
 
             $firstLineAfterKey = true;
@@ -191,9 +186,9 @@ class LanguageMixer
 
             // If the key wasn't found in the text, there is
             // a structure difference between the source an destination
-            // languages - for example when a string key was replaced 
+            // languages - for example when a string key was replaced
             // with an array of strings.
-            return false; 
+            return false;
         }
 
         return $currentLineIndex;

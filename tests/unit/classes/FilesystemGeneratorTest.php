@@ -2,7 +2,6 @@
 
 use RainLab\Builder\Classes\FilesystemGenerator;
 
-
 class FilesystemGeneratorTest extends TestCase
 {
     public function setUp() : void

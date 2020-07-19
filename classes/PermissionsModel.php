@@ -90,12 +90,12 @@ class PermissionsModel extends PluginYamlModel
 
     protected function validateDupicatePermissions()
     {
-        foreach ($this->permissions as $outerIndex=>$outerPermission) {
+        foreach ($this->permissions as $outerIndex => $outerPermission) {
             if (!isset($outerPermission['permission'])) {
                 continue;
             }
 
-            foreach ($this->permissions as $innerIndex=>$innerPermission) {
+            foreach ($this->permissions as $innerIndex => $innerPermission) {
                 if (!isset($innerPermission['permission'])) {
                     continue;
                 }
@@ -105,7 +105,8 @@ class PermissionsModel extends PluginYamlModel
 
                 if ($innerIndex != $outerIndex && $outerCode == $innerCode && strlen($outerCode)) {
                     throw new ValidationException([
-                        'permissions' => Lang::get('rainlab.builder::lang.permission.error_duplicate_code', 
+                        'permissions' => Lang::get(
+                            'rainlab.builder::lang.permission.error_duplicate_code',
                             ['code' => $outerCode]
                         )
                     ]);
@@ -149,7 +150,7 @@ class PermissionsModel extends PluginYamlModel
 
     protected function trimPermissionProperties($permission)
     {
-        array_walk($permission, function($value, $key){
+        array_walk($permission, function ($value, $key) {
             return trim($value);
         });
 
@@ -171,7 +172,7 @@ class PermissionsModel extends PluginYamlModel
         $permissions = [];
         $index = 0;
 
-        foreach ($filePermissions as $code=>$permission) {
+        foreach ($filePermissions as $code => $permission) {
             $permission['permission'] = $code;
 
             $permissions[] = $permission;

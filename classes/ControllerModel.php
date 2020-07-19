@@ -44,7 +44,7 @@ class ControllerModel extends BaseModel
         if (!$this->validateFileName($controller)) {
             throw new SystemException('Invalid controller file name: '.$language);
         }
-        
+
         $this->controller = $this->trimExtension($controller);
         $this->loadControllerBehaviors();
         $this->exists = true;
@@ -65,7 +65,7 @@ class ControllerModel extends BaseModel
         parent::fill($attributes);
 
         if (!$this->isNewModel() && is_array($this->behaviors)) {
-            foreach ($this->behaviors as $class=>&$configuration) {
+            foreach ($this->behaviors as $class => &$configuration) {
                 if (is_scalar($configuration)) {
                     $configuration = json_decode($configuration, true);
                 }
@@ -117,7 +117,7 @@ class ControllerModel extends BaseModel
         $behaviors = $library->listBehaviors();
 
         $result = [];
-        foreach ($behaviors as $behaviorClass=>$behaviorInfo) {
+        foreach ($behaviors as $behaviorClass => $behaviorInfo) {
             $result[$behaviorClass] = [
                 $behaviorInfo['name'],
                 $behaviorInfo['description']
@@ -327,7 +327,7 @@ class ControllerModel extends BaseModel
 
         try {
             return Yaml::parse(File::get($filePath));
-        } 
+        }
         catch (Exception $ex) {
             throw new ApplicationException(Lang::get('rainlab.builder::lang.controller.error_invalid_yaml_configuration', ['file'=>$fileName]));
         }

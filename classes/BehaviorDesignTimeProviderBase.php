@@ -2,7 +2,7 @@
 
 use Backend\Classes\WidgetBase;
 
-abstract class BehaviorDesignTimeProviderBase extends WidgetBase 
+abstract class BehaviorDesignTimeProviderBase extends WidgetBase
 {
     /**
      * Renders behaivor body.
@@ -30,5 +30,4 @@ abstract class BehaviorDesignTimeProviderBase extends WidgetBase
 
         return null;
     }
-
 }

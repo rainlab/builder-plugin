@@ -42,7 +42,7 @@ class ControllerBehaviorLibrary
      * the default control design and design settings will be used.
      * @param string $configFileName Default behavior configuration file name, for example config_form.yaml.
      * @param array $viewTemplates An array of view templates that are required for the behavior.
-     * The templates are used when a new controller is created. The templates should be specified as paths 
+     * The templates are used when a new controller is created. The templates should be specified as paths
      * to Twig files in the format ['~/plugins/author/plugin/behaviors/behaviorname/templates/view.htm.tpl'].
      */
     public function registerBehavior($class, $name, $description, $properties, $configFilePropertyName, $designTimeProviderClass, $configFileName, $viewTemplates = [])

@@ -27,7 +27,7 @@ class ModelListModel extends ModelYamlModel
     public function loadForm($path)
     {
         $this->fileName = $path;
-        
+
         return parent::load($this->getFilePath());
     }
 
@@ -77,11 +77,12 @@ class ModelListModel extends ModelYamlModel
 
     protected function validateDupicateColumns()
     {
-        foreach ($this->columns as $outerIndex=>$outerColumn) {
-            foreach ($this->columns as $innerIndex=>$innerColumn) {
+        foreach ($this->columns as $outerIndex => $outerColumn) {
+            foreach ($this->columns as $innerIndex => $innerColumn) {
                 if ($innerIndex != $outerIndex && $innerColumn['field'] == $outerColumn['field']) {
                     throw new ValidationException([
-                        'columns' => Lang::get('rainlab.builder::lang.list.error_duplicate_column', 
+                        'columns' => Lang::get(
+                            'rainlab.builder::lang.list.error_duplicate_column',
                             ['column' => $outerColumn['field']]
                         )
                     ]);
@@ -130,12 +131,12 @@ class ModelListModel extends ModelYamlModel
         $columns = [];
         $index = 0;
 
-        foreach ($fileColumns as $columnName=>$column) {
+        foreach ($fileColumns as $columnName => $column) {
             if (!is_array($column)) {
                 // Handle the case when a column is defined as
                 // column: Title
                 $column = [
-                    'label' => $column 
+                    'label' => $column
                 ];
             }
 
@@ -158,8 +159,7 @@ class ModelListModel extends ModelYamlModel
             'sortable'
         ];
 
-        $column = array_filter($column, function($value) 
-        {
+        $column = array_filter($column, function ($value) {
             return strlen($value) > 0;
         });
 

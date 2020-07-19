@@ -83,7 +83,7 @@ class ControllerBuilder extends FormWidgetBase
     {
         $result = [];
 
-        foreach ($propertyConfiguration as $property=>$propertyData) {
+        foreach ($propertyConfiguration as $property => $propertyData) {
             $propertyData['property'] = $property;
 
             $result[] = $propertyData;
@@ -110,8 +110,8 @@ class ControllerBuilder extends FormWidgetBase
 
     protected function renderBehaviorBody($behaviorClass, $behaviorInfo, $behaviorConfig)
     {
-       $provider = $this->getBehaviorDesignTimeProvider($behaviorInfo['designTimeProvider']);
+        $provider = $this->getBehaviorDesignTimeProvider($behaviorInfo['designTimeProvider']);
 
-       return $provider->renderBehaviorBody($behaviorClass, $behaviorConfig, $this);
+        return $provider->renderBehaviorBody($behaviorClass, $behaviorConfig, $this);
     }
 }

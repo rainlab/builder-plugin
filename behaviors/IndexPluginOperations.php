@@ -56,7 +56,7 @@ class IndexPluginOperations extends IndexOperationsBehaviorBase
                 'pluginCode' => $model->getPluginCode()
             ];
 
-            return array_merge($result, $this->controller->updatePluginList()); 
+            return array_merge($result, $this->controller->updatePluginList());
         }
     }
 

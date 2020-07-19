@@ -11,7 +11,7 @@ class ModelFileParser
     /**
      * Returns the model namespace, class name and table name.
      * @param string $fileContents Specifies the file contents.
-     * @return array|null Returns an array with keys 'namespace', 'class' and 'table' 
+     * @return array|null Returns an array with keys 'namespace', 'class' and 'table'
      * Returns null if the parsing fails.
      */
     public function extractModelInfoFromSource($fileContents)
@@ -135,8 +135,8 @@ class ModelFileParser
         }
 
         $tableName = $stream->getCurrentText();
-        $tableName = trim($tableName, '\''); 
-        $tableName = trim($tableName, '"'); 
+        $tableName = trim($tableName, '\'');
+        $tableName = trim($tableName, '"');
 
         return $tableName;
     }
@@ -181,6 +181,6 @@ class ModelFileParser
         }
 
         // The implementation is not finished and postponed. Relation definition could
-        // be quite complex and contain nested arrays. 
+        // be quite complex and contain nested arrays.
     }
 }

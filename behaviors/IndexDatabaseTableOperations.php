@@ -54,7 +54,11 @@ class IndexDatabaseTableOperations extends IndexOperationsBehaviorBase
 
         $pluginCode = Request::input('plugin_code');
         $model->setPluginCode($pluginCode);
-        $model->validate();
+        try {
+            $model->validate();
+        } catch (Exception $ex) {
+            throw new ApplicationException($ex->getMessage());
+        }
 
         $migration = $model->generateCreateOrUpdateMigration();
 
@@ -91,7 +95,7 @@ class IndexDatabaseTableOperations extends IndexOperationsBehaviorBase
 
         try {
             $model->save();
-        } 
+        }
         catch (Exception $ex) {
             throw new ApplicationException($ex->getMessage());
         }
@@ -103,14 +107,33 @@ class IndexDatabaseTableOperations extends IndexOperationsBehaviorBase
             $this->controller->widget->versionList->refreshActivePlugin()
         );
 
-        $result['builderResponseData'] = [
-            'builderObjectName'=>$table,
-            'tabId' => $this->getTabId($table),
-            'tabTitle' => $table,
-            'tableName' => $table,
-            'operation' => $operation,
-            'pluginCode' => $pluginCode->toCode()
-        ];
+        if ($operation === 'delete') {
+            $result['builderResponseData'] = [
+                'builderObjectName' => $table,
+                'tabId' => $this->getTabId($table),
+                'tabTitle' => $table,
+                'tableName' => $table,
+                'operation' => $operation,
+                'pluginCode' => $pluginCode->toCode()
+            ];
+        } else {
+            $widget = $this->makeBaseFormWidget($table);
+            $this->vars['tableName'] = $table;
+
+            $result['builderResponseData'] = [
+                'builderObjectName' => $table,
+                'tabId' => $this->getTabId($table),
+                'tabTitle' => $table,
+                'tableName' => $table,
+                'operation' => $operation,
+                'pluginCode' => $pluginCode->toCode(),
+                'tab' => $this->makePartial('tab', [
+                    'form'  => $widget,
+                    'pluginCode' => $this->getPluginCode()->toCode(),
+                    'tableName' => $table
+                ])
+            ];
+        }
 
         return $result;
     }
@@ -186,7 +209,7 @@ class IndexDatabaseTableOperations extends IndexOperationsBehaviorBase
 
         $booleanColumns = ['unsigned', 'allow_null', 'auto_increment', 'primary_key'];
         foreach ($postData['columns'] as &$row) {
-            foreach ($row as $column=>$value) {
+            foreach ($row as $column => $value) {
                 if (in_array($column, $booleanColumns) && $value == 'false') {
                     $row[$column] = false;
                 }

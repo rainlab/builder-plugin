@@ -24,6 +24,6 @@ class Settings extends Model
      */
     public $rules = [
         'author_name' => 'required',
-        'author_namespace' => ['required', 'regex:/^[a-z]+[a-z0-9]+$/i']
+        'author_namespace' => ['required', 'regex:/^[a-z]+[a-z0-9]+$/i', 'reserved']
     ];
 }

@@ -40,7 +40,7 @@ abstract class YamlModel extends BaseModel
             $fileData = $this->originalFileData;
 
             if ($data) {
-                // Save the section data only if the section 
+                // Save the section data only if the section
                 // is not empty.
                 $fileData[$this->yamlSection] = $data;
             } else {
@@ -107,7 +107,7 @@ abstract class YamlModel extends BaseModel
 
         try {
             $data = Yaml::parse(File::get($filePath));
-        } 
+        }
         catch (Exception $ex) {
             throw new ApplicationException(sprintf('Cannot parse the YAML file %s: %s', basename($filePath), $ex->getMessage()));
         }

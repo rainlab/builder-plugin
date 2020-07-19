@@ -56,11 +56,11 @@ class DefaultBehaviorDesignTimeProvider extends BehaviorDesignTimeProviderBase
         }
 
         switch ($class) {
-            case 'Backend\Behaviors\FormController' : 
+            case 'Backend\Behaviors\FormController':
                 return $this->getFormControllerDefaultConfiguration($controllerModel, $controllerGenerator);
-            case 'Backend\Behaviors\ListController' : 
+            case 'Backend\Behaviors\ListController':
                 return $this->getListControllerDefaultConfiguration($controllerModel, $controllerGenerator);
-            case 'Backend\Behaviors\ReorderController' :
+            case 'Backend\Behaviors\ReorderController':
                 return $this->getReorderControllerDefaultConfiguration($controllerModel, $controllerGenerator);
         }
     }
@@ -106,7 +106,7 @@ class DefaultBehaviorDesignTimeProvider extends BehaviorDesignTimeProviderBase
         ];
 
         return $result;
-    } 
+    }
 
     protected function getListControllerDefaultConfiguration($controllerModel, $controllerGenerator)
     {
@@ -148,7 +148,7 @@ class DefaultBehaviorDesignTimeProvider extends BehaviorDesignTimeProviderBase
             $controllerGenerator->setTemplateVariable('hasFormBehavior', true);
             $controllerGenerator->setTemplateVariable('createUrl', $createUrl);
         }
-        
+
         if (in_array('Backend\Behaviors\ReorderController', $controllerModel->behaviors)) {
             $reorderUrl = $this->getControllerlUrl($pluginCodeObj, $controllerModel->controller).'/reorder';
             $controllerGenerator->setTemplateVariable('hasReorderBehavior', true);

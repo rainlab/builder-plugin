@@ -205,7 +205,6 @@ class ControllerGenerator
 
         if ($this->sourceModel->behaviors) {
             $this->templateVars['behaviors'] = $this->sourceModel->behaviors;
-
         }
         else {
             $this->templateVars['behaviors'] = [];
@@ -272,7 +271,7 @@ class ControllerGenerator
 
         if (count($templateParts)) {
             $templateParts = "\n".implode("\n", $templateParts);
-        } 
+        }
         else {
             $templateParts = "";
         }
@@ -332,7 +331,7 @@ class ControllerGenerator
 
     protected function generateViews()
     {
-        foreach ($this->templateFiles as $templatePath=>$destPath) {
+        foreach ($this->templateFiles as $templatePath => $destPath) {
             $code = $this->parseTemplate($templatePath);
 
             $this->writeFile($destPath, $code);

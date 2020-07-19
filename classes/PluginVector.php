@@ -33,7 +33,7 @@ class PluginVector
 
         $plugins = PluginManager::instance()->getPlugins();
 
-        foreach ($plugins as $code=>$plugin) {
+        foreach ($plugins as $code => $plugin) {
             if ($code == $pluginCode) {
                 return new PluginVector($plugin, $pluginCodeObj);
             }

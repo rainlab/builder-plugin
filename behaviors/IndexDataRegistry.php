@@ -33,31 +33,31 @@ class IndexDataRegistry extends ControllerBehavior
         $result = null;
 
         switch ($type) {
-            case 'localization': 
+            case 'localization':
                 $result = LocalizationModel::getPluginRegistryData($code, $subtype);
                 break;
             case 'model-classes':
                 $result = ModelModel::getPluginRegistryData($code, $subtype);
                 break;
-            case 'model-forms' :
+            case 'model-forms':
                 $result = ModelFormModel::getPluginRegistryData($code, $subtype);
                 break;
-            case 'model-lists' :
+            case 'model-lists':
                 $result = ModelListModel::getPluginRegistryData($code, $subtype);
                 break;
-            case 'controller-urls' :
+            case 'controller-urls':
                 $result = ControllerModel::getPluginRegistryData($code, $subtype);
                 break;
-            case 'model-columns' :
+            case 'model-columns':
                 $result = ModelModel::getPluginRegistryDataColumns($code, $subtype);
                 break;
-            case 'plugin-lists' :
+            case 'plugin-lists':
                 $result = ModelListModel::getPluginRegistryDataAllRecords($code);
                 break;
-            case 'permissions' :
+            case 'permissions':
                 $result = PermissionsModel::getPluginRegistryData($code);
                 break;
-            default: 
+            default:
                 throw new SystemException('Unknown plugin registry data type requested.');
         }
 

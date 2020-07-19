@@ -57,7 +57,7 @@ class DatabaseTableModel extends BaseModel
 
         $tables = self::getSchemaManager()->listTableNames();
 
-        return array_filter($tables, function($item) use($prefix) {
+        return array_filter($tables, function ($item) use ($prefix) {
             return Str::startsWith($item, $prefix);
         });
     }
@@ -104,7 +104,7 @@ class DatabaseTableModel extends BaseModel
             'name.max' => Lang::get('rainlab.builder::lang.database.error_table_name_too_long')
         ];
 
-        Validator::extend('tablePrefix', function($attribute, $value, $parameters) use ($prefix) {
+        Validator::extend('tablePrefix', function ($attribute, $value, $parameters) use ($prefix) {
             $value = trim($value);
 
             if (!Str::startsWith($value, $prefix)) {
@@ -114,7 +114,7 @@ class DatabaseTableModel extends BaseModel
             return true;
         });
 
-        Validator::extend('uniqueTableName', function($attribute, $value, $parameters) {
+        Validator::extend('uniqueTableName', function ($attribute, $value, $parameters) {
             $value = trim($value);
 
             $schema = $this->getSchema();
@@ -174,8 +174,8 @@ class DatabaseTableModel extends BaseModel
     protected function validateColumns()
     {
         $this->validateColumnNameLengths();
-        $this->validateDupicateColumns();
-        $this->validateDubplicatePrimaryKeys();
+        $this->validateDuplicateColumns();
+        $this->validateDuplicatePrimaryKeys();
         $this->validateAutoIncrementColumns();
         $this->validateColumnsLengthParameter();
         $this->validateUnsignedColumns();
@@ -189,7 +189,8 @@ class DatabaseTableModel extends BaseModel
 
             if (Str::length($name) > 64) {
                 throw new ValidationException([
-                    'columns' => Lang::get('rainlab.builder::lang.database.error_column_name_too_long', 
+                    'columns' => Lang::get(
+                        'rainlab.builder::lang.database.error_column_name_too_long',
                         ['column' => $name]
                     )
                 ]);
@@ -197,13 +198,14 @@ class DatabaseTableModel extends BaseModel
         }
     }
 
-    protected function validateDupicateColumns()
+    protected function validateDuplicateColumns()
     {
-        foreach ($this->columns as $outerIndex=>$outerColumn) {
-            foreach ($this->columns as $innerIndex=>$innerColumn) {
+        foreach ($this->columns as $outerIndex => $outerColumn) {
+            foreach ($this->columns as $innerIndex => $innerColumn) {
                 if ($innerIndex != $outerIndex && $innerColumn['name'] == $outerColumn['name']) {
                     throw new ValidationException([
-                        'columns' => Lang::get('rainlab.builder::lang.database.error_table_duplicate_column', 
+                        'columns' => Lang::get(
+                            'rainlab.builder::lang.database.error_table_duplicate_column',
                             ['column' => $outerColumn['name']]
                         )
                     ]);
@@ -212,7 +214,7 @@ class DatabaseTableModel extends BaseModel
         }
     }
 
-    protected function validateDubplicatePrimaryKeys()
+    protected function validateDuplicatePrimaryKeys()
     {
         $keysFound = 0;
         $autoIncrementsFound = 0;
@@ -281,8 +283,7 @@ class DatabaseTableModel extends BaseModel
         foreach ($this->columns as $column) {
             try {
                 MigrationColumnType::validateLength($column['type'], $column['length']);
-            }
-            catch (Exception $ex) {
+            } catch (Exception $ex) {
                 throw new ValidationException([
                     'columns' => $ex->getMessage()
                 ]);
@@ -294,6 +295,10 @@ class DatabaseTableModel extends BaseModel
     {
         foreach ($this->columns as $column) {
             if (!strlen($column['default'])) {
+                continue;
+            }
+            // Allow null value for all nullable columns
+            if (strtolower($column['default']) === 'null' && (bool) $column['allow_null'] === true) {
                 continue;
             }
 
@@ -326,7 +331,7 @@ class DatabaseTableModel extends BaseModel
             }
 
             if ($column['type'] == MigrationColumnType::TYPE_BOOLEAN) {
-                if (!preg_match('/^0|1$/', $default)) {
+                if (!preg_match('/^0|1|true|false$/i', $default)) {
                     throw new ValidationException([
                         'columns' => Lang::get('rainlab.builder::lang.database.error_boolean_default_value', ['column'=>$column['name']])
                     ]);
@@ -382,6 +387,15 @@ class DatabaseTableModel extends BaseModel
                 'default' => $column->getDefault(),
                 'id' => $columnName,
             ];
+
+            // Format quoted "null" values with quotes
+            if ($column->getNotnull() === false) {
+                if ($item['default'] === null) {
+                    $item['default'] = 'null';
+                } elseif (strtolower($item['default']) === 'null') {
+                    $item['default'] = "'null'";
+                }
+            }
 
             $this->columns[] = $item;
         }

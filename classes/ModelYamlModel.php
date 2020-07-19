@@ -87,7 +87,7 @@ abstract class ModelYamlModel extends YamlModel
 
             try {
                 $fileContents = Yaml::parseFile($fileInfo->getPathname());
-            } 
+            }
             catch (Exception $ex) {
                 continue;
             }
@@ -192,7 +192,8 @@ abstract class ModelYamlModel extends YamlModel
         return $this->getPluginCodeObj()->toPluginDirectoryPath().'/models/'.strtolower($this->getModelClassName()).'/'.$fileName;
     }
 
-    protected function addExtension($fileName) {
+    protected function addExtension($fileName)
+    {
         if (substr($fileName, -5) !== '.yaml') {
             $fileName .= '.yaml';
         }
