@@ -152,12 +152,12 @@
                 continue
             }
 
-            if (itemSpan == 'auto') {
+            if (itemSpan === 'auto') {
                 $.oc.foundation.element.removeClass(item, 'span-left')
                 $.oc.foundation.element.removeClass(item, 'span-full')
                 $.oc.foundation.element.removeClass(item, 'span-right')
 
-                if (prevSpan == 'left') {
+                if (prevSpan === 'left') {
                     $.oc.foundation.element.addClass(item, 'span-right')
                     prevSpan = 'right'
                 }
@@ -792,7 +792,7 @@
         return false;
     }
 
-    $(document).ready(function(){
+    $(function() {
         // There is a single instance of the form builder. All operations
         // are stateless, so instance properties or DOM references are not needed.
         $.oc.builder.formbuilder.controller = new FormBuilder()
