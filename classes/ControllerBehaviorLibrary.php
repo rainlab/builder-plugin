@@ -71,6 +71,26 @@ class ControllerBehaviorLibrary
 
         $this->behaviors = [];
 
+        /**
+         * @event pages.builder.registerControllerBehaviors
+         * Provides a hook to register controller behaviors that should be made available to the RainLab.Builder plugin
+         *
+         * Example usage:
+         *
+         *     Event::listen('pages.builder.registerControllerBehaviors', function ((ControllerBehaviorLibrary) $library) {
+         *           $library->registerBehavior(
+         *               'Backend\Behaviors\FormController', // Class name of the behavior
+         *               'rainlab.builder::lang.controller.behavior_form_controller', // Name in the UI
+         *               'rainlab.builder::lang.controller.behavior_form_controller_description', // Description in the UI
+         *               $properties, // Property definitions for configuring the behavior, must be compatible with Inspector properties (see https://octobercms.com/docs/plugin/components#component-properties)
+         *               'formConfig', // Property name for the config property on the controller implementing the behavior
+         *               null, // Design time provider class extending RainLab\Builder\Classes\BehaviorDesignTimeProviderBase
+         *               'config_form.yaml', // Default behavior configuration file name
+         *               $templates // Array of view templates required for the behavior, used when a new controller is created.
+         *           );
+         *     });
+         *
+         */
         Event::fire('pages.builder.registerControllerBehaviors', [$this]);
 
         return $this->behaviors;
