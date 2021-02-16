@@ -505,7 +505,7 @@ class MigrationModel extends BaseModel
         $value = preg_replace_callback('/[0-9]+$/u', function ($match) {
             $numericSuffix = $match[0];
 
-            return '_'.$numericSuffix;
+            return '_' . $numericSuffix;
         }, $value);
 
         return $value;
