@@ -97,8 +97,13 @@ class ModelFileParser
         if ($stream->getNextExpected(T_WHITESPACE) === null) {
             return null;
         }
+        $expectedCodesOrValues = [T_STRING, T_NS_SEPARATOR];
 
-        return $stream->getNextExpectedTerminated([T_STRING, T_NS_SEPARATOR], [T_WHITESPACE, ';']);
+        // namespace string on php 8.0 returns code 314 (T_NAME_QUALIFIED)
+        if (defined('T_NAME_QUALIFIED') && T_NAME_QUALIFIED > 0) {
+            $expectedCodesOrValues[] = T_NAME_QUALIFIED;
+        }
+        return $stream->getNextExpectedTerminated($expectedCodesOrValues, [T_WHITESPACE, ';']);
     }
 
     protected function extractClassName($stream)
