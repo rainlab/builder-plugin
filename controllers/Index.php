@@ -77,6 +77,7 @@ class Index extends Controller
         }
 
         $this->pageTitleTemplate = '%s Builder';
+        $this->vars['layoutIgnoreTouchNavigation'] = true;
     }
 
     public function setBuilderActivePlugin($pluginCode, $refreshPluginList = false)
