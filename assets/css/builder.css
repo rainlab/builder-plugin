@@ -726,7 +726,7 @@ html.gecko.mac .builder-controllers-builder-area ul.controller-behavior-list {
   z-index: 106;
 }
 .builder-tabs.primary > .tabs > ul.tabs > li {
-  bottom: -2px;
+  bottom: -3px;
   margin-left: -20px;
   z-index: 105;
 }
