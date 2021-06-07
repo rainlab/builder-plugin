@@ -1,0 +1,14 @@
+/*
+ * Legacy styles for October v1.0
+ */
+
+/* Custom buttons for the toolbar */
+
+div.control-table .toolbar a.builder-custom-table-button:before {
+    line-height: 17px;
+    font-size: 21px;
+    color: #323e50;
+    margin-right: 5px;
+    top: 3px;
+    opacity: 1;
+}

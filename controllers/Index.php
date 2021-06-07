@@ -62,6 +62,11 @@ class Index extends Controller
     {
         $this->addCss('/plugins/rainlab/builder/assets/css/builder.css', 'RainLab.Builder');
 
+        // Legacy styles for October v1.0
+        if (!class_exists('System')) {
+            $this->addCss('/plugins/rainlab/builder/assets/css/builder-v1.css', 'RainLab.Builder');
+        }
+
         // The table widget scripts should be preloaded
         $this->addJs('/modules/backend/widgets/table/assets/js/build-min.js', 'core');
 
@@ -77,7 +82,6 @@ class Index extends Controller
         }
 
         $this->pageTitleTemplate = '%s Builder';
-        $this->vars['layoutIgnoreTouchNavigation'] = true;
     }
 
     public function setBuilderActivePlugin($pluginCode, $refreshPluginList = false)
