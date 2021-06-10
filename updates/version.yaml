@@ -27,3 +27,4 @@
 1.0.27: Added ability to use 'scope' in a form relation field, added ability to change the sort order of versions and added additional properties for repeater widget in form builder. Added Polish translation.
 1.0.28: Fixes support for PHP 8
 1.0.29: Disable touch device detection
+1.0.30: Minor styling improvements

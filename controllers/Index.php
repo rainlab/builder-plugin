@@ -47,7 +47,7 @@ class Index extends Controller
 
         BackendMenu::setContext('RainLab.Builder', 'builder', 'database');
 
-        $this->bodyClass = 'compact-container';
+        $this->bodyClass = 'compact-container sidenav-responsive';
         $this->pageTitle = 'rainlab.builder::lang.plugin.name';
 
         new PluginList($this, 'pluginList');
