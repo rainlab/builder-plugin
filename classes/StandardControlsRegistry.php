@@ -197,11 +197,6 @@ class StandardControlsRegistry
                 'title' => Lang::get('rainlab.builder::lang.form.property_hint_path'),
                 'description' => Lang::get('rainlab.builder::lang.form.property_hint_path_description'),
                 'type' => 'string',
-                'validation' => [
-                    'required' => [
-                        'message' => Lang::get('rainlab.builder::lang.form.property_hint_path_required')
-                    ]
-                ],
                 'sortOrder' => 81
             ]
         ];
