@@ -29,17 +29,19 @@ tabs:
             dynamicHeight: true
             columns:
                 name:
+                    width: 18%
                     title: rainlab.builder::lang.database.column_name_name
-                    validation: 
-                        required: 
+                    validation:
+                        required:
                             message: rainlab.builder::lang.database.column_name_required
                         regex:
                             pattern: ^[0-9_a-z]+$
                             message: rainlab.builder::lang.database.column_validation_title
                 type:
+                    width: 14%
                     title: rainlab.builder::lang.database.column_name_type
                     type: dropdown
-                    options: 
+                    options:
                         integer: Integer
                         smallInteger: Small Integer
                         bigInteger: Big Integer
@@ -53,25 +55,30 @@ tabs:
                         boolean: Boolean
                         decimal: Decimal
                         double: Double
-                    validation: 
-                        required: 
+                    validation:
+                        required:
                             message: rainlab.builder::lang.database.column_type_required
                 length:
+                    width: 8%
                     title: rainlab.builder::lang.database.column_name_length
                     validation:
                         regex:
                             pattern: (^[0-9]+$)|(^[0-9]+,[0-9]+$)
                             message: rainlab.builder::lang.database.column_validation_length
                 unsigned:
+                    width: 8%
                     title: rainlab.builder::lang.database.column_name_unsigned
                     type: checkbox
                 allow_null:
+                    width: 8%
                     title: rainlab.builder::lang.database.column_name_nullable
                     type: checkbox
                 auto_increment:
+                    width: 8%
                     title: rainlab.builder::lang.database.column_auto_increment
                     type: checkbox
                 primary_key:
+                    width: 8%
                     title: rainlab.builder::lang.database.column_auto_primary_key
                     type: checkbox
                     width: 50px

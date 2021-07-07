@@ -153,5 +153,10 @@ class Plugin extends PluginBase
         CombineAssets::registerCallback(function ($combiner) {
             $combiner->registerBundle('$/rainlab/builder/assets/js/build.js');
         });
+
+        /**
+         * Add provider for "timestamp" type for MySQL and SQLite
+         */
+        $this->app->register(\MarkTopper\DoctrineDBALTimestampType\Laravel5ServiceProvider::class);
     }
 }
