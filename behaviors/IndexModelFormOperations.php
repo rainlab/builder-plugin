@@ -5,7 +5,9 @@ use RainLab\Builder\Classes\ModelFormModel;
 use RainLab\Builder\Classes\PluginCode;
 use RainLab\Builder\FormWidgets\FormBuilder;
 use RainLab\Builder\Classes\ModelModel;
+use RainLab\Builder\Classes\ControlLibrary;
 use Backend\Classes\FormField;
+use Backend\FormWidgets\DataTable;
 use ApplicationException;
 use Exception;
 use Request;
@@ -127,6 +129,24 @@ class IndexModelFormOperations extends IndexOperationsBehaviorBase
         ];
     }
 
+    public function onModelShowAddFieldsFromDatabasePopup()
+    {
+        $columns = ModelModel::getModelColumnsAndTypes($this->getPluginCode(), Input::get('model_class'));
+        $config = $this->makeConfig($this->getAddFieldsFromDatabaseDataTableConfig());
+
+        $field = new FormField('add_fields_from_database', 'add_fields_from_database');
+        $field->value = $this->getAddFieldsFromDatabaseDataTableValue($columns);
+
+        $datatable = new DataTable($this->controller, $field, $config);
+        $datatable->alias = 'add_fields_from_database_datatable';
+        $datatable->bindToController();
+
+        return $this->makePartial('add-fields-from-database-popup-form', [
+            'datatable'  => $datatable,
+            'pluginCode' => $this->getPluginCode()->toCode(),
+        ]);
+    }
+
     protected function loadOrCreateFormFromPost()
     {
         $pluginCode = Request::input('plugin_code');
@@ -182,5 +202,79 @@ class IndexModelFormOperations extends IndexOperationsBehaviorBase
             'pluginCode' => $pluginCode,
             'modelClass' => $fullClassName
         ];
+    }
+
+    /**
+     * Returns the configuration for the DataTable widget that
+     * is used in the "add fields from database" popup.
+     *
+     * @return array
+     */
+    protected function getAddFieldsFromDatabaseDataTableConfig()
+    {
+        // Get all registered controls and build an array that uses the control types as key and value for each entry.
+        $controls   = ControlLibrary::instance()->listControls();
+        $fieldTypes = array_merge(array_keys($controls['Standard']), array_keys($controls['Widgets']));
+        $options    = array_combine($fieldTypes, $fieldTypes);
+
+        return [
+            'toolbar' => false,
+            'columns' => [
+                'add'    => [
+                    'title' => 'rainlab.builder::lang.common.add',
+                    'type'  => 'checkbox',
+                    'width' => '50px',
+                ],
+                'column' => [
+                    'title'    => 'rainlab.builder::lang.database.column_name_name',
+                    'readOnly' => true,
+                ],
+                'label'  => [
+                    'title' => 'rainlab.builder::lang.list.column_name_label',
+                ],
+                'type'   => [
+                    'title'   => 'rainlab.builder::lang.form.control_widget_type',
+                    'type'    => 'dropdown',
+                    'options' => $options,
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * Returns the initial value for the DataTable widget that
+     * is used in the "add database columns" popup.
+     *
+     * @param array $columns
+     *
+     * @return array
+     */
+    protected function getAddFieldsFromDatabaseDataTableValue(array $columns)
+    {
+        // Map database column types to widget types.
+        $typeMap = [
+            'string'       => 'text',
+            'integer'      => 'number',
+            'text'         => 'textarea',
+            'timestamp'    => 'datepicker',
+            'smallInteger' => 'number',
+            'bigInteger'   => 'number',
+            'date'         => 'datepicker',
+            'time'         => 'datepicker',
+            'dateTime'     => 'datepicker',
+            'binary'       => 'checkbox',
+            'boolean'      => 'checkbox',
+            'decimal'      => 'number',
+            'double'       => 'number',
+        ];
+
+        return array_map(function ($column) use ($typeMap) {
+            return [
+                'column' => $column['name'],
+                'label'  => str_replace('_', ' ', ucfirst($column['name'])),
+                'type'   => $typeMap[$column['type']] ?? $column['type'],
+                'add'    => false,
+            ];
+        }, $columns);
     }
 }

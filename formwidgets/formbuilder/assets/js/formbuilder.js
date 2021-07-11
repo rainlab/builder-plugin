@@ -397,7 +397,7 @@
         return fieldName
     }
 
-    FormBuilder.prototype.addControlToPlaceholder = function(placeholder, controlType, controlName, noNewPlaceholder) {
+    FormBuilder.prototype.addControlToPlaceholder = function(placeholder, controlType, controlName, noNewPlaceholder, fieldName) {
         // Duplicate the placeholder and place it after
         // the existing one
         if (!noNewPlaceholder) {
@@ -420,7 +420,9 @@
         placeholder.innerHTML = ''
         placeholder.removeAttribute('data-builder-placeholder')
 
-        var fieldName = this.generateFieldName(controlType, placeholder)
+        if (!fieldName) {
+            fieldName = this.generateFieldName(controlType, placeholder)
+        }
 
         // Send request to the server to load the
         // control markup, Inspector data schema, inspector title, etc.
