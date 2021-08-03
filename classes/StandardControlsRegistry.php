@@ -747,6 +747,15 @@ class StandardControlsRegistry
     {
         $properties = $this->getFieldSizeProperties();
 
+        $properties['mode'] = [
+            'title' => Lang::get('rainlab.builder::lang.form.property_richeditor_toolbar_buttons'),
+            'description' => Lang::get('rainlab.builder::lang.form.property_richeditor_toolbar_buttons_description'),
+            'group' => Lang::get('rainlab.builder::lang.form.property_group_rich_editor'),
+            'type' => 'text',
+            'ignoreIfEmpty' => true,
+            'sortOrder' => 81
+        ];
+
         $this->controlLibrary->registerControl(
             'richeditor',
             'rainlab.builder::lang.form.control_richeditor',
@@ -998,6 +1007,34 @@ class StandardControlsRegistry
                     ]
                 ],
                 'sortOrder' => 88
+            ],
+            'maxFilesize' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_fileupload_maxfilesize'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_fileupload_maxfilesize_description'),
+                'group' => Lang::get('rainlab.builder::lang.form.property_group_fileupload'),
+                'sortOrder' => 89,
+                'type' => 'string',
+                'ignoreIfEmpty' => true,
+                'validation' => [
+                    'regex' => [
+                        'pattern' => '^[0-9\.]+$',
+                        'message' => Lang::get('rainlab.builder::lang.form.property_fileupload_invalid_maxfilesize')
+                    ]
+                ],
+            ],
+            'maxFiles' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_fileupload_maxfiles'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_fileupload_maxfiles_description'),
+                'group' => Lang::get('rainlab.builder::lang.form.property_group_fileupload'),
+                'sortOrder' => 90,
+                'type' => 'string',
+                'ignoreIfEmpty' => true,
+                'validation' => [
+                    'regex' => [
+                        'pattern' => '^[0-9]+$',
+                        'message' => Lang::get('rainlab.builder::lang.form.property_fileupload_invalid_maxfiles')
+                    ]
+                ],
             ]
         ];
 
