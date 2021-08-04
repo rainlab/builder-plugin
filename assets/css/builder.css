@@ -128,10 +128,10 @@
   -moz-border-radius: 20px;
   border-radius: 20px;
   background: #ecf0f1;
-  color: #95a5a6!important;
+  color: #95a5a6 !important;
 }
 .builder-building-area ul.builder-control-list > li.control:not(.placeholder):not(.loading-control):not(.updating-control):hover > div.remove-control:hover {
-  color: white!important;
+  color: white !important;
   background: #c03f31;
 }
 .builder-building-area ul.builder-control-list > li.control:not(.placeholder):not(.loading-control):not(.updating-control):hover[data-control-type=hint] > div.remove-control,
@@ -305,7 +305,6 @@ html.gecko.mac .builder-building-area div[data-root-control-wrapper] {
   font-style: normal;
   text-decoration: inherit;
   -webkit-font-smoothing: antialiased;
-  *margin-right: .3em;
   content: "\f107";
   color: inherit;
   right: 15px;
@@ -636,7 +635,7 @@ html.gecko.mac .builder-controllers-builder-area ul.controller-behavior-list {
 }
 .builder-tabs > .tabs .tab-control.inspector-trigger:hover span,
 .builder-tabs > .tabs .tab-control.inspector-trigger.inspector-open span {
-  background: #0181b9;
+  background: #3498db;
 }
 .builder-tabs > .tabs .tab-control.inspector-trigger.global {
   top: 5px;
@@ -688,7 +687,7 @@ html.gecko.mac .builder-controllers-builder-area ul.controller-behavior-list {
   color: #95a5a6;
 }
 .builder-tabs > .tabs > ul.tabs > li .tab-control.close-btn:hover {
-  color: #0181b9 !important;
+  color: #3498db !important;
 }
 .builder-tabs > .tabs > ul.tabs > li .tab-control.inspector-trigger {
   right: 34px;
@@ -846,12 +845,6 @@ html.gecko.mac .builder-controllers-builder-area ul.controller-behavior-list {
 .builder-tabs.secondary > .tabs ul.tabs > li.active > div.tab-container > div {
   color: #555555;
   padding-right: 30px;
-}
-html.gecko .builder-tabs.primary > .tabs > ul.tabs > li {
-  bottom: -3px;
-}
-html.gecko .builder-tabs.primary > .tabs > ul.tabs > li > div.tab-container > div {
-  padding-top: 5px;
 }
 .builder-menu-editor {
   background: white;
