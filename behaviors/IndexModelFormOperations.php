@@ -129,19 +129,19 @@ class IndexModelFormOperations extends IndexOperationsBehaviorBase
         ];
     }
 
-    public function onModelShowAddFieldsFromDatabasePopup()
+    public function onModelShowAddDatabaseFieldsPopup()
     {
         $columns = ModelModel::getModelColumnsAndTypes($this->getPluginCode(), Input::get('model_class'));
-        $config = $this->makeConfig($this->getAddFieldsFromDatabaseDataTableConfig());
+        $config = $this->makeConfig($this->getAddDatabaseFieldsDataTableConfig());
 
-        $field = new FormField('add_fields_from_database', 'add_fields_from_database');
-        $field->value = $this->getAddFieldsFromDatabaseDataTableValue($columns);
+        $field = new FormField('add_database_fields_datatable', 'add_database_fields_datatable');
+        $field->value = $this->getAddDatabaseFieldsDataTableValue($columns);
 
         $datatable = new DataTable($this->controller, $field, $config);
-        $datatable->alias = 'add_fields_from_database_datatable';
+        $datatable->alias = 'add_database_fields_datatable';
         $datatable->bindToController();
 
-        return $this->makePartial('add-fields-from-database-popup-form', [
+        return $this->makePartial('add-database-fields-popup-form', [
             'datatable'  => $datatable,
             'pluginCode' => $this->getPluginCode()->toCode(),
         ]);
@@ -206,11 +206,11 @@ class IndexModelFormOperations extends IndexOperationsBehaviorBase
 
     /**
      * Returns the configuration for the DataTable widget that
-     * is used in the "add fields from database" popup.
+     * is used in the "add database fields" popup.
      *
      * @return array
      */
-    protected function getAddFieldsFromDatabaseDataTableConfig()
+    protected function getAddDatabaseFieldsDataTableConfig()
     {
         // Get all registered controls and build an array that uses the control types as key and value for each entry.
         $controls   = ControlLibrary::instance()->listControls();
@@ -249,7 +249,7 @@ class IndexModelFormOperations extends IndexOperationsBehaviorBase
      *
      * @return array
      */
-    protected function getAddFieldsFromDatabaseDataTableValue(array $columns)
+    protected function getAddDatabaseFieldsDataTableValue(array $columns)
     {
         // Map database column types to widget types.
         $typeMap = [

@@ -34,7 +34,7 @@
     ModelForm.prototype.cmdSaveForm = function(ev) {
         var $target = $(ev.currentTarget),
             $form = $target.closest('form'),
-            $rootContainer = $('[data-root-control-wrapper] > [data-control-container]', $form), 
+            $rootContainer = $('[data-root-control-wrapper] > [data-control-container]', $form),
             $inspectorContainer = $form.find('.inspector-container'),
             controls = $.oc.builder.formbuilder.domToPropertyJson.convert($rootContainer.get(0))
 
@@ -63,7 +63,7 @@
         )
     }
 
-    ModelForm.prototype.cmdAddFieldsFromDatabase = function (ev) {
+    ModelForm.prototype.cmdAddDatabaseFields = function (ev) {
         var $target = $(ev.currentTarget)
 
         // Always use the first placeholder to add controls
