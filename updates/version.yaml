@@ -1,32 +1,33 @@
-1.0.1: Initialize plugin.
-1.0.2: Fixes the problem with selecting a plugin. Minor localization corrections. Configuration files in the list and form behaviors are now autocomplete.
-1.0.3: Improved handling of the enum data type.
-1.0.4: Added user permissions to work with the Builder.
-1.0.5: Fixed permissions registration.
-1.0.6: Fixed front-end record ordering in the Record List component.
-1.0.7: Builder settings are now protected with user permissions. The database table column list is scrollable now. Minor code cleanup.
-1.0.8: Added the Reorder Controller behavior.
-1.0.9: Minor API and UI updates.
-1.0.10: Minor styling update.
-1.0.11: Fixed a bug where clicking placeholder in a repeater would open Inspector. Fixed a problem with saving forms with repeaters in tabs. Minor style fix.
-1.0.12: Added support for the Trigger property to the Media Finder widget configuration. Names of form fields and list columns definition files can now contain underscores.
-1.0.13: Minor styling fix on the database editor.
-1.0.14: Added support for published_at timestamp field
-1.0.15: Fixed a bug where saving a localization string in Inspector could cause a JavaScript error. Added support for Timestamps and Soft Deleting for new models.
-1.0.16: Fixed a bug when saving a form with the Repeater widget in a tab could create invalid fields in the form's outside area. Added a check that prevents creating localization strings inside other existing strings.
-1.0.17: Added support Trigger attribute support for RecordFinder and Repeater form widgets.
-1.0.18: Fixes a bug where '::class' notations in a model class definition could prevent the model from appearing in the Builder model list. Added emptyOption property support to the dropdown form control.
-1.0.19: Added a feature allowing to add all database columns to a list definition. Added max length validation for database table and column names.
-1.0.20: Fixes a bug where form the builder could trigger the "current.hasAttribute is not a function" error.
-1.0.21: Back-end navigation sort order updated.
-1.0.22: Added scopeValue property to the RecordList component.
-1.0.23: Added support for balloon-selector field type, added Brazilian Portuguese translation, fixed some bugs
-1.0.24: Added support for tag list field type, added read only toggle for fields. Prevent plugins from using reserved PHP keywords for class names and namespaces
-1.0.25: Allow editing of migration code in the "Migration" popup when saving changes in the database editor.
-1.0.26: Allow special default values for columns and added new "Add ID column" button to database editor.
-1.0.27: Added ability to use 'scope' in a form relation field, added ability to change the sort order of versions and added additional properties for repeater widget in form builder. Added Polish translation.
-1.0.28: Fixes support for PHP 8
-1.0.29: Disable touch device detection
-1.0.30: Minor styling improvements
-1.0.31: Added support for more rich editor and file upload properties
-1.0.32: Minor styling improvements
+v1.0.1: Initialize plugin.
+v1.0.2: Fixes the problem with selecting a plugin. Minor localization corrections. Configuration files in the list and form behaviors are now autocomplete.
+v1.0.3: Improved handling of the enum data type.
+v1.0.4: Added user permissions to work with the Builder.
+v1.0.5: Fixed permissions registration.
+v1.0.6: Fixed front-end record ordering in the Record List component.
+v1.0.7: Builder settings are now protected with user permissions. The database table column list is scrollable now. Minor code cleanup.
+v1.0.8: Added the Reorder Controller behavior.
+v1.0.9: Minor API and UI updates.
+v1.0.10: Minor styling update.
+v1.0.11: Fixed a bug where clicking placeholder in a repeater would open Inspector. Fixed a problem with saving forms with repeaters in tabs. Minor style fix.
+v1.0.12: Added support for the Trigger property to the Media Finder widget configuration. Names of form fields and list columns definition files can now contain underscores.
+v1.0.13: Minor styling fix on the database editor.
+v1.0.14: Added support for published_at timestamp field
+v1.0.15: Fixed a bug where saving a localization string in Inspector could cause a JavaScript error. Added support for Timestamps and Soft Deleting for new models.
+v1.0.16: Fixed a bug when saving a form with the Repeater widget in a tab could create invalid fields in the form's outside area. Added a check that prevents creating localization strings inside other existing strings.
+v1.0.17: Added support Trigger attribute support for RecordFinder and Repeater form widgets.
+v1.0.18: Fixes a bug where '::class' notations in a model class definition could prevent the model from appearing in the Builder model list. Added emptyOption property support to the dropdown form control.
+v1.0.19: Added a feature allowing to add all database columns to a list definition. Added max length validation for database table and column names.
+v1.0.20: Fixes a bug where form the builder could trigger the "current.hasAttribute is not a function" error.
+v1.0.21: Back-end navigation sort order updated.
+v1.0.22: Added scopeValue property to the RecordList component.
+v1.0.23: Added support for balloon-selector field type, added Brazilian Portuguese translation, fixed some bugs
+v1.0.24: Added support for tag list field type, added read only toggle for fields. Prevent plugins from using reserved PHP keywords for class names and namespaces
+v1.0.25: Allow editing of migration code in the "Migration" popup when saving changes in the database editor.
+v1.0.26: Allow special default values for columns and added new "Add ID column" button to database editor.
+v1.0.27: Added ability to use 'scope' in a form relation field, added ability to change the sort order of versions and added additional properties for repeater widget in form builder. Added Polish translation.
+v1.0.28: Fixes support for PHP 8
+v1.0.29: Disable touch device detection
+v1.0.30: Minor styling improvements
+v1.0.31: Added support for more rich editor and file upload properties
+v1.0.32: Minor styling improvements
+v1.1.0: Adds feature for adding database fields to a form definition.

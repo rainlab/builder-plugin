@@ -227,6 +227,16 @@ if(controls===false){$.oc.flashMsg({'text':$.oc.builder.formbuilder.domToPropert
 return}
 var data={controls:controls}
 $target.request('onModelFormSave',{data:data}).done(this.proxy(this.saveFormDone))}
+ModelForm.prototype.cmdAddDatabaseFields=function(ev){var $target=$(ev.currentTarget)
+var $placeholder=this.getMasterTabsActivePane().find('.builder-control-list .control.placeholder:first')[0]
+var fields=$target.find('.control-table').data('oc.table').dataSource.data.filter(function(column){return column.add}).reverse()
+$target.closest('.control-popup').data('oc.popup').hide()
+$.oc.stripeLoadIndicator.show()
+function addField(field){return function(){var defer=$.Deferred()
+$.oc.builder.formbuilder.controller.addControlToPlaceholder($placeholder,field.type,field.label?field.label:field.column,false,field.column).complete(function(){defer.resolve()})
+return defer.promise()};}
+var allFields=$.when({})
+$.each(fields,function(index,field){allFields=allFields.then(addField(field))});$.when(allFields).always($.oc.builder.indexController.hideStripeIndicatorProxy)}
 ModelForm.prototype.cmdOpenForm=function(ev){var form=$(ev.currentTarget).data('form'),model=$(ev.currentTarget).data('modelClass')
 this.indexController.openOrLoadMasterTab($(ev.target),'onModelFormCreateOrOpen',this.makeTabId(model+'-'+form),{file_name:form,model_class:model})}
 ModelForm.prototype.cmdDeleteForm=function(ev){var $target=$(ev.currentTarget)
