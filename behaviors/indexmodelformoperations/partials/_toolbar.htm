@@ -8,6 +8,16 @@
         <?= e(trans('backend::lang.form.save')) ?>
     </a>
 
+    <a
+        href="javascript:;"
+        class="btn btn-primary oc-icon-magic"
+        data-control="popup"
+        data-handler="onModelShowAddFieldsFromDatabasePopup"
+        data-stripe-load-indicator
+    >
+        <?= e(trans('rainlab.builder::lang.form.btn_add_fields_from_database')) ?>
+    </a>
+
     <button
         type="button"
         class="btn btn-default empty oc-icon-trash-o <?php if (!strlen($fileName)): ?>hide<?php endif ?>"
