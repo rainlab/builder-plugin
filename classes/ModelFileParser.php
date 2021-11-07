@@ -101,14 +101,15 @@ class ModelFileParser
             return null;
         }
 
-        $expectedCodesOrValues = [T_STRING, T_NS_SEPARATOR];
+        $expected = [T_STRING, T_NS_SEPARATOR];
 
-        // Namespace string on php 8.0 returns code 314 (T_NAME_QUALIFIED)
+        // Namespace string on PHP 8.0 returns code 314 (T_NAME_QUALIFIED)
+        // @deprecated combine when min req > php 8
         if (defined('T_NAME_QUALIFIED') && T_NAME_QUALIFIED > 0) {
-            $expectedCodesOrValues[] = T_NAME_QUALIFIED;
+            $expected[] = T_NAME_QUALIFIED;
         }
 
-        return $stream->getNextExpectedTerminated($expectedCodesOrValues, [T_WHITESPACE, ';']);
+        return $stream->getNextExpectedTerminated($expected, [T_WHITESPACE, ';']);
     }
 
     /**
