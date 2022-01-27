@@ -566,7 +566,7 @@ return [
         'rolling_back' => 'Rolling back...',
         'applied' => 'Version applied',
         'rolled_back' => 'Version rolled back',
-        'hint_save_unapplied' => 'You saved an unapplied version. Unapplied versions could be automatically applied when you or another user logs into the back-end or when a database table is saved in the Database section of the Builder.',
+        'hint_save_unapplied' => 'You saved an unapplied version. Unapplied versions could be automatically applied when you or another user migrates the database or when a database table is saved in the Database section of the Builder.',
         'hint_rollback' => 'Rolling back a version will also roll back all versions newer than this version. Please note that unapplied versions could be automatically applied by the system when you or another user logs into the back-end or when a database table is saved in the Database section of the Builder.',
         'hint_apply' => 'Applying a version will also apply all older unapplied versions of the plugin.',
         'dont_show_again' => 'Don\'t show again',
