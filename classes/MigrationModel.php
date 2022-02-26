@@ -314,8 +314,7 @@ class MigrationModel extends BaseModel
                 'code' => Lang::get('rainlab.builder::lang.migration.error_namespace_mismatch', ['namespace'=>$pluginNamespace])
             ]);
         }
-
-        $this->scriptFileName = Str::snake($migrationInfo['class']);
+        $this->scriptFileName = $this->makeScriptFileName($migrationInfo['class']);
 
         /*
          * Validate that a file with the generated name does not exist yet.
@@ -497,5 +496,18 @@ class MigrationModel extends BaseModel
     {
         $versionObj = new PluginVersion;
         return $versionObj->getPluginVersionInformation($this->getPluginCodeObj());
+    }
+
+    protected function makeScriptFileName($value)
+    {
+        $value = Str::snake($value);
+
+        $value = preg_replace_callback('/[0-9]+$/u', function ($match) {
+            $numericSuffix = $match[0];
+
+            return '_' . $numericSuffix;
+        }, $value);
+
+        return $value;
     }
 }
