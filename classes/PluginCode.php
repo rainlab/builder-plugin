@@ -1,5 +1,6 @@
 <?php namespace RainLab\Builder\Classes;
 
+use Db;
 use ApplicationException;
 
 /**
@@ -84,9 +85,18 @@ class PluginCode
         return '$/'.$this->toFilesystemPath();
     }
 
-    public function toDatabasePrefix()
+    /**
+     * toDatabasePrefix
+     */
+    public function toDatabasePrefix($dbPrefix = false)
     {
-        return strtolower($this->authorCode.'_'.$this->pluginCode);
+        $builderPrefix = strtolower($this->authorCode.'_'.$this->pluginCode);
+
+        if ($dbPrefix) {
+            return Db::getTablePrefix() . $builderPrefix;
+        }
+
+        return $builderPrefix;
     }
 
     public function getAuthorCode()

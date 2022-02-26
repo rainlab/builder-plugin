@@ -50,21 +50,33 @@ class DatabaseTableModel extends BaseModel
      */
     protected static $schema = null;
 
+    /**
+     * listPluginTables
+     */
     public static function listPluginTables($pluginCode)
     {
         $pluginCodeObj = new PluginCode($pluginCode);
-        $prefix = $pluginCodeObj->toDatabasePrefix();
+        $prefix = $pluginCodeObj->toDatabasePrefix(true);
 
         $tables = self::getSchemaManager()->listTableNames();
 
-        return array_filter($tables, function ($item) use ($prefix) {
+        $foundTables = array_filter($tables, function ($item) use ($prefix) {
             return Str::startsWith($item, $prefix);
         });
+
+        $unprefixedTables = array_map(function($table) {
+            return substr($table, mb_strlen(Db::getTablePrefix()));
+        }, $foundTables);
+
+        return $unprefixedTables;
     }
 
+    /**
+     * tableExists
+     */
     public static function tableExists($name)
     {
-        return self::getSchema()->hasTable($name);
+        return self::getSchema()->hasTable(Db::getTablePrefix() . $name);
     }
 
     /**
@@ -80,11 +92,22 @@ class DatabaseTableModel extends BaseModel
         $schema = self::getSchemaManager()->createSchema();
 
         $this->name = $name;
-        $this->tableInfo = $schema->getTable($this->name);
+        $this->tableInfo = $schema->getTable($this->getFullTableName());
         $this->loadColumnsFromTableInfo();
         $this->exists = true;
     }
 
+    /**
+     * getFullTableName
+     */
+    protected function getFullTableName()
+    {
+        return Db::getTablePrefix() . $this->name;
+    }
+
+    /**
+     * validate
+     */
     public function validate()
     {
         $pluginDbPrefix = $this->getPluginCodeObj()->toDatabasePrefix();
