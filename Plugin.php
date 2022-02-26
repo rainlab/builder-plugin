@@ -7,8 +7,9 @@ use System\Classes\PluginBase;
 use System\Classes\CombineAssets;
 use RainLab\Builder\Classes\StandardControlsRegistry;
 use RainLab\Builder\Classes\StandardBehaviorsRegistry;
-use Illuminate\Support\Facades\Validator;
 use RainLab\Builder\Rules\Reserved;
+use Doctrine\DBAL\Types\Type as DoctrineType;
+use Illuminate\Support\Facades\Validator;
 
 class Plugin extends PluginBase
 {
@@ -121,6 +122,9 @@ class Plugin extends PluginBase
         ];
     }
 
+    /**
+     * boot
+     */
     public function boot()
     {
         Event::listen('pages.builder.registerControls', function ($controlLibrary) {
@@ -143,8 +147,16 @@ class Plugin extends PluginBase
             // Fixes lowercase attribute names in the new plugin modal form
             return ucfirst($message);
         });
+
+        // Register doctrine types
+        if (!DoctrineType::hasType('timestamp')) {
+            DoctrineType::addType('timestamp', \RainLab\Builder\Classes\Doctrine\TimestampType::class);
+        }
     }
 
+    /**
+     * register
+     */
     public function register()
     {
         /*
