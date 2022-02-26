@@ -314,6 +314,7 @@ class MigrationModel extends BaseModel
                 'code' => Lang::get('rainlab.builder::lang.migration.error_namespace_mismatch', ['namespace'=>$pluginNamespace])
             ]);
         }
+
         $this->scriptFileName = $this->makeScriptFileName($migrationInfo['class']);
 
         /*
@@ -498,7 +499,13 @@ class MigrationModel extends BaseModel
         return $versionObj->getPluginVersionInformation($this->getPluginCodeObj());
     }
 
-    protected function makeScriptFileName($value)
+    /**
+     * makeScriptFileName will ensure the last digit in the script contains an underscore,
+     * for consistency with other areas.
+     *
+     * eg: Some123Script3 → Some123Script_3
+     */
+    protected function makeScriptFileName($value): string
     {
         $value = Str::snake($value);
 

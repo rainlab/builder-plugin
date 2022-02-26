@@ -115,9 +115,10 @@ class ControlLibrary
                 'title' => Lang::get('rainlab.builder::lang.form.property_label_title'),
                 'type' => 'builderLocalization',
                 'validation' => [
-                    'required' => [
-                        'message' => Lang::get('rainlab.builder::lang.form.property_label_required')
-                    ]
+                    // Label is technically not a required field -sg
+                    // 'required' => [
+                    //     'message' => Lang::get('rainlab.builder::lang.form.property_label_required')
+                    // ]
                 ]
             ],
             'oc.comment' => [

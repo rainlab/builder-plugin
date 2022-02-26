@@ -365,7 +365,8 @@ class StandardControlsRegistry
             'dependsOn',
             'preset',
             'attributes',
-            'label',
+            // Partials can have labels -sg
+            // 'label',
             'oc.commentPosition',
             'oc.comment',
             'disabled'
