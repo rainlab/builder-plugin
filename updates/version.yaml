@@ -31,3 +31,4 @@ v1.0.30: Minor styling improvements
 v1.0.31: Added support for more rich editor and file upload properties
 v1.0.32: Minor styling improvements
 v1.1.0: Adds feature for adding database fields to a form definition.
+v1.1.1: Adds DBAL timestamp column type. Adds database prefix support. Fixes various bugs.
