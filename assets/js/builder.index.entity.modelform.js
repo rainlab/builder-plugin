@@ -92,7 +92,7 @@
                     field.label ? field.label : field.column,
                     false,
                     field.column
-                ).complete(function () {
+                ).always(function () {
                     defer.resolve()
                 })
                 return defer.promise()
