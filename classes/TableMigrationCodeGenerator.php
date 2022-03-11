@@ -382,6 +382,7 @@ class TableMigrationCodeGenerator extends BaseModel
         $result .= $this->generateNullable($column, $changeMode, $columnData, $forceFlagsChange);
         $result .= $this->generateUnsigned($column, $changeMode, $columnData, $forceFlagsChange);
         $result .= $this->generateDefault($column, $changeMode, $columnData, $forceFlagsChange);
+        $result .= $this->generateComment($column, $changeMode, $columnData, $forceFlagsChange);
 
         if ($changeMode) {
             $result .= '->change()';
@@ -492,6 +493,35 @@ class TableMigrationCodeGenerator extends BaseModel
         }
 
         return sprintf('->default(\'%s\')', $this->quoteParameter($default));
+    }
+
+    protected function generateComment($column, $changeMode, $columnData, $forceFlagsChange)
+    {
+
+        $result = null;
+        $default = $column->getComment();
+
+        if (!$changeMode) {
+            
+            if (strlen($default)) {
+                $result = $this->generateCommentMethodCall($default, $column);
+            }
+        } elseif (in_array('comment', $columnData->changedProperties) || $forceFlagsChange) {
+            if (strlen($default)) {
+                $result = $this->generateCommentMethodCall($default, $column);
+            } elseif ($changeMode) {
+                $result = sprintf('->comment(null)');
+            }
+        }
+
+        return $result;
+    }
+
+    protected function generateCommentMethodCall($default, $column)
+    {
+        $columnName = $column->getName();
+        $typeName = $column->getType()->getName();
+        return sprintf('->comment(\'%s\')', $this->quoteParameter($default));
     }
 
     protected function generatePrimaryKeyCode($index)
