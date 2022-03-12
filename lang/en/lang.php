@@ -53,6 +53,7 @@ return [
         'column_name_nullable' => 'Nullable',
         'column_auto_increment' => 'AUTOINCR',
         'column_default' => 'Default',
+        'column_comment' => 'Comment',
         'column_auto_primary_key' => 'PK',
         'tab_new_table' => 'New table',
         'btn_add_column' => 'Add column',

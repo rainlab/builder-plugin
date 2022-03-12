@@ -54,6 +54,8 @@ class DatabaseTableSchemaCreator extends BaseModel
 
         $default = trim($options['default']);
 
+        $result['comment'] = trim(empty($options['comment']) ? '' : $options['comment']);
+
         // Note - this code doesn't allow to set empty string as default.
         // But converting empty strings to NULLs is required for the further
         // work with Doctrine types. As an option - empty strings could be specified

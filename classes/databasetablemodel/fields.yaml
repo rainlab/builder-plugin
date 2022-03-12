@@ -86,3 +86,6 @@ tabs:
                     title: rainlab.builder::lang.database.column_auto_primary_key
                     type: checkbox
                     width: 8%
+
+                comment:
+                    title: rainlab.builder::lang.database.column_comment
