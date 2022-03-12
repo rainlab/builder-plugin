@@ -422,6 +422,7 @@ class TableMigrationCodeGenerator extends BaseModel
         $method = $this->applyMethodIncrements($method, $column);
 
         $lengthStr = $this->formatLengthParameters($column, $method);
+
         return sprintf('\t\t$table->%s(\'%s\'%s)', $method, $columnName, $lengthStr);
     }
 
@@ -433,7 +434,8 @@ class TableMigrationCodeGenerator extends BaseModel
             if (!$column->getNotnull()) {
                 $result = $this->generateBooleanMethod('nullable', true);
             }
-        } elseif (in_array('notnull', $columnData->changedProperties) || $forceFlagsChange) {
+        }
+        elseif (in_array('notnull', $columnData->changedProperties) || $forceFlagsChange) {
             $result = $this->generateBooleanMethod('nullable', !$column->getNotnull());
         }
 
@@ -448,7 +450,8 @@ class TableMigrationCodeGenerator extends BaseModel
             if ($column->getUnsigned()) {
                 $result = $this->generateBooleanMethod('unsigned', true);
             }
-        } elseif (in_array('unsigned', $columnData->changedProperties) || $forceFlagsChange) {
+        }
+        elseif (in_array('unsigned', $columnData->changedProperties) || $forceFlagsChange) {
             $result = $this->generateBooleanMethod('unsigned', $column->getUnsigned());
         }
 
@@ -497,19 +500,19 @@ class TableMigrationCodeGenerator extends BaseModel
 
     protected function generateComment($column, $changeMode, $columnData, $forceFlagsChange)
     {
-
         $result = null;
         $default = $column->getComment();
 
         if (!$changeMode) {
-            
             if (strlen($default)) {
                 $result = $this->generateCommentMethodCall($default, $column);
             }
-        } elseif (in_array('comment', $columnData->changedProperties) || $forceFlagsChange) {
+        }
+        elseif (in_array('comment', $columnData->changedProperties) || $forceFlagsChange) {
             if (strlen($default)) {
                 $result = $this->generateCommentMethodCall($default, $column);
-            } elseif ($changeMode) {
+            }
+            elseif ($changeMode) {
                 $result = sprintf('->comment(null)');
             }
         }
@@ -519,8 +522,6 @@ class TableMigrationCodeGenerator extends BaseModel
 
     protected function generateCommentMethodCall($default, $column)
     {
-        $columnName = $column->getName();
-        $typeName = $column->getType()->getName();
         return sprintf('->comment(\'%s\')', $this->quoteParameter($default));
     }
 
@@ -535,7 +536,7 @@ class TableMigrationCodeGenerator extends BaseModel
     {
         $result = $value ? 'true' : 'false';
 
-        return$result;
+        return $result;
     }
 
     protected function generateBooleanMethod($methodName, $value)
@@ -588,8 +589,8 @@ class TableMigrationCodeGenerator extends BaseModel
     protected function tableHasPrimaryKeyChanges($tableDiff)
     {
         return $this->findPrimaryKeyIndex($tableDiff->addedIndexes, $tableDiff->fromTable) ||
-                $this->findPrimaryKeyIndex($tableDiff->changedIndexes, $tableDiff->fromTable) ||
-                $this->findPrimaryKeyIndex($tableDiff->removedIndexes, $tableDiff->fromTable);
+            $this->findPrimaryKeyIndex($tableDiff->changedIndexes, $tableDiff->fromTable) ||
+            $this->findPrimaryKeyIndex($tableDiff->removedIndexes, $tableDiff->fromTable);
     }
 
     protected function getChangedOrRemovedPrimaryKey($tableDiff)

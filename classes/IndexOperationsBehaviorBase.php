@@ -5,15 +5,21 @@ use Backend\Behaviors\FormController;
 use ApplicationException;
 
 /**
- * Base class for index operation behaviors
+ * IndexOperationsBehaviorBase base class for index operation behaviors
  *
  * @package rainlab\builder
  * @author Alexey Bobkov, Samuel Georges
  */
 abstract class IndexOperationsBehaviorBase extends ControllerBehavior
 {
+    /**
+     * @var string|null baseFormConfigFile
+     */
     protected $baseFormConfigFile = null;
 
+    /**
+     * makeBaseFormWidget
+     */
     protected function makeBaseFormWidget($modelCode, $options = [])
     {
         if (!strlen($this->baseFormConfigFile)) {
@@ -21,16 +27,31 @@ abstract class IndexOperationsBehaviorBase extends ControllerBehavior
         }
 
         $widgetConfig = $this->makeConfig($this->baseFormConfigFile);
-
         $widgetConfig->model = $this->loadOrCreateBaseModel($modelCode, $options);
         $widgetConfig->alias = 'form_'.md5(get_class($this)).uniqid();
 
-        $form = $this->makeWidget('Backend\Widgets\Form', $widgetConfig);
-        $form->context = strlen($modelCode) ? FormController::CONTEXT_UPDATE : FormController::CONTEXT_CREATE;
+        $widgetConfig = $this->extendBaseFormWidgetConfig($widgetConfig);
+
+        $form = $this->makeWidget(\Backend\Widgets\Form::class, $widgetConfig);
+
+        $form->context = strlen($modelCode)
+            ? FormController::CONTEXT_UPDATE
+            : FormController::CONTEXT_CREATE;
 
         return $form;
     }
 
+    /**
+     * extendBaseFormWidgetConfig
+     */
+    protected function extendBaseFormWidgetConfig($config)
+    {
+        return $config;
+    }
+
+    /**
+     * getPluginCode
+     */
     protected function getPluginCode()
     {
         $vector = $this->controller->getBuilderActivePluginVector();
@@ -42,5 +63,8 @@ abstract class IndexOperationsBehaviorBase extends ControllerBehavior
         return $vector->pluginCodeObj;
     }
 
+    /**
+     * loadOrCreateBaseModel
+     */
     abstract protected function loadOrCreateBaseModel($modelCode, $options = []);
 }
