@@ -25,7 +25,18 @@ abstract class YamlModel extends BaseModel
     protected $originalFilePath;
 
     protected $originalFileData = [];
-
+    
+    private function array_merge_many($arr1,$arr2){
+        // If October doesn't provide a similar method, I think it can be added to \October\Rain\Support\Collection
+        $arrMerge=array_merge($arr1,$arr2);
+        foreach($arrMerge as $k=>$v){
+            if (is_array($v) && isset($arr1[$k]) && isset($arr2[$k])) {
+               $arrMerge[$k]=$this->array_merge_many($arr1[$k],$arr2[$k]);
+            }
+        }
+        return $arrMerge;
+    }
+    
     public function save()
     {
         $this->validate();
@@ -42,7 +53,7 @@ abstract class YamlModel extends BaseModel
             if ($data) {
                 // Save the section data only if the section
                 // is not empty.
-                $fileData[$this->yamlSection] = $data;
+                $fileData[$this->yamlSection]=$this->array_merge_many($fileData[$this->yamlSection],$data);
             } else {
                 if (array_key_exists($this->yamlSection, $fileData)) {
                     unset($fileData[$this->yamlSection]);
