@@ -8,12 +8,10 @@ use RainLab\Builder\Widgets\ModelList;
 use RainLab\Builder\Widgets\VersionList;
 use RainLab\Builder\Widgets\LanguageList;
 use RainLab\Builder\Widgets\ControllerList;
-use Backend;
 use BackendMenu;
-use Config;
 
 /**
- * Builder index controller
+ * Index controller for Builder
  *
  * @package rainlab\builder
  * @author Alexey Bobkov, Samuel Georges
@@ -23,23 +21,23 @@ class Index extends Controller
     use InspectableContainer;
 
     public $implement = [
-        'RainLab.Builder.Behaviors.IndexPluginOperations',
-        'RainLab.Builder.Behaviors.IndexDatabaseTableOperations',
-        'RainLab.Builder.Behaviors.IndexModelOperations',
-        'RainLab.Builder.Behaviors.IndexModelFormOperations',
-        'RainLab.Builder.Behaviors.IndexModelListOperations',
-        'RainLab.Builder.Behaviors.IndexPermissionsOperations',
-        'RainLab.Builder.Behaviors.IndexMenusOperations',
-        'RainLab.Builder.Behaviors.IndexVersionsOperations',
-        'RainLab.Builder.Behaviors.IndexLocalizationOperations',
-        'RainLab.Builder.Behaviors.IndexControllerOperations',
-        'RainLab.Builder.Behaviors.IndexDataRegistry'
+        \RainLab\Builder\Behaviors\IndexPluginOperations::class,
+        \RainLab\Builder\Behaviors\IndexDatabaseTableOperations::class,
+        \RainLab\Builder\Behaviors\IndexModelOperations::class,
+        \RainLab\Builder\Behaviors\IndexModelFormOperations::class,
+        \RainLab\Builder\Behaviors\IndexModelListOperations::class,
+        \RainLab\Builder\Behaviors\IndexPermissionsOperations::class,
+        \RainLab\Builder\Behaviors\IndexMenusOperations::class,
+        \RainLab\Builder\Behaviors\IndexVersionsOperations::class,
+        \RainLab\Builder\Behaviors\IndexLocalizationOperations::class,
+        \RainLab\Builder\Behaviors\IndexControllerOperations::class,
+        \RainLab\Builder\Behaviors\IndexDataRegistry::class
     ];
 
     public $requiredPermissions = ['rainlab.builder.manage_plugins'];
 
     /**
-     * Constructor.
+     * __construct
      */
     public function __construct()
     {
@@ -69,17 +67,7 @@ class Index extends Controller
 
         // The table widget scripts should be preloaded
         $this->addJs('/modules/backend/widgets/table/assets/js/build-min.js', 'core');
-
-        if (Config::get('develop.decompileBackendAssets', false)) {
-            // Allow decompiled backend assets for RainLab Builder
-            $assets = Backend::decompileAsset('../../plugins/rainlab/builder/assets/js/build.js', true);
-
-            foreach ($assets as $asset) {
-                $this->addJs($asset, 'RainLab.Builder');
-            }
-        } else {
-            $this->addJs('/plugins/rainlab/builder/assets/js/build-min.js', 'RainLab.Builder');
-        }
+        $this->addJs('/plugins/rainlab/builder/assets/js/build-min.js', 'RainLab.Builder');
 
         $this->pageTitleTemplate = '%s Builder';
     }

@@ -28,12 +28,16 @@ return [
         'manage_plugins' => 'Create and edit plugins',
     ],
     'author_name' => [
-        'title' => 'Author name',
+        'title' => 'Author Name',
         'description' => 'Default author name to use for your new plugins. The author name is not fixed - you can change it in the plugins configuration at any time.',
     ],
     'author_namespace' => [
-        'title' => 'Author namespace',
+        'title' => 'Author Namespace',
         'description' => 'If you develop for the Marketplace, the namespace should match the author code and cannot be changed. Refer to the documentation for details.',
+    ],
+    'config' => [
+        'use_table_comments_label' => 'Include Table Comments',
+        'use_table_comments_comment' => 'Show comment field when defining table columns.'
     ],
     'database' => [
         'menu_label' => 'Database',
@@ -53,6 +57,7 @@ return [
         'column_name_nullable' => 'Nullable',
         'column_auto_increment' => 'AUTOINCR',
         'column_default' => 'Default',
+        'column_comment' => 'Comment',
         'column_auto_primary_key' => 'PK',
         'tab_new_table' => 'New table',
         'btn_add_column' => 'Add column',

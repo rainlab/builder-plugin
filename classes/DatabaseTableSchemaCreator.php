@@ -51,13 +51,13 @@ class DatabaseTableSchemaCreator extends BaseModel
         $result['unsigned'] = !!$options['unsigned'];
         $result['notnull'] = !$options['allow_null'];
         $result['autoincrement'] = !!$options['auto_increment'];
-
-        $default = trim($options['default']);
+        $result['comment'] = trim($options['comment'] ?? '');
 
         // Note - this code doesn't allow to set empty string as default.
         // But converting empty strings to NULLs is required for the further
         // work with Doctrine types. As an option - empty strings could be specified
         // as '' in the editor UI (table column editor).
+        $default = trim($options['default']);
         $result['default'] = $default === '' ? null : $default;
 
         return $result;

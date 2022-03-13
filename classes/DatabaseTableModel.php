@@ -404,6 +404,7 @@ class DatabaseTableModel extends BaseModel
                 'auto_increment' => $column->getAutoincrement(),
                 'primary_key' => in_array($columnName, $primaryKeyColumns),
                 'default' => $column->getDefault(),
+                'comment' => $column->getComment(),
                 'id' => $columnName,
             ];
 
