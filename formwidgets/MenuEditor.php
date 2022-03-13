@@ -159,11 +159,29 @@ class MenuEditor extends FormWidgetBase
                 ],
             ],
             [
+                'title' => Lang::get('rainlab.builder::lang.menu.icon_svg'),
+                'description' => Lang::get('rainlab.builder::lang.menu.icon_svg_description'),
+                'property' => 'iconSvg',
+            ],
+            [
                 'title' => Lang::get('rainlab.builder::lang.menu.property_permissions'),
                 'property' => 'permissions',
                 'type' => 'stringListAutocomplete',
                 'fillFrom' => 'permissions'
-            ]
+            ],
+            [
+                'title' => Lang::get('rainlab.builder::lang.menu.counter'),
+                'description' => Lang::get('rainlab.builder::lang.menu.counter_description'),
+                'property' => 'counter',
+                'group' => Lang::get('rainlab.builder::lang.menu.counter_group'),
+
+            ],
+            [
+                'title' => Lang::get('rainlab.builder::lang.menu.counter_label'),
+                'description' => Lang::get('rainlab.builder::lang.menu.counter_label_description'),
+                'property' => 'counterLabel',
+                'group' => Lang::get('rainlab.builder::lang.menu.counter_group'),
+            ],
         ];
 
         return $result;

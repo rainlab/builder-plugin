@@ -608,6 +608,13 @@ return [
         'property_code_required' => 'Please enter the menu item code.',
         'error_duplicate_main_menu_code' => "Duplicate main menu item code: ':code'.",
         'error_duplicate_side_menu_code' => "Duplicate side menu item code: ':code'.",
+        'icon_svg' => 'iconSvg',
+        'icon_svg_description' => 'An SVG icon to be used in place of the standard icon. The SVG icon should be a rectangle and can support colors',
+        'counter' => 'Counter',
+        'counter_description' => 'A numeric value to output near the menu icon. The value should be a number or a callable returning a number',
+        'counter_label' => 'counterLabel',
+        'counter_label_description' => 'A string value to describe the numeric reference in counter',
+        'counter_group' => 'Counter'
     ],
     'localization' => [
         'menu_label' => 'Localization',
