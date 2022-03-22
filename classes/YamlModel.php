@@ -209,12 +209,24 @@ abstract class YamlModel extends BaseModel
         $arrMerge = array_merge($arr1, $arr2);
 
         foreach ($arrMerge as $key => $val) {
-            if (is_array($val) && isset($arr1[$key]) && isset($arr2[$key])) {
+            if (!is_array($val) || !$this->isArrayAssociative($val)) {
+                continue;
+            }
+
+            if (isset($arr1[$key]) && isset($arr2[$key])) {
                $arrMerge[$key] = $this->arrayMergeMany($arr1[$key], $arr2[$key]);
             }
         }
 
         return $arrMerge;
+    }
+
+    /**
+     * isArrayAssociative retruns true if the array is associative
+     */
+    protected function isArrayAssociative($arr)
+    {
+        return is_array($arr) && array_keys($arr) !== range(0, count($arr) - 1);
     }
 
     /**
