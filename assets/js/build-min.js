@@ -65,7 +65,7 @@ EntityBase.prototype.getIndexController=function(){return this.indexController}
 EntityBase.prototype.updateMasterTabIdAndTitle=function($tabPane,responseData){var tabsObject=this.getMasterTabsObject()
 tabsObject.updateIdentifier($tabPane,responseData.tabId)
 tabsObject.updateTitle($tabPane,responseData.tabTitle)}
-EntityBase.prototype.unhideFormDeleteButton=function($tabPane){$('[data-control=delete-button]',$tabPane).removeClass('hide')}
+EntityBase.prototype.unhideFormDeleteButton=function($tabPane){$('[data-control=delete-button]',$tabPane).removeClass('hide oc-hide')}
 EntityBase.prototype.forceCloseTab=function($tabPane){$tabPane.trigger('close.oc.tab',[{force:true}])}
 EntityBase.prototype.unmodifyTab=function($tabPane){this.indexController.unchangeTab($tabPane)}
 $.oc.builder.entityControllers.base=EntityBase;}(window.jQuery);+function($){"use strict";if($.oc.builder===undefined)
@@ -476,10 +476,10 @@ if(!tabId||String(tabId).length==0){continue}
 var $versionLi=$versionList.find('li[data-id="'+tabId+'"]')
 if(!$versionLi.length){continue}
 var isApplied=$versionLi.data('applied'),$pane=tabsObject.findPaneFromTab($tab)
-if(isApplied){$pane.find('[data-builder-command="version:cmdApplyVersion"]').addClass('hide')
-$pane.find('[data-builder-command="version:cmdRollbackVersion"]').removeClass('hide')}
-else{$pane.find('[data-builder-command="version:cmdApplyVersion"]').removeClass('hide')
-$pane.find('[data-builder-command="version:cmdRollbackVersion"]').addClass('hide')}}}
+if(isApplied){$pane.find('[data-builder-command="version:cmdApplyVersion"]').addClass('hide oc-hide')
+$pane.find('[data-builder-command="version:cmdRollbackVersion"]').removeClass('hide oc-hide')}
+else{$pane.find('[data-builder-command="version:cmdApplyVersion"]').removeClass('hide oc-hide')
+$pane.find('[data-builder-command="version:cmdRollbackVersion"]').addClass('hide oc-hide')}}}
 $.oc.builder.entityControllers.version=Version;}(window.jQuery);+function($){"use strict";if($.oc.builder===undefined)
 $.oc.builder={}
 if($.oc.builder.entityControllers===undefined)
