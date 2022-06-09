@@ -51,6 +51,7 @@ class Plugin extends PluginBase
                 'iconSvg'     => 'plugins/rainlab/builder/assets/images/builder-icon.svg',
                 'permissions' => ['rainlab.builder.manage_plugins'],
                 'order'       => 400,
+                'useDropdown' => false,
 
                 'sideMenu' => [
                     'database' => [
