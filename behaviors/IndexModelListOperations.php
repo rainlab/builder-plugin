@@ -54,7 +54,7 @@ class IndexModelListOperations extends IndexOperationsBehaviorBase
     public function onModelListSave()
     {
         $model = $this->loadOrCreateListFromPost();
-        $model->fill($_POST);
+        $model->fill(post());
         $model->save();
 
         $result = $this->controller->widget->modelList->updateList();

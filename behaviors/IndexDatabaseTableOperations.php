@@ -81,7 +81,7 @@ class IndexDatabaseTableOperations extends IndexOperationsBehaviorBase
         $tableName = Input::get('table_name');
 
         $model = $this->loadOrCreateBaseModel($tableName);
-        $model->fill($this->processColumnData($_POST));
+        $model->fill($this->processColumnData(post()));
 
         $pluginCode = Request::input('plugin_code');
         $model->setPluginCode($pluginCode);
@@ -117,7 +117,7 @@ class IndexDatabaseTableOperations extends IndexOperationsBehaviorBase
         $model = new MigrationModel();
         $model->setPluginCodeObj($pluginCode);
 
-        $model->fill($_POST);
+        $model->fill(post());
 
         $operation = Input::get('operation');
         $table = Input::get('table');

@@ -37,7 +37,7 @@ class IndexPluginOperations extends IndexOperationsBehaviorBase
         $pluginCode = Input::get('pluginCode');
 
         $model = $this->loadOrCreateBaseModel($pluginCode);
-        $model->fill($_POST);
+        $model->fill(post());
         $model->save();
 
         if (!$pluginCode) {

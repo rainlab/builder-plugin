@@ -42,7 +42,7 @@ class IndexModelOperations extends IndexOperationsBehaviorBase
         $model = $this->loadOrCreateBaseModel(null);
         $model->setPluginCode($pluginCode);
 
-        $model->fill($_POST);
+        $model->fill(post());
         $model->save();
 
         $result = $this->controller->widget->modelList->updateList();

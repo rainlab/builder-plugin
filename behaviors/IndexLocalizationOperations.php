@@ -55,7 +55,7 @@ class IndexLocalizationOperations extends IndexOperationsBehaviorBase
     public function onLanguageSave()
     {
         $model = $this->loadOrCreateLocalizationFromPost();
-        $model->fill($_POST);
+        $model->fill(post());
         $model->save(false);
 
         Flash::success(Lang::get('rainlab.builder::lang.localization.saved'));

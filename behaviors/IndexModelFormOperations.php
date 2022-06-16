@@ -71,7 +71,7 @@ class IndexModelFormOperations extends IndexOperationsBehaviorBase
     {
         $model = $this->loadOrCreateFormFromPost();
 
-        $model->fill($_POST);
+        $model->fill(post());
         $model->save();
 
         $result = $this->controller->widget->modelList->updateList();

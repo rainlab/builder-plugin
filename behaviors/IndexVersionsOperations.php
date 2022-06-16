@@ -55,7 +55,7 @@ class IndexVersionsOperations extends IndexOperationsBehaviorBase
     public function onVersionSave()
     {
         $model = $this->loadOrCreateListFromPost();
-        $model->fill($_POST);
+        $model->fill(post());
         $model->save(false);
 
         Flash::success(Lang::get('rainlab.builder::lang.version.saved'));
@@ -85,7 +85,7 @@ class IndexVersionsOperations extends IndexOperationsBehaviorBase
         // Save the version before applying it
         //
         $model = $this->loadOrCreateListFromPost();
-        $model->fill($_POST);
+        $model->fill(post());
         $model->save(false);
 
         // Apply the version
@@ -109,7 +109,7 @@ class IndexVersionsOperations extends IndexOperationsBehaviorBase
         // Save the version before rolling it back
         //
         $model = $this->loadOrCreateListFromPost();
-        $model->fill($_POST);
+        $model->fill(post());
         $model->save(false);
 
         // Rollback the version

@@ -54,7 +54,7 @@ class IndexControllerOperations extends IndexOperationsBehaviorBase
         ];
 
         $model = $this->loadOrCreateBaseModel(null, $options);
-        $model->fill($_POST);
+        $model->fill(post());
         $model->save();
 
         $this->vars['controller'] = $model->controller;
@@ -90,7 +90,7 @@ class IndexControllerOperations extends IndexOperationsBehaviorBase
         $controller = Input::get('controller');
 
         $model = $this->loadModelFromPost();
-        $model->fill($_POST);
+        $model->fill(post());
         $model->save();
 
         Flash::success(Lang::get('rainlab.builder::lang.controller.saved'));

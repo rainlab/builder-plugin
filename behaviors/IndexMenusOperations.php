@@ -47,7 +47,7 @@ class IndexMenusOperations extends IndexOperationsBehaviorBase
         $pluginCode = $pluginCodeObj->toCode();
         $model = $this->loadOrCreateBaseModel($pluginCodeObj->toCode());
         $model->setPluginCodeObj($pluginCodeObj);
-        $model->fill($_POST);
+        $model->fill(post());
         $model->save();
 
         Flash::success(Lang::get('rainlab.builder::lang.menu.saved'));
