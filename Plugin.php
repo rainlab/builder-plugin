@@ -143,10 +143,12 @@ class Plugin extends PluginBase
             }
         });
 
-        Validator::extend('reserved', Reserved::class);
-        Validator::replacer('reserved', function ($message, $attribute, $rule, $parameters) {
-            // Fixes lowercase attribute names in the new plugin modal form
-            return ucfirst($message);
+        $this->app->resolving('validator', function ($validator) {
+            $validator->extend('reserved', Reserved::class);
+            $validator->replacer('reserved', function ($message, $attribute, $rule, $parameters) {
+                // Fixes lowercase attribute names in the new plugin modal form
+                return ucfirst($message);
+            });
         });
 
         // Register doctrine types
