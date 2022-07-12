@@ -33,6 +33,11 @@ abstract class YamlModel extends BaseModel
     protected $originalFileData = [];
 
     /**
+     * @var bool preserveOriginal values
+     */
+    protected $preserveOriginal = true;
+
+    /**
      * save the file
      */
     public function save()
@@ -50,10 +55,8 @@ abstract class YamlModel extends BaseModel
 
             // Save the section data only if the section is not empty.
             if ($data) {
-                $fileData[$this->yamlSection] = $this->arrayMergeMany(
-                    $fileData[$this->yamlSection] ?? [],
-                    $data
-                );
+                $originalData = $this->preserveOriginal === true ? ($fileData[$this->yamlSection] ?? []) : [];
+                $fileData[$this->yamlSection] = $this->arrayMergeMany($originalData, $data);
             }
             else {
                 if (array_key_exists($this->yamlSection, $fileData)) {

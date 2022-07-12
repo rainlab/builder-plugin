@@ -7,33 +7,66 @@ use Exception;
 use File;
 
 /**
- * Manages plugin basic information.
+ * PluginBaseModel manages plugin basic information.
  *
  * @package rainlab\builder
  * @author Alexey Bobkov, Samuel Georges
  */
 class PluginBaseModel extends PluginYamlModel
 {
+    /**
+     * @var string name
+     */
     public $name;
 
+    /**
+     * @var string namespace
+     */
     public $namespace;
 
+    /**
+     * @var string description
+     */
     public $description;
 
+    /**
+     * @var string author
+     */
     public $author;
 
+    /**
+     * @var string icon
+     */
     public $icon;
 
+    /**
+     * @var string author_namespace
+     */
     public $author_namespace;
 
+    /**
+     * @var string homepage
+     */
     public $homepage;
 
+    /**
+     * @var string localizedName
+     */
     protected $localizedName;
 
+    /**
+     * @var string localizedDescription
+     */
     protected $localizedDescription;
 
-    protected $yamlSection = "plugin";
+    /**
+     * @var string yamlSection
+     */
+    protected $yamlSection = 'plugin';
 
+    /**
+     * @var array fillable
+     */
     protected static $fillable = [
         'name',
         'author',
@@ -44,6 +77,9 @@ class PluginBaseModel extends PluginYamlModel
         'homepage'
     ];
 
+    /**
+     * @var array validationRules
+     */
     protected $validationRules = [
         'name' => 'required',
         'author'   => ['required'],
@@ -52,6 +88,9 @@ class PluginBaseModel extends PluginYamlModel
         'homepage' => 'url'
     ];
 
+    /**
+     * getIconOptions
+     */
     public function getIconOptions()
     {
         return IconList::getList();

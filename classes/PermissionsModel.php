@@ -6,7 +6,7 @@ use ValidationException;
 use Lang;
 
 /**
- * Manages plugin permissions information.
+ * PermissionsModel manages plugin permissions information.
  *
  * @package rainlab\builder
  * @author Alexey Bobkov, Samuel Georges
@@ -23,6 +23,14 @@ class PermissionsModel extends PluginYamlModel
         'permissions'
     ];
 
+    /**
+     * @var bool preserveOriginal values
+     */
+    protected $preserveOriginal = false;
+
+    /**
+     * setPluginCodeObj
+     */
     public function setPluginCodeObj($pluginCodeObj)
     {
         $this->pluginCodeObj = $pluginCodeObj;

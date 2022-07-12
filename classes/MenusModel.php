@@ -6,7 +6,7 @@ use ValidationException;
 use Lang;
 
 /**
- * Manages plugin back-end menus.
+ * MenusModel manages plugin backend menus.
  *
  * @package rainlab\builder
  * @author Alexey Bobkov, Samuel Georges
@@ -22,6 +22,11 @@ class MenusModel extends PluginYamlModel
     protected static $fillable = [
         'menus'
     ];
+
+    /**
+     * @var bool preserveOriginal values
+     */
+    protected $preserveOriginal = false;
 
     /**
      * Converts the model's data to an array before it's saved to a YAML file.
