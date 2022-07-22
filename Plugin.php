@@ -9,7 +9,7 @@ use RainLab\Builder\Classes\StandardControlsRegistry;
 use RainLab\Builder\Classes\StandardBehaviorsRegistry;
 use RainLab\Builder\Rules\Reserved;
 use Doctrine\DBAL\Types\Type as DoctrineType;
-use Illuminate\Support\Facades\Validator;
+use Validator;
 
 class Plugin extends PluginBase
 {
@@ -143,13 +143,23 @@ class Plugin extends PluginBase
             }
         });
 
-        $this->callAfterResolving('validator', function ($validator) {
-            $validator->extend('reserved', Reserved::class);
-            $validator->replacer('reserved', function ($message, $attribute, $rule, $parameters) {
+        // Compatibility with v1 legacy
+        if (!class_exists('System')) {
+            Validator::extend('reserved', Reserved::class);
+            Validator::replacer('reserved', function ($message, $attribute, $rule, $parameters) {
                 // Fixes lowercase attribute names in the new plugin modal form
                 return ucfirst($message);
             });
-        });
+        }
+        else {
+            $this->callAfterResolving('validator', function ($validator) {
+                $validator->extend('reserved', Reserved::class);
+                $validator->replacer('reserved', function ($message, $attribute, $rule, $parameters) {
+                    // Fixes lowercase attribute names in the new plugin modal form
+                    return ucfirst($message);
+                });
+            });
+        }
 
         // Register doctrine types
         if (!DoctrineType::hasType('timestamp')) {
