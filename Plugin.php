@@ -143,7 +143,7 @@ class Plugin extends PluginBase
             }
         });
 
-        $this->app->resolving('validator', function ($validator) {
+        $this->callAfterResolving('validator', function ($validator) {
             $validator->extend('reserved', Reserved::class);
             $validator->replacer('reserved', function ($message, $attribute, $rule, $parameters) {
                 // Fixes lowercase attribute names in the new plugin modal form
