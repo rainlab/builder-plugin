@@ -228,7 +228,6 @@ class IndexDatabaseTableOperations extends IndexOperationsBehaviorBase
 
         if (!$tableName) {
             $model->name = $this->getPluginCode()->toDatabasePrefix().'_';
-
             return $model;
         }
 
@@ -246,7 +245,7 @@ class IndexDatabaseTableOperations extends IndexOperationsBehaviorBase
         $widgetConfig->alias = 'form_migration_'.uniqid();
 
         $form = $this->makeWidget(\Backend\Widgets\Form::class, $widgetConfig);
-        $form->context = FormController::CONTEXT_CREATE;
+        $form->context = 'create';
 
         return $form;
     }

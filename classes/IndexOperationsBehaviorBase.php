@@ -33,10 +33,7 @@ abstract class IndexOperationsBehaviorBase extends ControllerBehavior
         $widgetConfig = $this->extendBaseFormWidgetConfig($widgetConfig);
 
         $form = $this->makeWidget(\Backend\Widgets\Form::class, $widgetConfig);
-
-        $form->context = strlen($modelCode)
-            ? FormController::CONTEXT_UPDATE
-            : FormController::CONTEXT_CREATE;
+        $form->context = strlen($modelCode) ? 'update' : 'create';
 
         return $form;
     }
