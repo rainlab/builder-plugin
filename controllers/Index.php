@@ -31,6 +31,7 @@ class Index extends Controller
         \RainLab\Builder\Behaviors\IndexVersionsOperations::class,
         \RainLab\Builder\Behaviors\IndexLocalizationOperations::class,
         \RainLab\Builder\Behaviors\IndexControllerOperations::class,
+        \RainLab\Builder\Behaviors\IndexImportsOperations::class,
         \RainLab\Builder\Behaviors\IndexDataRegistry::class
     ];
 

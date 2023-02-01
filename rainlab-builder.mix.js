@@ -22,6 +22,7 @@ module.exports = (mix) => {
         'plugins/rainlab/builder/assets/js/builder.index.entity.modellist.js',
         'plugins/rainlab/builder/assets/js/builder.index.entity.permission.js',
         'plugins/rainlab/builder/assets/js/builder.index.entity.menus.js',
+        'plugins/rainlab/builder/assets/js/builder.index.entity.imports.js',
         'plugins/rainlab/builder/assets/js/builder.index.entity.version.js',
         'plugins/rainlab/builder/assets/js/builder.index.entity.localization.js',
         'plugins/rainlab/builder/assets/js/builder.index.entity.controller.js',

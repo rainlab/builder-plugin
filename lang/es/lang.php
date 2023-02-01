@@ -21,7 +21,7 @@ return [
         'field_author_namespace_description' => 'You cannot change the namespaces with Builder after you create the plugin. Example author namespace: JohnSmith',
         'tab_general' => 'Parametros generales',
         'tab_description' => 'Descripción',
-        'field_homepage' => 'Plugin homepage URL',
+        'field_homepage' => 'Plugin Homepage (URL)',
         'no_description' => 'No hay descripción proporcionada para este plugin',
         'error_settings_not_editable' => 'Configuración de este plugin no se pueden editar con el Builder.',
         'update_hint' => 'Puedes editar el nombre de plugins y descripción localizada en la pestaña de localizaciones.',

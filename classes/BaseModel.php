@@ -20,12 +20,24 @@ abstract class BaseModel
      */
     public $exists = false;
 
+    /**
+     * @var array validationRules
+     */
     protected $validationRules = [];
 
+    /**
+     * @var array validationMessages
+     */
     protected $validationMessages = [];
 
+    /**
+     * @var array fillable
+     */
     protected static $fillable = [];
 
+    /**
+     * @var array updatedData
+     */
     protected $updatedData = [];
 
     /**
@@ -33,6 +45,9 @@ abstract class BaseModel
      */
     protected $pluginCodeObj = null;
 
+    /**
+     * fill
+     */
     public function fill(array $attributes)
     {
         $this->updatedData = [];
@@ -58,6 +73,9 @@ abstract class BaseModel
         }
     }
 
+    /**
+     * validate
+     */
     public function validate()
     {
         $existingData = [];
@@ -80,6 +98,9 @@ abstract class BaseModel
         }
     }
 
+    /**
+     * isNewModel
+     */
     public function isNewModel()
     {
         return $this->exists === false;
@@ -103,10 +124,16 @@ abstract class BaseModel
         $this->pluginCodeObj = $obj;
     }
 
+    /**
+     * validateBeforeCreate
+     */
     protected function validateBeforeCreate()
     {
     }
 
+    /**
+     * getModelPluginName
+     */
     public function getModelPluginName()
     {
         $pluginCodeObj = $this->getPluginCodeObj();
@@ -120,6 +147,9 @@ abstract class BaseModel
         return null;
     }
 
+    /**
+     * getPluginCodeObj
+     */
     public function getPluginCodeObj()
     {
         if (!$this->pluginCodeObj) {

@@ -3,28 +3,29 @@
  */
 +function ($) { "use strict";
 
-    if ($.oc.builder === undefined)
-        $.oc.builder = {}
+    if ($.oc.builder === undefined) {
+        $.oc.builder = {};
+    }
 
     var Base = $.oc.foundation.base,
-        BaseProto = Base.prototype
+        BaseProto = Base.prototype;
 
     var Builder = function() {
-        Base.call(this)
+        Base.call(this);
 
-        this.$masterTabs = null
-        this.masterTabsObj = null
-        this.hideStripeIndicatorProxy = null
-        this.entityControllers = {}
+        this.$masterTabs = null;
+        this.masterTabsObj = null;
+        this.hideStripeIndicatorProxy = null;
+        this.entityControllers = {};
 
-        this.init()
+        this.init();
     }
 
     Builder.prototype = Object.create(BaseProto)
     Builder.prototype.constructor = Builder
 
     Builder.prototype.dispose = function() {
-        // We don't really care about disposing the 
+        // We don't really care about disposing the
         // index controller, as it's used only once
         // and always exists during the page life.
         BaseProto.dispose.call(this)
@@ -34,20 +35,20 @@
     // ============================
 
     Builder.prototype.openOrLoadMasterTab = function($form, serverHandlerName, tabId, data) {
-        if (this.masterTabsObj.goTo(tabId))
-            return false
+        if (this.masterTabsObj.goTo(tabId)) {
+            return false;
+        }
 
-        var requestData = data === undefined ? {} : data
+        var requestData = data === undefined ? {} : data;
 
-        $.oc.stripeLoadIndicator.show()
-        var promise = $form.request(
-                serverHandlerName, 
-                { data: requestData }
-            )
+        $.oc.stripeLoadIndicator.show();
+
+        var promise = $form
+            .request(serverHandlerName, {
+                data: requestData
+            })
             .done(this.proxy(this.addMasterTab))
-            .always(
-                this.hideStripeIndicatorProxy
-            )
+            .always(this.hideStripeIndicatorProxy);
 
         return promise
     }
@@ -93,10 +94,10 @@
     Builder.prototype.createEntityControllers = function() {
         for (var controller in $.oc.builder.entityControllers) {
             if (controller == "base") {
-                continue
+                continue;
             }
 
-            this.entityControllers[controller] = new $.oc.builder.entityControllers[controller](this)
+            this.entityControllers[controller] = new $.oc.builder.entityControllers[controller](this);
         }
     }
 
@@ -139,6 +140,7 @@
             models: { menu: 'models', count: 0 },
             permissions: { menu: 'permissions', count: 0 },
             menus: { menu: 'menus', count: 0 },
+            imports: { menu: 'imports', count: 0 },
             versions: { menu: 'versions', count: 0 },
             localization: { menu: 'localization', count: 0 },
             controller: { menu: 'controllers', count: 0 }
@@ -194,7 +196,7 @@
     Builder.prototype.onCommand = function(ev) {
         if (ev.currentTarget.tagName == 'FORM' && ev.type == 'click') {
             // The form elements could have data-builder-command attribute,
-            // but for them we only handle the submit event and ignore clicks. 
+            // but for them we only handle the submit event and ignore clicks.
 
             return
         }
@@ -260,13 +262,14 @@
     Builder.prototype.onDataRegistryItems = function(ev, data) {
         var self = this
 
-        if (data.propertyDefinition.fillFrom == 'model-classes' || 
-            data.propertyDefinition.fillFrom == 'model-forms' || 
-            data.propertyDefinition.fillFrom == 'model-lists' || 
+        if (data.propertyDefinition.fillFrom == 'model-classes' ||
+            data.propertyDefinition.fillFrom == 'model-forms' ||
+            data.propertyDefinition.fillFrom == 'model-lists' ||
             data.propertyDefinition.fillFrom == 'controller-urls' ||
-            data.propertyDefinition.fillFrom == 'model-columns' || 
-            data.propertyDefinition.fillFrom == 'plugin-lists' || 
-            data.propertyDefinition.fillFrom == 'permissions') {
+            data.propertyDefinition.fillFrom == 'model-columns' ||
+            data.propertyDefinition.fillFrom == 'plugin-lists' ||
+            data.propertyDefinition.fillFrom == 'permissions'
+        ) {
             ev.preventDefault()
 
             var subtype = null,

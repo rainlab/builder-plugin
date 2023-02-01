@@ -1,23 +1,29 @@
 <?php namespace RainLab\Builder\Behaviors;
 
 use RainLab\Builder\Classes\IndexOperationsBehaviorBase;
-use RainLab\Builder\Classes\MenusModel;
+use RainLab\Builder\Classes\ImportsModel;
 use RainLab\Builder\Classes\PluginCode;
 use Request;
 use Flash;
 use Lang;
 
 /**
- * Plugin back-end menu management functionality for the Builder index controller
+ * IndexImportsOperations functionality for the Builder index controller
  *
  * @package rainlab\builder
  * @author Alexey Bobkov, Samuel Georges
  */
-class IndexMenusOperations extends IndexOperationsBehaviorBase
+class IndexImportsOperations extends IndexOperationsBehaviorBase
 {
-    protected $baseFormConfigFile = '~/plugins/rainlab/builder/classes/menusmodel/fields.yaml';
+    /**
+     * @var string baseFormConfigFile
+     */
+    protected $baseFormConfigFile = '~/plugins/rainlab/builder/classes/importsmodel/fields.yaml';
 
-    public function onMenusOpen()
+    /**
+     * onImportsOpen
+     */
+    public function onImportsOpen()
     {
         $pluginCodeObj = $this->getPluginCode();
 
@@ -25,11 +31,11 @@ class IndexMenusOperations extends IndexOperationsBehaviorBase
         $widget = $this->makeBaseFormWidget($pluginCode);
 
         $result = [
-            'tabTitle' => $widget->model->getPluginName().'/'.Lang::get('rainlab.builder::lang.menu.tab'),
-            'tabIcon' => 'icon-location-arrow',
+            'tabTitle' => $widget->model->getPluginName().'/'.__("Import"),
+            'tabIcon' => 'icon-arrow-circle-down',
             'tabId' => $this->getTabId($pluginCode),
             'tab' => $this->makePartial('tab', [
-                'form'  => $widget,
+                'form' => $widget,
                 'pluginCode' => $pluginCodeObj->toCode()
             ])
         ];
@@ -37,7 +43,10 @@ class IndexMenusOperations extends IndexOperationsBehaviorBase
         return $result;
     }
 
-    public function onMenusSave()
+    /**
+     * onImportsSave
+     */
+    public function onImportsSave()
     {
         $pluginCodeObj = new PluginCode(Request::input('plugin_code'));
 
@@ -45,27 +54,32 @@ class IndexMenusOperations extends IndexOperationsBehaviorBase
         $model = $this->loadOrCreateBaseModel($pluginCodeObj->toCode());
         $model->setPluginCodeObj($pluginCodeObj);
         $model->fill(post());
-        $model->save();
+        $model->import();
 
-        Flash::success(Lang::get('rainlab.builder::lang.menu.saved'));
+        Flash::success(__("Import Complete"));
 
         $result['builderResponseData'] = [
             'tabId' => $this->getTabId($pluginCode),
-            'tabTitle' => $model->getPluginName().'/'.Lang::get('rainlab.builder::lang.menu.tab'),
+            'tabTitle' => $model->getPluginName().'/'.__("Import"),
         ];
 
         return $result;
     }
 
+    /**
+     * getTabId
+     */
     protected function getTabId($pluginCode)
     {
-        return 'menus-'.$pluginCode;
+        return 'imports-'.$pluginCode;
     }
 
+    /**
+     * loadOrCreateBaseModel
+     */
     protected function loadOrCreateBaseModel($pluginCode, $options = [])
     {
-        $model = new MenusModel();
-
+        $model = new ImportsModel;
         $model->loadPlugin($pluginCode);
         return $model;
     }

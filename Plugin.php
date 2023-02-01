@@ -118,6 +118,13 @@ class Plugin extends PluginBase
                         'url'         => 'javascript:;',
                         'attributes'  => ['data-menu-item'=>'localization'],
                         'permissions' => ['rainlab.builder.manage_plugins']
+                    ],
+                    'imports' => [
+                        'label'       => 'Import',
+                        'icon'        => 'icon-arrow-circle-down',
+                        'url'         => 'javascript:;',
+                        'attributes'  => ['data-no-side-panel'=>'true', 'data-builder-command'=>'imports:cmdOpenImports', 'data-menu-item'=>'imports'],
+                        'permissions' => ['rainlab.builder.manage_plugins']
                     ]
                 ]
 

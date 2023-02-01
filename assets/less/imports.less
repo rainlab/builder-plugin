@@ -1,0 +1,92 @@
+.builder-blueprint-importer {
+    background: white;
+
+    .builder-blueprint-importer-workspace {
+        padding: 30px;
+    }
+
+    ul.builder-imports {
+        font-size: 0;
+        padding: 0;
+        cursor: pointer;
+
+        > li {
+            display: inline-block;
+            vertical-align: top;
+            border-radius: 4px;
+
+            div.item-container:hover, &.inspector-open > div.item-container {
+                background: @builder-hover-color!important;
+                color: white!important;
+
+                a {
+                    color: white!important;
+                }
+            }
+
+            div.item-container {
+                position: relative;
+
+                .close-btn {
+                    color: white;
+                    position: absolute;
+                    display: none;
+                    width: 15px;
+                    height: 15px;
+                    right: 5px;
+                    top: 5px;
+                    font-size: 14px;
+                    text-align: center;
+                    line-height: 14px;
+                }
+
+                &:hover .close-btn {
+                    display: block;
+                    text-decoration: none;
+                    .opacity(0.5);
+
+                    &:hover {
+                        .opacity(1);
+                    }
+                }
+            }
+
+            &.add {
+                font-size: 16px;
+                text-align: center;
+                border: 2px dotted #dde0e2;
+                height: 64px;
+
+                a {
+                    padding: 20px 15px;
+                    height: 60px;
+                    display: block;
+                    text-decoration: none;
+                    color: #bdc3c7;
+                }
+
+                i {
+                    margin-right: 5px;
+                }
+
+                span {
+                    position: relative;
+                    top: -1px;
+                }
+
+                span.title {
+                    font-size: 14px;
+                }
+
+                &:hover {
+                    border: 2px dotted @builder-hover-color;
+                    background: @builder-hover-color!important;
+
+                    a {
+                        color: white;
+                    }
+                }
+            }
+        }
+    }
+}
