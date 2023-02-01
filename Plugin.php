@@ -1,7 +1,7 @@
 <?php namespace RainLab\Builder;
 
-use Event;
 use Lang;
+use Event;
 use Backend;
 use System\Classes\PluginBase;
 use System\Classes\CombineAssets;
@@ -11,36 +11,52 @@ use RainLab\Builder\Rules\Reserved;
 use Doctrine\DBAL\Types\Type as DoctrineType;
 use Validator;
 
+/**
+ * Plugin registration file
+ */
 class Plugin extends PluginBase
 {
+    /**
+     * pluginDetails
+     */
     public function pluginDetails()
     {
         return [
-            'name'        => 'rainlab.builder::lang.plugin.name',
+            'name' => 'rainlab.builder::lang.plugin.name',
             'description' => 'rainlab.builder::lang.plugin.description',
-            'author'      => 'Alexey Bobkov, Samuel Georges',
-            'icon'        => 'icon-wrench',
-            'homepage'    => 'https://github.com/rainlab/builder-plugin'
+            'author' => 'Alexey Bobkov, Samuel Georges',
+            'icon' => 'icon-wrench',
+            'homepage' => 'https://github.com/rainlab/builder-plugin'
         ];
     }
 
+    /**
+     * registerComponents
+     */
     public function registerComponents()
     {
         return [
-            'RainLab\Builder\Components\RecordList'       => 'builderList',
-            'RainLab\Builder\Components\RecordDetails'    => 'builderDetails'
+            \RainLab\Builder\Components\RecordList::class => 'builderList',
+            \RainLab\Builder\Components\RecordDetails::class => 'builderDetails'
         ];
     }
 
+    /**
+     * registerPermissions
+     */
     public function registerPermissions()
     {
         return [
             'rainlab.builder.manage_plugins' => [
                 'tab' => 'rainlab.builder::lang.plugin.name',
-                'label' => 'rainlab.builder::lang.plugin.manage_plugins']
+                'label' => 'rainlab.builder::lang.plugin.manage_plugins'
+            ]
         ];
     }
 
+    /**
+     * registerNavigation
+     */
     public function registerNavigation()
     {
         return [
@@ -71,7 +87,7 @@ class Plugin extends PluginBase
                     'permissions' => [
                         'label'       => 'rainlab.builder::lang.permission.menu_label',
                         'icon'        => 'icon-unlock-alt',
-                        'url'         => '#',
+                        'url'         => 'javascript:;',
                         'attributes'  => ['data-no-side-panel'=>'true', 'data-builder-command'=>'permission:cmdOpenPermissions', 'data-menu-item'=>'permissions'],
                         'permissions' => ['rainlab.builder.manage_plugins']
                     ],
@@ -109,6 +125,9 @@ class Plugin extends PluginBase
         ];
     }
 
+    /**
+     * registerSettings
+     */
     public function registerSettings()
     {
         return [
@@ -165,18 +184,5 @@ class Plugin extends PluginBase
         if (!DoctrineType::hasType('timestamp')) {
             DoctrineType::addType('timestamp', \RainLab\Builder\Classes\Doctrine\TimestampType::class);
         }
-    }
-
-    /**
-     * register
-     */
-    public function register()
-    {
-        /*
-         * Register asset bundles
-         */
-        CombineAssets::registerCallback(function ($combiner) {
-            $combiner->registerBundle('$/rainlab/builder/assets/js/build.js');
-        });
     }
 }
