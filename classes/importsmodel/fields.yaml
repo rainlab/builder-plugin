@@ -14,4 +14,4 @@ secondaryTabs:
         blueprints:
             stretch: true
             tab: Blueprints
-            type: RainLab\Builder\FormWidgets\BlueprintImporter
+            type: RainLab\Builder\FormWidgets\BlueprintBuilder

@@ -6,19 +6,19 @@ use Input;
 use Lang;
 
 /**
- * BlueprintImporter form widget
+ * BlueprintBuilder form widget
  *
  * @package october\backend
  * @author Alexey Bobkov, Samuel Georges
  */
-class BlueprintImporter extends FormWidgetBase
+class BlueprintBuilder extends FormWidgetBase
 {
     protected $iconList = null;
 
     /**
      * {@inheritDoc}
      */
-    protected $defaultAlias = 'blueprintimporter';
+    protected $defaultAlias = 'blueprintbuilder';
 
     /**
      * @var \Backend\Classes\WidgetBase selectWidget reference to the widget used for selecting a page.
@@ -30,7 +30,7 @@ class BlueprintImporter extends FormWidgetBase
      */
     public function init()
     {
-        if (post('blueprintimporter_flag')) {
+        if (post('blueprintbuilder_flag')) {
             $this->getSelectFormWidget();
         }
     }
@@ -89,7 +89,7 @@ class BlueprintImporter extends FormWidgetBase
      */
     public function loadAssets()
     {
-        $this->addJs('js/blueprintimporter.js', 'builder');
+        $this->addJs('js/blueprintbuilder.js', 'builder');
     }
 
     /**
@@ -121,7 +121,7 @@ class BlueprintImporter extends FormWidgetBase
         $config = $this->makeConfig('~/plugins/rainlab/builder/classes/importsmodel/fields_select.yaml');
         $config->model = $model;
         $config->alias = $this->alias . 'Select';
-        $config->arrayName = 'BlueprintImporter';
+        $config->arrayName = 'BlueprintBuilder';
 
         $form = $this->makeWidget(\Backend\Widgets\Form::class, $config);
         $form->bindToController();

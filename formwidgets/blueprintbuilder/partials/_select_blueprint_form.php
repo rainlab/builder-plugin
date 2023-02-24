@@ -1,8 +1,8 @@
-<div id="<?= $this->getId('popup') ?>" class="blueprintimporter-popup">
+<div id="<?= $this->getId('popup') ?>" class="blueprintbuilder-popup">
     <?= Form::ajax($this->getEventHandler('onSelectBlueprint'), [
         'data-popup-load-indicator' => true,
     ]) ?>
-        <input type="hidden" name="blueprintimporter_flag" value="1" />
+        <input type="hidden" name="blueprintbuilder_flag" value="1" />
         <input type="hidden" name="formWidgetAlias" value="<?= e($this->getParentForm()->alias) ?>" />
         <input type="hidden" name="operationClass" value="IndexImportsOperations" />
         <input type="hidden" name="plugin_code" value="<?= e($pluginCode) ?>" />
@@ -13,7 +13,7 @@
         </div>
 
         <div class="modal-body">
-            <div class="blueprintimporter-form" id="<?= $this->getId('selectWidget') ?>">
+            <div class="blueprintbuilder-form" id="<?= $this->getId('selectWidget') ?>">
                 <?= $selectWidget->render() ?>
             </div>
         </div>

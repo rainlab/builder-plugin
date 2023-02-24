@@ -47,11 +47,11 @@
     }
 
     Imports.prototype.cmdAddBlueprintItem = function(ev) {
-        $.oc.builder.blueprintimporter.controller.addBlueprintItem(ev)
+        $.oc.builder.blueprintbuilder.controller.addBlueprintItem(ev)
     }
 
     Imports.prototype.cmdRemoveBlueprintItem = function(ev) {
-        $.oc.builder.blueprintimporter.controller.removeBlueprint(ev)
+        $.oc.builder.blueprintbuilder.controller.removeBlueprint(ev)
     }
 
     // INTERNAL METHODS

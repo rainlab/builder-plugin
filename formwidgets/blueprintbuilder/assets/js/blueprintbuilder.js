@@ -7,48 +7,48 @@
  */
 +function ($) { "use strict";
 
-    if ($.oc.builder.blueprintimporter === undefined) {
-        $.oc.builder.blueprintimporter = {};
+    if ($.oc.builder.blueprintbuilder === undefined) {
+        $.oc.builder.blueprintbuilder = {};
     }
 
     var Base = $.oc.foundation.base,
         BaseProto = Base.prototype;
 
-    var BlueprintImporter = function() {
+    var BlueprintBuilder = function() {
         Base.call(this);
 
         this.init();
     }
 
-    BlueprintImporter.prototype = Object.create(BaseProto)
-    BlueprintImporter.prototype.constructor = BlueprintImporter
+    BlueprintBuilder.prototype = Object.create(BaseProto)
+    BlueprintBuilder.prototype.constructor = BlueprintBuilder
 
     // INTERNAL METHODS
     // ============================
 
-    BlueprintImporter.prototype.init = function() {
+    BlueprintBuilder.prototype.init = function() {
         this.registerHandlers();
     }
 
-    BlueprintImporter.prototype.registerHandlers = function() {
+    BlueprintBuilder.prototype.registerHandlers = function() {
 
     }
 
     // BUILDER API METHODS
     // ============================
 
-    BlueprintImporter.prototype.addBlueprintItem = function(ev) {
+    BlueprintBuilder.prototype.addBlueprintItem = function(ev) {
 
     }
 
-    BlueprintImporter.prototype.removeBlueprint = function(ev) {
+    BlueprintBuilder.prototype.removeBlueprint = function(ev) {
 
     }
 
     $(document).ready(function(){
         // There is a single instance of the form builder. All operations
         // are stateless, so instance properties or DOM references are not needed.
-        $.oc.builder.blueprintimporter.controller = new BlueprintImporter();
+        $.oc.builder.blueprintbuilder.controller = new BlueprintBuilder();
     })
 
 }(window.jQuery);
