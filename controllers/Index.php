@@ -1,7 +1,7 @@
 <?php namespace RainLab\Builder\Controllers;
 
+use Request;
 use Backend\Classes\Controller;
-use Backend\Traits\InspectableContainer;
 use RainLab\Builder\Widgets\PluginList;
 use RainLab\Builder\Widgets\DatabaseTableList;
 use RainLab\Builder\Widgets\ModelList;
@@ -18,8 +18,11 @@ use BackendMenu;
  */
 class Index extends Controller
 {
-    use InspectableContainer;
+    use \Backend\Traits\InspectableContainer;
 
+    /**
+     * @var array implement
+     */
     public $implement = [
         \RainLab\Builder\Behaviors\IndexPluginOperations::class,
         \RainLab\Builder\Behaviors\IndexDatabaseTableOperations::class,
@@ -35,6 +38,9 @@ class Index extends Controller
         \RainLab\Builder\Behaviors\IndexDataRegistry::class
     ];
 
+    /**
+     * @var array requiredPermissions
+     */
     public $requiredPermissions = ['rainlab.builder.manage_plugins'];
 
     /**
@@ -53,15 +59,43 @@ class Index extends Controller
 
         $this->bodyClass = 'compact-container sidenav-responsive';
         $this->pageTitle = 'rainlab.builder::lang.plugin.name';
+    }
 
+    /**
+     * beforeDisplay
+     */
+    public function beforeDisplay()
+    {
         new PluginList($this, 'pluginList');
         new DatabaseTableList($this, 'databaseTabelList');
         new ModelList($this, 'modelList');
         new VersionList($this, 'versionList');
         new LanguageList($this, 'languageList');
         new ControllerList($this, 'controllerList');
+
+        $this->bindFormWidgetToController();
     }
 
+    /**
+     * bindFormWidgetToController
+     */
+    protected function bindFormWidgetToController()
+    {
+        if (!Request::ajax() || !post('operationClass') || !post('formWidgetAlias')) {
+            return;
+        }
+
+        $extension = $this->asExtension(post('operationClass'));
+        if (!$extension) {
+            return;
+        }
+
+        $extension->bindFormWidgetToController(post('formWidgetAlias'));
+    }
+
+    /**
+     * index
+     */
     public function index()
     {
         $this->addCss('/plugins/rainlab/builder/assets/css/builder.css', 'RainLab.Builder');
@@ -78,6 +112,9 @@ class Index extends Controller
         $this->pageTitleTemplate = '%s Builder';
     }
 
+    /**
+     * setBuilderActivePlugin
+     */
     public function setBuilderActivePlugin($pluginCode, $refreshPluginList = false)
     {
         $this->widget->pluginList->setActivePlugin($pluginCode);
@@ -99,11 +136,17 @@ class Index extends Controller
         return $result;
     }
 
+    /**
+     * getBuilderActivePluginVector
+     */
     public function getBuilderActivePluginVector()
     {
         return $this->widget->pluginList->getActivePluginVector();
     }
 
+    /**
+     * updatePluginList
+     */
     public function updatePluginList()
     {
         return $this->widget->pluginList->updateList();

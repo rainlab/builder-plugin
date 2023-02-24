@@ -112,8 +112,8 @@ class IndexControllerOperations extends IndexOperationsBehaviorBase
         $widget = $this->makeBaseFormWidget(null, $options);
 
         return $this->makePartial('create-controller-popup-form', [
-            'form'=>$widget,
-            'pluginCode' =>  $pluginCodeObj->toCode()
+            'form' => $widget,
+            'pluginCode' => $pluginCodeObj->toCode()
         ]);
     }
 

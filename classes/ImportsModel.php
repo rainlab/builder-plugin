@@ -1,8 +1,7 @@
 <?php namespace RainLab\Builder\Classes;
 
-use ApplicationException;
-use SystemException;
-use ValidationException;
+use Tailor\Classes\Blueprint\GlobalBlueprint;
+use Tailor\Classes\Blueprint\EntryBlueprint;
 use Lang;
 
 /**
@@ -44,5 +43,23 @@ class ImportsModel extends BaseModel
      */
     public function import()
     {
+    }
+
+    /**
+     * getBlueprintUuidOptions
+     */
+    public function getBlueprintUuidOptions()
+    {
+        $result = [];
+
+        foreach (EntryBlueprint::listInProject() as $blueprint) {
+            $result[$blueprint->uuid] = $blueprint->handle;
+        }
+
+        foreach (GlobalBlueprint::listInProject() as $blueprint) {
+            $result[$blueprint->uuid] = $blueprint->handle;
+        }
+
+        return $result;
     }
 }

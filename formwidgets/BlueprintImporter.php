@@ -1,5 +1,6 @@
 <?php namespace RainLab\Builder\FormWidgets;
 
+use RainLab\Builder\Classes\ImportsModel;
 use Backend\Classes\FormWidgetBase;
 use Input;
 use Lang;
@@ -20,10 +21,18 @@ class BlueprintImporter extends FormWidgetBase
     protected $defaultAlias = 'blueprintimporter';
 
     /**
+     * @var \Backend\Classes\WidgetBase selectWidget reference to the widget used for selecting a page.
+     */
+    protected $selectFormWidget;
+
+    /**
      * {@inheritDoc}
      */
     public function init()
     {
+        if (post('blueprintimporter_flag')) {
+            $this->getSelectFormWidget();
+        }
     }
 
     /**
@@ -42,6 +51,8 @@ class BlueprintImporter extends FormWidgetBase
     {
         $this->vars['model'] = $this->model;
         $this->vars['items'] = $this->model->blueprints;
+        $this->vars['selectWidget'] = $this->getSelectFormWidget();
+        $this->vars['pluginCode'] = $this->getPluginCode();
 
         $this->vars['emptyItem'] = [
             'label' => __("Add Blueprint"),
@@ -49,6 +60,28 @@ class BlueprintImporter extends FormWidgetBase
             'code' => 'newitemcode',
             'url' => '/'
         ];
+    }
+
+    /**
+     * onShowSelectBlueprintForm
+     */
+    public function onShowSelectBlueprintForm()
+    {
+        $this->prepareVars();
+
+        return $this->makePartial('select_blueprint_form');
+    }
+
+    /**
+     * onSelectBlueprint
+     */
+    public function onSelectBlueprint()
+    {
+        $widget = $this->getSelectFormWidget();
+
+        $data = $widget->getSaveData();
+
+        traceLog($data);
     }
 
     /**
@@ -72,5 +105,27 @@ class BlueprintImporter extends FormWidgetBase
         $pluginVector = $this->controller->getBuilderActivePluginVector();
 
         return $pluginVector->pluginCodeObj->toCode();
+    }
+
+
+    /**
+     * getSelectFormWidget
+     */
+    protected function getSelectFormWidget()
+    {
+        if ($this->selectFormWidget) {
+            return $this->selectFormWidget;
+        }
+
+        $model = new ImportsModel;
+        $config = $this->makeConfig('~/plugins/rainlab/builder/classes/importsmodel/fields_select.yaml');
+        $config->model = $model;
+        $config->alias = $this->alias . 'Select';
+        $config->arrayName = 'BlueprintImporter';
+
+        $form = $this->makeWidget(\Backend\Widgets\Form::class, $config);
+        $form->bindToController();
+
+        return $this->selectFormWidget = $form;
     }
 }

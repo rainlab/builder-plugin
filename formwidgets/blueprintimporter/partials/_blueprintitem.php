@@ -1,3 +1,0 @@
-<li class="item">
-    ...Blueprint Chosen...
-</li>
