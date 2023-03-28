@@ -454,7 +454,7 @@ html.gecko.mac .builder-building-area div[data-root-control-wrapper] {
   margin-right: 0;
 }
 .builder-controllers-builder-area {
-  background: white;
+  background: var(--bs-body-bg, white);
 }
 .builder-controllers-builder-area ul.controller-behavior-list {
   padding: 20px;
@@ -847,7 +847,7 @@ html.gecko.mac .builder-controllers-builder-area ul.controller-behavior-list {
   padding-right: 30px;
 }
 .builder-menu-editor {
-  background: white;
+  background: var(--bs-body-bg, white);
 }
 .builder-menu-editor .builder-menu-editor-workspace {
   padding: 30px;
@@ -1084,7 +1084,7 @@ html.gecko .control-filelist ul li.group {
 }
 .builder-inspector-container {
   width: 350px;
-  border-left: 1px solid #d9d9d9;
+  border-left: 1px solid var(--bs-border-color, #d9d9d9);
 }
 .builder-inspector-container:empty {
   display: none!important;
