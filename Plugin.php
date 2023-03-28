@@ -4,9 +4,9 @@ use Lang;
 use Event;
 use Backend;
 use System\Classes\PluginBase;
-use System\Classes\CombineAssets;
 use RainLab\Builder\Classes\StandardControlsRegistry;
 use RainLab\Builder\Classes\StandardBehaviorsRegistry;
+use RainLab\Builder\Classes\StandardBlueprintsRegistry;
 use RainLab\Builder\Rules\Reserved;
 use Doctrine\DBAL\Types\Type as DoctrineType;
 use Validator;
@@ -160,6 +160,10 @@ class Plugin extends PluginBase
 
         Event::listen('pages.builder.registerControllerBehaviors', function ($behaviorLibrary) {
             new StandardBehaviorsRegistry($behaviorLibrary);
+        });
+
+        Event::listen('pages.builder.registerTailorBlueprints', function ($blueprintLibrary) {
+            new StandardBlueprintsRegistry($blueprintLibrary);
         });
 
         // Register reserved keyword validation

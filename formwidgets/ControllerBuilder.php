@@ -61,6 +61,9 @@ class ControllerBuilder extends FormWidgetBase
     // Methods for the internal use
     //
 
+    /**
+     * getBehaviorDesignTimeProvider
+     */
     protected function getBehaviorDesignTimeProvider($providerClass)
     {
         if (array_key_exists($providerClass, $this->designTimeProviders)) {
@@ -70,6 +73,9 @@ class ControllerBuilder extends FormWidgetBase
         return $this->designTimeProviders[$providerClass] = new $providerClass($this->controller);
     }
 
+    /**
+     * getPropertyValue
+     */
     protected function getPropertyValue($properties, $property)
     {
         if (array_key_exists($property, $properties)) {
@@ -79,6 +85,9 @@ class ControllerBuilder extends FormWidgetBase
         return null;
     }
 
+    /**
+     * propertiesToInspectorSchema
+     */
     protected function propertiesToInspectorSchema($propertyConfiguration)
     {
         $result = [];
@@ -92,6 +101,9 @@ class ControllerBuilder extends FormWidgetBase
         return $result;
     }
 
+    /**
+     * getBehaviorInfo
+     */
     protected function getBehaviorInfo($class)
     {
         if (array_key_exists($class, $this->behaviorInfoCache)) {
@@ -108,6 +120,9 @@ class ControllerBuilder extends FormWidgetBase
         return $this->behaviorInfoCache[$class] = $behaviorInfo;
     }
 
+    /**
+     * renderBehaviorBody
+     */
     protected function renderBehaviorBody($behaviorClass, $behaviorInfo, $behaviorConfig)
     {
         $provider = $this->getBehaviorDesignTimeProvider($behaviorInfo['designTimeProvider']);

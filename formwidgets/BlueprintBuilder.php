@@ -1,7 +1,9 @@
 <?php namespace RainLab\Builder\FormWidgets;
 
+use RainLab\Builder\Classes\TailorBlueprintLibrary;
 use RainLab\Builder\Classes\ImportsModel;
 use Backend\Classes\FormWidgetBase;
+use ApplicationException;
 use Input;
 use Lang;
 
@@ -19,6 +21,10 @@ class BlueprintBuilder extends FormWidgetBase
      * {@inheritDoc}
      */
     protected $defaultAlias = 'blueprintbuilder';
+
+    protected $designTimeProviders = [];
+
+    protected $blueprintInfoCache = [];
 
     /**
      * @var \Backend\Classes\WidgetBase selectWidget reference to the widget used for selecting a page.
@@ -127,5 +133,78 @@ class BlueprintBuilder extends FormWidgetBase
         $form->bindToController();
 
         return $this->selectFormWidget = $form;
+    }
+
+    //
+    // Methods for the internal use
+    //
+
+    /**
+     * getBlueprintDesignTimeProvider
+     */
+    protected function getBlueprintDesignTimeProvider($providerClass)
+    {
+        if (array_key_exists($providerClass, $this->designTimeProviders)) {
+            return $this->designTimeProviders[$providerClass];
+        }
+
+        return $this->designTimeProviders[$providerClass] = new $providerClass($this->controller);
+    }
+
+    /**
+     * getPropertyValue
+     */
+    protected function getPropertyValue($properties, $property)
+    {
+        if (array_key_exists($property, $properties)) {
+            return $properties[$property];
+        }
+
+        return null;
+    }
+
+    /**
+     * propertiesToInspectorSchema
+     */
+    protected function propertiesToInspectorSchema($propertyConfiguration)
+    {
+        $result = [];
+
+        foreach ($propertyConfiguration as $property => $propertyData) {
+            $propertyData['property'] = $property;
+
+            $result[] = $propertyData;
+        }
+
+        return $result;
+    }
+
+    /**
+     * getBlueprintInfo
+     */
+    protected function getBlueprintInfo($class, $handle)
+    {
+        if (array_key_exists($class, $this->blueprintInfoCache)) {
+            return $this->blueprintInfoCache[$class];
+        }
+
+        $library = TailorBlueprintLibrary::instance();
+        $blueprintInfo = $library->getBlueprintInfo($class, $handle);
+
+        if (!$blueprintInfo) {
+            throw new ApplicationException('The requested blueprint class information is not found.');
+        }
+
+        return $this->blueprintInfoCache[$class] = $blueprintInfo;
+    }
+
+    /**
+     * renderBlueprintBody
+     */
+    protected function renderBlueprintBody($blueprintClass, $blueprintInfo, $blueprintConfig)
+    {
+        $provider = $this->getBlueprintDesignTimeProvider($blueprintInfo['designTimeProvider']);
+
+        return $provider->renderBlueprintBody($blueprintClass, $blueprintConfig, $this);
     }
 }

@@ -8,6 +8,13 @@
                         'blueprintConfig' => $blueprintConfig
                     ]) ?>
                 <?php endforeach ?>
+
+                <?= $this->makePartial('blueprint', [
+                    'blueprintClass' => 'Tailor\Classes\Blueprint\EntryBlueprint',
+                    'blueprintHandle' => 'Test\Blog',
+                    'blueprintConfig' => []
+                ]) ?>
+
                 <li class="add">
                     <a href="javascript:;"
                         data-hotkey="ctrl+i, cmd+i"

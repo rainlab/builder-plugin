@@ -5,7 +5,6 @@ use RainLab\Builder\Classes\ImportsModel;
 use RainLab\Builder\Classes\PluginCode;
 use Request;
 use Flash;
-use Lang;
 
 /**
  * IndexImportsOperations functionality for the Builder index controller
@@ -26,7 +25,6 @@ class IndexImportsOperations extends IndexOperationsBehaviorBase
     public function onImportsOpen()
     {
         $pluginCodeObj = $this->getPluginCode();
-
         $pluginCode = $pluginCodeObj->toCode();
         $widget = $this->makeBaseFormWidget($pluginCode);
 
@@ -48,6 +46,10 @@ class IndexImportsOperations extends IndexOperationsBehaviorBase
      */
     public function onImportsSave()
     {
+        // Debug
+        traceLog(post());
+        return [];
+
         $pluginCodeObj = new PluginCode(Request::input('plugin_code'));
 
         $pluginCode = $pluginCodeObj->toCode();

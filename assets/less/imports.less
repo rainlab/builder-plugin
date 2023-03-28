@@ -70,6 +70,72 @@
             margin-bottom: 40px;
             .clearfix();
 
+            .tailor-blueprint {
+                div.form {
+                    .clearfix();
+
+                    padding: 25px 25px 0 25px;
+                    border: 2px solid @builder-control-border-color;
+                    margin-bottom: 20px;
+                    .border-radius(4px);
+                }
+
+                div.field {
+                    &.left {
+                        float: left;
+                        width: 48%;
+                    }
+
+                    &.right {
+                        float: right;
+                        width: 45%;
+                    }
+
+                    div.label {
+                        background: #EEF2F4;
+                        height: 25px;
+                        margin-bottom: 10px;
+
+                        &.size-3 {
+                            width: 100px;
+                        }
+
+                        &.size-5 {
+                            width: 150px;
+                        }
+
+                        &.size-2 {
+                            width: 60px;
+                        }
+                    }
+
+                    div.control {
+                        background: #EEF2F4;
+                        height: 35px;
+                        margin-bottom: 25px;
+                    }
+                }
+
+                div.button {
+                    background: #EEF2F4;
+                    height: 35px;
+                    margin-right: 20px;
+                    .border-radius(4px);
+
+                    &.size-5 {
+                        width: 100px;
+                    }
+
+                    &.size-3 {
+                        width: 60px;
+                    }
+
+                    &:first-child {
+                        margin-right: 0;
+                    }
+                }
+            }
+
             &:hover, &.inspector-open {
                 * {
                     border-color: @builder-hover-color!important;

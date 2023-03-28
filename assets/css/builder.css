@@ -608,7 +608,7 @@ html.gecko.mac .builder-controllers-builder-area ul.controller-behavior-list {
 }
 .builder-tabs > .tabs .tab-control.inspector-trigger:hover span,
 .builder-tabs > .tabs .tab-control.inspector-trigger.inspector-open span {
-  background: #3498db;
+  background: var(--bs-link-color);
 }
 .builder-tabs > .tabs .tab-control.inspector-trigger.global {
   top: 5px;
@@ -659,7 +659,7 @@ html.gecko.mac .builder-controllers-builder-area ul.controller-behavior-list {
   color: #95a5a6;
 }
 .builder-tabs > .tabs > ul.tabs > li .tab-control.close-btn:hover {
-  color: #3498db !important;
+  color: var(--bs-link-color) !important;
 }
 .builder-tabs > .tabs > ul.tabs > li .tab-control.inspector-trigger {
   right: 34px;
@@ -1033,6 +1033,62 @@ html.gecko.mac .builder-controllers-builder-area ul.controller-behavior-list {
 }
 .builder-tailor-builder-area ul.tailor-blueprint-list .blueprint-container:after {
   clear: both;
+}
+.builder-tailor-builder-area ul.tailor-blueprint-list .blueprint-container .tailor-blueprint div.form {
+  padding: 25px 25px 0 25px;
+  border: 2px solid #bdc3c7;
+  margin-bottom: 20px;
+  border-radius: 4px;
+}
+.builder-tailor-builder-area ul.tailor-blueprint-list .blueprint-container .tailor-blueprint div.form:before,
+.builder-tailor-builder-area ul.tailor-blueprint-list .blueprint-container .tailor-blueprint div.form:after {
+  content: " ";
+  display: table;
+}
+.builder-tailor-builder-area ul.tailor-blueprint-list .blueprint-container .tailor-blueprint div.form:after {
+  clear: both;
+}
+.builder-tailor-builder-area ul.tailor-blueprint-list .blueprint-container .tailor-blueprint div.field.left {
+  float: left;
+  width: 48%;
+}
+.builder-tailor-builder-area ul.tailor-blueprint-list .blueprint-container .tailor-blueprint div.field.right {
+  float: right;
+  width: 45%;
+}
+.builder-tailor-builder-area ul.tailor-blueprint-list .blueprint-container .tailor-blueprint div.field div.label {
+  background: #EEF2F4;
+  height: 25px;
+  margin-bottom: 10px;
+}
+.builder-tailor-builder-area ul.tailor-blueprint-list .blueprint-container .tailor-blueprint div.field div.label.size-3 {
+  width: 100px;
+}
+.builder-tailor-builder-area ul.tailor-blueprint-list .blueprint-container .tailor-blueprint div.field div.label.size-5 {
+  width: 150px;
+}
+.builder-tailor-builder-area ul.tailor-blueprint-list .blueprint-container .tailor-blueprint div.field div.label.size-2 {
+  width: 60px;
+}
+.builder-tailor-builder-area ul.tailor-blueprint-list .blueprint-container .tailor-blueprint div.field div.control {
+  background: #EEF2F4;
+  height: 35px;
+  margin-bottom: 25px;
+}
+.builder-tailor-builder-area ul.tailor-blueprint-list .blueprint-container .tailor-blueprint div.button {
+  background: #EEF2F4;
+  height: 35px;
+  margin-right: 20px;
+  border-radius: 4px;
+}
+.builder-tailor-builder-area ul.tailor-blueprint-list .blueprint-container .tailor-blueprint div.button.size-5 {
+  width: 100px;
+}
+.builder-tailor-builder-area ul.tailor-blueprint-list .blueprint-container .tailor-blueprint div.button.size-3 {
+  width: 60px;
+}
+.builder-tailor-builder-area ul.tailor-blueprint-list .blueprint-container .tailor-blueprint div.button:first-child {
+  margin-right: 0;
 }
 .builder-tailor-builder-area ul.tailor-blueprint-list .blueprint-container:hover *,
 .builder-tailor-builder-area ul.tailor-blueprint-list .blueprint-container.inspector-open * {

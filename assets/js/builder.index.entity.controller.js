@@ -29,14 +29,14 @@
             behaviorsSelected = $form.find('input[name="behaviors[]"]:checked').length,
             promise = null
 
-        // If behaviors were selected, open a new tab after the 
+        // If behaviors were selected, open a new tab after the
         // controller is saved. Otherwise just update the controller
         // list.
         if (behaviorsSelected) {
             promise = this.indexController.openOrLoadMasterTab(
-                $form, 
-                'onControllerCreate', 
-                this.makeTabId(pluginCode+'-new-controller'), 
+                $form,
+                'onControllerCreate',
+                this.makeTabId(pluginCode+'-new-controller'),
                 {}
             )
         }
@@ -85,7 +85,7 @@
         }
 
         var $masterTabPane = this.getMasterTabsActivePane()
-        
+
         this.getIndexController().unchangeTab($masterTabPane)
     }
 
