@@ -11,7 +11,7 @@
             position: relative;
             margin-bottom: 20px;
             cursor: pointer;
-            .user-select(none);
+            user-select: none;
 
             &[data-unknown] {
                 cursor: default;
@@ -21,10 +21,11 @@
                 padding: 10px 12px;
                 position: relative;
                 text-align: center;
-                border: 2px dotted #dde0e2;
+                border: 2px dotted var(--bs-border-color, #dae0e0);
                 margin-top: 20px;
-                .border-radius(4px);
-                color: #dae0e0;
+                border-radius: 4px;
+                color: var(--bs-emphasis-color, #dae0e0);
+                background: var(--oc-secondary-bg);
 
                 i {
                     margin-right: 8px;
@@ -41,7 +42,7 @@
                 text-align: left;
             }
 
-            &.updating-control:after, 
+            &.updating-control:after,
             &.loading-control:before {
                 background-image:url(../../../../../modules/system/assets/ui/images/loader-transparent.svg);
                 background-size: 15px 15px;
@@ -53,7 +54,7 @@
                 margin-right: 13px;
                 position: relative;
                 top: 2px;
-                .animation(spin 1s linear infinite);
+                animation: spin 1s linear infinite;
             }
 
             &.loading-control:after {
@@ -75,7 +76,7 @@
                 width: 25px;
                 height: 25px;
                 background: rgba(127, 127, 127, 0.1);
-                .border-radius(4px);
+                border-radius: 4px;
             }
 
             &.drag-over {
@@ -123,7 +124,7 @@
                     font-size: 16px;
                     font-weight: bold;
                     line-height: 21px;
-                    .border-radius(20px);
+                    border-radius: 20px;
                     background: #ecf0f1;
                     color: #95a5a6 !important;
 
@@ -158,7 +159,7 @@
             > .control-wrapper,
             > .control-static-contents {
                 position: relative;
-                .transition(margin 0.1s);
+                transition: margin 0.1s;
             }
         }
 
@@ -169,6 +170,7 @@
             color: white!important;
             border-style: solid;
             border-color: @builder-hover-color;
+            opacity: 1;
         }
 
         > li.control:not(.placeholder):not(.loading-control):not([data-unknown]):hover > .control-wrapper *,
@@ -184,7 +186,7 @@
                 left: 0;
                 width: 10px;
                 height: 100%;
-                .border-radius(5px);
+                border-radius: 5px;
                 background-color: @builder-hover-color;
             }
 
@@ -229,7 +231,7 @@
         margin-top: 6px;
     }
 
-    .builder-control-comment-above, 
+    .builder-control-comment-above,
     .builder-control-comment-below {
         color: #737373;
         font-size: 12px;
@@ -247,5 +249,11 @@ html.gecko.mac {
         div[data-root-control-wrapper] {
             margin-right: 17px;
         }
+    }
+}
+
+[data-bs-theme="dark"] {
+    .builder-building-area {
+        background: @body-bg;
     }
 }
