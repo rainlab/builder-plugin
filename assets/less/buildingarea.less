@@ -17,7 +17,7 @@
                 cursor: default;
             }
 
-            &.placeholder, &.loading-control {
+            &.oc-placeholder, &.loading-control {
                 padding: 10px 12px;
                 position: relative;
                 text-align: center;
@@ -110,7 +110,7 @@
                 display: none;
             }
 
-            &:not(.placeholder):not(.loading-control):not(.updating-control):hover > {
+            &:not(.oc-placeholder):not(.loading-control):not(.updating-control):hover > {
                 > div.remove-control {
                     font-family: sans-serif;
                     display: block;
@@ -163,9 +163,9 @@
             }
         }
 
-        > li.placeholder:hover,
-        > li.placeholder.popover-highlight,
-        > li.placeholder.control-palette-open {
+        > li.oc-placeholder:hover,
+        > li.oc-placeholder.popover-highlight,
+        > li.oc-placeholder.control-palette-open {
             background-color: @builder-hover-color!important;
             color: white!important;
             border-style: solid;
@@ -173,12 +173,12 @@
             opacity: 1;
         }
 
-        > li.control:not(.placeholder):not(.loading-control):not([data-unknown]):hover > .control-wrapper *,
-        > li.control.inspector-open:not(.placeholder):not(.loading-control) > .control-wrapper * {
+        > li.control:not(.oc-placeholder):not(.loading-control):not([data-unknown]):hover > .control-wrapper *,
+        > li.control.inspector-open:not(.oc-placeholder):not(.loading-control) > .control-wrapper * {
             color: @builder-hover-color!important;
         }
 
-        > li.control.drag-over:not(.placeholder) {
+        > li.control.drag-over:not(.oc-placeholder) {
             &:before {
                 position: absolute;
                 content: '';

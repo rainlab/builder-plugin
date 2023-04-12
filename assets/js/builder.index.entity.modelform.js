@@ -67,7 +67,7 @@
         var $target = $(ev.currentTarget)
 
         // Always use the first placeholder to add controls
-        var $placeholder = this.getMasterTabsActivePane().find('.builder-control-list .control.placeholder:first')[0]
+        var $placeholder = this.getMasterTabsActivePane().find('.builder-control-list .control.oc-placeholder:first')[0]
 
         // Filter all fields from the DataTable that have the "add" checkbox checked.
         var fields = $target.find('.control-table').data('oc.table').dataSource.data.filter(function (column) {

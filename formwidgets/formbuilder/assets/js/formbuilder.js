@@ -38,7 +38,7 @@
 
         $(document).on('change', '.builder-control-list > li.control', this.proxy(this.onControlChange))
         $(document).on('click', '.builder-control-list > li.control div[data-builder-remove-control]', this.proxy(this.onRemoveControl))
-        $(document).on('click', '.builder-control-list > li.placeholder', this.proxy(this.onPlaceholderClick))
+        $(document).on('click', '.builder-control-list > li.oc-placeholder', this.proxy(this.onPlaceholderClick))
         $(document).on('showing.oc.inspector', '.builder-control-list > li.control', this.proxy(this.onInspectorShowing))
         $(document).on('livechange', '.builder-control-list > li.control', this.proxy(this.onControlLiveChange))
         $(document).on('autocompleteitems.oc.inspector', '.builder-control-list > li.control', this.proxy(this.onAutocompleteItems))
