@@ -176,12 +176,13 @@ class MenuEditor extends FormWidgetBase
                 'group' => Lang::get('rainlab.builder::lang.menu.counter_group'),
 
             ],
-            [
-                'title' => Lang::get('rainlab.builder::lang.menu.counter_label'),
-                'description' => Lang::get('rainlab.builder::lang.menu.counter_label_description'),
-                'property' => 'counterLabel',
-                'group' => Lang::get('rainlab.builder::lang.menu.counter_group'),
-            ],
+            // Removed in OCv2
+            // [
+            //     'title' => Lang::get('rainlab.builder::lang.menu.counter_label'),
+            //     'description' => Lang::get('rainlab.builder::lang.menu.counter_label_description'),
+            //     'property' => 'counterLabel',
+            //     'group' => Lang::get('rainlab.builder::lang.menu.counter_group'),
+            // ],
         ];
 
         return $result;
