@@ -3,8 +3,11 @@
         <div class="scroll-wrapper">
             <ul class="tailor-blueprint-list" id="blueprintList">
                 <?php foreach ($model->blueprints as $blueprintUuid => $blueprintConfig): ?>
+                    <?php
+                        $model->loadBlueprintInfo($blueprintUuid);
+                    ?>
                     <?= $this->makePartial('blueprint', [
-                        'blueprintClass' => 'Tailor\Classes\Blueprint\EntryBlueprint',
+                        'blueprintClass' => get_class($model->getLoadedBlueprint()),
                         'blueprintUuid' => $blueprintUuid,
                         'blueprintConfig' => $blueprintConfig
                     ]) ?>

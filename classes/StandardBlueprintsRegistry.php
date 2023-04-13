@@ -8,6 +8,9 @@
  */
 class StandardBlueprintsRegistry
 {
+    /**
+     * @var TailorBlueprintLibrary blueprintLibrary
+     */
     protected $blueprintLibrary;
 
     /**

@@ -90,21 +90,18 @@ class BlueprintBuilder extends FormWidgetBase
 
         $data = $widget->getSaveData();
 
-        $uniqueKey = $data['blueprint_uuid'] ?? null;
-        if (!$uniqueKey || strpos($uniqueKey, '@') === false) {
+        $uuid = $data['blueprint_uuid'] ?? null;
+        if (!$uuid) {
             throw new ApplicationException('Missing blueprint uuid');
         }
 
-        [$uuid, $class] = explode('@', $uniqueKey, 2);
-
         $model = $widget->getModel();
-
-        $model->loadBlueprintInfo($class, $uuid);
+        $model->loadBlueprintInfo($uuid);
 
         return [
             '@#blueprintList' => $this->makePartial('blueprint', [
                 'blueprintUuid' => $uuid,
-                'blueprintClass' => $class,
+                'blueprintClass' => get_class($model->getLoadedBlueprint()),
                 'blueprintConfig' => $model->generateBlueprintConfiguration()
             ])
         ];

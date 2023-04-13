@@ -56,6 +56,9 @@ class ImportsModel extends BaseModel
      */
     public function import()
     {
+        // $this->generateController();
+        // $this->generateModel();
+        // $this->generateMigration();
     }
 
     /**
@@ -75,15 +78,13 @@ class ImportsModel extends BaseModel
 
         foreach (EntryBlueprint::listInProject() as $blueprint) {
             if (!in_array($blueprint->uuid, $this->selectedBlueprints)) {
-                $blueprintClass = get_class($blueprint);
-                $result["{$blueprint->uuid}@{$blueprintClass}"] = $blueprint->handle;
+                $result[$blueprint->uuid] = $blueprint->handle;
             }
         }
 
         foreach (GlobalBlueprint::listInProject() as $blueprint) {
             if (!in_array($blueprint->uuid, $this->selectedBlueprints)) {
-                $blueprintClass = get_class($blueprint);
-                $result["{$blueprint->uuid}@{$blueprintClass}"] = $blueprint->handle;
+                $result[$blueprint->uuid] = $blueprint->handle;
             }
         }
 
@@ -91,29 +92,29 @@ class ImportsModel extends BaseModel
     }
 
     /**
+     * getLoadedBlueprint
+     */
+    public function getLoadedBlueprint()
+    {
+        return $this->loadedBlueprint;
+    }
+
+    /**
      * loadBlueprintInfo
      */
-    public function loadBlueprintInfo($class, $uuid)
+    public function loadBlueprintInfo($uuid)
     {
-        switch ($class) {
-            case \Tailor\Classes\Blueprint\EntryBlueprint::class:
-            case \Tailor\Classes\Blueprint\SingleBlueprint::class:
-            case \Tailor\Classes\Blueprint\StreamBlueprint::class:
-            case \Tailor\Classes\Blueprint\GlobalBlueprint::class:
-                $indexerMethod = 'findSection';
-                break;
+        $indexer = BlueprintIndexer::instance();
 
-            case \Tailor\Classes\Blueprint\StructureBlueprint::class:
-                $indexerMethod = 'findGlobal';
-                break;
-
-            default:
-                return;
+        if ($blueprint = $indexer->findSection($uuid)) {
+            $this->loadedBlueprint = $blueprint;
+            return;
         }
 
-        $blueprint = BlueprintIndexer::instance()->$indexerMethod($uuid);
-
-        $this->loadedBlueprint = $blueprint;
+        if ($blueprint = $indexer->findGlobal($uuid)) {
+            $this->loadedBlueprint = $blueprint;
+            return;
+        }
     }
 
     /**

@@ -46,13 +46,9 @@ class IndexImportsOperations extends IndexOperationsBehaviorBase
      */
     public function onImportsSave()
     {
-// Debug
-traceLog(post());
-return [];
-
-        $pluginCodeObj = new PluginCode(Request::input('plugin_code'));
-
+        $pluginCodeObj = new PluginCode(post('plugin_code'));
         $pluginCode = $pluginCodeObj->toCode();
+
         $model = $this->loadOrCreateBaseModel($pluginCodeObj->toCode());
         $model->setPluginCodeObj($pluginCodeObj);
         $model->fill(post());
@@ -60,10 +56,12 @@ return [];
 
         Flash::success(__("Import Complete"));
 
+        $result = [];
         $result['builderResponseData'] = [
             'tabId' => $this->getTabId($pluginCode),
             'tabTitle' => $model->getPluginName().'/'.__("Import"),
         ];
+        $result['#blueprintList'] = '';
 
         return $result;
     }
