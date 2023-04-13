@@ -15,8 +15,6 @@ use Lang;
  */
 class BlueprintBuilder extends FormWidgetBase
 {
-    protected $iconList = null;
-
     /**
      * {@inheritDoc}
      */
@@ -75,6 +73,11 @@ class BlueprintBuilder extends FormWidgetBase
     {
         $this->prepareVars();
 
+        $selectedBlueprints = array_keys((array) post('blueprints') ?: []);
+        if ($selectedBlueprints) {
+            $this->getSelectFormWidget()->getModel()->setSelectedBlueprints($selectedBlueprints);
+        }
+
         return $this->makePartial('select_blueprint_form');
     }
 
@@ -87,7 +90,24 @@ class BlueprintBuilder extends FormWidgetBase
 
         $data = $widget->getSaveData();
 
-        traceLog($data);
+        $uniqueKey = $data['blueprint_uuid'] ?? null;
+        if (!$uniqueKey || strpos($uniqueKey, '@') === false) {
+            throw new ApplicationException('Missing blueprint uuid');
+        }
+
+        [$uuid, $class] = explode('@', $uniqueKey, 2);
+
+        $model = $widget->getModel();
+
+        $model->loadBlueprintInfo($class, $uuid);
+
+        return [
+            '@#blueprintList' => $this->makePartial('blueprint', [
+                'blueprintUuid' => $uuid,
+                'blueprintClass' => $class,
+                'blueprintConfig' => $model->generateBlueprintConfiguration()
+            ])
+        ];
     }
 
     /**
@@ -103,7 +123,7 @@ class BlueprintBuilder extends FormWidgetBase
      */
     public function getPluginCode()
     {
-        $pluginCode = Input::get('plugin_code');
+        $pluginCode = post('plugin_code');
         if (strlen($pluginCode)) {
             return $pluginCode;
         }
@@ -124,6 +144,7 @@ class BlueprintBuilder extends FormWidgetBase
         }
 
         $model = new ImportsModel;
+        $model->setPluginCode($this->getPluginCode());
         $config = $this->makeConfig('~/plugins/rainlab/builder/classes/importsmodel/fields_select.yaml');
         $config->model = $model;
         $config->alias = $this->alias . 'Select';
@@ -182,20 +203,20 @@ class BlueprintBuilder extends FormWidgetBase
     /**
      * getBlueprintInfo
      */
-    protected function getBlueprintInfo($class, $handle)
+    protected function getBlueprintInfo($class, $uuid)
     {
-        if (array_key_exists($class, $this->blueprintInfoCache)) {
-            return $this->blueprintInfoCache[$class];
+        if (array_key_exists($uuid, $this->blueprintInfoCache)) {
+            return $this->blueprintInfoCache[$uuid];
         }
 
         $library = TailorBlueprintLibrary::instance();
-        $blueprintInfo = $library->getBlueprintInfo($class, $handle);
+        $blueprintInfo = $library->getBlueprintInfo($class, $uuid);
 
         if (!$blueprintInfo) {
             throw new ApplicationException('The requested blueprint class information is not found.');
         }
 
-        return $this->blueprintInfoCache[$class] = $blueprintInfo;
+        return $this->blueprintInfoCache[$uuid] = $blueprintInfo;
     }
 
     /**

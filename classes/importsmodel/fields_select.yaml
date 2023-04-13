@@ -4,16 +4,4 @@
 
 fields:
     blueprint_uuid:
-        label: Blueprint Handle
         type: dropdown
-        commentAbove: Select the blueprint to import.
-
-    controller_name:
-        label: Controller Name
-        type: text
-        commentAbove: "Controller name defines the class name and URL of the controller's back-end pages. Standard PHP variable naming conventions apply. The first symbol should be a capital Latin letter. Examples: Categories, Posts, Products."
-
-    model_name:
-        label: Model Name
-        type: text
-        commentAbove: "Model name defines the class name of the model. Standard PHP variable naming conventions apply. The first symbol should be a capital Latin letter. Examples: Category, Post, Product."

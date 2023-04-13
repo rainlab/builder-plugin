@@ -46,9 +46,9 @@ class IndexImportsOperations extends IndexOperationsBehaviorBase
      */
     public function onImportsSave()
     {
-        // Debug
-        traceLog(post());
-        return [];
+// Debug
+traceLog(post());
+return [];
 
         $pluginCodeObj = new PluginCode(Request::input('plugin_code'));
 

@@ -15,9 +15,15 @@ use ApplicationException;
  */
 class DefaultBlueprintDesignTimeProvider extends BlueprintDesignTimeProviderBase
 {
+    /**
+     * @var array defaultBlueprintClasses
+     */
     protected $defaultBlueprintClasses = [
-        'Tailor\Classes\Blueprint\EntryBlueprint' => 'entry',
-        'Tailor\Classes\Blueprint\GlobalBlueprint' => 'global',
+        \Tailor\Classes\Blueprint\EntryBlueprint::class => 'entry',
+        \Tailor\Classes\Blueprint\StreamBlueprint::class => 'entry',
+        \Tailor\Classes\Blueprint\SingleBlueprint::class => 'entry',
+        \Tailor\Classes\Blueprint\StructureBlueprint::class => 'entry',
+        \Tailor\Classes\Blueprint\GlobalBlueprint::class => 'global',
     ];
 
     /**
@@ -55,21 +61,30 @@ class DefaultBlueprintDesignTimeProvider extends BlueprintDesignTimeProviderBase
         }
 
         switch ($class) {
-            case 'Tailor\Classes\Blueprint\EntryBlueprint':
+            case \Tailor\Classes\Blueprint\EntryBlueprint::class:
+            case \Tailor\Classes\Blueprint\StreamBlueprint::class:
+            case \Tailor\Classes\Blueprint\SingleBlueprint::class:
+            case \Tailor\Classes\Blueprint\StructureBlueprint::class:
                 return $this->getEntryBlueprintDefaultConfiguration($controllerModel, $controllerGenerator);
-            case 'Tailor\Classes\Blueprint\GlobalBlueprint':
+            case \Tailor\Classes\Blueprint\GlobalBlueprint::class:
                 return $this->getGlobalBlueprintDefaultConfiguration($controllerModel, $controllerGenerator);
         }
     }
 
-    protected function renderUnknownControl($class, $properties)
+    /**
+     * renderUnknownBlueprint
+     */
+    protected function renderUnknownBlueprint($class, $properties)
     {
         return $this->makePartial('blueprint-unknown', [
-            'properties'=>$properties,
-            'class'=>$class
+            'properties' => $properties,
+            'class' => $class
         ]);
     }
 
+    /**
+     * getEntryBlueprintDefaultConfiguration
+     */
     protected function getEntryBlueprintDefaultConfiguration($controllerModel, $controllerGenerator)
     {
         if (!$controllerModel->baseModelClassName) {
@@ -160,6 +175,6 @@ class DefaultBlueprintDesignTimeProvider extends BlueprintDesignTimeProviderBase
      */
     protected function getControllerlUrl($pluginCodeObj, $controller)
     {
-         return $pluginCodeObj->toUrl().'/'.strtolower($controller);
+        return $pluginCodeObj->toUrl().'/'.strtolower($controller);
     }
 }

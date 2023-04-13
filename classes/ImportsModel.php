@@ -1,8 +1,11 @@
 <?php namespace RainLab\Builder\Classes;
 
+use Str;
+use Lang;
 use Tailor\Classes\Blueprint\GlobalBlueprint;
 use Tailor\Classes\Blueprint\EntryBlueprint;
-use Lang;
+use Tailor\Classes\BlueprintIndexer;
+use SystemException;
 
 /**
  * ImportsModel manages plugin blueprint imports
@@ -21,6 +24,16 @@ class ImportsModel extends BaseModel
      * @var string pluginName
      */
     protected $pluginName;
+
+    /**
+     * @var array selectedBlueprints are the blueprint handles already selected
+     */
+    public $selectedBlueprints = [];
+
+    /**
+     * @var \Tailor\Classes\Blueprint loadedBlueprint
+     */
+    public $loadedBlueprint;
 
     /**
      * loadPlugin
@@ -46,6 +59,14 @@ class ImportsModel extends BaseModel
     }
 
     /**
+     * setSelectedBlueprints
+     */
+    public function setSelectedBlueprints($blueprints)
+    {
+        $this->selectedBlueprints = $blueprints;
+    }
+
+    /**
      * getBlueprintUuidOptions
      */
     public function getBlueprintUuidOptions()
@@ -53,13 +74,64 @@ class ImportsModel extends BaseModel
         $result = [];
 
         foreach (EntryBlueprint::listInProject() as $blueprint) {
-            $result[$blueprint->uuid] = $blueprint->handle;
+            if (!in_array($blueprint->uuid, $this->selectedBlueprints)) {
+                $blueprintClass = get_class($blueprint);
+                $result["{$blueprint->uuid}@{$blueprintClass}"] = $blueprint->handle;
+            }
         }
 
         foreach (GlobalBlueprint::listInProject() as $blueprint) {
-            $result[$blueprint->uuid] = $blueprint->handle;
+            if (!in_array($blueprint->uuid, $this->selectedBlueprints)) {
+                $blueprintClass = get_class($blueprint);
+                $result["{$blueprint->uuid}@{$blueprintClass}"] = $blueprint->handle;
+            }
         }
 
         return $result;
+    }
+
+    /**
+     * loadBlueprintInfo
+     */
+    public function loadBlueprintInfo($class, $uuid)
+    {
+        switch ($class) {
+            case \Tailor\Classes\Blueprint\EntryBlueprint::class:
+            case \Tailor\Classes\Blueprint\SingleBlueprint::class:
+            case \Tailor\Classes\Blueprint\StreamBlueprint::class:
+            case \Tailor\Classes\Blueprint\GlobalBlueprint::class:
+                $indexerMethod = 'findSection';
+                break;
+
+            case \Tailor\Classes\Blueprint\StructureBlueprint::class:
+                $indexerMethod = 'findGlobal';
+                break;
+
+            default:
+                return;
+        }
+
+        $blueprint = BlueprintIndexer::instance()->$indexerMethod($uuid);
+
+        $this->loadedBlueprint = $blueprint;
+    }
+
+    /**
+     * generateBlueprintConfiguration
+     */
+    public function generateBlueprintConfiguration(): array
+    {
+        $blueprint = $this->loadedBlueprint;
+        if (!$blueprint) {
+            throw new SystemException(sprintf('An active blueprint is not set in the %s object.', get_class($this)));
+        }
+
+        $handleBase = class_basename($blueprint->handle);
+
+        return [
+            'name' => $blueprint->name,
+            'controllerClass' => Str::plural($handleBase),
+            'modelClass' => Str::singular($handleBase),
+        ];
     }
 }

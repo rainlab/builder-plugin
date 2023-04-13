@@ -20,7 +20,7 @@ class TailorBlueprintLibrary
     /**
      * getBlueprintInfo
      */
-    public function getBlueprintInfo($blueprintClassName, $blueprintHandle)
+    public function getBlueprintInfo($blueprintClassName, $blueprintUuid)
     {
         $blueprints = $this->listBlueprints();
 
