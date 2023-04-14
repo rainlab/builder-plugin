@@ -1,7 +1,7 @@
 <?php namespace RainLab\Builder\Behaviors;
 
 use RainLab\Builder\Classes\IndexOperationsBehaviorBase;
-use RainLab\Builder\Classes\MigrationModel;
+use RainLab\Builder\Models\MigrationModel;
 use RainLab\Builder\Classes\PluginCode;
 use ApplicationException;
 use Exception;
@@ -18,7 +18,7 @@ use Lang;
  */
 class IndexVersionsOperations extends IndexOperationsBehaviorBase
 {
-    protected $baseFormConfigFile = '~/plugins/rainlab/builder/classes/migrationmodel/management-fields.yaml';
+    protected $baseFormConfigFile = '~/plugins/rainlab/builder/models/migrationmodel/management-fields.yaml';
 
     public function onVersionCreateOrOpen()
     {

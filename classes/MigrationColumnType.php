@@ -3,6 +3,7 @@
 use SystemException;
 use ApplicationException;
 use Doctrine\DBAL\Types\Type as DoctrineType;
+use RainLab\Builder\Models\BaseModel;
 use Lang;
 
 /**

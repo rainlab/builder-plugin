@@ -2,8 +2,8 @@
 
 use Lang;
 use RainLab\Builder\Classes\BlueprintDesignTimeProviderBase;
-use RainLab\Builder\Classes\ModelListModel;
-use RainLab\Builder\Classes\ModelFormModel;
+use RainLab\Builder\Models\ModelListModel;
+use RainLab\Builder\Models\ModelFormModel;
 use SystemException;
 use ApplicationException;
 

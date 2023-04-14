@@ -1,5 +1,7 @@
-<?php namespace RainLab\Builder\Classes;
+<?php namespace RainLab\Builder\Models;
 
+use RainLab\Builder\Classes\MigrationFileParser;
+use RainLab\Builder\Classes\PluginVersion;
 use Str;
 use Lang;
 use File;
@@ -207,7 +209,7 @@ class MigrationModel extends BaseModel
             'seeder' => 'seeder.php.tpl'
         ];
 
-        $templatePath = '$/rainlab/builder/classes/migrationmodel/templates/'.$templateFiles[$versionType];
+        $templatePath = '$/rainlab/builder/models/migrationmodel/templates/'.$templateFiles[$versionType];
         $templatePath = File::symbolizePath($templatePath);
 
         $fileContents = File::get($templatePath);

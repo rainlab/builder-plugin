@@ -1,5 +1,10 @@
-<?php namespace RainLab\Builder\Classes;
+<?php namespace RainLab\Builder\Models;
 
+use RainLab\Builder\Classes\EnumDbType;
+use RainLab\Builder\Classes\FilesystemGenerator;
+use RainLab\Builder\Classes\MigrationColumnType;
+use RainLab\Builder\Classes\ModelFileParser;
+use RainLab\Builder\Classes\PluginCode;
 use DirectoryIterator;
 use ApplicationException;
 use SystemException;
@@ -8,7 +13,6 @@ use Lang;
 use File;
 use Schema;
 use Str;
-use Db;
 
 /**
  * Manages plugin models.
@@ -100,7 +104,7 @@ class ModelModel extends BaseModel
 
         $dynamicContents = [];
 
-        $generator = new FilesystemGenerator('$', $structure, '$/rainlab/builder/classes/modelmodel/templates');
+        $generator = new FilesystemGenerator('$', $structure, '$/rainlab/builder/models/modelmodel/templates');
         $generator->setVariables($variables);
 
         if ($this->addSoftDeleting) {

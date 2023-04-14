@@ -1,9 +1,9 @@
 <?php namespace RainLab\Builder\Behaviors;
 
 use RainLab\Builder\Classes\IndexOperationsBehaviorBase;
-use RainLab\Builder\Classes\ModelListModel;
+use RainLab\Builder\Models\ModelListModel;
 use RainLab\Builder\Classes\PluginCode;
-use RainLab\Builder\Classes\ModelModel;
+use RainLab\Builder\Models\ModelModel;
 use ApplicationException;
 use Exception;
 use Request;
@@ -19,7 +19,7 @@ use Lang;
  */
 class IndexModelListOperations extends IndexOperationsBehaviorBase
 {
-    protected $baseFormConfigFile = '~/plugins/rainlab/builder/classes/modellistmodel/fields.yaml';
+    protected $baseFormConfigFile = '~/plugins/rainlab/builder/models/modellistmodel/fields.yaml';
 
     public function onModelListCreateOrOpen()
     {

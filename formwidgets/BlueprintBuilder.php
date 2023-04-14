@@ -1,7 +1,7 @@
 <?php namespace RainLab\Builder\FormWidgets;
 
 use RainLab\Builder\Classes\TailorBlueprintLibrary;
-use RainLab\Builder\Classes\ImportsModel;
+use RainLab\Builder\Models\ImportsModel;
 use Backend\Classes\FormWidgetBase;
 use ApplicationException;
 use Input;
@@ -142,7 +142,7 @@ class BlueprintBuilder extends FormWidgetBase
 
         $model = new ImportsModel;
         $model->setPluginCode($this->getPluginCode());
-        $config = $this->makeConfig('~/plugins/rainlab/builder/classes/importsmodel/fields_select.yaml');
+        $config = $this->makeConfig('~/plugins/rainlab/builder/models/importsmodel/fields_select.yaml');
         $config->model = $model;
         $config->alias = $this->alias . 'Select';
         $config->arrayName = 'BlueprintBuilder';

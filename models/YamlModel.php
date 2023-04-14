@@ -1,4 +1,4 @@
-<?php namespace RainLab\Builder\Classes;
+<?php namespace RainLab\Builder\Models;
 
 use Symfony\Component\Yaml\Dumper as YamlDumper;
 use ApplicationException;

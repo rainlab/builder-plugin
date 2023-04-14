@@ -1,6 +1,7 @@
 <?php namespace RainLab\Builder\Classes;
 
 use Doctrine\DBAL\Schema\Table;
+use RainLab\Builder\Models\BaseModel;
 
 /**
  * Creates Doctrine table schema basing on the column information array.

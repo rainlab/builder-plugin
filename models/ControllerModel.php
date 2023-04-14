@@ -1,13 +1,18 @@
-<?php namespace RainLab\Builder\Classes;
+<?php namespace RainLab\Builder\Models;
 
-use ApplicationException;
-use Symfony\Component\Yaml\Dumper as YamlDumper;
-use SystemException;
-use DirectoryIterator;
 use Yaml;
-use Exception;
 use Lang;
 use File;
+use RainLab\Builder\Classes\ControllerBehaviorLibrary;
+use RainLab\Builder\Classes\ControllerFileParser;
+use RainLab\Builder\Classes\ControllerGenerator;
+use RainLab\Builder\Models\ModelModel;
+use RainLab\Builder\Classes\PluginCode;
+use Symfony\Component\Yaml\Dumper as YamlDumper;
+use ApplicationException;
+use DirectoryIterator;
+use SystemException;
+use Exception;
 
 /**
  * Represents and manages plugin controllers.

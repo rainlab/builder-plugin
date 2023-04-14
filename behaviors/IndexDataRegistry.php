@@ -2,12 +2,12 @@
 
 use Backend\Classes\ControllerBehavior;
 use RainLab\Builder\Classes\PluginCode;
-use RainLab\Builder\Classes\LocalizationModel;
-use RainLab\Builder\Classes\ModelModel;
-use RainLab\Builder\Classes\ModelFormModel;
-use RainLab\Builder\Classes\ModelListModel;
-use RainLab\Builder\Classes\ControllerModel;
-use RainLab\Builder\Classes\PermissionsModel;
+use RainLab\Builder\Models\LocalizationModel;
+use RainLab\Builder\Models\ModelModel;
+use RainLab\Builder\Models\ModelFormModel;
+use RainLab\Builder\Models\ModelListModel;
+use RainLab\Builder\Models\ControllerModel;
+use RainLab\Builder\Models\PermissionsModel;
 use ApplicationException;
 use SystemException;
 use Exception;

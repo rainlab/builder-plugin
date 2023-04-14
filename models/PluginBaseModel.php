@@ -1,5 +1,8 @@
-<?php namespace RainLab\Builder\Classes;
+<?php namespace RainLab\Builder\Models;
 
+use RainLab\Builder\Classes\FilesystemGenerator;
+use RainLab\Builder\Classes\IconList;
+use RainLab\Builder\Classes\PluginCode;
 use RainLab\Builder\Models\Settings as PluginSettings;
 use System\Classes\UpdateManager;
 use System\Classes\PluginManager;
@@ -193,7 +196,7 @@ class PluginBaseModel extends PluginYamlModel
             'pluginDescriptionSanitized' => $this->sanitizePHPString($this->localizedDescription),
         ];
 
-        $generator = new FilesystemGenerator('$', $structure, '$/rainlab/builder/classes/pluginbasemodel/templates');
+        $generator = new FilesystemGenerator('$', $structure, '$/rainlab/builder/models/pluginbasemodel/templates');
         $generator->setVariables($variables);
         $generator->generate();
     }

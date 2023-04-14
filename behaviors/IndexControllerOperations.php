@@ -1,7 +1,7 @@
 <?php namespace RainLab\Builder\Behaviors;
 
 use RainLab\Builder\Classes\IndexOperationsBehaviorBase;
-use RainLab\Builder\Classes\ControllerModel;
+use RainLab\Builder\Models\ControllerModel;
 use RainLab\Builder\Classes\PluginCode;
 use ApplicationException;
 use Exception;
@@ -18,7 +18,7 @@ use Lang;
  */
 class IndexControllerOperations extends IndexOperationsBehaviorBase
 {
-    protected $baseFormConfigFile = '~/plugins/rainlab/builder/classes/controllermodel/fields.yaml';
+    protected $baseFormConfigFile = '~/plugins/rainlab/builder/models/controllermodel/fields.yaml';
 
     public function onControllerOpen()
     {
@@ -108,7 +108,7 @@ class IndexControllerOperations extends IndexOperationsBehaviorBase
             'pluginCode' => $pluginCodeObj->toCode()
         ];
 
-        $this->baseFormConfigFile = '~/plugins/rainlab/builder/classes/controllermodel/new-controller-fields.yaml';
+        $this->baseFormConfigFile = '~/plugins/rainlab/builder/models/controllermodel/new-controller-fields.yaml';
         $widget = $this->makeBaseFormWidget(null, $options);
 
         return $this->makePartial('create-controller-popup-form', [

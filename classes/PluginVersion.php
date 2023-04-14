@@ -1,5 +1,6 @@
 <?php namespace RainLab\Builder\Classes;
 
+use RainLab\Builder\Models\BaseModel;
 use SystemException;
 use File;
 use Yaml;

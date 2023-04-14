@@ -25,12 +25,12 @@
                 <?= $this->renderControlWrapper($controlRenderingInfo['type'], $controlRenderingInfo['properties'], $controlConfig) ?>
 
         </li>
-        
+
         <li class="clear-row"></li>
     <?php endforeach ?>
 
-    <li 
-        class="control placeholder <?= 'span-'.$this->getSpan('auto', $prevSpan, true) ?>"
+    <li
+        class="control oc-placeholder <?= 'span-'.$this->getSpan('auto', $prevSpan, true) ?>"
         data-builder-span="auto"
         data-builder-placeholder="true"
         data-builder-loading-text="<?= e(trans('rainlab.builder::lang.form.loading')) ?>"

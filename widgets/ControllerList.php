@@ -3,7 +3,7 @@
 use Str;
 use Input;
 use Backend\Classes\WidgetBase;
-use RainLab\Builder\Classes\ControllerModel;
+use RainLab\Builder\Models\ControllerModel;
 
 /**
  * Plugin controller list widget.

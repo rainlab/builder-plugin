@@ -1,6 +1,6 @@
 <?php
 
-use RainLab\Builder\Classes\ModelModel;
+use RainLab\Builder\Models\ModelModel;
 use RainLab\Builder\Classes\PluginCode;
 
 class ModelModelTest extends TestCase

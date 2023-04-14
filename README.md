@@ -329,3 +329,7 @@ Then save the following as `class/controldesigntimeprovider/_control-yourwidgetn
 ```
 
 You should now be able to add and configure your custom widget within the Builder plugin just like any other plugin.
+
+### License
+
+This plugin is an official extension of the October CMS platform and is free to use if you have a platform license. See [EULA license](LICENSE.md) for more details.

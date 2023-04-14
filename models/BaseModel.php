@@ -1,5 +1,7 @@
-<?php namespace RainLab\Builder\Classes;
+<?php namespace RainLab\Builder\Models;
 
+use RainLab\Builder\Classes\PluginCode;
+use RainLab\Builder\Classes\PluginVector;
 use ValidationException;
 use SystemException;
 use Validator;

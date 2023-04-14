@@ -1,5 +1,6 @@
-<?php namespace RainLab\Builder\Classes;
+<?php namespace RainLab\Builder\Models;
 
+use RainLab\Builder\Classes\PluginCode;
 use ApplicationException;
 use Lang;
 use File;

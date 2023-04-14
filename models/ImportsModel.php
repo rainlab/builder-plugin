@@ -1,4 +1,4 @@
-<?php namespace RainLab\Builder\Classes;
+<?php namespace RainLab\Builder\Models;
 
 use Str;
 use Lang;

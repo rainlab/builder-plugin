@@ -1,7 +1,7 @@
 <?php namespace RainLab\Builder\Behaviors;
 
 use RainLab\Builder\Classes\IndexOperationsBehaviorBase;
-use RainLab\Builder\Classes\MenusModel;
+use RainLab\Builder\Models\MenusModel;
 use RainLab\Builder\Classes\PluginCode;
 use Request;
 use Flash;
@@ -15,7 +15,7 @@ use Lang;
  */
 class IndexMenusOperations extends IndexOperationsBehaviorBase
 {
-    protected $baseFormConfigFile = '~/plugins/rainlab/builder/classes/menusmodel/fields.yaml';
+    protected $baseFormConfigFile = '~/plugins/rainlab/builder/models/menusmodel/fields.yaml';
 
     public function onMenusOpen()
     {

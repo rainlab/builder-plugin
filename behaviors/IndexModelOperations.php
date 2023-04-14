@@ -1,7 +1,7 @@
 <?php namespace RainLab\Builder\Behaviors;
 
 use RainLab\Builder\Classes\IndexOperationsBehaviorBase;
-use RainLab\Builder\Classes\ModelModel;
+use RainLab\Builder\Models\ModelModel;
 use Backend\Behaviors\FormController;
 use ApplicationException;
 use Exception;
@@ -16,7 +16,7 @@ use Input;
  */
 class IndexModelOperations extends IndexOperationsBehaviorBase
 {
-    protected $baseFormConfigFile = '~/plugins/rainlab/builder/classes/modelmodel/fields.yaml';
+    protected $baseFormConfigFile = '~/plugins/rainlab/builder/models/modelmodel/fields.yaml';
 
     public function onModelLoadPopup()
     {

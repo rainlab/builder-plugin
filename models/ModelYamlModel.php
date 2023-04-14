@@ -1,5 +1,7 @@
-<?php namespace RainLab\Builder\Classes;
+<?php namespace RainLab\Builder\Models;
 
+use RainLab\Builder\Models\ModelModel;
+use RainLab\Builder\Classes\PluginCode;
 use DirectoryIterator;
 use SystemException;
 use Exception;

@@ -1,5 +1,7 @@
-<?php namespace RainLab\Builder\Classes;
+<?php namespace RainLab\Builder\Models;
 
+use RainLab\Builder\Classes\LanguageMixer;
+use RainLab\Builder\Classes\PhpSourceStream;
 use ApplicationException;
 use Symfony\Component\Yaml\Dumper as YamlDumper;
 use SystemException;
@@ -131,7 +133,7 @@ class LocalizationModel extends BaseModel
 
     public function initContent()
     {
-        $templatePath = '$/rainlab/builder/classes/localizationmodel/templates/lang.php';
+        $templatePath = '$/rainlab/builder/models/localizationmodel/templates/lang.php';
         $templatePath = File::symbolizePath($templatePath);
 
         $strings = include($templatePath);

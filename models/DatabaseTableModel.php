@@ -1,5 +1,10 @@
-<?php namespace RainLab\Builder\Classes;
+<?php namespace RainLab\Builder\Models;
 
+use RainLab\Builder\Classes\DatabaseTableSchemaCreator;
+use RainLab\Builder\Classes\EnumDbType;
+use RainLab\Builder\Classes\MigrationColumnType;
+use RainLab\Builder\Classes\PluginCode;
+use RainLab\Builder\Classes\TableMigrationCodeGenerator;
 use Doctrine\DBAL\Types\Type;
 use ApplicationException;
 use ValidationException;

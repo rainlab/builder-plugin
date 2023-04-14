@@ -3,7 +3,7 @@
 use Str;
 use Input;
 use Backend\Classes\WidgetBase;
-use RainLab\Builder\Classes\DatabaseTableModel;
+use RainLab\Builder\Models\DatabaseTableModel;
 
 /**
  * Database table list widget.

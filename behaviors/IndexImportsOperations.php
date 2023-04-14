@@ -1,7 +1,7 @@
 <?php namespace RainLab\Builder\Behaviors;
 
 use RainLab\Builder\Classes\IndexOperationsBehaviorBase;
-use RainLab\Builder\Classes\ImportsModel;
+use RainLab\Builder\Models\ImportsModel;
 use RainLab\Builder\Classes\PluginCode;
 use Request;
 use Flash;
@@ -17,7 +17,7 @@ class IndexImportsOperations extends IndexOperationsBehaviorBase
     /**
      * @var string baseFormConfigFile
      */
-    protected $baseFormConfigFile = '~/plugins/rainlab/builder/classes/importsmodel/fields.yaml';
+    protected $baseFormConfigFile = '~/plugins/rainlab/builder/models/importsmodel/fields.yaml';
 
     /**
      * onImportsOpen

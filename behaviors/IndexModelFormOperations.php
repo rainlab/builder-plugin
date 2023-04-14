@@ -1,10 +1,10 @@
 <?php namespace RainLab\Builder\Behaviors;
 
 use RainLab\Builder\Classes\IndexOperationsBehaviorBase;
-use RainLab\Builder\Classes\ModelFormModel;
+use RainLab\Builder\Models\ModelFormModel;
 use RainLab\Builder\Classes\PluginCode;
 use RainLab\Builder\FormWidgets\FormBuilder;
-use RainLab\Builder\Classes\ModelModel;
+use RainLab\Builder\Models\ModelModel;
 use RainLab\Builder\Classes\ControlLibrary;
 use Backend\Classes\FormField;
 use Backend\FormWidgets\DataTable;
@@ -23,7 +23,7 @@ use Lang;
  */
 class IndexModelFormOperations extends IndexOperationsBehaviorBase
 {
-    protected $baseFormConfigFile = '~/plugins/rainlab/builder/classes/modelformmodel/fields.yaml';
+    protected $baseFormConfigFile = '~/plugins/rainlab/builder/models/modelformmodel/fields.yaml';
 
     public function __construct($controller)
     {
