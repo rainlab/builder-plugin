@@ -3,15 +3,16 @@
         <div class="scroll-wrapper">
             <ul class="tailor-blueprint-list" id="blueprintList">
                 <?php foreach ($model->blueprints as $blueprintUuid => $blueprintConfig): ?>
-                    <?php
-                        $model->loadBlueprintInfo($blueprintUuid);
-                    ?>
                     <?= $this->makePartial('blueprint', [
-                        'blueprintClass' => get_class($model->getLoadedBlueprint()),
                         'blueprintUuid' => $blueprintUuid,
                         'blueprintConfig' => $blueprintConfig
                     ]) ?>
                 <?php endforeach ?>
+
+                <?= $this->makePartial('blueprint', [
+                    'blueprintUuid' => 'edcd102e-0525-4e4d-b07e-633ae6c18db6',
+                    'blueprintConfig' => []
+                ]) ?>
             </ul>
             <div class="add-blueprint-button">
                 <a href="javascript:;"

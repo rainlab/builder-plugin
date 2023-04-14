@@ -31,18 +31,36 @@
     }
 
     BlueprintBuilder.prototype.registerHandlers = function() {
-
+        $(document).on('click', '.tailor-blueprint-list > li div[data-builder-remove-blueprint]', this.proxy(this.onRemoveBlueprint))
     }
 
     // BUILDER API METHODS
     // ============================
 
-    BlueprintBuilder.prototype.addBlueprintItem = function(ev) {
+    BlueprintBuilder.prototype.onRemoveBlueprint = function(ev) {
+        this.removeBlueprint($(ev.target).closest('li'));
 
+        ev.preventDefault();
+        ev.stopPropagation();
+
+        return false;
     }
 
-    BlueprintBuilder.prototype.removeBlueprint = function(ev) {
+    BlueprintBuilder.prototype.removeBlueprint = function($control) {
+        var $container = $('.blueprint-container:first', $control);
 
+        if ($container.hasClass('inspector-open')) {
+            var $inspectorContainer = this.findInspectorContainer($container);
+            $.oc.foundation.controlUtils.disposeControls($inspectorContainer.get(0));
+        }
+
+        $control.remove();
+    }
+
+    BlueprintBuilder.prototype.findInspectorContainer = function($element) {
+        var $containerRoot = $element.closest('[data-inspector-container]')
+
+        return $containerRoot.find('.inspector-container')
     }
 
     $(document).ready(function(){

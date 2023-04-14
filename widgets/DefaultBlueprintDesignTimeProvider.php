@@ -1,6 +1,9 @@
 <?php namespace RainLab\Builder\Widgets;
 
+use Str;
 use RainLab\Builder\Classes\BlueprintDesignTimeProviderBase;
+use ApplicationException;
+use SystemException;
 
 /**
  * DefaultBlueprintDesignTimeProvider
@@ -25,10 +28,10 @@ class DefaultBlueprintDesignTimeProvider extends BlueprintDesignTimeProviderBase
      * renderBlueprintBody
      * @param string $class Specifies the blueprint class to render.
      * @param array $properties Blueprint property values.
-     * @param  \RainLab\Builder\FormWidgets\BlueprintBuilder $blueprintBuilder BlueprintBuilder widget instance.
+     * @param object $blueprintObj
      * @return string Returns HTML markup string.
      */
-    public function renderBlueprintBody($class, $properties, $blueprintBuilder)
+    public function renderBlueprintBody($class, $properties, $blueprintObj)
     {
         if (!array_key_exists($class, $this->defaultBlueprintClasses)) {
             return $this->renderUnknownBlueprint($class, $properties);
@@ -38,8 +41,32 @@ class DefaultBlueprintDesignTimeProvider extends BlueprintDesignTimeProviderBase
 
         return $this->makePartial('blueprint-'.$partial, [
             'properties' => $properties,
-            'blueprintBuilder' => $blueprintBuilder
+            'blueprintObj' => $blueprintObj
         ]);
+    }
+
+    /**
+     * getDefaultConfiguration returns default blueprint configuration as an array.
+     * @param string $class Specifies the blueprint class name.
+     * @param string $blueprintObj
+     * @param mixed $importsModel
+     * @return array
+     */
+    public function getDefaultConfiguration($class, $blueprintObj, $importsModel)
+    {
+        if (!array_key_exists($class, $this->defaultBlueprintClasses)) {
+            throw new SystemException('Unknown blueprint class: '.$class);
+        }
+
+        switch ($class) {
+            case \Tailor\Classes\Blueprint\EntryBlueprint::class:
+            case \Tailor\Classes\Blueprint\StreamBlueprint::class:
+            case \Tailor\Classes\Blueprint\SingleBlueprint::class:
+            case \Tailor\Classes\Blueprint\StructureBlueprint::class:
+                return $this->getEntryBlueprintDefaultConfiguration($blueprintObj, $importsModel);
+            case \Tailor\Classes\Blueprint\GlobalBlueprint::class:
+                return $this->getGlobalBlueprintDefaultConfiguration($blueprintObj, $importsModel);
+        }
     }
 
     /**
@@ -51,5 +78,37 @@ class DefaultBlueprintDesignTimeProvider extends BlueprintDesignTimeProviderBase
             'properties' => $properties,
             'class' => $class
         ]);
+    }
+
+    /**
+     * getEntryBlueprintDefaultConfiguration
+     */
+    protected function getEntryBlueprintDefaultConfiguration($blueprintObj, $importsModel)
+    {
+        $handleBase = class_basename($blueprintObj->handle);
+
+        $result = [
+            'name' => $blueprintObj->name,
+            'controllerClass' => Str::plural($handleBase),
+            'modelClass' => Str::singular($handleBase),
+        ];
+
+        return $result;
+    }
+
+    /**
+     * getGlobalBlueprintDefaultConfiguration
+     */
+    protected function getGlobalBlueprintDefaultConfiguration($blueprintObj, $importsModel)
+    {
+        $handleBase = class_basename($blueprintObj->handle);
+
+        $result = [
+            'name' => $blueprintObj->name,
+            'controllerClass' => Str::plural($handleBase),
+            'modelClass' => Str::singular($handleBase),
+        ];
+
+        return $result;
     }
 }

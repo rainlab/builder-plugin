@@ -1,5 +1,6 @@
 <?php namespace RainLab\Builder\Classes;
 
+use Tailor\Classes\BlueprintIndexer;
 use Event;
 use Lang;
 
@@ -15,24 +16,37 @@ class TailorBlueprintLibrary
 
     const DEFAULT_DESIGN_TIME_PROVIDER = 'RainLab\Builder\Widgets\DefaultBlueprintDesignTimeProvider';
 
+    /**
+     * @var array blueprints registered
+     */
     protected $blueprints = null;
 
     /**
      * getBlueprintInfo
      */
-    public function getBlueprintInfo($blueprintClassName, $blueprintUuid)
+    public function getBlueprintInfo($blueprintUuid)
     {
-        $blueprints = $this->listBlueprints();
+        $blueprintObj = $this->getBlueprintObject($blueprintUuid);
+        if (!$blueprintObj) {
+            return null;
+        }
 
+        $blueprintClassName = get_class($blueprintObj);
+
+        $blueprints = $this->listBlueprints();
         if (!array_key_exists($blueprintClassName, $blueprints)) {
             return null;
         }
 
-        return $blueprints[$blueprintClassName];
+        return [
+            'blueprintObj' => $blueprintObj,
+            'blueprintClass' => get_class($blueprintObj)
+        ] + $blueprints[$blueprintClassName];
     }
 
     /**
-     * Registers a controller blueprint.
+     * registerBlueprint
+     *
      * @param string $class Specifies the blueprint class name.
      * @param string $name Specifies the blueprint name, for example "Form blueprint".
      * @param string $description Specifies the blueprint description.
@@ -80,5 +94,21 @@ class TailorBlueprintLibrary
         Event::fire('pages.builder.registerTailorBlueprints', [$this]);
 
         return $this->blueprints;
+    }
+
+    /**
+     * getBlueprintObject
+     */
+    public function getBlueprintObject($uuid)
+    {
+        $indexer = BlueprintIndexer::instance();
+
+        if ($blueprint = $indexer->findSection($uuid)) {
+            return $blueprint;
+        }
+
+        if ($blueprint = $indexer->findGlobal($uuid)) {
+            return $blueprint;
+        }
     }
 }

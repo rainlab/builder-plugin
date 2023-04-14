@@ -1,11 +1,10 @@
 <?php namespace RainLab\Builder\FormWidgets;
 
+use Str;
 use RainLab\Builder\Classes\TailorBlueprintLibrary;
 use RainLab\Builder\Models\ImportsModel;
 use Backend\Classes\FormWidgetBase;
 use ApplicationException;
-use Input;
-use Lang;
 
 /**
  * BlueprintBuilder form widget
@@ -73,9 +72,10 @@ class BlueprintBuilder extends FormWidgetBase
     {
         $this->prepareVars();
 
-        $selectedBlueprints = array_keys((array) post('blueprints') ?: []);
+        $selectedBlueprints = (array) post('blueprints') ?: [];
         if ($selectedBlueprints) {
-            $this->getSelectFormWidget()->getModel()->setSelectedBlueprints($selectedBlueprints);
+            $model = $this->getSelectFormWidget()->getModel();
+            $model->blueprints = $selectedBlueprints;
         }
 
         return $this->makePartial('select_blueprint_form');
@@ -95,14 +95,13 @@ class BlueprintBuilder extends FormWidgetBase
             throw new ApplicationException('Missing blueprint uuid');
         }
 
-        $model = $widget->getModel();
-        $model->loadBlueprintInfo($uuid);
+        $blueprintInfo = $this->getBlueprintInfo($uuid);
+        $blueprintConfig = $this->generateBlueprintConfiguration($blueprintInfo);
 
         return [
             '@#blueprintList' => $this->makePartial('blueprint', [
                 'blueprintUuid' => $uuid,
-                'blueprintClass' => get_class($model->getLoadedBlueprint()),
-                'blueprintConfig' => $model->generateBlueprintConfiguration()
+                'blueprintConfig' => $blueprintConfig
             ])
         ];
     }
@@ -140,10 +139,8 @@ class BlueprintBuilder extends FormWidgetBase
             return $this->selectFormWidget;
         }
 
-        $model = new ImportsModel;
-        $model->setPluginCode($this->getPluginCode());
         $config = $this->makeConfig('~/plugins/rainlab/builder/models/importsmodel/fields_select.yaml');
-        $config->model = $model;
+        $config->model = $this->makeImportsModelInstance();
         $config->alias = $this->alias . 'Select';
         $config->arrayName = 'BlueprintBuilder';
 
@@ -151,6 +148,16 @@ class BlueprintBuilder extends FormWidgetBase
         $form->bindToController();
 
         return $this->selectFormWidget = $form;
+    }
+
+    /**
+     * makeImportsModelInstance
+     */
+    protected function makeImportsModelInstance()
+    {
+        $model = new ImportsModel;
+        $model->setPluginCode($this->getPluginCode());
+        return $model;
     }
 
     //
@@ -200,14 +207,14 @@ class BlueprintBuilder extends FormWidgetBase
     /**
      * getBlueprintInfo
      */
-    protected function getBlueprintInfo($class, $uuid)
+    protected function getBlueprintInfo($uuid)
     {
         if (array_key_exists($uuid, $this->blueprintInfoCache)) {
             return $this->blueprintInfoCache[$uuid];
         }
 
         $library = TailorBlueprintLibrary::instance();
-        $blueprintInfo = $library->getBlueprintInfo($class, $uuid);
+        $blueprintInfo = $library->getBlueprintInfo($uuid);
 
         if (!$blueprintInfo) {
             throw new ApplicationException('The requested blueprint class information is not found.');
@@ -219,10 +226,30 @@ class BlueprintBuilder extends FormWidgetBase
     /**
      * renderBlueprintBody
      */
-    protected function renderBlueprintBody($blueprintClass, $blueprintInfo, $blueprintConfig)
+    protected function renderBlueprintBody($blueprintInfo, $blueprintConfig)
     {
+        $blueprintClass = $blueprintInfo['blueprintClass'];
+
+        $blueprintObj = $blueprintInfo['blueprintObj'];
+
         $provider = $this->getBlueprintDesignTimeProvider($blueprintInfo['designTimeProvider']);
 
-        return $provider->renderBlueprintBody($blueprintClass, $blueprintConfig, $this);
+        return $provider->renderBlueprintBody($blueprintClass, $blueprintConfig, $blueprintObj);
+    }
+
+    /**
+     * generateBlueprintConfiguration
+     */
+    protected function generateBlueprintConfiguration($blueprintInfo): array
+    {
+        $blueprintClass = $blueprintInfo['blueprintClass'];
+
+        $blueprintObj = $blueprintInfo['blueprintObj'];
+
+        $provider = $this->getBlueprintDesignTimeProvider($blueprintInfo['designTimeProvider']);
+
+        $model = $this->makeImportsModelInstance();
+
+        return $provider->getDefaultConfiguration($blueprintClass, $blueprintObj, $model);
     }
 }

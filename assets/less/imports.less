@@ -8,6 +8,8 @@
         list-style: none;
 
         li {
+            position: relative;
+
             h4 {
                 text-align: center;
                 border-bottom: 1px dotted @builder-control-border-color;
@@ -26,6 +28,35 @@
                     top: 14px;
                 }
             }
+
+            div.remove-blueprint {
+                font-family: sans-serif;
+                display: none;
+                position: absolute;
+                right: 0;
+                top: 20px;
+                cursor: pointer;
+                width: 21px;
+                height: 21px;
+                padding-left: 6px;
+                font-size: 16px;
+                font-weight: bold;
+                line-height: 21px;
+                border-radius: 20px;
+                background: #ecf0f1;
+                color: #95a5a6 !important;
+
+                &:hover {
+                    color: white !important;
+                    background: #c03f31;
+                }
+            }
+
+            &:hover {
+                div.remove-blueprint {
+                    display: block;
+                }
+            }
         }
 
         .blueprint-container {
@@ -34,66 +65,10 @@
             .tailor-blueprint {
                 div.form {
                     .clearfix();
-
                     padding: 25px 25px 0 25px;
                     border: 2px solid @builder-control-border-color;
                     margin-bottom: 20px;
-                    .border-radius(4px);
-                }
-
-                div.field {
-                    &.left {
-                        float: left;
-                        width: 48%;
-                    }
-
-                    &.right {
-                        float: right;
-                        width: 45%;
-                    }
-
-                    div.label {
-                        background: var(--oc-secondary-bg, #EEF2F4);
-                        height: 25px;
-                        margin-bottom: 10px;
-
-                        &.size-3 {
-                            width: 100px;
-                        }
-
-                        &.size-5 {
-                            width: 150px;
-                        }
-
-                        &.size-2 {
-                            width: 60px;
-                        }
-                    }
-
-                    div.control {
-                        background: var(--oc-secondary-bg, #EEF2F4);
-                        height: 35px;
-                        margin-bottom: 25px;
-                    }
-                }
-
-                div.button {
-                    background: var(--oc-secondary-bg, #EEF2F4);
-                    height: 35px;
-                    margin-right: 20px;
-                    .border-radius(4px);
-
-                    &.size-5 {
-                        width: 100px;
-                    }
-
-                    &.size-3 {
-                        width: 60px;
-                    }
-
-                    &:first-child {
-                        margin-right: 0;
-                    }
+                    border-radius: 4px;
                 }
             }
 
