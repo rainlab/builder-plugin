@@ -9,7 +9,7 @@ use File;
 use Twig;
 
 /**
- * Helper class for generating controller class files and associated files.
+ * ControllerGenerator is a helper class for generating controller class files and associated files.
  *
  * @package rainlab\builder
  * @author Alexey Bobkov, Samuel Georges
@@ -133,7 +133,7 @@ class ControllerGenerator
         $controllerPath = $this->sourceModel->getControllerFilePath(true);
         $behaviorLibrary = ControllerBehaviorLibrary::instance();
 
-        $knownConfgFiles = [];
+        $knownConfigFiles = [];
         foreach ($this->sourceModel->behaviors as $behaviorClass) {
             $behaviorInfo = $behaviorLibrary->getBehaviorInfo($behaviorClass);
             $configFileName = $behaviorInfo['configFileName'];
@@ -142,7 +142,7 @@ class ControllerGenerator
                 continue;
             }
 
-            if (in_array($configFileName, $knownConfgFiles)) {
+            if (in_array($configFileName, $knownConfigFiles)) {
                 throw new ValidationException([
                     'behaviors' => Lang::get('rainlab.builder::lang.controller.error_behavior_config_conflict', [
                         'file' => $configFileName
@@ -152,7 +152,7 @@ class ControllerGenerator
                 throw new ApplicationException();
             }
 
-            $knownConfgFiles[] = $configFileName;
+            $knownConfigFiles[] = $configFileName;
 
             $destFilePath = $controllerPath.'/'.$configFileName;
             if (File::isFile($destFilePath)) {

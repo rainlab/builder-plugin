@@ -1,8 +1,11 @@
 <?php namespace RainLab\Builder\Models;
 
 use Lang;
+use File;
 use Tailor\Classes\Blueprint\GlobalBlueprint;
 use Tailor\Classes\Blueprint\EntryBlueprint;
+use RainLab\Builder\Classes\BlueprintGenerator;
+use ApplicationException;
 
 /**
  * ImportsModel manages plugin blueprint imports
@@ -21,6 +24,29 @@ class ImportsModel extends BaseModel
      * @var string pluginName
      */
     protected $pluginName;
+
+    /**
+     * @var array fillable attributes
+     */
+    protected static $fillable = [
+        'blueprints',
+    ];
+
+    /**
+     * fill
+     */
+    public function fill(array $attributes)
+    {
+        parent::fill($attributes);
+
+        if (is_array($this->blueprints)) {
+            foreach ($this->blueprints as &$configuration) {
+                if (is_scalar($configuration)) {
+                    $configuration = json_decode($configuration, true);
+                }
+            }
+        }
+    }
 
     /**
      * loadPlugin
@@ -43,9 +69,12 @@ class ImportsModel extends BaseModel
      */
     public function import()
     {
-        // $this->generateController();
-        // $this->generateModel();
-        // $this->generateMigration();
+        if (!$this->blueprints || !is_array($this->blueprints)) {
+            throw new ApplicationException("There are no blueprints to import, please select a blueprint and try again.");
+        }
+
+        $generator = new BlueprintGenerator($this);
+        $generator->generate();
     }
 
     /**
@@ -68,5 +97,15 @@ class ImportsModel extends BaseModel
         }
 
         return $result;
+    }
+
+    /**
+     * getPluginFilePath
+     */
+    public function getPluginFilePath($path)
+    {
+        $pluginDir = $this->getPluginCodeObj()->toPluginDirectoryPath();
+
+        return File::symbolizePath("{$pluginDir}/{$path}");
     }
 }

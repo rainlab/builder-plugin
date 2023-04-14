@@ -54,7 +54,7 @@ class StandardBlueprintsRegistry
                 'type' => 'string',
                 'validation' => [
                     'required' => [
-                        'message' => "A singular name is required"
+                        'message' => "A controller name is required"
                     ]
                 ],
             ],
@@ -64,10 +64,20 @@ class StandardBlueprintsRegistry
                 'type' => 'string',
                 'validation' => [
                     'required' => [
-                        'message' => "A singular name is required"
+                        'message' => "A model name is required"
                     ]
                 ],
             ],
+            'tableName' => [
+                'title' => "Table Name",
+                'description' => "Table name defines the table name in the database.",
+                'type' => 'string',
+                'validation' => [
+                    'required' => [
+                        'message' => "A table name is required"
+                    ]
+                ],
+            ]
         ];
 
         $templates = [];

@@ -162,7 +162,7 @@
                     prevSpan = 'right'
                 }
                 else {
-                    if (!$.oc.foundation.element.hasClass(item, 'placeholder')) {
+                    if (!$.oc.foundation.element.hasClass(item, 'oc-placeholder')) {
                         $.oc.foundation.element.addClass(item, 'span-left')
                     }
                     else {
@@ -414,7 +414,7 @@
 
         // Replace the placeholder class with control
         // loading indicator
-        $.oc.foundation.element.removeClass(placeholder, 'placeholder')
+        $.oc.foundation.element.removeClass(placeholder, 'oc-placeholder')
         $.oc.foundation.element.addClass(placeholder, 'loading-control')
         $.oc.foundation.element.removeClass(placeholder, 'control-palette-open')
         placeholder.innerHTML = ''
@@ -539,7 +539,7 @@
         for (var i=children.length-1; i>=0; i--) {
             var element = children[i]
 
-            if (element.tagName === 'LI' && $.oc.foundation.element.hasClass(element, 'placeholder')) {
+            if (element.tagName === 'LI' && $.oc.foundation.element.hasClass(element, 'oc-placeholder')) {
                 return element
             }
         }

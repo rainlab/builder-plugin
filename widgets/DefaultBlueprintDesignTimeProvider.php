@@ -86,11 +86,13 @@ class DefaultBlueprintDesignTimeProvider extends BlueprintDesignTimeProviderBase
     protected function getEntryBlueprintDefaultConfiguration($blueprintObj, $importsModel)
     {
         $handleBase = class_basename($blueprintObj->handle);
+        $dbPrefix = $importsModel->getPluginCodeObj()->toDatabasePrefix().'_';
 
         $result = [
             'name' => $blueprintObj->name,
             'controllerClass' => Str::plural($handleBase),
             'modelClass' => Str::singular($handleBase),
+            'tableName' => $dbPrefix . Str::snake($handleBase),
         ];
 
         return $result;
@@ -102,11 +104,13 @@ class DefaultBlueprintDesignTimeProvider extends BlueprintDesignTimeProviderBase
     protected function getGlobalBlueprintDefaultConfiguration($blueprintObj, $importsModel)
     {
         $handleBase = class_basename($blueprintObj->handle);
+        $dbPrefix = $importsModel->getPluginCodeObj()->toDatabasePrefix().'_';
 
         $result = [
             'name' => $blueprintObj->name,
             'controllerClass' => Str::plural($handleBase),
             'modelClass' => Str::singular($handleBase),
+            'tableName' => $dbPrefix . Str::snake($handleBase),
         ];
 
         return $result;

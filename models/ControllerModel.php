@@ -15,7 +15,7 @@ use SystemException;
 use Exception;
 
 /**
- * Represents and manages plugin controllers.
+ * ControllerModel represents and manages plugin controllers.
  *
  * @package rainlab\builder
  * @author Alexey Bobkov, Samuel Georges

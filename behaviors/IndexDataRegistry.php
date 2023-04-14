@@ -1,23 +1,17 @@
 <?php namespace RainLab\Builder\Behaviors;
 
 use Backend\Classes\ControllerBehavior;
-use RainLab\Builder\Classes\PluginCode;
 use RainLab\Builder\Models\LocalizationModel;
 use RainLab\Builder\Models\ModelModel;
 use RainLab\Builder\Models\ModelFormModel;
 use RainLab\Builder\Models\ModelListModel;
 use RainLab\Builder\Models\ControllerModel;
 use RainLab\Builder\Models\PermissionsModel;
-use ApplicationException;
 use SystemException;
-use Exception;
-use Request;
-use Flash;
 use Input;
-use Lang;
 
 /**
- * Plugin data registry functionality for the Builder index controller
+ * IndexDataRegistry is plugin data registry functionality for the Builder index controller
  *
  * @package rainlab\builder
  * @author Alexey Bobkov, Samuel Georges

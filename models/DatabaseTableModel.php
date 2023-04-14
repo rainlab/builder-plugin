@@ -24,6 +24,9 @@ use Db;
  */
 class DatabaseTableModel extends BaseModel
 {
+    /**
+     * @var array columns
+     */
     public $columns = [];
 
     /**
