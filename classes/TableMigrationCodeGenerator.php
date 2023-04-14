@@ -20,9 +20,15 @@ class TableMigrationCodeGenerator extends BaseModel
     const COLUMN_MODE_CHANGE = 'change';
     const COLUMN_MODE_REVERT = 'revert';
 
+    /**
+     * @var string indent characters
+     */
     protected $indent = '    ';
 
-    protected $eol = PHP_EOL;
+    /**
+     * @var string eol character
+     */
+    protected $eol = "\n";
 
     /**
      * Generates code for creating or updating a database table.
