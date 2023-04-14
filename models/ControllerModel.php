@@ -205,8 +205,8 @@ class ControllerModel extends BaseModel
         $controllers = self::listPluginControllers($pluginCodeObj);
         $result = [];
 
-        foreach ($controllers as $controler) {
-            $controllerPath = strtolower(basename($controler));
+        foreach ($controllers as $controller) {
+            $controllerPath = strtolower(basename($controller));
 
             $url = $urlBase.$controllerPath;
 

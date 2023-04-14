@@ -5,7 +5,7 @@ use Backend\Classes\WidgetBase;
 abstract class BehaviorDesignTimeProviderBase extends WidgetBase
 {
     /**
-     * Renders behaivor body.
+     * Renders behavior body.
      * @param string $class Specifies the behavior class to render.
      * @param array $properties Behavior property values.
      * @param  \RainLab\Builder\FormWidgets\ControllerBuilder $controllerBuilder ControllerBuilder widget instance.

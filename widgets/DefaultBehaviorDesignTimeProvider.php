@@ -22,7 +22,7 @@ class DefaultBehaviorDesignTimeProvider extends BehaviorDesignTimeProviderBase
     ];
 
     /**
-     * Renders behaivor body.
+     * Renders behavior body.
      * @param string $class Specifies the behavior class to render.
      * @param array $properties Behavior property values.
      * @param  \RainLab\Builder\FormWidgets\ControllerBuilder $controllerBuilder ControllerBuilder widget instance.
@@ -88,7 +88,7 @@ class DefaultBehaviorDesignTimeProvider extends BehaviorDesignTimeProviderBase
             throw new ApplicationException(Lang::get('rainlab.builder::lang.controller.error_model_doesnt_have_forms'));
         }
 
-        $controllerUrl = $this->getControllerlUrl($pluginCodeObj, $controllerModel->controller);
+        $controllerUrl = $this->getControllerUrl($pluginCodeObj, $controllerModel->controller);
 
         $result = [
             'name' => $controllerModel->controller,
@@ -140,8 +140,8 @@ class DefaultBehaviorDesignTimeProvider extends BehaviorDesignTimeProviderBase
         ];
 
         if (in_array('Backend\Behaviors\FormController', $controllerModel->behaviors)) {
-            $updateUrl = $this->getControllerlUrl($pluginCodeObj, $controllerModel->controller).'/update/:id';
-            $createUrl = $this->getControllerlUrl($pluginCodeObj, $controllerModel->controller).'/create';
+            $updateUrl = $this->getControllerUrl($pluginCodeObj, $controllerModel->controller).'/update/:id';
+            $createUrl = $this->getControllerUrl($pluginCodeObj, $controllerModel->controller).'/create';
 
             $result['recordUrl'] = $updateUrl;
 
@@ -150,7 +150,7 @@ class DefaultBehaviorDesignTimeProvider extends BehaviorDesignTimeProviderBase
         }
 
         if (in_array('Backend\Behaviors\ReorderController', $controllerModel->behaviors)) {
-            $reorderUrl = $this->getControllerlUrl($pluginCodeObj, $controllerModel->controller).'/reorder';
+            $reorderUrl = $this->getControllerUrl($pluginCodeObj, $controllerModel->controller).'/reorder';
             $controllerGenerator->setTemplateVariable('hasReorderBehavior', true);
             $controllerGenerator->setTemplateVariable('reorderUrl', $reorderUrl);
         }
@@ -189,7 +189,7 @@ class DefaultBehaviorDesignTimeProvider extends BehaviorDesignTimeProviderBase
         return '$/' . $pluginCodeObj->toFilesystemPath() . '/models/' . strtolower($modelClassName) . '/' . $file;
     }
 
-    protected function getControllerlUrl($pluginCodeObj, $controller)
+    protected function getControllerUrl($pluginCodeObj, $controller)
     {
          return $pluginCodeObj->toUrl().'/'.strtolower($controller);
     }
