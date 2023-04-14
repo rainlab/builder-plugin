@@ -328,11 +328,6 @@ class TableMigrationCodeGenerator extends BaseModel
         $tableFunction = $isNewTable ? 'create' : 'table';
         $result = sprintf('\tSchema::%s(\'%s\', function($table)', $tableFunction, $tableName).$this->eol;
         $result .= '\t{'.$this->eol;
-
-        if ($isNewTable) {
-            $result .= '\t\t$table->engine = \'InnoDB\';'.$this->eol;
-        }
-
         return $result;
     }
 
