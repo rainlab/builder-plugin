@@ -155,24 +155,31 @@ class StandardControlsRegistry
     protected function registerDropdownControl()
     {
         $properties = [
-            'emptyOption' => [
-                'title' => Lang::get('rainlab.builder::lang.form.property_empty_option'),
-                'description' => Lang::get('rainlab.builder::lang.form.property_empty_option_description'),
-                'type' => 'string',
-                'ignoreIfEmpty' => true,
-                'sortOrder' => 82
-            ],
             'options' => [
                 'title' => Lang::get('rainlab.builder::lang.form.property_options'),
                 'type' => 'dictionary',
                 'ignoreIfEmpty' => true,
                 'sortOrder' => 81
             ],
+            'optionsMethod' => [
+                'title' => "Options Method",
+                'description' => "Request options from this method name defined on the model or as a static method (Class::method).",
+                'type' => 'string',
+                'ignoreIfEmpty' => true,
+                'sortOrder' => 82
+            ],
+            'emptyOption' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_empty_option'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_empty_option_description'),
+                'type' => 'string',
+                'ignoreIfEmpty' => true,
+                'sortOrder' => 83
+            ],
             'showSearch' => [
                 'title' => Lang::get('rainlab.builder::lang.form.property_show_search'),
                 'description' => Lang::get('rainlab.builder::lang.form.property_show_search_description'),
                 'type' => 'checkbox',
-                'sortOrder' => 83,
+                'sortOrder' => 84,
                 'default' => true
             ]
         ];
@@ -196,7 +203,14 @@ class StandardControlsRegistry
                 'type' => 'dictionary',
                 'ignoreIfEmpty' => true,
                 'sortOrder' => 81
-            ]
+            ],
+            'optionsMethod' => [
+                'title' => "Options Method",
+                'description' => "Request options from this method name defined on the model or as a static method (Class::method).",
+                'type' => 'string',
+                'ignoreIfEmpty' => true,
+                'sortOrder' => 82
+            ],
         ];
 
         $this->controlLibrary->registerControl(
@@ -293,7 +307,14 @@ class StandardControlsRegistry
                 'type' => 'dictionary',
                 'ignoreIfEmpty' => true,
                 'sortOrder' => 81
-            ]
+            ],
+            'optionsMethod' => [
+                'title' => "Options Method",
+                'description' => "Request options from this method name defined on the model or as a static method (Class::method).",
+                'type' => 'string',
+                'ignoreIfEmpty' => true,
+                'sortOrder' => 82
+            ],
         ];
 
         $ignoreProperties = [
@@ -323,7 +344,14 @@ class StandardControlsRegistry
                 'type' => 'dictionary',
                 'ignoreIfEmpty' => true,
                 'sortOrder' => 81
-            ]
+            ],
+            'optionsMethod' => [
+                'title' => "Options Method",
+                'description' => "Request options from this method name defined on the model or as a static method (Class::method).",
+                'type' => 'string',
+                'ignoreIfEmpty' => true,
+                'sortOrder' => 82
+            ],
         ];
 
         $ignoreProperties = [

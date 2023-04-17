@@ -86,7 +86,9 @@ trait HasModels
 
         $fieldset->defineAllFormFields($container);
 
-        $model->controls = ['fields' => $container->getControls()];
+        $model->controls = [
+            'tabs' => ['fields' => $container->getControls()]
+        ];
 
         return $model;
     }
