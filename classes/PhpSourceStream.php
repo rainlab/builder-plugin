@@ -3,17 +3,26 @@
 use SystemException;
 
 /**
- * Represents a PHP source code token stream.
+ * PhpSourceStream represents a PHP source code token stream.
  *
  * @package rainlab\builder
  * @author Alexey Bobkov, Samuel Georges
  */
 class PhpSourceStream
 {
+    /**
+     * @var array tokens
+     */
     protected $tokens;
 
+    /**
+     * @var int head
+     */
     protected $head = 0;
 
+    /**
+     * @var array headBookmarks
+     */
     protected $headBookmarks = [];
 
     public function __construct($fileContents)
@@ -157,9 +166,13 @@ class PhpSourceStream
      * The termination tokens could be specified as array.
      * @return string|null Returns the tokens text or null
      */
-    public function getNextExpectedTerminated($expectedCodesOrValues, $terminationToken)
+    public function getNextExpectedTerminated($expectedCodesOrValues, $terminationToken, $skipToken = [])
     {
         $buffer = null;
+
+        if (!is_array($skipToken)) {
+            $skipToken = [$skipToken];
+        }
 
         if (!is_array($terminationToken)) {
             $terminationToken = [$terminationToken];
@@ -174,12 +187,12 @@ class PhpSourceStream
                 continue;
             }
 
-            if (in_array($code, $terminationToken)) {
+            if (in_array($code, $terminationToken) || in_array($text, $terminationToken)) {
                 return $buffer;
             }
 
-            if (in_array($text, $terminationToken)) {
-                return $buffer;
+            if (in_array($code, $skipToken) || in_array($text, $skipToken)) {
+                continue;
             }
 
             // The token should be either expected or termination.
@@ -210,10 +223,10 @@ class PhpSourceStream
         return $this->setHead($this->getHead()-1);
     }
 
-
     /**
-     * Returns the stream text from the head position to the next semicolon and updates the head.
-     * If the method succeeds, the head is positioned on the semicolon.
+     * getTextToSemicolon returns the stream text from the head position to the next
+     * semicolon and updates the head. If the method succeeds, the head is positioned
+     * on the semicolon.
      */
     public function getTextToSemicolon()
     {
@@ -231,13 +244,16 @@ class PhpSourceStream
         return null;
     }
 
-    public function unquotePhpString($string)
+    /**
+     * unquotePhpString
+     */
+    public function unquotePhpString($string, $default = false)
     {
         if ((substr($string, 0, 1) === '\'' && substr($string, -1) === '\'') ||
             (substr($string, 0, 1) === '"' && substr($string, -1) === '"')) {
             return substr($string, 1, -1);
         }
 
-        return false;
+        return $default;
     }
 }
