@@ -1,5 +1,7 @@
 <?php namespace RainLab\Builder\Classes;
 
+use Tailor\Classes\Blueprint\EntryBlueprint;
+use Tailor\Classes\Blueprint\GlobalBlueprint;
 use Tailor\Classes\BlueprintIndexer;
 use Event;
 use Lang;
@@ -103,12 +105,16 @@ class TailorBlueprintLibrary
     {
         $indexer = BlueprintIndexer::instance();
 
-        if ($blueprint = $indexer->findSection($uuid)) {
-            return $blueprint;
+        foreach (EntryBlueprint::listInProject() as $blueprint) {
+            if ($blueprint->uuid === $uuid) {
+                return $blueprint;
+            }
         }
 
-        if ($blueprint = $indexer->findGlobal($uuid)) {
-            return $blueprint;
+        foreach (GlobalBlueprint::listInProject() as $section) {
+            if ($blueprint->uuid === $uuid) {
+                return $blueprint;
+            }
         }
     }
 }

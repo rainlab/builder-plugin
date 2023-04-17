@@ -38,6 +38,9 @@ class MigrationModel extends BaseModel
      */
     public $code;
 
+    /**
+     * @var string originalVersion
+     */
     protected $originalVersion;
 
     /**
@@ -47,6 +50,9 @@ class MigrationModel extends BaseModel
      */
     public $scriptFileName;
 
+    /**
+     * @var string originalScriptFileName
+     */
     public $originalScriptFileName;
 
     protected static $fillable = [

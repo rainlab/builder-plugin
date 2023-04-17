@@ -11,7 +11,14 @@ return new class extends Migration
     public function up()
     {
         Schema::create('{{ tableName }}', function(Blueprint $table) {
-            {{ migrationCode|raw }}
+            $table->increments('id');
+            $table->integer('site_id')->nullable()->index();
+            $table->integer('site_root_id')->nullable()->index();
+            $table->string('title')->nullable();
+            $table->string('slug')->nullable()->index();
+{{ migrationCode|raw }}
+            $table->softDeletes();
+            $table->timestamps();
         });
     }
 

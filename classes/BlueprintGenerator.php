@@ -1,8 +1,11 @@
 <?php namespace RainLab\Builder\Classes;
 
+use App;
 use Lang;
 use File;
 use Twig;
+use Tailor\Classes\SchemaBuilder;
+use Tailor\Classes\BlueprintIndexer;
 use RainLab\Builder\Classes\TailorBlueprintLibrary;
 use Symfony\Component\Yaml\Dumper as YamlDumper;
 use ApplicationException;
@@ -17,6 +20,11 @@ use Exception;
  */
 class BlueprintGenerator
 {
+    use \RainLab\Builder\Classes\BlueprintGenerator\HasMigrations;
+    use \RainLab\Builder\Classes\BlueprintGenerator\HasVersionFile;
+    use \RainLab\Builder\Classes\BlueprintGenerator\HasControllers;
+    use \RainLab\Builder\Classes\BlueprintGenerator\HasModels;
+
     /**
      * @var object sourceModel
      */
@@ -43,6 +51,11 @@ class BlueprintGenerator
     protected $activeConfig;
 
     /**
+     * @var array blueprintFiles
+     */
+    protected $blueprintFiles = [];
+
+    /**
      * __construct
      */
     public function __construct($source)
@@ -63,6 +76,7 @@ class BlueprintGenerator
                 $blueprintLib = TailorBlueprintLibrary::instance();
                 $blueprint = $blueprintLib->getBlueprintObject($uuid);
                 if ($blueprint) {
+                    $this->blueprintFiles[] = $blueprint->getFilePath();
                     $this->generateBlueprint($blueprint, $config);
                 }
             }
@@ -71,6 +85,9 @@ class BlueprintGenerator
             $this->rollback();
             throw $ex;
         }
+
+// debug
+        // $this->disableGeneratedBlueprints();
     }
 
     /**
@@ -81,8 +98,28 @@ class BlueprintGenerator
         $this->activeBlueprint = $blueprint;
         $this->activeConfig = $config;
 
+
+        $this->validateController();
+        $this->validateModel();
+
         $this->setTemplateVars();
-        $this->generateMigration();
+        // $this->generateMigration();
+        $this->generateController();
+        // $this->generateModel();
+        // $this->generateVersionUpdate();
+    }
+
+    /**
+     * disableGeneratedBlueprints
+     */
+    protected function disableGeneratedBlueprints()
+    {
+        foreach ($this->blueprintFiles as $filePath) {
+            File::move(
+                $filePath,
+                str_replace('.yaml', '.yaml.bak', $filePath)
+            );
+        }
     }
 
     /**
@@ -92,6 +129,7 @@ class BlueprintGenerator
     {
         $pluginCodeObj = $this->sourceModel->getPluginCodeObj();
 
+        $this->templateVars = $this->activeConfig;
         $this->templateVars['pluginNamespace'] = $pluginCodeObj->toPluginNamespace();
         $this->templateVars['pluginCode'] = $pluginCodeObj->toCode();
     }
@@ -154,22 +192,16 @@ class BlueprintGenerator
     /**
      * generateMigration for a blueprint, returns the migration file name
      */
-    protected function generateMigration(): string
+    protected function generateMigration()
     {
-        $tableName = $this->activeConfig['tableName'] ?? 'unknown';
+        $this->generateContentTable();
+    }
 
-        $proposedFile = "create_{$tableName}_table.php";
-        $migrationFilePath = $this->sourceModel->getPluginFilePath('updates/'.$proposedFile);
-
-        $counter = 2;
-        while (File::isFile($migrationFilePath)) {
-            $proposedFile = "create_{$tableName}_table_{$counter}.php";
-            $migrationFilePath = $this->sourceModel->getPluginFilePath('updates/'.$proposedFile);
-            $counter++;
-        }
-
-        $this->writeFile($migrationFilePath, '<?php echo "test";');
-
-        return $proposedFile;
+    /**
+     * makeTabs
+     */
+    protected function makeTabs($str)
+    {
+        return str_replace('\t', '    ', $str);
     }
 }

@@ -5,6 +5,7 @@ use File;
 use Tailor\Classes\Blueprint\GlobalBlueprint;
 use Tailor\Classes\Blueprint\EntryBlueprint;
 use RainLab\Builder\Classes\BlueprintGenerator;
+use RainLab\Builder\Classes\PluginVersion;
 use ApplicationException;
 
 /**
@@ -107,5 +108,15 @@ class ImportsModel extends BaseModel
         $pluginDir = $this->getPluginCodeObj()->toPluginDirectoryPath();
 
         return File::symbolizePath("{$pluginDir}/{$path}");
+    }
+
+    /**
+     * getPluginVersionInformation
+     */
+    public function getPluginVersionInformation()
+    {
+        $versionObj = new PluginVersion;
+
+        return $versionObj->getPluginVersionInformation($this->getPluginCodeObj());
     }
 }

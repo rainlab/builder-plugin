@@ -44,10 +44,13 @@ class ControllerModel extends BaseModel
         'controller' => ['regex:/^[A-Z]+[a-zA-Z0-9_]+$/']
     ];
 
+    /**
+     * load
+     */
     public function load($controller)
     {
         if (!$this->validateFileName($controller)) {
-            throw new SystemException('Invalid controller file name: '.$language);
+            throw new SystemException("Invalid controller file name: {$controller}");
         }
 
         $this->controller = $this->trimExtension($controller);
