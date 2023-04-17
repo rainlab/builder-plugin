@@ -32,11 +32,10 @@ trait HasControllers
      */
     protected function generateController()
     {
-        if (!isset($this->activeConfig['controllerClass'])) {
+        $controllerClass = $this->getConfig('controllerClass');
+        if (!$controllerClass) {
             throw new ApplicationException('Missing a controller class name');
         }
-
-        $controllerClass = $this->activeConfig['controllerClass'];
 
         $generator = new ControllerGenerator($this->sourceModel);
         $generator->generate();

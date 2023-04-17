@@ -61,7 +61,9 @@ class IndexImportsOperations extends IndexOperationsBehaviorBase
             'tabId' => $this->getTabId($pluginCode),
             'tabTitle' => $model->getPluginName().'/'.__("Import"),
         ];
-        $result['#blueprintList'] = '';
+
+// debug
+        // $result['#blueprintList'] = '';
 
         return $result;
     }

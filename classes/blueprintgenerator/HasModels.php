@@ -31,10 +31,9 @@ trait HasModels
      */
     protected function generateModel()
     {
-        if (!isset($this->activeConfig['modelClass'])) {
+        $modelClass = $this->getConfig('modelClass');
+        if (!$modelClass) {
             throw new ApplicationException('Missing a model class name');
         }
-
-        $modelClass = $this->activeConfig['modelClass'];
     }
 }

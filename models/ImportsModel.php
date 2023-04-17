@@ -27,6 +27,16 @@ class ImportsModel extends BaseModel
     protected $pluginName;
 
     /**
+     * @var object activeBlueprint
+     */
+    protected $activeBlueprint;
+
+    /**
+     * @var array activeConfig
+     */
+    protected $activeConfig;
+
+    /**
      * @var array fillable attributes
      */
     protected static $fillable = [
@@ -47,6 +57,37 @@ class ImportsModel extends BaseModel
                 }
             }
         }
+    }
+
+    /**
+     * setBlueprintContext
+     */
+    public function setBlueprintContext($blueprint, $config)
+    {
+        $this->activeBlueprint = $blueprint;
+        $this->activeConfig = $config;
+    }
+
+    /**
+     * getBlueprintObject
+     */
+    public function getBlueprintObject()
+    {
+        return $this->activeBlueprint;
+    }
+
+    /**
+     * getBlueprintConfig
+     */
+    public function getBlueprintConfig($name = null, $default = null)
+    {
+        if ($name === null) {
+            return $this->activeConfig;
+        }
+
+        return array_key_exists($name, $this->activeConfig)
+            ? $this->activeConfig[$name]
+            : $default;
     }
 
     /**

@@ -24,7 +24,7 @@ trait HasVersionFile
      */
     protected function generateVersionUpdate()
     {
-        $blueprintName = $this->activeConfig['name'] ?? 'Unknown';
+        $blueprintName = $this->getConfig('name', 'Unknown');
 
         $versionFilePath = $this->sourceModel->getPluginFilePath('updates/version.yaml');
 

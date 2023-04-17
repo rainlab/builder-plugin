@@ -41,16 +41,6 @@ class BlueprintGenerator
     protected $filesGenerated;
 
     /**
-     * @var object activeBlueprint
-     */
-    protected $activeBlueprint;
-
-    /**
-     * @var array activeConfig
-     */
-    protected $activeConfig;
-
-    /**
      * @var array blueprintFiles
      */
     protected $blueprintFiles = [];
@@ -77,7 +67,8 @@ class BlueprintGenerator
                 $blueprint = $blueprintLib->getBlueprintObject($uuid);
                 if ($blueprint) {
                     $this->blueprintFiles[] = $blueprint->getFilePath();
-                    $this->generateBlueprint($blueprint, $config);
+                    $this->sourceModel->setBlueprintContext($blueprint, $config);
+                    $this->generateBlueprint();
                 }
             }
         }
@@ -93,18 +84,14 @@ class BlueprintGenerator
     /**
      * generateBlueprint
      */
-    protected function generateBlueprint($blueprint, $config)
+    protected function generateBlueprint()
     {
-        $this->activeBlueprint = $blueprint;
-        $this->activeConfig = $config;
-
-
         $this->validateController();
         $this->validateModel();
 
         $this->setTemplateVars();
         // $this->generateMigration();
-        $this->generateController();
+        // $this->generateController();
         // $this->generateModel();
         // $this->generateVersionUpdate();
     }
@@ -129,7 +116,7 @@ class BlueprintGenerator
     {
         $pluginCodeObj = $this->sourceModel->getPluginCodeObj();
 
-        $this->templateVars = $this->activeConfig;
+        $this->templateVars = $this->getConfig();
         $this->templateVars['pluginNamespace'] = $pluginCodeObj->toPluginNamespace();
         $this->templateVars['pluginCode'] = $pluginCodeObj->toCode();
     }
@@ -203,5 +190,13 @@ class BlueprintGenerator
     protected function makeTabs($str)
     {
         return str_replace('\t', '    ', $str);
+    }
+
+    /**
+     * getConfig
+     */
+    protected function getConfig($key = null, $default = null)
+    {
+        return $this->sourceModel->getBlueprintConfig($key, $default);
     }
 }

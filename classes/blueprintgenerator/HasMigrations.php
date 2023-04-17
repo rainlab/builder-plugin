@@ -16,11 +16,10 @@ trait HasMigrations
      */
     protected function generateContentTable()
     {
-        if (!isset($this->activeConfig['tableName'])) {
+        $tableName = $this->getConfig('tableName');
+        if (!$tableName) {
             throw new ApplicationException('Missing a table name');
         }
-
-        $tableName = $this->activeConfig['tableName'];
 
         $proposedFile = "create_{$tableName}_table.php";
         $migrationFilePath = $this->sourceModel->getPluginFilePath('updates/'.$proposedFile);
@@ -34,7 +33,7 @@ trait HasMigrations
         }
 
         // Prepare the schema from the fieldset
-        $table = $this->makeSchemaBlueprint($tableName, $this->activeBlueprint);
+        $table = $this->makeSchemaBlueprint($tableName);
 
         // Write migration to disk
         $migrationCode = '';
@@ -79,9 +78,11 @@ trait HasMigrations
     /**
      * makeSchemaBlueprint
      */
-    protected function makeSchemaBlueprint($tableName, $blueprint)
+    protected function makeSchemaBlueprint($tableName)
     {
+        $blueprint = $this->sourceModel->getBlueprintObject();
         $uuid = $blueprint->uuid;
+
         $fieldset = BlueprintIndexer::instance()->findContentFieldset($uuid);
         if (!$fieldset) {
             throw new ApplicationException("Unable to find content fieldset definition with UUID of '{$uuid}'.");
