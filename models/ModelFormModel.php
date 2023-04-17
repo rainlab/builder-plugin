@@ -4,7 +4,7 @@ use SystemException;
 use ValidationException;
 
 /**
- * Represents and manages model forms.
+ * ModelFormModel represents and manages model forms.
  *
  * @package rainlab\builder
  * @author Alexey Bobkov, Samuel Georges
@@ -22,6 +22,9 @@ class ModelFormModel extends ModelYamlModel
         'fileName' => ['required', 'regex:/^[a-z0-9\.\-_]+$/i']
     ];
 
+    /**
+     * loadForm
+     */
     public function loadForm($path)
     {
         $this->fileName = $path;
@@ -29,6 +32,9 @@ class ModelFormModel extends ModelYamlModel
         return parent::load($this->getFilePath());
     }
 
+    /**
+     * fill
+     */
     public function fill(array $attributes)
     {
         if (!is_array($attributes['controls'])) {
@@ -42,6 +48,9 @@ class ModelFormModel extends ModelYamlModel
         return parent::fill($attributes);
     }
 
+    /**
+     * validateFileIsModelType
+     */
     public static function validateFileIsModelType($fileContentsArray)
     {
         $modelRootNodes = [
@@ -59,6 +68,9 @@ class ModelFormModel extends ModelYamlModel
         return false;
     }
 
+    /**
+     * validate
+     */
     public function validate()
     {
         parent::validate();
@@ -68,13 +80,16 @@ class ModelFormModel extends ModelYamlModel
         }
     }
 
+    /**
+     * initDefaults
+     */
     public function initDefaults()
     {
         $this->fileName = 'fields.yaml';
     }
 
     /**
-     * Converts the model's data to an array before it's saved to a YAML file.
+     * modelToYamlArray converts the model's data to an array before it's saved to a YAML file.
      * @return array
      */
     protected function modelToYamlArray()
@@ -83,7 +98,7 @@ class ModelFormModel extends ModelYamlModel
     }
 
     /**
-     * Load the model's data from an array.
+     * yamlArrayToModel loads the model's data from an array.
      * @param array $array An array to load the model fields from.
      */
     protected function yamlArrayToModel($array)

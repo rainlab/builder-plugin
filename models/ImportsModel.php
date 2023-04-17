@@ -6,6 +6,7 @@ use Tailor\Classes\Blueprint\GlobalBlueprint;
 use Tailor\Classes\Blueprint\EntryBlueprint;
 use RainLab\Builder\Classes\BlueprintGenerator;
 use RainLab\Builder\Classes\PluginVersion;
+use Tailor\Classes\BlueprintIndexer;
 use ApplicationException;
 
 /**
@@ -159,5 +160,22 @@ class ImportsModel extends BaseModel
         $versionObj = new PluginVersion;
 
         return $versionObj->getPluginVersionInformation($this->getPluginCodeObj());
+    }
+
+    /**
+     * getBlueprintFieldset
+     */
+    public function getBlueprintFieldset()
+    {
+        $blueprint = $this->getBlueprintObject();
+
+        $uuid = $blueprint->uuid ?? '???';
+
+        $fieldset = BlueprintIndexer::instance()->findContentFieldset($uuid);
+        if (!$fieldset) {
+            throw new ApplicationException("Unable to find content fieldset definition with UUID of '{$uuid}'.");
+        }
+
+        return $fieldset;
     }
 }

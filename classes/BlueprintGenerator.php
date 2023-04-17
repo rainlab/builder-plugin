@@ -86,13 +86,13 @@ class BlueprintGenerator
      */
     protected function generateBlueprint()
     {
-        $this->validateController();
         $this->validateModel();
+        $this->validateController();
 
         $this->setTemplateVars();
         // $this->generateMigration();
+        $this->generateModel();
         // $this->generateController();
-        // $this->generateModel();
         // $this->generateVersionUpdate();
     }
 
@@ -198,5 +198,21 @@ class BlueprintGenerator
     protected function getConfig($key = null, $default = null)
     {
         return $this->sourceModel->getBlueprintConfig($key, $default);
+    }
+
+    /**
+     * validateUniqueFiles
+     */
+    protected function validateUniqueFiles(array $files)
+    {
+        foreach ($files as $path) {
+            if (File::isFile($path)) {
+                throw new ValidationException([
+                    'modelClass' => __("File [:file] already exists for this plugin", [
+                        'file' => basename($path)
+                    ])
+                ]);
+            }
+        }
     }
 }

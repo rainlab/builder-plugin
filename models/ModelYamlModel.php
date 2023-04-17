@@ -10,7 +10,7 @@ use File;
 use Yaml;
 
 /**
- * A base class for models belonging to databse models (forms, lists, etc.).
+ * ModelYamlModel is a base class for models belonging to database models (forms, lists, etc.).
  *
  * @package rainlab\builder
  * @author Alexey Bobkov, Samuel Georges
@@ -21,6 +21,9 @@ abstract class ModelYamlModel extends YamlModel
 
     protected $modelClassName;
 
+    /**
+     * fill
+     */
     public function fill(array $attributes)
     {
         parent::fill($attributes);
@@ -30,6 +33,9 @@ abstract class ModelYamlModel extends YamlModel
         }
     }
 
+    /**
+     * setModelClassName
+     */
     public function setModelClassName($className)
     {
         if (!preg_match('/^[a-zA-Z]+[0-9a-z\_]*$/', $className)) {
@@ -39,6 +45,9 @@ abstract class ModelYamlModel extends YamlModel
         $this->modelClassName = $className;
     }
 
+    /**
+     * validate
+     */
     public function validate()
     {
         $this->validationMessages = [
@@ -50,7 +59,7 @@ abstract class ModelYamlModel extends YamlModel
     }
 
     /**
-     * Returns a string suitable for displaying in the Builder UI tabs.
+     * getDisplayName returns a string suitable for displaying in the Builder UI tabs.
      */
     public function getDisplayName($nameFallback)
     {
@@ -67,6 +76,9 @@ abstract class ModelYamlModel extends YamlModel
         return $this->getModelClassName().'/'.$fileName;
     }
 
+    /**
+     * listModelFiles
+     */
     public static function listModelFiles($pluginCodeObj, $modelClassName)
     {
         if (!self::validateModelClassName($modelClassName)) {
@@ -108,6 +120,9 @@ abstract class ModelYamlModel extends YamlModel
         return $result;
     }
 
+    /**
+     * getPluginRegistryData
+     */
     public static function getPluginRegistryData($pluginCode, $modelClassName)
     {
         $pluginCodeObj = new PluginCode($pluginCode);
@@ -136,6 +151,9 @@ abstract class ModelYamlModel extends YamlModel
         return $result;
     }
 
+    /**
+     * getPluginRegistryDataAllRecords
+     */
     public static function getPluginRegistryDataAllRecords($pluginCode)
     {
         $pluginCodeObj = new PluginCode($pluginCode);
@@ -158,16 +176,25 @@ abstract class ModelYamlModel extends YamlModel
         return $result;
     }
 
+    /**
+     * validateFileIsModelType
+     */
     public static function validateFileIsModelType($fileContentsArray)
     {
         return false;
     }
 
+    /**
+     * validateModelClassName
+     */
     protected static function validateModelClassName($modelClassName)
     {
         return preg_match('/^[A-Z]+[a-zA-Z0-9_]+$/i', $modelClassName);
     }
 
+    /**
+     * getModelClassName
+     */
     protected function getModelClassName()
     {
         if ($this->modelClassName === null) {
@@ -177,9 +204,18 @@ abstract class ModelYamlModel extends YamlModel
         return $this->modelClassName;
     }
 
+    /**
+     * getYamlFilePath
+     */
+    public function getYamlFilePath()
+    {
+        $fileName = $this->addExtension(trim($this->fileName));
+
+        return File::symbolizePath($this->getPluginCodeObj()->toPluginDirectoryPath().'/models/'.strtolower($this->getModelClassName()).'/'.$fileName);
+    }
 
     /**
-     * Returns a file path to save the model to.
+     * getFilePath returns a file path to save the model to.
      * @return string Returns a path.
      */
     protected function getFilePath()
@@ -194,6 +230,9 @@ abstract class ModelYamlModel extends YamlModel
         return $this->getPluginCodeObj()->toPluginDirectoryPath().'/models/'.strtolower($this->getModelClassName()).'/'.$fileName;
     }
 
+    /**
+     * addExtension
+     */
     protected function addExtension($fileName)
     {
         if (substr($fileName, -5) !== '.yaml') {

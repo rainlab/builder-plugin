@@ -4,7 +4,6 @@ use App;
 use File;
 use Tailor\Classes\BlueprintIndexer;
 use ApplicationException;
-use Editor\VueComponents\Application;
 
 /**
  * HasMigrations
@@ -80,16 +79,9 @@ trait HasMigrations
      */
     protected function makeSchemaBlueprint($tableName)
     {
-        $blueprint = $this->sourceModel->getBlueprintObject();
-        $uuid = $blueprint->uuid;
-
-        $fieldset = BlueprintIndexer::instance()->findContentFieldset($uuid);
-        if (!$fieldset) {
-            throw new ApplicationException("Unable to find content fieldset definition with UUID of '{$uuid}'.");
-        }
-
         $table = App::make(\October\Rain\Database\Schema\Blueprint::class, ['table' => $tableName]);
 
+        $fieldset = $this->sourceModel->getBlueprintFieldset();
         foreach ($fieldset->getAllFields() as $fieldObj) {
             $fieldObj->extendDatabaseTable($table);
         }

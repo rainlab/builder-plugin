@@ -3,23 +3,27 @@
 use RainLab\Builder\Classes\IndexOperationsBehaviorBase;
 use RainLab\Builder\Models\ControllerModel;
 use RainLab\Builder\Classes\PluginCode;
-use ApplicationException;
-use Exception;
 use Request;
 use Flash;
 use Input;
 use Lang;
 
 /**
- * Plugin controller management functionality for the Builder index controller
+ * IndexControllerOperations is plugin controller management functionality for the Builder index controller
  *
  * @package rainlab\builder
  * @author Alexey Bobkov, Samuel Georges
  */
 class IndexControllerOperations extends IndexOperationsBehaviorBase
 {
+    /**
+     * @var string baseFormConfigFile
+     */
     protected $baseFormConfigFile = '~/plugins/rainlab/builder/models/controllermodel/fields.yaml';
 
+    /**
+     * onControllerOpen
+     */
     public function onControllerOpen()
     {
         $controller = Input::get('controller');
@@ -45,6 +49,9 @@ class IndexControllerOperations extends IndexOperationsBehaviorBase
         return $result;
     }
 
+    /**
+     * onControllerCreate
+     */
     public function onControllerCreate()
     {
         $pluginCodeObj = new PluginCode(Request::input('plugin_code'));

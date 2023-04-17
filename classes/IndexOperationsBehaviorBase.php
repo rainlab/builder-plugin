@@ -1,7 +1,6 @@
 <?php namespace RainLab\Builder\Classes;
 
 use Backend\Classes\ControllerBehavior;
-use Backend\Behaviors\FormController;
 use ApplicationException;
 
 /**

@@ -16,23 +16,47 @@ use Twig;
  */
 class ControllerGenerator
 {
+    /**
+     * @var BaseModel sourceModel
+     */
     protected $sourceModel;
 
+    /**
+     * @var array templateVars
+     */
     protected $templateVars;
 
+    /**
+     * @var array configTemplateProperties
+     */
     protected $configTemplateProperties = [];
 
+    /**
+     * @var array templateFiles
+     */
     protected $templateFiles = [];
 
+    /**
+     * @var array filesGenerated
+     */
     protected $filesGenerated;
 
+    /**
+     * @var array designTimeProviders
+     */
     protected $designTimeProviders = [];
 
+    /**
+     * __construct
+     */
     public function __construct($source)
     {
         $this->sourceModel = $source;
     }
 
+    /**
+     * generate
+     */
     public function generate()
     {
         $this->filesGenerated = [];
@@ -55,11 +79,17 @@ class ControllerGenerator
         }
     }
 
+    /**
+     * setTemplateVariable
+     */
     public function setTemplateVariable($var, $value)
     {
         $this->templateVars[$var] = $value;
     }
 
+    /**
+     * validateBehaviorViewTemplates
+     */
     protected function validateBehaviorViewTemplates()
     {
         if (!$this->sourceModel->behaviors) {
@@ -92,8 +122,6 @@ class ControllerGenerator
                             'view' => $templateBaseName
                         ])
                     ]);
-
-                    throw new ApplicationException();
                 }
 
                 $knownTemplates[] = $templateFileName;
@@ -213,11 +241,17 @@ class ControllerGenerator
         $this->templateVars['behaviorConfigVars'] = $this->configTemplateProperties;
     }
 
+    /**
+     * getTemplatePath
+     */
     protected function getTemplatePath($template)
     {
         return __DIR__.'/controllergenerator/templates/'.$template;
     }
 
+    /**
+     * parseTemplate
+     */
     protected function parseTemplate($templatePath, $vars = [])
     {
         $template = File::get($templatePath);
@@ -228,6 +262,9 @@ class ControllerGenerator
         return $code;
     }
 
+    /**
+     * writeFile
+     */
     protected function writeFile($path, $data)
     {
         $fileDirectory = dirname($path);
@@ -249,6 +286,9 @@ class ControllerGenerator
         $this->filesGenerated[] = $path;
     }
 
+    /**
+     * rollback
+     */
     protected function rollback()
     {
         foreach ($this->filesGenerated as $path) {
@@ -256,6 +296,9 @@ class ControllerGenerator
         }
     }
 
+    /**
+     * generateControllerFile
+     */
     protected function generateControllerFile()
     {
         $templateParts = [];
@@ -285,6 +328,9 @@ class ControllerGenerator
         $this->writeFile($controllerFilePath, $code);
     }
 
+    /**
+     * getBehaviorDesignTimeProvider
+     */
     protected function getBehaviorDesignTimeProvider($providerClass)
     {
         if (array_key_exists($providerClass, $this->designTimeProviders)) {
@@ -294,6 +340,9 @@ class ControllerGenerator
         return $this->designTimeProviders[$providerClass] = new $providerClass(null, []);
     }
 
+    /**
+     * generateConfigFiles
+     */
     protected function generateConfigFiles()
     {
         if (!$this->sourceModel->behaviors) {
@@ -329,6 +378,9 @@ class ControllerGenerator
         }
     }
 
+    /**
+     * generateViews
+     */
     protected function generateViews()
     {
         foreach ($this->templateFiles as $templatePath => $destPath) {

@@ -1,18 +1,6 @@
 <?php namespace RainLab\Builder\Classes\BlueprintGenerator;
 
-use App;
-use Lang;
-use Yaml;
-use File;
-use Twig;
-use Tailor\Classes\SchemaBuilder;
-use Tailor\Classes\BlueprintIndexer;
-use RainLab\Builder\Classes\TailorBlueprintLibrary;
-use RainLab\Builder\Classes\ControllerGenerator;
-use Symfony\Component\Yaml\Dumper as YamlDumper;
-use ApplicationException;
-use ValidationException;
-use Exception;
+use RainLab\Builder\Models\ControllerModel;
 
 /**
  * HasControllers
@@ -24,7 +12,13 @@ trait HasControllers
      */
     protected function validateController()
     {
+        $files = [];
 
+        $model = $this->makeControllerModel();
+        $model->validate();
+        $files[] = $model->getControllerFilePath();
+
+        $this->validateUniqueFiles($files);
     }
 
     /**
@@ -32,12 +26,28 @@ trait HasControllers
      */
     protected function generateController()
     {
-        $controllerClass = $this->getConfig('controllerClass');
-        if (!$controllerClass) {
-            throw new ApplicationException('Missing a controller class name');
-        }
+        $controller = $this->makeControllerModel();
+        $controller->save();
+    }
 
-        $generator = new ControllerGenerator($this->sourceModel);
-        $generator->generate();
+    /**
+     * makeControllerModel
+     */
+    protected function makeControllerModel()
+    {
+        $controller = new ControllerModel();
+
+        $controller->setPluginCodeObj($this->sourceModel->getPluginCodeObj());
+
+        $controller->baseModelClassName = $this->getConfig('modelClass');
+
+        $controller->controller = $this->getConfig('controllerClass');
+
+        $controller->behaviors = [
+            \Backend\Behaviors\ListController::class,
+            \Backend\Behaviors\FormController::class,
+        ];
+
+        return $controller;
     }
 }

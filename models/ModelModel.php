@@ -15,7 +15,7 @@ use Schema;
 use Str;
 
 /**
- * Manages plugin models.
+ * ModelModel manages plugin models.
  *
  * @package rainlab\builder
  * @author Alexey Bobkov, Samuel Georges
@@ -24,10 +24,24 @@ class ModelModel extends BaseModel
 {
     const UNQUALIFIED_CLASS_NAME_PATTERN = '/^[A-Z]+[a-zA-Z0-9_]+$/';
 
+    /**
+     * @var string className
+     */
     public $className;
 
+    /**
+     * @var string databaseTable
+     */
     public $databaseTable;
 
+    /**
+     * @var bool skipDbValidation
+     */
+    public $skipDbValidation = false;
+
+    /**
+     * @var array fillable
+     */
     protected static $fillable = [
         'className',
         'databaseTable',
@@ -35,6 +49,9 @@ class ModelModel extends BaseModel
         'addSoftDeleting'
     ];
 
+    /**
+     * @var array validationRules
+     */
     protected $validationRules = [
         'className' => ['required', 'regex:' . self::UNQUALIFIED_CLASS_NAME_PATTERN, 'uniqModelName'],
         'databaseTable' => ['required'],
@@ -42,6 +59,9 @@ class ModelModel extends BaseModel
         'addSoftDeleting' => ['deletedAtColumnMustExist']
     ];
 
+    /**
+     * listPluginModels
+     */
     public static function listPluginModels($pluginCodeObj)
     {
         $modelsDirectoryPath = $pluginCodeObj->toPluginDirectoryPath().'/models';
@@ -85,6 +105,9 @@ class ModelModel extends BaseModel
         return $result;
     }
 
+    /**
+     * save
+     */
     public function save()
     {
         $this->validate();
@@ -120,6 +143,9 @@ class ModelModel extends BaseModel
         $generator->generate();
     }
 
+    /**
+     * validate
+     */
     public function validate()
     {
         $path = File::symbolizePath('$/'.$this->getFilePath());
@@ -151,9 +177,19 @@ class ModelModel extends BaseModel
             return $this->validateColumnsExist($value, $columns, ['deleted_at']);
         });
 
+        if ($this->skipDbValidation) {
+            unset(
+                $this->validationRules['addTimestamps'],
+                $this->validationRules['addSoftDeleting']
+            );
+        }
+
         parent::validate();
     }
 
+    /**
+     * getDatabaseTableOptions
+     */
     public function getDatabaseTableOptions()
     {
         $pluginCode = $this->getPluginCodeObj()->toCode();
@@ -162,6 +198,9 @@ class ModelModel extends BaseModel
         return array_combine($tables, $tables);
     }
 
+    /**
+     * getTableNameFromModelClass
+     */
     private static function getTableNameFromModelClass($pluginCodeObj, $modelClassName)
     {
         if (!self::validateModelClassName($modelClassName)) {
@@ -187,6 +226,9 @@ class ModelModel extends BaseModel
         return $modelInfo['table'];
     }
 
+    /**
+     * getModelFields
+     */
     public static function getModelFields($pluginCodeObj, $modelClassName)
     {
         $tableName = self::getTableNameFromModelClass($pluginCodeObj, $modelClassName);
@@ -197,6 +239,9 @@ class ModelModel extends BaseModel
         return Schema::getColumnListing($tableName);
     }
 
+    /**
+     * getModelColumnsAndTypes
+     */
     public static function getModelColumnsAndTypes($pluginCodeObj, $modelClassName)
     {
         $tableName = self::getTableNameFromModelClass($pluginCodeObj, $modelClassName);
@@ -229,6 +274,9 @@ class ModelModel extends BaseModel
         return $result;
     }
 
+    /**
+     * getPluginRegistryData
+     */
     public static function getPluginRegistryData($pluginCode, $subtype)
     {
         $pluginCodeObj = new PluginCode($pluginCode);
@@ -244,6 +292,9 @@ class ModelModel extends BaseModel
         return $result;
     }
 
+    /**
+     * getPluginRegistryDataColumns
+     */
     public static function getPluginRegistryDataColumns($pluginCode, $modelClassName)
     {
         $classParts = explode('\\', $modelClassName);
@@ -268,16 +319,33 @@ class ModelModel extends BaseModel
         return $result;
     }
 
+    /**
+     * validateModelClassName
+     */
     public static function validateModelClassName($modelClassName)
     {
         return class_exists($modelClassName) || !!preg_match(self::UNQUALIFIED_CLASS_NAME_PATTERN, $modelClassName);
     }
 
+    /**
+     * getModelFilePath
+     */
+    public function getModelFilePath()
+    {
+        return File::symbolizePath($this->getPluginCodeObj()->toPluginDirectoryPath().'/models/'.$this->className.'.php');
+    }
+
+    /**
+     * getFilePath
+     */
     protected function getFilePath()
     {
         return $this->getPluginCodeObj()->toFilesystemPath().'/models/'.$this->className.'.php';
     }
 
+    /**
+     * validateColumnsExist
+     */
     protected function validateColumnsExist($value, $columns, $columnsToCheck)
     {
         if (!strlen(trim($this->databaseTable))) {

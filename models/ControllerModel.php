@@ -188,6 +188,9 @@ class ControllerModel extends BaseModel
         return $result;
     }
 
+    /**
+     * getControllerFilePath
+     */
     public function getControllerFilePath($controllerFilesDirectory = false)
     {
         $pluginCodeObj = $this->getPluginCodeObj();
@@ -200,6 +203,9 @@ class ControllerModel extends BaseModel
         return $controllersDirectoryPath.'/'.strtolower($this->controller);
     }
 
+    /**
+     * getPluginRegistryData
+     */
     public static function getPluginRegistryData($pluginCode, $subtype)
     {
         $pluginCodeObj = new PluginCode($pluginCode);
@@ -219,6 +225,9 @@ class ControllerModel extends BaseModel
         return $result;
     }
 
+    /**
+     * saveController
+     */
     protected function saveController()
     {
         $this->validate();
