@@ -61,9 +61,13 @@ class ListElementContainer implements ListElement
         $parsedConfig['field'] = $name;
 
         // Remove default values
+        $keepDefaults = [
+            'type',
+        ];
+
         $defaultField = new ListColumn;
         foreach ($parsedConfig as $key => $value) {
-            if ($key !== 'type' && $defaultField->$key === $value) {
+            if (!in_array($key, $keepDefaults) && $defaultField->$key === $value) {
                 unset($parsedConfig[$key]);
             }
         }

@@ -5,6 +5,14 @@
 @builder-control-text-color: #95a5a6;
 @builder-hover-color: var(--oc-selection);
 
+:root, [data-bs-theme="light"] {
+    --oc-builder-control-color: #555;
+}
+
+[data-bs-theme="dark"] {
+    --oc-builder-control-color: #888;
+}
+
 @import "buildingarea.less";
 @import "controlblueprint.less";
 @import "behaviors.less";

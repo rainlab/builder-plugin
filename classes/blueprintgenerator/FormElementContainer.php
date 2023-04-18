@@ -68,11 +68,20 @@ class FormElementContainer extends FieldsetDefinition implements FormElement
         $parsedConfig = array_except((array) $config, $ignoreConfig);
 
         // Remove default values
+        $keepDefaults = [
+            'type',
+            'span',
+        ];
+
         $defaultField = new FormField;
         foreach ($parsedConfig as $key => $value) {
-            if ($key !== 'type' && $defaultField->$key === $value) {
+            if (!in_array($key, $keepDefaults) && $defaultField->$key === $value) {
                 unset($parsedConfig[$key]);
             }
+        }
+
+        if (isset($config['span']) && $config['span'] === 'adaptive') {
+            $config['span'] = 'full';
         }
 
         return $parsedConfig;

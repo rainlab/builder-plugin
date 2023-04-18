@@ -25,11 +25,14 @@
                 margin-top: 20px;
                 border-radius: 4px;
                 color: var(--bs-emphasis-color, #dae0e0);
-                background: var(--oc-secondary-bg);
 
                 i {
                     margin-right: 8px;
                 }
+            }
+
+            &.loading-control {
+                background: var(--oc-secondary-bg);
             }
 
             &.clear-row {
@@ -125,8 +128,8 @@
                     font-weight: bold;
                     line-height: 21px;
                     border-radius: 20px;
-                    background: #ecf0f1;
-                    color: #95a5a6 !important;
+                    background: var(--oc-toolbar-border, #ecf0f1);
+                    color: var(--oc-toolbar-color, #95a5a6) !important;
 
                     &:hover {
                         color: white !important;
@@ -201,13 +204,13 @@
     .control-body {
         &.field-disabled,
         &.field-hidden {
-            .opacity(0.5);
+            opacity: 0.5;
         }
     }
 
     .builder-control-label {
         margin-bottom: 10px;
-        color: #555555;
+        color: var(--oc-builder-control-color);
         font-size: 14px;
         font-weight: 600;
 
