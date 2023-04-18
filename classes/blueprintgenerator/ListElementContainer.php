@@ -19,7 +19,7 @@ class ListElementContainer implements ListElement
      */
     public function defineColumn(string $columnName = null, string $label = null): ColumnDefinition
     {
-        $column = (new ColumnDefinition)->label($label);
+        $column = (new ColumnDefinition)->label($label)->displayAs('text');
 
         $this->columns[$columnName] = $column;
 
@@ -63,7 +63,7 @@ class ListElementContainer implements ListElement
         // Remove default values
         $defaultField = new ListColumn;
         foreach ($parsedConfig as $key => $value) {
-            if ($defaultField->$key === $value) {
+            if ($key !== 'type' && $defaultField->$key === $value) {
                 unset($parsedConfig[$key]);
             }
         }

@@ -15,7 +15,7 @@ class FormElementContainer extends FieldsetDefinition implements FormElement
      */
     public function addFormField(string $fieldName = null, string $label = null): FieldDefinition
     {
-        $field = (new FieldDefinition)->label($label);
+        $field = (new FieldDefinition)->label($label)->displayAs('text');
 
         $this->addField($fieldName, $field);
 
@@ -70,7 +70,7 @@ class FormElementContainer extends FieldsetDefinition implements FormElement
         // Remove default values
         $defaultField = new FormField;
         foreach ($parsedConfig as $key => $value) {
-            if ($defaultField->$key === $value) {
+            if ($key !== 'type' && $defaultField->$key === $value) {
                 unset($parsedConfig[$key]);
             }
         }

@@ -2,7 +2,6 @@
 
 use App;
 use File;
-use Tailor\Classes\BlueprintIndexer;
 use ApplicationException;
 
 /**
@@ -53,6 +52,8 @@ trait HasMigrations
         ]);
 
         $this->writeFile($migrationFilePath, $code);
+
+        $this->migrationScripts[] = $proposedFile;
     }
 
     /**

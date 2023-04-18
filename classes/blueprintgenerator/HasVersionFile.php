@@ -1,18 +1,9 @@
 <?php namespace RainLab\Builder\Classes\BlueprintGenerator;
 
-use App;
-use Lang;
 use Yaml;
 use File;
-use Twig;
-use Tailor\Classes\SchemaBuilder;
 use RainLab\Builder\Models\MigrationModel;
-use Tailor\Classes\BlueprintIndexer;
-use RainLab\Builder\Classes\TailorBlueprintLibrary;
-use Symfony\Component\Yaml\Dumper as YamlDumper;
 use ApplicationException;
-use ValidationException;
-use Exception;
 
 /**
  * HasVersionFile
@@ -36,8 +27,9 @@ trait HasVersionFile
             "Created {$blueprintName} Tables"
         ];
 
-        // @todo
-        $versionInformation[$nextVersion][] = 'script_name.php';
+        foreach ($this->migrationScripts as $scriptName) {
+            $versionInformation[$nextVersion][] = $scriptName;
+        }
 
         $yamlData = Yaml::render($versionInformation);
 
