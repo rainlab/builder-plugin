@@ -8,6 +8,7 @@ use Twig;
 use Tailor\Classes\SchemaBuilder;
 use Tailor\Classes\BlueprintIndexer;
 use RainLab\Builder\Models\MenusModel;
+use RainLab\Builder\Models\PermissionsModel;
 use RainLab\Builder\Classes\TailorBlueprintLibrary;
 use Symfony\Component\Yaml\Dumper as YamlDumper;
 use ApplicationException;
@@ -15,14 +16,14 @@ use ValidationException;
 use Exception;
 
 /**
- * HasPluginFile
+ * HasNavigation
  */
-trait HasPluginFile
+trait HasNavigation
 {
     /**
      * generateNavigation
      */
-    protected function generatePluginUpdate()
+    protected function generateNavigation()
     {
         $blueprint = $this->sourceModel->getBlueprintObject();
 
@@ -33,15 +34,14 @@ trait HasPluginFile
         $indexer->findSecondaryNavigation($blueprint->uuid);
     }
 
-
     /**
      * loadOrCreateMenusModel
      */
-    protected function loadOrCreateMenusModel($pluginCode)
+    protected function loadOrCreateMenusModel()
     {
         $model = new MenusModel;
 
-        $model->loadPlugin($pluginCode);
+        $model->setPluginCodeObj($this->sourceModel->getPluginCodeObj());
 
         return $model;
     }

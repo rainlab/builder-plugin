@@ -87,12 +87,14 @@ class DefaultBlueprintDesignTimeProvider extends BlueprintDesignTimeProviderBase
     {
         $handleBase = class_basename($blueprintObj->handle);
         $dbPrefix = $importsModel->getPluginCodeObj()->toDatabasePrefix().'_';
+        $permissionPrefix = $importsModel->getPluginCodeObj()->toPermissionPrefix().'.manage_';
 
         $result = [
             'name' => $blueprintObj->name,
             'controllerClass' => Str::plural($handleBase),
             'modelClass' => Str::singular($handleBase),
             'tableName' => $dbPrefix . Str::snake($handleBase),
+            'permissionCode' => $permissionPrefix . Str::snake($handleBase),
         ];
 
         return $result;
@@ -105,12 +107,14 @@ class DefaultBlueprintDesignTimeProvider extends BlueprintDesignTimeProviderBase
     {
         $handleBase = class_basename($blueprintObj->handle);
         $dbPrefix = $importsModel->getPluginCodeObj()->toDatabasePrefix().'_';
+        $permissionPrefix = $importsModel->getPluginCodeObj()->toPermissionPrefix().'.manage_';
 
         $result = [
             'name' => $blueprintObj->name,
             'controllerClass' => Str::plural($handleBase),
             'modelClass' => Str::singular($handleBase),
             'tableName' => $dbPrefix . Str::snake($handleBase),
+            'permissionCode' => $permissionPrefix . Str::snake($handleBase),
         ];
 
         return $result;

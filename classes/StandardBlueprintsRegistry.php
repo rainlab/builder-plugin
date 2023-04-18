@@ -77,6 +77,16 @@ class StandardBlueprintsRegistry
                         'message' => "A table name is required"
                     ]
                 ],
+            ],
+            'permissionCode' => [
+                'title' => "Permission Code",
+                'description' => "Permission code used to manage this item.",
+                'type' => 'string',
+                'validation' => [
+                    'required' => [
+                        'message' => "A permission code is required"
+                    ]
+                ],
             ]
         ];
 

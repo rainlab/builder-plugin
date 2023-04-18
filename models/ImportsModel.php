@@ -165,9 +165,9 @@ class ImportsModel extends BaseModel
     /**
      * getBlueprintFieldset
      */
-    public function getBlueprintFieldset()
+    public function getBlueprintFieldset($blueprint = null)
     {
-        $blueprint = $this->getBlueprintObject();
+        $blueprint = $blueprint ?: $this->getBlueprintObject();
 
         $uuid = $blueprint->uuid ?? '???';
 

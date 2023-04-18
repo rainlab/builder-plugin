@@ -6,15 +6,21 @@ use Lang;
 use File;
 
 /**
- * A base class for models that keep data in the plugin.yaml file.
+ * PluginYamlModel is a base class for models that keep data in the plugin.yaml file.
  *
  * @package rainlab\builder
  * @author Alexey Bobkov, Samuel Georges
  */
 abstract class PluginYamlModel extends YamlModel
 {
+    /**
+     * @var string pluginName
+     */
     protected $pluginName;
 
+    /**
+     * loadPlugin
+     */
     public function loadPlugin($pluginCode)
     {
         $pluginCodeObj = new PluginCode($pluginCode);
@@ -33,11 +39,17 @@ abstract class PluginYamlModel extends YamlModel
         return $result;
     }
 
+    /**
+     * getPluginName
+     */
     public function getPluginName()
     {
         return Lang::get($this->pluginName);
     }
 
+    /**
+     * loadCommonProperties
+     */
     protected function loadCommonProperties()
     {
         if (!array_key_exists('plugin', $this->originalFileData)) {
@@ -51,10 +63,16 @@ abstract class PluginYamlModel extends YamlModel
         }
     }
 
+    /**
+     * initPropertiesFromPluginCodeObject
+     */
     protected function initPropertiesFromPluginCodeObject($pluginCodeObj)
     {
     }
 
+    /**
+     * pluginSettingsFileExists
+     */
     protected static function pluginSettingsFileExists($pluginCodeObj)
     {
         $filePath = File::symbolizePath($pluginCodeObj->toPluginFilePath());

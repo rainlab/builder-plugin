@@ -13,12 +13,24 @@ use Lang;
  */
 class PermissionsModel extends PluginYamlModel
 {
+    /**
+     * @var array permissions
+     */
     public $permissions = [];
 
+    /**
+     * @var string yamlSection
+     */
     protected $yamlSection = 'permissions';
 
+    /**
+     * @var object pluginCodeObj
+     */
     protected $pluginCodeObj;
 
+    /**
+     * @var array fillable
+     */
     protected static $fillable = [
         'permissions'
     ];
@@ -37,7 +49,7 @@ class PermissionsModel extends PluginYamlModel
     }
 
     /**
-     * Converts the model's data to an array before it's saved to a YAML file.
+     * modelToYamlArray converts the model's data to an array before it's saved to a YAML file.
      * @return array
      */
     protected function modelToYamlArray()
@@ -68,6 +80,9 @@ class PermissionsModel extends PluginYamlModel
         return $filePermissions;
     }
 
+    /**
+     * validate
+     */
     public function validate()
     {
         parent::validate();
@@ -76,6 +91,9 @@ class PermissionsModel extends PluginYamlModel
         $this->validateRequiredProperties();
     }
 
+    /**
+     * getPluginRegistryData
+     */
     public static function getPluginRegistryData($pluginCode)
     {
         $model = new PermissionsModel();
@@ -96,6 +114,9 @@ class PermissionsModel extends PluginYamlModel
         return $result;
     }
 
+    /**
+     * validateDuplicatePermissions
+     */
     protected function validateDuplicatePermissions()
     {
         foreach ($this->permissions as $outerIndex => $outerPermission) {
@@ -123,6 +144,9 @@ class PermissionsModel extends PluginYamlModel
         }
     }
 
+    /**
+     * validateRequiredProperties
+     */
     protected function validateRequiredProperties()
     {
         foreach ($this->permissions as $permission) {
@@ -156,6 +180,9 @@ class PermissionsModel extends PluginYamlModel
         }
     }
 
+    /**
+     * trimPermissionProperties
+     */
     protected function trimPermissionProperties($permission)
     {
         array_walk($permission, function ($value, $key) {
@@ -165,13 +192,16 @@ class PermissionsModel extends PluginYamlModel
         return $permission;
     }
 
+    /**
+     * isEmptyRow
+     */
     protected function isEmptyRow($permission)
     {
         return !isset($permission['tab']) || !isset($permission['permission']) || !isset($permission['label']);
     }
 
     /**
-     * Load the model's data from an array.
+     * yamlArrayToModel loads the model's data from an array.
      * @param array $array An array to load the model fields from.
      */
     protected function yamlArrayToModel($array)
@@ -190,7 +220,7 @@ class PermissionsModel extends PluginYamlModel
     }
 
     /**
-     * Returns a file path to save the model to.
+     * getFilePath returns a file path to save the model to.
      * @return string Returns a path.
      */
     protected function getFilePath()

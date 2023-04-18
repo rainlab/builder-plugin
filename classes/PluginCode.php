@@ -136,6 +136,14 @@ class PluginCode
     }
 
     /**
+     * toPermissionPrefix
+     */
+    public function toPermissionPrefix()
+    {
+        return strtolower($this->authorCode.'.'.$this->pluginCode);
+    }
+
+    /**
      * getAuthorCode
      */
     public function getAuthorCode()

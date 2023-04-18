@@ -19,16 +19,22 @@ class BlueprintGenerator
     use \RainLab\Builder\Classes\BlueprintGenerator\HasMigrations;
     use \RainLab\Builder\Classes\BlueprintGenerator\HasVersionFile;
     use \RainLab\Builder\Classes\BlueprintGenerator\HasControllers;
-    use \RainLab\Builder\Classes\BlueprintGenerator\HasPluginFile;
+    use \RainLab\Builder\Classes\BlueprintGenerator\HasPermissions;
+    use \RainLab\Builder\Classes\BlueprintGenerator\HasNavigation;
     use \RainLab\Builder\Classes\BlueprintGenerator\HasModels;
 
     /**
-     * @var object sourceModel
+     * @var object sourceModel is the imports model
      */
     protected $sourceModel;
 
     /**
-     * @var array templateVars
+     * @var array sourceBlueprints are blueprint objects that can be saved to disk
+     */
+    protected $sourceBlueprints = [];
+
+    /**
+     * @var array templateVars are used when rendering templates
      */
     protected $templateVars;
 
@@ -64,16 +70,28 @@ class BlueprintGenerator
         $this->filesGenerated = [];
         $this->blueprintFiles = [];
         $this->migrationScripts = [];
+        $this->sourceBlueprints = [];
 
+        $this->loadSourceBlueprints();
+
+        // Validate
+        foreach ($this->sourceBlueprints as $blueprint) {
+            $this->setBlueprintContext($blueprint);
+            $this->validatePermission();
+            // $this->validateModel();
+            // $this->validateController();
+        }
+
+        // Generate
         try {
-            foreach ($this->sourceModel->blueprints as $uuid => $config) {
-                $blueprintLib = TailorBlueprintLibrary::instance();
-                $blueprint = $blueprintLib->getBlueprintObject($uuid);
-                if ($blueprint) {
-                    $this->blueprintFiles[] = $blueprint->getFilePath();
-                    $this->sourceModel->setBlueprintContext($blueprint, $config);
-                    $this->generateBlueprint();
-                }
+            foreach ($this->sourceBlueprints as $blueprint) {
+                $this->setBlueprintContext($blueprint);
+                // $this->generateMigration();
+                $this->generatePermission();
+                // $this->generateModel();
+                // $this->generateController();
+
+                $this->blueprintFiles[] = $blueprint->getFilePath();
             }
         }
         catch (Exception $ex) {
@@ -81,25 +99,36 @@ class BlueprintGenerator
             throw $ex;
         }
 
-        $this->generatePluginUpdate();
-        $this->generateVersionUpdate();
+        // $this->generateNavigation();
 // debug
         // $this->disableGeneratedBlueprints();
     }
 
     /**
-     * generateBlueprint
+     * loadSourceBlueprints
      */
-    protected function generateBlueprint()
+    protected function loadSourceBlueprints()
     {
+        $blueprintLib = TailorBlueprintLibrary::instance();
+
+        foreach ($this->sourceModel->blueprints as $uuid => $config) {
+            $blueprint = $blueprintLib->getBlueprintObject($uuid);
+            if ($blueprint) {
+                $this->sourceBlueprints[$uuid] = $blueprint;
+            }
+        }
+    }
+
+    /**
+     * setBlueprintContext
+     */
+    protected function setBlueprintContext($blueprint)
+    {
+        $config = $this->sourceModel->blueprints[$blueprint->uuid] ?? [];
+
+        $this->sourceModel->setBlueprintContext($blueprint, $config);
+
         $this->setTemplateVars();
-
-        $this->validateModel();
-        $this->validateController();
-
-        $this->generateMigration();
-        $this->generateModel();
-        $this->generateController();
     }
 
     /**
