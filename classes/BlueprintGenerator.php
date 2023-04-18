@@ -19,6 +19,7 @@ class BlueprintGenerator
     use \RainLab\Builder\Classes\BlueprintGenerator\HasMigrations;
     use \RainLab\Builder\Classes\BlueprintGenerator\HasVersionFile;
     use \RainLab\Builder\Classes\BlueprintGenerator\HasControllers;
+    use \RainLab\Builder\Classes\BlueprintGenerator\HasPluginFile;
     use \RainLab\Builder\Classes\BlueprintGenerator\HasModels;
 
     /**
@@ -80,6 +81,8 @@ class BlueprintGenerator
             throw $ex;
         }
 
+        $this->generatePluginUpdate();
+        $this->generateVersionUpdate();
 // debug
         // $this->disableGeneratedBlueprints();
     }
@@ -89,14 +92,14 @@ class BlueprintGenerator
      */
     protected function generateBlueprint()
     {
+        $this->setTemplateVars();
+
         $this->validateModel();
         $this->validateController();
 
-        $this->setTemplateVars();
         $this->generateMigration();
         $this->generateModel();
         $this->generateController();
-        $this->generateVersionUpdate();
     }
 
     /**

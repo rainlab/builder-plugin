@@ -8,15 +8,21 @@ use Flash;
 use Lang;
 
 /**
- * Plugin back-end menu management functionality for the Builder index controller
+ * IndexMenusOperations is plugin backend menu management functionality for the Builder index controller
  *
  * @package rainlab\builder
  * @author Alexey Bobkov, Samuel Georges
  */
 class IndexMenusOperations extends IndexOperationsBehaviorBase
 {
+    /**
+     * @var string baseFormConfigFile
+     */
     protected $baseFormConfigFile = '~/plugins/rainlab/builder/models/menusmodel/fields.yaml';
 
+    /**
+     * onMenusOpen
+     */
     public function onMenusOpen()
     {
         $pluginCodeObj = $this->getPluginCode();
@@ -37,6 +43,9 @@ class IndexMenusOperations extends IndexOperationsBehaviorBase
         return $result;
     }
 
+    /**
+     * onMenusSave
+     */
     public function onMenusSave()
     {
         $pluginCodeObj = new PluginCode(Request::input('plugin_code'));
@@ -57,16 +66,23 @@ class IndexMenusOperations extends IndexOperationsBehaviorBase
         return $result;
     }
 
+    /**
+     * getTabId
+     */
     protected function getTabId($pluginCode)
     {
         return 'menus-'.$pluginCode;
     }
 
+    /**
+     * loadOrCreateBaseModel
+     */
     protected function loadOrCreateBaseModel($pluginCode, $options = [])
     {
         $model = new MenusModel();
 
         $model->loadPlugin($pluginCode);
+
         return $model;
     }
 }

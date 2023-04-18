@@ -15,8 +15,6 @@ trait HasVersionFile
      */
     protected function generateVersionUpdate()
     {
-        $blueprintName = $this->getConfig('name', 'Unknown');
-
         $versionFilePath = $this->sourceModel->getPluginFilePath('updates/version.yaml');
 
         $nextVersion = $this->getNextVersion();
@@ -24,7 +22,7 @@ trait HasVersionFile
         $versionInformation = $this->sourceModel->getPluginVersionInformation();
 
         $versionInformation[$nextVersion] = [
-            "Created {$blueprintName} Tables"
+            "Imported Blueprints from Tailor"
         ];
 
         foreach ($this->migrationScripts as $scriptName) {
@@ -41,12 +39,14 @@ trait HasVersionFile
     }
 
     /**
-     * getNextVersion
+     * getNextVersion returns the next version for this plugin
      */
     protected function getNextVersion()
     {
         $migration = new MigrationModel;
+
         $migration->setPluginCodeObj($this->sourceModel->getPluginCodeObj());
+
         return $migration->getNextVersion();
     }
 }

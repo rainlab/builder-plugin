@@ -72,7 +72,7 @@ class PermissionsModel extends PluginYamlModel
     {
         parent::validate();
 
-        $this->validateDupicatePermissions();
+        $this->validateDuplicatePermissions();
         $this->validateRequiredProperties();
     }
 
@@ -96,7 +96,7 @@ class PermissionsModel extends PluginYamlModel
         return $result;
     }
 
-    protected function validateDupicatePermissions()
+    protected function validateDuplicatePermissions()
     {
         foreach ($this->permissions as $outerIndex => $outerPermission) {
             if (!isset($outerPermission['permission'])) {

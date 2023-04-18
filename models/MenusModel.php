@@ -13,12 +13,24 @@ use Lang;
  */
 class MenusModel extends PluginYamlModel
 {
+    /**
+     * @var array menus
+     */
     public $menus = [];
 
+    /**
+     * @var string yamlSection
+     */
     protected $yamlSection = 'navigation';
 
+    /**
+     * @var object pluginCodeObj
+     */
     protected $pluginCodeObj;
 
+    /**
+     * @var array fillable
+     */
     protected static $fillable = [
         'menus'
     ];
@@ -29,7 +41,7 @@ class MenusModel extends PluginYamlModel
     protected $preserveOriginal = false;
 
     /**
-     * Converts the model's data to an array before it's saved to a YAML file.
+     * modelToYamlArray converts the model's data to an array before it's saved to a YAML file.
      * @return array
      */
     protected function modelToYamlArray()
@@ -71,13 +83,19 @@ class MenusModel extends PluginYamlModel
         return $fileMenus;
     }
 
+    /**
+     * validate
+     */
     public function validate()
     {
         parent::validate();
 
-        $this->validateDupicateMenus();
+        $this->validateDuplicateMenus();
     }
 
+    /**
+     * fill
+     */
     public function fill(array $attributes)
     {
         if (!is_array($attributes['menus'])) {
@@ -91,13 +109,16 @@ class MenusModel extends PluginYamlModel
         return parent::fill($attributes);
     }
 
+    /**
+     * setPluginCodeObj
+     */
     public function setPluginCodeObj($pluginCodeObj)
     {
         $this->pluginCodeObj = $pluginCodeObj;
     }
 
     /**
-     * Load the model's data from an array.
+     * yamlArrayToModel loads the model's data from an array.
      * @param array $array An array to load the model fields from.
      */
     protected function yamlArrayToModel($array)
@@ -126,6 +147,9 @@ class MenusModel extends PluginYamlModel
         $this->menus = $menus;
     }
 
+    /**
+     * trimMenuProperties
+     */
     protected function trimMenuProperties($menu)
     {
         array_walk($menu, function ($value, $key) {
@@ -140,7 +164,7 @@ class MenusModel extends PluginYamlModel
     }
 
     /**
-     * Returns a file path to save the model to.
+     * getFilePath returns a file path to save the model to.
      * @return string Returns a path.
      */
     protected function getFilePath()
@@ -152,7 +176,10 @@ class MenusModel extends PluginYamlModel
         return $this->pluginCodeObj->toPluginFilePath();
     }
 
-    protected function validateDupicateMenus()
+    /**
+     * validateDuplicateMenus
+     */
+    protected function validateDuplicateMenus()
     {
         foreach ($this->menus as $outerIndex => $mainMenuItem) {
             $mainMenuItem = $this->trimMenuProperties($mainMenuItem);
@@ -191,6 +218,9 @@ class MenusModel extends PluginYamlModel
         }
     }
 
+    /**
+     * codeExistsInList
+     */
     protected function codeExistsInList($codeIndex, $code, $list)
     {
         foreach ($list as $index => $item) {
