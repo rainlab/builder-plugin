@@ -15,10 +15,11 @@ trait HasControllers
         $files = [];
 
         $model = $this->makeControllerModel();
-        $model->validate();
         $files[] = $model->getControllerFilePath();
 
         $this->validateUniqueFiles($files);
+
+        $model->validate();
     }
 
     /**
