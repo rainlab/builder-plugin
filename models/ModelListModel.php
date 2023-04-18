@@ -13,13 +13,22 @@ use Lang;
  */
 class ModelListModel extends ModelYamlModel
 {
+    /**
+     * @var array columns
+     */
     public $columns;
 
+    /**
+     * @var array fillable
+     */
     protected static $fillable = [
         'fileName',
         'columns'
     ];
 
+    /**
+     * @var array validationRules
+     */
     protected $validationRules = [
         'fileName' => ['required', 'regex:/^[a-z0-9\.\-_]+$/i']
     ];
@@ -75,7 +84,7 @@ class ModelListModel extends ModelYamlModel
     {
         parent::validate();
 
-        $this->validateDupicateColumns();
+        $this->validateDuplicateColumns();
 
         if (!$this->columns) {
             throw new ValidationException(['columns' => 'Please create at least one column.']);
@@ -91,9 +100,9 @@ class ModelListModel extends ModelYamlModel
     }
 
     /**
-     * validateDupicateColumns
+     * validateDuplicateColumns
      */
-    protected function validateDupicateColumns()
+    protected function validateDuplicateColumns()
     {
         foreach ($this->columns as $outerIndex => $outerColumn) {
             foreach ($this->columns as $innerIndex => $innerColumn) {
