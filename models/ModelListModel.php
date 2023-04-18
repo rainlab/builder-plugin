@@ -6,7 +6,7 @@ use ValidationException;
 use Lang;
 
 /**
- * Represents and manages model lists.
+ * ModelListModel represents and manages model lists.
  *
  * @package rainlab\builder
  * @author Alexey Bobkov, Samuel Georges
@@ -24,6 +24,9 @@ class ModelListModel extends ModelYamlModel
         'fileName' => ['required', 'regex:/^[a-z0-9\.\-_]+$/i']
     ];
 
+    /**
+     * loadForm
+     */
     public function loadForm($path)
     {
         $this->fileName = $path;
@@ -31,6 +34,9 @@ class ModelListModel extends ModelYamlModel
         return parent::load($this->getFilePath());
     }
 
+    /**
+     * fill
+     */
     public function fill(array $attributes)
     {
         if (!is_array($attributes['columns'])) {
@@ -44,6 +50,9 @@ class ModelListModel extends ModelYamlModel
         return parent::fill($attributes);
     }
 
+    /**
+     * validateFileIsModelType
+     */
     public static function validateFileIsModelType($fileContentsArray)
     {
         $modelRootNodes = [
@@ -59,6 +68,9 @@ class ModelListModel extends ModelYamlModel
         return false;
     }
 
+    /**
+     * validate
+     */
     public function validate()
     {
         parent::validate();
@@ -70,11 +82,17 @@ class ModelListModel extends ModelYamlModel
         }
     }
 
+    /**
+     * initDefaults
+     */
     public function initDefaults()
     {
         $this->fileName = 'columns.yaml';
     }
 
+    /**
+     * validateDupicateColumns
+     */
     protected function validateDupicateColumns()
     {
         foreach ($this->columns as $outerIndex => $outerColumn) {
@@ -151,6 +169,9 @@ class ModelListModel extends ModelYamlModel
         $this->columns = $columns;
     }
 
+    /**
+     * preprocessColumnDataBeforeSave
+     */
     protected function preprocessColumnDataBeforeSave($column)
     {
         $booleanFields = [

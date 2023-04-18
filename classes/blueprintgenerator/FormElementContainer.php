@@ -6,7 +6,7 @@ use October\Rain\Element\Form\FieldDefinition;
 use October\Rain\Element\Form\FieldsetDefinition;
 
 /**
- * HasControllers
+ * FormElementContainer
  */
 class FormElementContainer extends FieldsetDefinition implements FormElement
 {
@@ -15,7 +15,7 @@ class FormElementContainer extends FieldsetDefinition implements FormElement
      */
     public function addFormField(string $fieldName = null, string $label = null): FieldDefinition
     {
-        $field = new FieldDefinition;
+        $field = (new FieldDefinition)->label($label);
 
         $this->addField($fieldName, $field);
 

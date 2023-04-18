@@ -909,6 +909,14 @@ class StandardControlsRegistry
                 'ignoreIfEmpty' => true,
                 'sortOrder' => 85
             ],
+            'optionsMethod' => [
+                'title' => "Options Method",
+                'description' => "Request options from this method name defined on the model or as a static method (Class::method).",
+                'group' => Lang::get('rainlab.builder::lang.form.property_group_taglist'),
+                'type' => 'string',
+                'ignoreIfEmpty' => true,
+                'sortOrder' => 86
+            ],
             'nameFrom' => [
                 'title' => Lang::get('rainlab.builder::lang.form.property_taglist_name_from'),
                 'description' => Lang::get('rainlab.builder::lang.form.property_taglist_name_from_description'),

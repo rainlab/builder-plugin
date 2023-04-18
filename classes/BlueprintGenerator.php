@@ -86,10 +86,10 @@ class BlueprintGenerator
         $this->validateController();
 
         $this->setTemplateVars();
-        // $this->generateMigration();
+        $this->generateMigration();
         $this->generateModel();
-        // $this->generateController();
-        // $this->generateVersionUpdate();
+        $this->generateController();
+        $this->generateVersionUpdate();
     }
 
     /**
@@ -170,14 +170,6 @@ class BlueprintGenerator
         foreach ($this->filesGenerated as $path) {
             @unlink($path);
         }
-    }
-
-    /**
-     * generateMigration for a blueprint, returns the migration file name
-     */
-    protected function generateMigration()
-    {
-        $this->generateContentTable();
     }
 
     /**

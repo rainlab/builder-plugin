@@ -5,6 +5,7 @@ use File;
 use RainLab\Builder\Models\ModelModel;
 use RainLab\Builder\Models\ModelFormModel;
 use RainLab\Builder\Models\ModelListModel;
+use RainLab\Builder\Classes\BlueprintGenerator\ListElementContainer;
 use RainLab\Builder\Classes\BlueprintGenerator\FormElementContainer;
 use ApplicationException;
 use ValidationException;
@@ -27,10 +28,14 @@ trait HasModels
         $form = $this->makeModelFormModel();
         $files[] = $form->getYamlFilePath();
 
+        $lists = $this->makeModelListModel();
+        $files[] = $lists->getYamlFilePath();
+
         $this->validateUniqueFiles($files);
 
         $model->validate();
         $form->validate();
+        $lists->validate();
     }
 
     /**
@@ -38,6 +43,9 @@ trait HasModels
      */
     protected function generateModel()
     {
+        $lists = $this->makeModelListModel();
+        $lists->save();
+
         $form = $this->makeModelFormModel();
         $form->save();
 
@@ -68,7 +76,7 @@ trait HasModels
     }
 
     /**
-     * makeModelModel
+     * makeModelFormModel
      */
     protected function makeModelFormModel()
     {
@@ -89,6 +97,30 @@ trait HasModels
         $model->controls = [
             'tabs' => ['fields' => $container->getControls()]
         ];
+
+        return $model;
+    }
+
+    /**
+     * makeModelListModel
+     */
+    protected function makeModelListModel()
+    {
+        $model = new ModelListModel();
+
+        $model->setPluginCodeObj($this->sourceModel->getPluginCodeObj());
+
+        $model->setModelClassName($this->getConfig('modelClass'));
+
+        $model->fileName = 'columns.yaml';
+
+        $container = new ListElementContainer;
+
+        $fieldset = $this->sourceModel->getBlueprintFieldset();
+
+        $fieldset->defineAllListColumns($container);
+
+        $model->columns = $container->getControls();
 
         return $model;
     }

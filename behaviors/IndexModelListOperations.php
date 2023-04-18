@@ -2,17 +2,14 @@
 
 use RainLab\Builder\Classes\IndexOperationsBehaviorBase;
 use RainLab\Builder\Models\ModelListModel;
-use RainLab\Builder\Classes\PluginCode;
 use RainLab\Builder\Models\ModelModel;
-use ApplicationException;
-use Exception;
 use Request;
 use Flash;
 use Input;
 use Lang;
 
 /**
- * Model list management functionality for the Builder index controller
+ * IndexModelListOperations provides model list management functionality for the Builder index controller
  *
  * @package rainlab\builder
  * @author Alexey Bobkov, Samuel Georges
@@ -21,6 +18,9 @@ class IndexModelListOperations extends IndexOperationsBehaviorBase
 {
     protected $baseFormConfigFile = '~/plugins/rainlab/builder/models/modellistmodel/fields.yaml';
 
+    /**
+     * onModelListCreateOrOpen
+     */
     public function onModelListCreateOrOpen()
     {
         $fileName = Input::get('file_name');
@@ -51,6 +51,9 @@ class IndexModelListOperations extends IndexOperationsBehaviorBase
         return $result;
     }
 
+    /**
+     * onModelListSave
+     */
     public function onModelListSave()
     {
         $model = $this->loadOrCreateListFromPost();
@@ -73,6 +76,9 @@ class IndexModelListOperations extends IndexOperationsBehaviorBase
         return $result;
     }
 
+    /**
+     * onModelListDelete
+     */
     public function onModelListDelete()
     {
         $model = $this->loadOrCreateListFromPost();
@@ -87,6 +93,9 @@ class IndexModelListOperations extends IndexOperationsBehaviorBase
         return $result;
     }
 
+    /**
+     * onModelListGetModelFields
+     */
     public function onModelListGetModelFields()
     {
         $columnNames = ModelModel::getModelFields($this->getPluginCode(), Input::get('model_class'));
@@ -106,6 +115,9 @@ class IndexModelListOperations extends IndexOperationsBehaviorBase
         ];
     }
 
+    /**
+     * onModelListLoadDatabaseColumns
+     */
     public function onModelListLoadDatabaseColumns()
     {
         $columns = ModelModel::getModelColumnsAndTypes($this->getPluginCode(), Input::get('model_class'));
@@ -117,6 +129,9 @@ class IndexModelListOperations extends IndexOperationsBehaviorBase
         ];
     }
 
+    /**
+     * loadOrCreateListFromPost
+     */
     protected function loadOrCreateListFromPost()
     {
         $pluginCode = Request::input('plugin_code');
@@ -131,6 +146,9 @@ class IndexModelListOperations extends IndexOperationsBehaviorBase
         return $this->loadOrCreateBaseModel($fileName, $options);
     }
 
+    /**
+     * getTabId
+     */
     protected function getTabId($modelClass, $fileName)
     {
         if (!strlen($fileName)) {
@@ -140,6 +158,9 @@ class IndexModelListOperations extends IndexOperationsBehaviorBase
         return 'modelList-'.$modelClass.'-'.$fileName;
     }
 
+    /**
+     * loadOrCreateBaseModel
+     */
     protected function loadOrCreateBaseModel($fileName, $options = [])
     {
         $model = new ModelListModel();
@@ -159,6 +180,9 @@ class IndexModelListOperations extends IndexOperationsBehaviorBase
         return $model;
     }
 
+    /**
+     * mergeRegistryDataIntoResult
+     */
     protected function mergeRegistryDataIntoResult(&$result, $model, $modelClass)
     {
         if (!array_key_exists('builderResponseData', $result)) {

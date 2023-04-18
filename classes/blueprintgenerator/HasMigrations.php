@@ -11,6 +11,14 @@ use ApplicationException;
 trait HasMigrations
 {
     /**
+     * generateMigration for a blueprint, returns the migration file name
+     */
+    protected function generateMigration()
+    {
+        $this->generateContentTable();
+    }
+
+    /**
      * generateContentTable
      */
     protected function generateContentTable()
