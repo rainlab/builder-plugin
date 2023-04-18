@@ -10,13 +10,13 @@ fields:
 
     toolbar:
         type: partial
-        path: $/rainlab/builder/behaviors/indexcontrolleroperations/partials/_toolbar.htm
+        path: $/rainlab/builder/behaviors/indexcontrolleroperations/partials/_toolbar.php
         cssClass: collapse-visible
 
 secondaryTabs:
     stretch: true
     fields:
-        formBuilder: 
+        formBuilder:
             type: RainLab\Builder\FormWidgets\ControllerBuilder
             stretch: true
             cssClass: layout

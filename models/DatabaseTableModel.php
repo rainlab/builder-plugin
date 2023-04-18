@@ -17,7 +17,7 @@ use Str;
 use Db;
 
 /**
- * Manages plugin database tables.
+ * DatabaseTableModel manages plugin database tables.
  *
  * @package rainlab\builder
  * @author Alexey Bobkov, Samuel Georges
@@ -165,6 +165,9 @@ class DatabaseTableModel extends BaseModel
         return parent::validate();
     }
 
+    /**
+     * generateCreateOrUpdateMigration
+     */
     public function generateCreateOrUpdateMigration()
     {
         $schemaCreator = new DatabaseTableSchemaCreator();
@@ -184,6 +187,9 @@ class DatabaseTableModel extends BaseModel
         return $this->createMigrationObject($migrationCode, sprintf($description, $tableName));
     }
 
+    /**
+     * generateDropMigration
+     */
     public function generateDropMigration()
     {
         $existingSchema = $this->tableInfo;
@@ -193,6 +199,9 @@ class DatabaseTableModel extends BaseModel
         return $this->createMigrationObject($migrationCode, sprintf('Drop table %s', $this->name));
     }
 
+    /**
+     * getSchema
+     */
     public static function getSchema()
     {
         if (!self::$schema) {
@@ -202,6 +211,9 @@ class DatabaseTableModel extends BaseModel
         return self::$schema;
     }
 
+    /**
+     * validateColumns
+     */
     protected function validateColumns()
     {
         $this->validateColumnNameLengths();
@@ -213,6 +225,9 @@ class DatabaseTableModel extends BaseModel
         $this->validateDefaultValues();
     }
 
+    /**
+     * validateColumnNameLengths
+     */
     protected function validateColumnNameLengths()
     {
         foreach ($this->columns as $column) {
@@ -229,6 +244,9 @@ class DatabaseTableModel extends BaseModel
         }
     }
 
+    /**
+     * validateDuplicateColumns
+     */
     protected function validateDuplicateColumns()
     {
         foreach ($this->columns as $outerIndex => $outerColumn) {
@@ -245,6 +263,9 @@ class DatabaseTableModel extends BaseModel
         }
     }
 
+    /**
+     * validateDuplicatePrimaryKeys
+     */
     protected function validateDuplicatePrimaryKeys()
     {
         $keysFound = 0;
@@ -266,6 +287,9 @@ class DatabaseTableModel extends BaseModel
         }
     }
 
+    /**
+     * validateAutoIncrementColumns
+     */
     protected function validateAutoIncrementColumns()
     {
         $autoIncrement = null;
@@ -294,6 +318,9 @@ class DatabaseTableModel extends BaseModel
         }
     }
 
+    /**
+     * validateUnsignedColumns
+     */
     protected function validateUnsignedColumns()
     {
         foreach ($this->columns as $column) {
@@ -309,12 +336,16 @@ class DatabaseTableModel extends BaseModel
         }
     }
 
+    /**
+     * validateColumnsLengthParameter
+     */
     protected function validateColumnsLengthParameter()
     {
         foreach ($this->columns as $column) {
             try {
                 MigrationColumnType::validateLength($column['type'], $column['length']);
-            } catch (Exception $ex) {
+            }
+            catch (Exception $ex) {
                 throw new ValidationException([
                     'columns' => $ex->getMessage()
                 ]);
@@ -322,6 +353,9 @@ class DatabaseTableModel extends BaseModel
         }
     }
 
+    /**
+     * validateDefaultValues
+     */
     protected function validateDefaultValues()
     {
         foreach ($this->columns as $column) {
@@ -367,12 +401,15 @@ class DatabaseTableModel extends BaseModel
         }
     }
 
+    /**
+     * getSchemaManager
+     */
     protected static function getSchemaManager()
     {
         if (!self::$schemaManager) {
             self::$schemaManager = Schema::getConnection()->getDoctrineSchemaManager();
 
-            Type::addType('enumdbtype', 'RainLab\Builder\Classes\EnumDbType');
+            Type::addType('enumdbtype', \RainLab\Builder\Classes\EnumDbType::class);
 
             // Fixes the problem with enum column type not supported
             // by Doctrine (https://github.com/laravel/framework/issues/1346)
@@ -384,6 +421,9 @@ class DatabaseTableModel extends BaseModel
         return self::$schemaManager;
     }
 
+    /**
+     * loadColumnsFromTableInfo
+     */
     protected function loadColumnsFromTableInfo()
     {
         $this->columns = [];
@@ -420,6 +460,9 @@ class DatabaseTableModel extends BaseModel
         }
     }
 
+    /**
+     * createMigrationObject
+     */
     protected function createMigrationObject($code, $description)
     {
         $migration = new MigrationModel();

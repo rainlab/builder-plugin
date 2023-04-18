@@ -74,7 +74,7 @@ class DefaultControlDesignTimeProvider extends ControlDesignTimeProviderBase
         }
 
         $partialName = 'control-static-'.$type;
-        $partialPath = $this->getViewPath('_'.$partialName.'.htm');
+        $partialPath = $this->getViewPath('_'.$partialName.'.php');
 
         if (!File::exists($partialPath)) {
             return null;

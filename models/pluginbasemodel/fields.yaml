@@ -2,7 +2,7 @@ tabs:
     fields:
         content:
             type: hint
-            path: $/rainlab/builder/behaviors/indexpluginoperations/partials/_plugin-update-hint.htm
+            path: $/rainlab/builder/behaviors/indexpluginoperations/partials/_plugin-update-hint.php
             tab: rainlab.builder::lang.plugin.tab_general
             context: [update]
 

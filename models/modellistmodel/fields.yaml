@@ -11,7 +11,7 @@ fields:
 
     toolbar:
         type: partial
-        path: $/rainlab/builder/behaviors/indexmodellistoperations/partials/_toolbar.htm
+        path: $/rainlab/builder/behaviors/indexmodellistoperations/partials/_toolbar.php
         cssClass: collapse-visible
 
 tabs:
@@ -28,26 +28,26 @@ tabs:
             height: 100
             dynamicHeight: true
             columns:
-                field: 
+                field:
                     title: rainlab.builder::lang.list.column_dbfield_label
                     type: autocomplete
                     fillFrom: model-fields
-                    validation: 
-                        required: 
+                    validation:
+                        required:
                             message: rainlab.builder::lang.list.column_dbfield_required
                 label:
                     title: rainlab.builder::lang.list.column_name_label
                     type: builderLocalization
-                    validation: 
-                        required: 
+                    validation:
+                        required:
                             message: rainlab.builder::lang.list.column_label_required
                 type:
                     title: rainlab.builder::lang.list.column_type_label
-                    validation: 
-                        required: 
+                    validation:
+                        required:
                             message: rainlab.builder::lang.list.column_type_required
                     type: dropdown
-                    options: 
+                    options:
                         text: rainlab.builder::lang.list.column_type_text
                         number: rainlab.builder::lang.list.column_type_number
                         switch: rainlab.builder::lang.list.column_type_switch
@@ -75,7 +75,7 @@ tabs:
                     width: 60px
                 select:
                     title: rainlab.builder::lang.list.column_label_select
-                relation: 
+                relation:
                     title: rainlab.builder::lang.list.column_label_relation
                 cssClass:
                     title: rainlab.builder::lang.list.column_label_css_class

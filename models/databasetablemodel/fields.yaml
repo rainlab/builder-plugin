@@ -11,7 +11,7 @@ fields:
 
     toolbar:
         type: partial
-        path: $/rainlab/builder/behaviors/indexdatabasetableoperations/partials/_toolbar.htm
+        path: $/rainlab/builder/behaviors/indexdatabasetableoperations/partials/_toolbar.php
         cssClass: collapse-visible
 
 tabs:

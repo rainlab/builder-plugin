@@ -1,12 +1,14 @@
 <?php namespace RainLab\Builder\Behaviors;
 
+use Str;
+use Lang;
+use Input;
+use Flash;
+use Request;
+use System\Classes\PluginManager;
 use RainLab\Builder\Classes\IndexOperationsBehaviorBase;
 use RainLab\Builder\Models\ModelListModel;
 use RainLab\Builder\Models\ModelModel;
-use Request;
-use Flash;
-use Input;
-use Lang;
 
 /**
  * IndexModelListOperations provides model list management functionality for the Builder index controller
@@ -16,7 +18,28 @@ use Lang;
  */
 class IndexModelListOperations extends IndexOperationsBehaviorBase
 {
+    /**
+     * @var string baseFormConfigFile
+     */
     protected $baseFormConfigFile = '~/plugins/rainlab/builder/models/modellistmodel/fields.yaml';
+
+    /**
+     * extendBaseFormWidgetConfig
+     */
+    protected function extendBaseFormWidgetConfig($config)
+    {
+        $typeOptions = array_get($config->tabs, 'fields.columns.columns.type.options');
+
+        $pluginColumns = PluginManager::instance()->getRegistrationMethodValues('registerListColumnTypes');
+        foreach ($pluginColumns as $customColumns) {
+            foreach (array_keys($customColumns) as $customColumn) {
+                $typeOptions[$customColumn] = __(Str::studly($customColumn));
+            }
+        }
+
+        array_set($config->tabs, 'fields.columns.columns.type.options', $typeOptions);
+        return $config;
+    }
 
     /**
      * onModelListCreateOrOpen
