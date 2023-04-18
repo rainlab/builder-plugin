@@ -44,6 +44,8 @@ trait HasControllers
 
         $controller->controller = $this->getConfig('controllerClass');
 
+        $controller->permissions = [$this->getConfig('permissionCode')];
+
         $controller->behaviors = [
             \Backend\Behaviors\ListController::class,
             \Backend\Behaviors\FormController::class,

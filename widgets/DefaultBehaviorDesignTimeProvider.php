@@ -73,6 +73,9 @@ class DefaultBehaviorDesignTimeProvider extends BehaviorDesignTimeProviderBase
         ]);
     }
 
+    /**
+     * getFormControllerDefaultConfiguration
+     */
     protected function getFormControllerDefaultConfiguration($controllerModel, $controllerGenerator)
     {
         if (!$controllerModel->baseModelClassName) {
@@ -108,6 +111,9 @@ class DefaultBehaviorDesignTimeProvider extends BehaviorDesignTimeProviderBase
         return $result;
     }
 
+    /**
+     * getListControllerDefaultConfiguration
+     */
     protected function getListControllerDefaultConfiguration($controllerModel, $controllerGenerator)
     {
         if (!$controllerModel->baseModelClassName) {
@@ -158,6 +164,9 @@ class DefaultBehaviorDesignTimeProvider extends BehaviorDesignTimeProviderBase
         return $result;
     }
 
+    /**
+     * getReorderControllerDefaultConfiguration
+     */
     protected function getReorderControllerDefaultConfiguration($controllerModel, $controllerGenerator)
     {
         if (!$controllerModel->baseModelClassName) {
@@ -179,18 +188,27 @@ class DefaultBehaviorDesignTimeProvider extends BehaviorDesignTimeProviderBase
         return $result;
     }
 
+    /**
+     * getFullModelClass
+     */
     protected function getFullModelClass($pluginCodeObj, $modelClassName)
     {
         return $pluginCodeObj->toPluginNamespace().'\\Models\\'.$modelClassName;
     }
 
+    /**
+     * getModelFilePath
+     */
     protected function getModelFilePath($pluginCodeObj, $modelClassName, $file)
     {
         return '$/' . $pluginCodeObj->toFilesystemPath() . '/models/' . strtolower($modelClassName) . '/' . $file;
     }
 
+    /**
+     * getControllerUrl
+     */
     protected function getControllerUrl($pluginCodeObj, $controller)
     {
-         return $pluginCodeObj->toUrl().'/'.strtolower($controller);
+        return $pluginCodeObj->toUrl().'/'.strtolower($controller);
     }
 }

@@ -15,9 +15,6 @@ trait HasNavigation
     {
         $model = $this->loadOrCreateMenusModel();
         $model->menus = array_merge($model->menus, $this->makeNavigationItems());
-
-        traceLog($model->menus);
-
         $model->validate();
     }
 
@@ -50,16 +47,14 @@ trait HasNavigation
             }
 
             $menuItem = $primaryNav->toBackendMenuArray();
-            // @todo set controller URL
-            // $menuItem['url'] = '';
+            $menuItem['url'] = $this->getControllerUrl();
             $menuItem['code'] = $primaryNav->code;
             $menuItem['sideMenu'] = [];
 
             $secondaryNav = $indexer->findSecondaryNavigation($blueprint->uuid);
             if ($secondaryNav && $secondaryNav->hasPrimary) {
                 $subItem = $secondaryNav->toBackendMenuArray();
-                // @todo set controller URL
-                // $subItem['url'] = '';
+                $subItem['url'] = $this->getControllerUrl();
                 $subItem['code'] = $secondaryNav->code;
                 $subItem['permissions'] = [$this->getConfig('permissionCode')];
                 $menuItem['sideMenu'][$secondaryNav->code] = $subItem;
@@ -82,8 +77,7 @@ trait HasNavigation
             }
 
             $subItem = $secondaryNav->toBackendMenuArray();
-            // @todo set controller URL
-            // $subItem['url'] = '';
+            $subItem['url'] = $this->getControllerUrl();
             $subItem['code'] = $secondaryNav->code;
             $subItem['permissions'] = [$this->getConfig('permissionCode')];
 
@@ -113,5 +107,13 @@ trait HasNavigation
         $model->setPluginCodeObj($this->sourceModel->getPluginCodeObj());
 
         return $model;
+    }
+
+    /**
+     * getControllerUrl
+     */
+    protected function getControllerUrl()
+    {
+        return $this->sourceModel->getPluginCodeObj()->toUrl().'/'.strtolower($this->getConfig('controllerClass'));
     }
 }

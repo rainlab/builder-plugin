@@ -78,19 +78,19 @@ class BlueprintGenerator
         // Validate
         foreach ($this->sourceBlueprints as $blueprint) {
             $this->setBlueprintContext($blueprint);
-            // $this->validatePermission();
-            // $this->validateModel();
-            // $this->validateController();
+            $this->validatePermission();
+            $this->validateModel();
+            $this->validateController();
         }
 
         // Generate
         try {
             foreach ($this->sourceBlueprints as $blueprint) {
                 $this->setBlueprintContext($blueprint);
-                // $this->generateMigration();
-                // $this->generatePermission();
-                // $this->generateModel();
-                // $this->generateController();
+                $this->generateMigration();
+                $this->generatePermission();
+                $this->generateModel();
+                $this->generateController();
 
                 $this->blueprintFiles[] = $blueprint->getFilePath();
             }
@@ -101,8 +101,7 @@ class BlueprintGenerator
         }
 
         $this->generateNavigation();
-// debug
-        // $this->disableGeneratedBlueprints();
+        $this->disableGeneratedBlueprints();
     }
 
     /**
