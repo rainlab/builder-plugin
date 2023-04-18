@@ -3,7 +3,6 @@
 use RainLab\Builder\Classes\IndexOperationsBehaviorBase;
 use RainLab\Builder\Models\ImportsModel;
 use RainLab\Builder\Classes\PluginCode;
-use Request;
 use Flash;
 
 /**
@@ -56,14 +55,14 @@ class IndexImportsOperations extends IndexOperationsBehaviorBase
 
         Flash::success(__("Import Complete"));
 
-        $result = [];
-        $result['builderResponseData'] = [
+        $builderResponseData = [
             'tabId' => $this->getTabId($pluginCode),
             'tabTitle' => $model->getPluginName().'/'.__("Import"),
         ];
 
-// debug
-        // $result['#blueprintList'] = '';
+        // Refresh everything
+        $result = $this->controller->setBuilderActivePlugin($pluginCode);
+        $result['builderResponseData'] = $builderResponseData;
 
         return $result;
     }

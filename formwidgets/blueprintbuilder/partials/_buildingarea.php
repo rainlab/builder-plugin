@@ -12,7 +12,6 @@
             <div class="add-blueprint-button">
                 <a href="javascript:;"
                     data-hotkey="ctrl+i, cmd+i"
-                    <?php /*data-builder-command="imports:cmdAddBlueprintItem"*/ ?>
                     data-control="popup"
                     data-handler="<?= $this->getEventHandler('onShowSelectBlueprintForm') ?>"
                 >

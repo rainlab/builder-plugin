@@ -36,10 +36,15 @@
     }
 
     Imports.prototype.cmdSaveImports = function(ev) {
-        var $target = $(ev.currentTarget),
-            $form = $target.closest('form');
+        var $target = $(ev.currentTarget);
+        $.oc.confirm($target.data('confirm'), this.proxy(this.saveImportsConfirmed));
+    }
 
-        $target.request('onImportsSave', {
+    Imports.prototype.saveImportsConfirmed = function(ev) {
+        var $masterTabPane = this.getMasterTabsActivePane(),
+            $form = $masterTabPane.find('form');
+
+        $form.request('onImportsSave', {
             data: {}
         }).done(
             this.proxy(this.saveImportsDone)
@@ -47,11 +52,11 @@
     }
 
     Imports.prototype.cmdAddBlueprintItem = function(ev) {
-        $.oc.builder.blueprintbuilder.controller.addBlueprintItem(ev)
+        // $.oc.builder.blueprintbuilder.controller.addBlueprintItem(ev)
     }
 
     Imports.prototype.cmdRemoveBlueprintItem = function(ev) {
-        $.oc.builder.blueprintbuilder.controller.removeBlueprint(ev)
+        // $.oc.builder.blueprintbuilder.controller.removeBlueprint(ev)
     }
 
     // INTERNAL METHODS
@@ -62,9 +67,25 @@
             throw new Error('Invalid response data');
         }
 
-        var $masterTabPane = this.getMasterTabsActivePane();
+        this.hideInspector();
+        $('#blueprintList').html('');
 
+        var $masterTabPane = this.getMasterTabsActivePane();
         this.getIndexController().unchangeTab($masterTabPane);
+    }
+
+    Imports.prototype.hideInspector = function() {
+        var $container = $('.blueprint-container.inspector-open:first');
+
+        if ($container.length) {
+            var $inspectorContainer = this.findInspectorContainer($container);
+            $.oc.foundation.controlUtils.disposeControls($inspectorContainer.get(0));
+        }
+    }
+
+    Imports.prototype.findInspectorContainer = function($element) {
+        var $containerRoot = $element.closest('[data-inspector-container]')
+        return $containerRoot.find('.inspector-container')
     }
 
     // REGISTRATION
