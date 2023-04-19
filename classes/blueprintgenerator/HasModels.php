@@ -105,6 +105,16 @@ trait HasModels
             'attributeNames' => $container->attributeNames,
             'customMessages' => $container->customMessages,
         ];
+
+        $blueprint = $this->sourceModel->getBlueprintObject();
+        if ($blueprint->useMultisite()) {
+            $model->traits[] = \October\Rain\Database\Traits\Multisite::class;
+
+            $model->multisiteDefinition = [
+                'fields' => $container->propagatable,
+                'sync' => $blueprint->useMultisiteSync()
+            ];
+        }
     }
 
     /**

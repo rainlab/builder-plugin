@@ -14,5 +14,5 @@ class {classname} extends Model
      * @var string table in the database used by the model.
      */
     public $table = '{table}';
-{validationContents}{relationContents}
+{validationContents}{multisiteContents}{relationContents}
 }

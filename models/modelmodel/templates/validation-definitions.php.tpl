@@ -1,5 +1,5 @@
-
 {% if validation %}{% if validation.rules %}
+
     /**
      * @var array rules for validation.
      */
@@ -11,6 +11,7 @@
 
     ];
 {% endif %}{% if validation.attributeNames %}
+
     /**
      * @var array attributeNames for validation.
      */
@@ -22,6 +23,7 @@
 
     ];
 {% endif %}{% if validation.customMessages %}
+
     /**
      * @var array customMessages for validation.
      */
@@ -33,6 +35,7 @@
 
     ];
 {% endif %}{% else %}
+
     /**
      * @var array rules for validation.
      */

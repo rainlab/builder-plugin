@@ -27,6 +27,11 @@ class ModelContainer extends Model
     public $customMessages = [];
 
     /**
+     * @var array propagatable list of attributes to propagate to other sites.
+     */
+    protected $propagatable = [];
+
+    /**
      * @var array relatedBlueprints
      */
     protected $relatedBlueprints;
@@ -35,6 +40,17 @@ class ModelContainer extends Model
      * @var object sourceModel
      */
     protected $sourceModel;
+
+    /**
+     * addPropagatable attributes for the model.
+     * @param  array|string|null  $attributes
+     */
+    public function addPropagatable($attributes = null)
+    {
+        $attributes = is_array($attributes) ? $attributes : func_get_args();
+
+        $this->propagatable = array_merge($this->propagatable, $attributes);
+    }
 
     /**
      * getBlueprintAttribute

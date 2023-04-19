@@ -43,14 +43,19 @@ class ModelModel extends BaseModel
     ];
 
     /**
-     * @var array relationDefinitions
+     * @var array relationDefinitions (belongsTo, belongsToMany, etc.)
      */
     public $relationDefinitions = [];
 
     /**
-     * @var array validationDefinitions
+     * @var array validationDefinitions (rules, attributeNames, customMessages)
      */
     public $validationDefinitions = [];
+
+    /**
+     * @var array multisiteDefinition (fields, sync)
+     */
+    public $multisiteDefinition;
 
     /**
      * @var bool addSoftDeleting
@@ -185,7 +190,6 @@ class ModelModel extends BaseModel
 
         // Validation contents
         $validationDefinitions = $this->validationDefinitions;
-
         foreach ($validationDefinitions as $type => &$definitions) {
             foreach ($definitions as $field => &$rule) {
                 // Cannot process anything other than string at this time
@@ -234,6 +238,13 @@ class ModelModel extends BaseModel
         }
 
         $generator->setVariable('relationContents', implode(PHP_EOL, $relationContents));
+
+        // Multisite contents
+        $multisiteTemplate = File::get(__DIR__.'/modelmodel/templates/multisite-definitions.php.tpl');
+
+        $multisiteContents = Twig::parse($multisiteTemplate, ['multisite' => $this->multisiteDefinition]);
+
+        $generator->setVariable('multisiteContents', $multisiteContents);
 
         $generator->generate();
     }
