@@ -119,6 +119,7 @@ trait HasModels
         $fieldset->defineAllFormFields($container);
 
         $model->controls = [
+            'fields' => $container->getPrimaryControls(),
             'tabs' => ['fields' => $container->getControls()]
         ];
 
@@ -143,6 +144,8 @@ trait HasModels
         $fieldset = $this->sourceModel->getBlueprintFieldset();
 
         $fieldset->defineAllListColumns($container);
+
+        $container->postProcessControls();
 
         $model->columns = $container->getControls();
 

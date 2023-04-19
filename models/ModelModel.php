@@ -41,14 +41,20 @@ class ModelModel extends BaseModel
     public $relationDefinitions = [];
 
     /**
-     * @var bool skipDbValidation
+     * @var bool addSoftDeleting
      */
-    public $skipDbValidation = false;
+    public $addTimestamps = false;
 
     /**
      * @var bool addSoftDeleting
      */
     public $addSoftDeleting = false;
+
+    /**
+     * @var bool skipDbValidation
+     */
+    public $skipDbValidation = false;
+
 
     /**
      * @var array fillable

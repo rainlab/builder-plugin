@@ -27,6 +27,20 @@ class ListElementContainer implements ListElement
     }
 
     /**
+     * postProcessControls
+     */
+    public function postProcessControls()
+    {
+        foreach ($this->columns as $field) {
+            // Downgrade tailor partials
+            if ($field->type === 'partial' && starts_with($field->path, '~/modules/tailor/contentfields/')) {
+                $field->displayAs('text');
+                $field->path(null);
+            }
+        }
+    }
+
+    /**
      * getControls
      */
     public function getControls(): array

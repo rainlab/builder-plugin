@@ -39,6 +39,28 @@ class FormElementContainer extends FieldsetDefinition implements FormElement
     }
 
     /**
+     * getPrimaryControls
+     */
+    public function getPrimaryControls()
+    {
+        $controls = [];
+
+        $controls['title'] = ['label' => 'Title', 'span' => 'full'];
+
+        $controls['slug'] = ['label' => 'Slug', 'preset' => ['field' => 'title', 'type' => 'slug']];
+
+        $controls['is_enabled'] = ['label' => 'Enabled', 'type' => 'switch', 'defaults' => true];
+
+        $controls['published_at'] = ['label' => 'Publish Date', 'type' => 'datepicker', 'defaultTimeMidnight' => true];
+
+        $controls['expired_at'] = ['label' => 'Expiry Date', 'type' => 'datepicker', 'defaultTimeMidnight' => true];
+
+        $controls['parent_id'] = ['label' => 'Parent', 'type' => 'dropdown', 'options' => []];
+
+        return $controls;
+    }
+
+    /**
      * getControls
      */
     public function getControls(): array
