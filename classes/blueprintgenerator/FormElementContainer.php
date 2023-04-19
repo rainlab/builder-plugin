@@ -43,16 +43,16 @@ class FormElementContainer extends FieldsetDefinition implements FormElement
      */
     public function getPrimaryControls()
     {
-        $controls = [];
+        $controls = new self;
 
-        $controls['title'] = (new FieldDefinition)->label('Title')->span('full')->getConfig();
-        $controls['slug'] = (new FieldDefinition)->label('Slug')->preset(['field' => 'title', 'type' => 'slug'])->getConfig();
-        $controls['is_enabled'] = (new FieldDefinition)->label('Enabled')->displayAs('switch')->defaults(true)->getConfig();
-        $controls['published_at'] = (new FieldDefinition)->label('Publish Date')->displayAs('datepicker')->defaultTimeMidnight()->getConfig();
-        $controls['expired_at'] = (new FieldDefinition)->label('Expiry Date')->displayAs('datepicker')->defaultTimeMidnight()->getConfig();
-        $controls['parent_id'] = (new FieldDefinition)->label('Parent')->displayAs('dropdown')->getConfig();
+        $controls->addFormField('title', 'Title')->span('full');
+        $controls->addFormField('slug', 'Slug')->preset(['field' => 'title', 'type' => 'slug']);
+        $controls->addFormField('is_enabled', 'Enabled')->displayAs('switch')->defaults(true);
+        $controls->addFormField('published_at', 'Publish Date')->displayAs('datepicker')->defaultTimeMidnight();
+        $controls->addFormField('expired_at', 'Expiry Date')->displayAs('datepicker')->defaultTimeMidnight();
+        $controls->addFormField('parent_id', 'Parent')->displayAs('dropdown');
 
-        return $controls;
+        return $controls->getControls();
     }
 
     /**
@@ -78,6 +78,7 @@ class FormElementContainer extends FieldsetDefinition implements FormElement
         $ignoreConfig = [
             'fieldName',
             'source',
+            'inverse',
             'externalToolbarAppState',
             'externalToolbarEventBus'
         ];
