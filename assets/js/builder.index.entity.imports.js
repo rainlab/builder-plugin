@@ -51,6 +51,11 @@
         );
     }
 
+    Imports.prototype.cmdMigrateDatabase = function(ev) {
+        var $target = $(ev.currentTarget);
+        $target.request('onMigrateDatabase');
+    }
+
     Imports.prototype.cmdAddBlueprintItem = function(ev) {
         // $.oc.builder.blueprintbuilder.controller.addBlueprintItem(ev)
     }

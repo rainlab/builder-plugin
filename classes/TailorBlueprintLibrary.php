@@ -60,7 +60,7 @@ class TailorBlueprintLibrary
         $fieldset = $indexer->findContentFieldset($blueprintUuid);
 
         $result = [];
-        foreach ($fieldset->getAllFields() as $field) {
+        foreach ($fieldset->getAllFields() as $name => $field) {
             // Loose check: if a field includes a "source" it can be considered
             // a positive match for a related tailor field, so check it
             if (!$field->source || $field->type === 'mixin') {
@@ -72,7 +72,7 @@ class TailorBlueprintLibrary
                 continue;
             }
 
-            $result[] = $bp->uuid;
+            $result[$name] = $bp->uuid;
         }
 
         return $result;

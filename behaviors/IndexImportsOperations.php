@@ -3,6 +3,7 @@
 use RainLab\Builder\Classes\IndexOperationsBehaviorBase;
 use RainLab\Builder\Models\ImportsModel;
 use RainLab\Builder\Classes\PluginCode;
+use System\Classes\VersionManager;
 use Flash;
 
 /**
@@ -65,6 +66,18 @@ class IndexImportsOperations extends IndexOperationsBehaviorBase
         $result['builderResponseData'] = $builderResponseData;
 
         return $result;
+    }
+
+    /**
+     * onMigrateDatabase
+     */
+    public function onMigrateDatabase()
+    {
+        $pluginCodeObj = new PluginCode(post('plugin_code'));
+
+        VersionManager::instance()->updatePlugin($pluginCodeObj->toCode());
+
+        Flash::success(__("Migration Complete"));
     }
 
     /**

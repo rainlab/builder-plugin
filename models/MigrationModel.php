@@ -1,12 +1,12 @@
 <?php namespace RainLab\Builder\Models;
 
-use RainLab\Builder\Classes\MigrationFileParser;
-use RainLab\Builder\Classes\PluginVersion;
 use Str;
 use Lang;
 use File;
 use Yaml;
 use Validator;
+use RainLab\Builder\Classes\MigrationFileParser;
+use RainLab\Builder\Classes\PluginVersion;
 use System\Classes\VersionManager;
 use October\Rain\Parse\Bracket as TextParser;
 use ApplicationException;
@@ -55,18 +55,27 @@ class MigrationModel extends BaseModel
      */
     public $originalScriptFileName;
 
+    /**
+     * @var array fillable
+     */
     protected static $fillable = [
         'version',
         'description',
         'code'
     ];
 
+    /**
+     * @var array validationRules
+     */
     protected $validationRules = [
         'version' => ['required', 'regex:/^[0-9]+\.[0-9]+\.[0-9]+$/', 'uniqueVersion'],
         'description' => ['required'],
         'scriptFileName' => ['regex:/^[a-z]+[a-z0-9_]+$/']
     ];
 
+    /**
+     * validate
+     */
     public function validate()
     {
         $isNewModel = $this->isNewModel();
@@ -95,6 +104,9 @@ class MigrationModel extends BaseModel
         return parent::validate();
     }
 
+    /**
+     * getNextVersion
+     */
     public function getNextVersion()
     {
         $versionInformation = $this->getPluginVersionInformation();
@@ -115,7 +127,7 @@ class MigrationModel extends BaseModel
     }
 
     /**
-     * Saves the migration and applies all outstanding migrations for the plugin.
+     * save the migration and applies all outstanding migrations for the plugin.
      */
     public function save($executeOnSave = true)
     {
@@ -154,6 +166,9 @@ class MigrationModel extends BaseModel
         $this->exists = true;
     }
 
+    /**
+     * load
+     */
     public function load($versionNumber)
     {
         $versionNumber = trim($versionNumber);
@@ -195,6 +210,9 @@ class MigrationModel extends BaseModel
         $this->originalScriptFileName = $this->scriptFileName;
     }
 
+    /**
+     * initVersion
+     */
     public function initVersion($versionType)
     {
         $versionTypes = ['migration', 'seeder', 'custom'];
@@ -231,6 +249,9 @@ class MigrationModel extends BaseModel
         $this->scriptFileName = $scriptFileName;
     }
 
+    /**
+     * makeScriptFileNameUnique
+     */
     public function makeScriptFileNameUnique()
     {
         $updatesPath = $this->getPluginUpdatesPath();
@@ -245,6 +266,9 @@ class MigrationModel extends BaseModel
         return $this->scriptFileName = $fileName;
     }
 
+    /**
+     * deleteModel
+     */
     public function deleteModel()
     {
         if ($this->isApplied()) {
@@ -255,6 +279,9 @@ class MigrationModel extends BaseModel
         $this->removeScriptFile();
     }
 
+    /**
+     * isApplied
+     */
     public function isApplied()
     {
         if ($this->isNewModel()) {
@@ -267,6 +294,9 @@ class MigrationModel extends BaseModel
         return !array_key_exists($this->originalVersion, $unappliedVersions);
     }
 
+    /**
+     * apply
+     */
     public function apply()
     {
         if ($this->isApplied()) {
@@ -277,6 +307,9 @@ class MigrationModel extends BaseModel
         $versionManager->updatePlugin($this->pluginCodeObj->toCode(), $this->version);
     }
 
+    /**
+     * rollback
+     */
     public function rollback()
     {
         if (!$this->isApplied()) {
@@ -287,6 +320,9 @@ class MigrationModel extends BaseModel
         $versionManager->removePlugin($this->pluginCodeObj->toCode(), $this->version);
     }
 
+    /**
+     * assignFileName
+     */
     protected function assignFileName()
     {
         $code = trim($this->code);
@@ -340,6 +376,9 @@ class MigrationModel extends BaseModel
         }
     }
 
+    /**
+     * saveScriptFile
+     */
     protected function saveScriptFile()
     {
         $originalFileContents = $this->getOriginalFileContents();
@@ -364,6 +403,9 @@ class MigrationModel extends BaseModel
         return $originalFileContents;
     }
 
+    /**
+     * getOriginalFileContents
+     */
     protected function getOriginalFileContents()
     {
         if (!strlen($this->originalScriptFileName)) {
@@ -376,6 +418,9 @@ class MigrationModel extends BaseModel
         }
     }
 
+    /**
+     * loadScriptFile
+     */
     protected function loadScriptFile()
     {
         $scriptFilePath = $this->getPluginUpdatesPath($this->scriptFileName.'.php');
@@ -387,6 +432,9 @@ class MigrationModel extends BaseModel
         return File::get($scriptFilePath);
     }
 
+    /**
+     * removeScriptFile
+     */
     protected function removeScriptFile()
     {
         $scriptFilePath = $this->getPluginUpdatesPath($this->scriptFileName.'.php');
@@ -395,6 +443,9 @@ class MigrationModel extends BaseModel
         @unlink($scriptFilePath);
     }
 
+    /**
+     * rollbackScriptFile
+     */
     protected function rollbackScriptFile($fileContents)
     {
         $scriptFilePath = $this->getPluginUpdatesPath($this->originalScriptFileName.'.php');
@@ -407,6 +458,9 @@ class MigrationModel extends BaseModel
         }
     }
 
+    /**
+     * rollbackSaving
+     */
     protected function rollbackSaving($originalVersionData, $originalScriptFileContents)
     {
         if ($originalVersionData) {
@@ -421,6 +475,9 @@ class MigrationModel extends BaseModel
         }
     }
 
+    /**
+     * insertOrUpdateVersion
+     */
     protected function insertOrUpdateVersion()
     {
         $versionFilePath = $this->getPluginUpdatesPath('version.yaml');
@@ -460,6 +517,9 @@ class MigrationModel extends BaseModel
         return $originalFileContents;
     }
 
+    /**
+     * deleteVersion
+     */
     protected function deleteVersion()
     {
         $versionInformation = $this->getPluginVersionInformation();
@@ -481,12 +541,18 @@ class MigrationModel extends BaseModel
         @File::chmod($versionFilePath);
     }
 
+    /**
+     * rollbackVersionFile
+     */
     protected function rollbackVersionFile($fileData)
     {
         $versionFilePath = $this->getPluginUpdatesPath('version.yaml');
         File::put($versionFilePath, $fileData);
     }
 
+    /**
+     * getPluginUpdatesPath
+     */
     protected function getPluginUpdatesPath($fileName = null)
     {
         $pluginCodeObj = $this->getPluginCodeObj();
@@ -501,6 +567,9 @@ class MigrationModel extends BaseModel
         return $filePath;
     }
 
+    /**
+     * getPluginVersionInformation
+     */
     protected function getPluginVersionInformation()
     {
         $versionObj = new PluginVersion;

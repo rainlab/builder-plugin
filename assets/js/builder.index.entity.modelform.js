@@ -74,7 +74,7 @@
             return column.add
         }).reverse()
 
-        // Hide the poup and initialize the load indicator.
+        // Hide the popup and initialize the load indicator.
         $target.closest('.control-popup').data('oc.popup').hide()
         $.oc.stripeLoadIndicator.show()
 
