@@ -11,13 +11,14 @@ class {classname} extends Model
     {dynamicContents}
 
     /**
-     * @var string The database table used by the model.
+     * @var string table in the database used by the model.
      */
     public $table = '{table}';
 
     /**
-     * @var array Validation rules
+     * @var array rules for validation.
      */
     public $rules = [
     ];
+{relationContents}
 }

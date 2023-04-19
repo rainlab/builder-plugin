@@ -1,5 +1,11 @@
 <?php namespace RainLab\Builder\Models;
 
+use Str;
+use Twig;
+use Lang;
+use File;
+use Schema;
+use Validator;
 use RainLab\Builder\Classes\EnumDbType;
 use RainLab\Builder\Classes\FilesystemGenerator;
 use RainLab\Builder\Classes\MigrationColumnType;
@@ -8,11 +14,6 @@ use RainLab\Builder\Classes\PluginCode;
 use DirectoryIterator;
 use ApplicationException;
 use SystemException;
-use Validator;
-use Lang;
-use File;
-use Schema;
-use Str;
 
 /**
  * ModelModel manages plugin models.
@@ -35,9 +36,19 @@ class ModelModel extends BaseModel
     public $databaseTable;
 
     /**
+     * @var array relationDefinitions
+     */
+    public $relationDefinitions = [];
+
+    /**
      * @var bool skipDbValidation
      */
     public $skipDbValidation = false;
+
+    /**
+     * @var bool addSoftDeleting
+     */
+    public $addSoftDeleting = false;
 
     /**
      * @var array fillable
@@ -45,8 +56,9 @@ class ModelModel extends BaseModel
     protected static $fillable = [
         'className',
         'databaseTable',
+        'relationDefinitions',
         'addTimestamps',
-        'addSoftDeleting'
+        'addSoftDeleting',
     ];
 
     /**
@@ -125,10 +137,11 @@ class ModelModel extends BaseModel
             'table' => $this->databaseTable
         ];
 
-        $dynamicContents = [];
-
         $generator = new FilesystemGenerator('$', $structure, '$/rainlab/builder/models/modelmodel/templates');
         $generator->setVariables($variables);
+
+        // Dynamic contents
+        $dynamicContents = [];
 
         if ($this->addSoftDeleting) {
             $dynamicContents[] = $generator->getTemplateContents('soft-delete.php.tpl');
@@ -139,6 +152,40 @@ class ModelModel extends BaseModel
         }
 
         $generator->setVariable('dynamicContents', implode('', $dynamicContents));
+
+        // Relation contents
+        $relationContents = [];
+
+        $relationTemplate = File::get(__DIR__.'/modelmodel/templates/relation-definitions.php.tpl');
+
+        foreach ($this->relationDefinitions as $relationType => $definitions) {
+            if (!$definitions) {
+                continue;
+            }
+
+            $relationVars = [
+                'relationType' => $relationType,
+                'relations' => [],
+            ];
+
+            foreach ($definitions as $relationName => $definition) {
+                $modelClass = array_shift($definition);
+
+                $props = $definition;
+                foreach ($props as &$prop) {
+                    $prop = var_export($prop, true);
+                }
+
+                $relationVars['relations'][$relationName] = [
+                    'class' => $modelClass,
+                    'props' => $props
+                ];
+            }
+
+            $relationContents[] = Twig::parse($relationTemplate, $relationVars);
+        }
+
+        $generator->setVariable('relationContents', implode(PHP_EOL, $relationContents));
 
         $generator->generate();
     }

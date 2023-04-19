@@ -4,6 +4,7 @@ use RainLab\Builder\Models\ModelModel;
 use RainLab\Builder\Models\ModelFormModel;
 use RainLab\Builder\Models\ModelListModel;
 use RainLab\Builder\Models\ModelFilterModel;
+use RainLab\Builder\Classes\BlueprintGenerator\ModelContainer;
 use RainLab\Builder\Classes\BlueprintGenerator\ListElementContainer;
 use RainLab\Builder\Classes\BlueprintGenerator\FormElementContainer;
 use RainLab\Builder\Classes\BlueprintGenerator\FilterElementContainer;
@@ -71,6 +72,8 @@ trait HasModels
 
         $model->databaseTable = $this->getConfig('tableName');
 
+        $model->relationDefinitions = $this->makeModelRelationDefinitions();
+
         $model->addTimestamps = true;
 
         $model->addSoftDeleting = true;
@@ -78,6 +81,22 @@ trait HasModels
         $model->skipDbValidation = true;
 
         return $model;
+    }
+
+    /**
+     * makeModelRelationDefinitions
+     */
+    protected function makeModelRelationDefinitions()
+    {
+        $container = new ModelContainer;
+
+        $container->setBlueprintDefinition($this->sourceModel->getBlueprintObject());
+
+        $fieldset = $this->sourceModel->getBlueprintFieldset();
+
+        $fieldset->applyModelExtensions($container);
+
+        return $container->getRelationDefinitions();
     }
 
     /**
