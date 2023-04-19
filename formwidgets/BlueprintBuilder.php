@@ -106,6 +106,7 @@ class BlueprintBuilder extends FormWidgetBase
 
         if (post('BlueprintBuilder[include_related]')) {
             $availableUuids = $this->getSelectFormWidget()->getModel()->getBlueprintUuidOptions();
+            unset($availableUuids[$uuid]);
             $this->appendRelatedBlueprintsToOutput($uuid, $result, $availableUuids);
         }
 

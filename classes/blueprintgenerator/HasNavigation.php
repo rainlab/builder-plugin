@@ -9,10 +9,16 @@ use RainLab\Builder\Models\MenusModel;
 trait HasNavigation
 {
     /**
+     * @var array seenMenuItems is map of uuid => menu_code
+     */
+    protected $seenMenuItems = [];
+
+    /**
      * validateNavigation
      */
     protected function validateNavigation()
     {
+        $this->seenMenuItems = [];
         $model = $this->loadOrCreateMenusModel();
         $model->menus = array_merge($model->menus, $this->makeNavigationItems());
         $model->validate();
@@ -58,6 +64,7 @@ trait HasNavigation
                 $subItem['code'] = $secondaryNav->code;
                 $subItem['permissions'] = [$this->getConfig('permissionCode')];
                 $menuItem['sideMenu'][$secondaryNav->code] = $subItem;
+                $this->seenMenuItems[$blueprint->uuid] = $secondaryNav->code;
             }
 
             $menus[$primaryNav->code] = $menuItem;
@@ -80,6 +87,7 @@ trait HasNavigation
             $subItem['url'] = $this->getControllerUrl();
             $subItem['code'] = $secondaryNav->code;
             $subItem['permissions'] = [$this->getConfig('permissionCode')];
+            $this->seenMenuItems[$blueprint->uuid] = $secondaryNav->code;
 
             $menus[$secondaryNav->parentCode]['sideMenu'][$secondaryNav->code] = $subItem;
         }
@@ -115,5 +123,15 @@ trait HasNavigation
     protected function getControllerUrl()
     {
         return $this->sourceModel->getPluginCodeObj()->toUrl().'/'.strtolower($this->getConfig('controllerClass'));
+    }
+
+    /**
+     * getActiveMenuItemCode
+     */
+    protected function getActiveMenuItemCode()
+    {
+        $uuid = $this->sourceModel->getBlueprintObject()->uuid;
+
+        return $this->seenMenuItems[$uuid] ?? 'unknown';
     }
 }

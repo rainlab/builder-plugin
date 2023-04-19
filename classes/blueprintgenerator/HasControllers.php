@@ -44,6 +44,8 @@ trait HasControllers
 
         $controller->controller = $this->getConfig('controllerClass');
 
+        $controller->menuItem = $this->getActiveMenuItemCode();
+
         $controller->permissions = [$this->getConfig('permissionCode')];
 
         $controller->behaviors = [
