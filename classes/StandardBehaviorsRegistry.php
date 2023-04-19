@@ -3,15 +3,21 @@
 use Lang;
 
 /**
- * Utility class for registering standard controller behaviors.
+ * StandardBehaviorsRegistry is a utility class for registering standard controller behaviors.
  *
  * @package rainlab\builder
  * @author Alexey Bobkov, Samuel Georges
  */
 class StandardBehaviorsRegistry
 {
+    /**
+     * @var object behaviorLibrary
+     */
     protected $behaviorLibrary;
 
+    /**
+     * __construct
+     */
     public function __construct($behaviorLibrary)
     {
         $this->behaviorLibrary = $behaviorLibrary;
@@ -19,6 +25,9 @@ class StandardBehaviorsRegistry
         $this->registerBehaviors();
     }
 
+    /**
+     * registerBehaviors
+     */
     protected function registerBehaviors()
     {
         $this->registerListBehavior();
@@ -26,6 +35,9 @@ class StandardBehaviorsRegistry
         $this->registerReorderBehavior();
     }
 
+    /**
+     * registerFormBehavior
+     */
     protected function registerFormBehavior()
     {
         $properties = [
@@ -167,9 +179,9 @@ class StandardBehaviorsRegistry
         ];
 
         $templates = [
-            '$/rainlab/builder/classes/standardbehaviorsregistry/formcontroller/templates/create.htm.tpl',
-            '$/rainlab/builder/classes/standardbehaviorsregistry/formcontroller/templates/update.htm.tpl',
-            '$/rainlab/builder/classes/standardbehaviorsregistry/formcontroller/templates/preview.htm.tpl'
+            '$/rainlab/builder/classes/standardbehaviorsregistry/formcontroller/templates/create.php.tpl',
+            '$/rainlab/builder/classes/standardbehaviorsregistry/formcontroller/templates/update.php.tpl',
+            '$/rainlab/builder/classes/standardbehaviorsregistry/formcontroller/templates/preview.php.tpl'
         ];
 
         $this->behaviorLibrary->registerBehavior(
@@ -184,6 +196,9 @@ class StandardBehaviorsRegistry
         );
     }
 
+    /**
+     * registerListBehavior
+     */
     protected function registerListBehavior()
     {
         $properties = [
@@ -341,8 +356,8 @@ class StandardBehaviorsRegistry
         ];
 
         $templates = [
-            '$/rainlab/builder/classes/standardbehaviorsregistry/listcontroller/templates/index.htm.tpl',
-            '$/rainlab/builder/classes/standardbehaviorsregistry/listcontroller/templates/_list_toolbar.htm.tpl'
+            '$/rainlab/builder/classes/standardbehaviorsregistry/listcontroller/templates/index.php.tpl',
+            '$/rainlab/builder/classes/standardbehaviorsregistry/listcontroller/templates/_list_toolbar.php.tpl'
         ];
 
         $this->behaviorLibrary->registerBehavior(
@@ -357,6 +372,9 @@ class StandardBehaviorsRegistry
         );
     }
 
+    /**
+     * registerReorderBehavior
+     */
     protected function registerReorderBehavior()
     {
         $properties = [
