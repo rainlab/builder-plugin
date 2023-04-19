@@ -72,8 +72,6 @@ trait HasModels
 
         $model->databaseTable = $this->getConfig('tableName');
 
-        $model->relationDefinitions = (array) $this->makeModelRelationDefinitions();
-
         $model->addTimestamps = true;
 
         $model->addSoftDeleting = true;
@@ -82,13 +80,15 @@ trait HasModels
 
         $model->traits[] = \Tailor\Traits\BlueprintRelationModel::class;
 
+        $this->extendModelWithModelSpecs($model);
+
         return $model;
     }
 
     /**
-     * makeModelRelationDefinitions
+     * extendModelWithModelSpecs
      */
-    protected function makeModelRelationDefinitions()
+    protected function extendModelWithModelSpecs($model)
     {
         $container = new ModelContainer;
 
@@ -98,7 +98,13 @@ trait HasModels
 
         $fieldset->applyModelExtensions($container);
 
-        return $container->getRelationDefinitions();
+        $model->relationDefinitions = (array) $container->getRelationDefinitions();
+
+        $model->validationDefinitions = [
+            'rules' => $container->rules + ['title' => 'required'],
+            'attributeNames' => $container->attributeNames,
+            'customMessages' => $container->customMessages,
+        ];
     }
 
     /**

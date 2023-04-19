@@ -48,6 +48,11 @@ class ModelModel extends BaseModel
     public $relationDefinitions = [];
 
     /**
+     * @var array validationDefinitions
+     */
+    public $validationDefinitions = [];
+
+    /**
      * @var bool addSoftDeleting
      */
     public $addTimestamps = false;
@@ -177,6 +182,24 @@ class ModelModel extends BaseModel
         }
 
         $generator->setVariable('dynamicContents', implode('', $dynamicContents));
+
+        // Validation contents
+        $validationDefinitions = $this->validationDefinitions;
+
+        foreach ($validationDefinitions as $type => &$definitions) {
+            foreach ($definitions as $field => &$rule) {
+                // Cannot process anything other than string at this time
+                if (!is_string($rule)) {
+                    unset($definitions[$field]);
+                }
+            }
+        }
+
+        $validationTemplate = File::get(__DIR__.'/modelmodel/templates/validation-definitions.php.tpl');
+
+        $validationContents = Twig::parse($validationTemplate, ['validation' => $validationDefinitions]);
+
+        $generator->setVariable('validationContents', $validationContents);
 
         // Relation contents
         $relationContents = [];

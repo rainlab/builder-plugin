@@ -9,6 +9,24 @@ use RainLab\Builder\Classes\TailorBlueprintLibrary;
 class ModelContainer extends Model
 {
     /**
+     * @var array rules for validation
+     *
+     */
+    public $rules = [];
+
+    /**
+     * @var array attributeNames of custom attributes
+     *
+     */
+    public $attributeNames = [];
+
+    /**
+     * @var array customMessages of custom error messages
+     *
+     */
+    public $customMessages = [];
+
+    /**
      * @var array relatedBlueprints
      */
     protected $relatedBlueprints;
