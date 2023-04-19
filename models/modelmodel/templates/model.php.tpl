@@ -7,8 +7,8 @@ use Model;
  */
 class {classname} extends Model
 {
-    use \October\Rain\Database\Traits\Validation;
-    {dynamicContents}
+{traitContents}
+{dynamicContents}
 
     /**
      * @var string table in the database used by the model.

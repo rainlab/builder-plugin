@@ -36,6 +36,13 @@ class ModelModel extends BaseModel
     public $databaseTable;
 
     /**
+     * @var array traits
+     */
+    public $traits = [
+        \October\Rain\Database\Traits\Validation:: class
+    ];
+
+    /**
      * @var array relationDefinitions
      */
     public $relationDefinitions = [];
@@ -54,7 +61,6 @@ class ModelModel extends BaseModel
      * @var bool skipDbValidation
      */
     public $skipDbValidation = false;
-
 
     /**
      * @var array fillable
@@ -145,6 +151,19 @@ class ModelModel extends BaseModel
 
         $generator = new FilesystemGenerator('$', $structure, '$/rainlab/builder/models/modelmodel/templates');
         $generator->setVariables($variables);
+
+        // Trait contents
+        if ($this->addSoftDeleting) {
+            $this->traits[] = \October\Rain\Database\Traits\SoftDelete::class;
+        }
+
+        usort($this->traits, function($a, $b) { return strlen($a) > strlen($b); });
+
+        $traitContents = [];
+        foreach ($this->traits as $trait) {
+            $traitContents[] = "    use \\{$trait};";
+        }
+        $generator->setVariable('traitContents', implode(PHP_EOL, $traitContents));
 
         // Dynamic contents
         $dynamicContents = [];

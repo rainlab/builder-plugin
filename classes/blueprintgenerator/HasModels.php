@@ -64,7 +64,7 @@ trait HasModels
      */
     protected function makeModelModel()
     {
-        $model = new ModelModel();
+        $model = new ModelModel;
 
         $model->setPluginCodeObj($this->sourceModel->getPluginCodeObj());
 
@@ -79,6 +79,8 @@ trait HasModels
         $model->addSoftDeleting = true;
 
         $model->skipDbValidation = true;
+
+        $model->traits[] = \Tailor\Traits\BlueprintRelationModel::class;
 
         return $model;
     }
@@ -104,7 +106,7 @@ trait HasModels
      */
     protected function makeModelFormModel()
     {
-        $model = new ModelFormModel();
+        $model = new ModelFormModel;
 
         $model->setPluginCodeObj($this->sourceModel->getPluginCodeObj());
 
@@ -131,7 +133,7 @@ trait HasModels
      */
     protected function makeModelListModel()
     {
-        $model = new ModelListModel();
+        $model = new ModelListModel;
 
         $model->setPluginCodeObj($this->sourceModel->getPluginCodeObj());
 
@@ -157,7 +159,7 @@ trait HasModels
      */
     protected function makeModelFilterModel()
     {
-        $model = new ModelFilterModel();
+        $model = new ModelFilterModel;
 
         $model->setPluginCodeObj($this->sourceModel->getPluginCodeObj());
 

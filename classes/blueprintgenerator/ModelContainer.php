@@ -71,6 +71,9 @@ class ModelContainer extends Model
         if ($overrideClass = $this->findRelatedModelClass($name)) {
             $props[0] = $overrideClass;
         }
+        elseif ($overrideBlueprint = $this->findRelatedBlueprintUuid($name)) {
+            $props['blueprint'] = $overrideBlueprint;
+        }
 
         unset($props['relationClass']);
 
@@ -94,5 +97,17 @@ class ModelContainer extends Model
                 return $pluginCodeObj->toPluginNamespace().'\\Models\\'.$modelClass;
             }
         }
+    }
+
+    /**
+     * findRelatedBlueprintUuid
+     */
+    protected function findRelatedBlueprintUuid($relationName)
+    {
+        if ($this->relatedBlueprints === null) {
+            $this->relatedBlueprints = TailorBlueprintLibrary::instance()->getRelatedBlueprintUuids($this->blueprint->uuid);
+        }
+
+        return $this->relatedBlueprints[$relationName] ?? null;
     }
 }

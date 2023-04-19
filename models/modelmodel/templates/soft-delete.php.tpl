@@ -1,6 +1,4 @@
 
-    use \October\Rain\Database\Traits\SoftDelete;
-
     /**
      * @var array dates to cast from the database.
      */
