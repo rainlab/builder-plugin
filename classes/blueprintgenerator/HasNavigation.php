@@ -64,7 +64,7 @@ trait HasNavigation
                 $subItem['code'] = $secondaryNav->code;
                 $subItem['permissions'] = [$this->getConfig('permissionCode')];
                 $menuItem['sideMenu'][$secondaryNav->code] = $subItem;
-                $this->seenMenuItems[$blueprint->uuid] = $secondaryNav->code;
+                $this->seenMenuItems[$blueprint->uuid] = $primaryNav->code.'||'.$secondaryNav->code;
             }
 
             $menus[$primaryNav->code] = $menuItem;
@@ -87,7 +87,7 @@ trait HasNavigation
             $subItem['url'] = $this->getControllerUrl();
             $subItem['code'] = $secondaryNav->code;
             $subItem['permissions'] = [$this->getConfig('permissionCode')];
-            $this->seenMenuItems[$blueprint->uuid] = $secondaryNav->code;
+            $this->seenMenuItems[$blueprint->uuid] = $secondaryNav->parentCode.'||'.$secondaryNav->code;
 
             $menus[$secondaryNav->parentCode]['sideMenu'][$secondaryNav->code] = $subItem;
         }
