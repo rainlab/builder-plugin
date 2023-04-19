@@ -11,7 +11,8 @@
 {% endif %}
 {% endfor %}
 
-        ]{% if not loop.last %},{% endif %}
+        ]{% if not loop.last %},
+{% endif %}
 {% endfor %}
 
     ];

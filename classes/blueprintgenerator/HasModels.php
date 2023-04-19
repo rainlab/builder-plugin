@@ -72,7 +72,7 @@ trait HasModels
 
         $model->databaseTable = $this->getConfig('tableName');
 
-        $model->relationDefinitions = $this->makeModelRelationDefinitions();
+        $model->relationDefinitions = (array) $this->makeModelRelationDefinitions();
 
         $model->addTimestamps = true;
 
@@ -90,7 +90,7 @@ trait HasModels
     {
         $container = new ModelContainer;
 
-        $container->setBlueprintDefinition($this->sourceModel->getBlueprintObject());
+        $container->setSourceModel($this->sourceModel);
 
         $fieldset = $this->sourceModel->getBlueprintFieldset();
 

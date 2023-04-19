@@ -164,7 +164,7 @@ class ModelModel extends BaseModel
 
         $relationTemplate = File::get(__DIR__.'/modelmodel/templates/relation-definitions.php.tpl');
 
-        foreach ($this->relationDefinitions as $relationType => $definitions) {
+        foreach ((array) $this->relationDefinitions as $relationType => $definitions) {
             if (!$definitions) {
                 continue;
             }
