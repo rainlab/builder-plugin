@@ -24,6 +24,11 @@ class TailorBlueprintLibrary
     protected $blueprints = null;
 
     /**
+     * @var array blueprintUuidCache for repeat lookups
+     */
+    protected $blueprintUuidCache = [];
+
+    /**
      * getBlueprintInfo
      */
     public function getBlueprintInfo($blueprintUuid)
@@ -44,6 +49,33 @@ class TailorBlueprintLibrary
             'blueprintObj' => $blueprintObj,
             'blueprintClass' => get_class($blueprintObj)
         ] + $blueprints[$blueprintClassName];
+    }
+
+    /**
+     * getRelatedBlueprintUuids returns blueprints related to the supplied blueprint UUID
+     */
+    public function getRelatedBlueprintUuids($blueprintUuid)
+    {
+        $indexer = BlueprintIndexer::instance();
+        $fieldset = $indexer->findContentFieldset($blueprintUuid);
+
+        $result = [];
+        foreach ($fieldset->getAllFields() as $field) {
+            // Loose check: if a field includes a "source" it can be considered
+            // a positive match for a related tailor field, so check it
+            if (!$field->source || $field->type === 'mixin') {
+                continue;
+            }
+
+            $bp = $this->getBlueprintObject($field->source, $field->source);
+            if (!$bp) {
+                continue;
+            }
+
+            $result[] = $bp->uuid;
+        }
+
+        return $result;
     }
 
     /**
@@ -101,19 +133,27 @@ class TailorBlueprintLibrary
     /**
      * getBlueprintObject
      */
-    public function getBlueprintObject($uuid)
+    public function getBlueprintObject($uuid, $handle = null)
     {
-        $indexer = BlueprintIndexer::instance();
+        if (isset($this->blueprintUuidCache[$uuid])) {
+            return $this->blueprintUuidCache[$uuid];
+        }
 
         foreach (EntryBlueprint::listInProject() as $blueprint) {
             if ($blueprint->uuid === $uuid) {
-                return $blueprint;
+                return $this->blueprintUuidCache[$blueprint->uuid] = $blueprint;
+            }
+            if ($handle && $blueprint->handle === $handle) {
+                return $this->blueprintUuidCache[$blueprint->uuid] = $blueprint;
             }
         }
 
-        foreach (GlobalBlueprint::listInProject() as $section) {
+        foreach (GlobalBlueprint::listInProject() as $blueprint) {
             if ($blueprint->uuid === $uuid) {
-                return $blueprint;
+                return $this->blueprintUuidCache[$blueprint->uuid] = $blueprint;
+            }
+            if ($handle && $blueprint->handle === $handle) {
+                return $this->blueprintUuidCache[$blueprint->uuid] = $blueprint;
             }
         }
     }

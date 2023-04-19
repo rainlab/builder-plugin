@@ -98,12 +98,46 @@ class BlueprintBuilder extends FormWidgetBase
         $blueprintInfo = $this->getBlueprintInfo($uuid);
         $blueprintConfig = $this->generateBlueprintConfiguration($blueprintInfo);
 
-        return [
-            '@#blueprintList' => $this->makePartial('blueprint', [
+        $result = [];
+        $result[] = $this->makePartial('blueprint', [
+            'blueprintUuid' => $uuid,
+            'blueprintConfig' => $blueprintConfig
+        ]);
+
+        if (post('BlueprintBuilder[include_related]')) {
+            $availableUuids = $this->getSelectFormWidget()->getModel()->getBlueprintUuidOptions();
+            $this->appendRelatedBlueprintsToOutput($uuid, $result, $availableUuids);
+        }
+
+        return ['@#blueprintList' => implode(PHP_EOL, $result)];
+    }
+
+    /**
+     * appendRelatedBlueprintsToOutput
+     */
+    protected function appendRelatedBlueprintsToOutput($parentUuid, &$result, &$available)
+    {
+        $library = TailorBlueprintLibrary::instance();
+        $relatedUuids = $library->getRelatedBlueprintUuids($parentUuid);
+
+        foreach ($relatedUuids as $uuid) {
+            if (!isset($available[$uuid])) {
+                continue;
+            }
+
+            $blueprintInfo = $this->getBlueprintInfo($uuid);
+            $blueprintConfig = $this->generateBlueprintConfiguration($blueprintInfo);
+
+            $result[] = $this->makePartial('blueprint', [
                 'blueprintUuid' => $uuid,
                 'blueprintConfig' => $blueprintConfig
-            ])
-        ];
+            ]);
+
+            unset($available[$uuid]);
+
+            // Recursion
+            $this->appendRelatedBlueprintsToOutput($uuid, $result, $available);
+        }
     }
 
     /**

@@ -45,17 +45,12 @@ class FormElementContainer extends FieldsetDefinition implements FormElement
     {
         $controls = [];
 
-        $controls['title'] = ['label' => 'Title', 'span' => 'full'];
-
-        $controls['slug'] = ['label' => 'Slug', 'preset' => ['field' => 'title', 'type' => 'slug']];
-
-        $controls['is_enabled'] = ['label' => 'Enabled', 'type' => 'switch', 'defaults' => true];
-
-        $controls['published_at'] = ['label' => 'Publish Date', 'type' => 'datepicker', 'defaultTimeMidnight' => true];
-
-        $controls['expired_at'] = ['label' => 'Expiry Date', 'type' => 'datepicker', 'defaultTimeMidnight' => true];
-
-        $controls['parent_id'] = ['label' => 'Parent', 'type' => 'dropdown', 'options' => []];
+        $controls['title'] = (new FieldDefinition)->label('Title')->span('full')->getConfig();
+        $controls['slug'] = (new FieldDefinition)->label('Slug')->preset(['field' => 'title', 'type' => 'slug'])->getConfig();
+        $controls['is_enabled'] = (new FieldDefinition)->label('Enabled')->displayAs('switch')->defaults(true)->getConfig();
+        $controls['published_at'] = (new FieldDefinition)->label('Publish Date')->displayAs('datepicker')->defaultTimeMidnight()->getConfig();
+        $controls['expired_at'] = (new FieldDefinition)->label('Expiry Date')->displayAs('datepicker')->defaultTimeMidnight()->getConfig();
+        $controls['parent_id'] = (new FieldDefinition)->label('Parent')->displayAs('dropdown')->getConfig();
 
         return $controls;
     }
