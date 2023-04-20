@@ -163,7 +163,7 @@ trait HasModels
 
         $container->postProcessControls();
 
-        $model->columns = $container->getControls();
+        $model->columns = $container->getPrimaryControls() + $container->getControls();
 
         return $model;
     }

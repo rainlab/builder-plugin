@@ -45,12 +45,12 @@ class FormElementContainer extends FieldsetDefinition implements FormElement
      */
     public function getPrimaryControls()
     {
-        $controls = new self;
+        $host = new self;
 
-        $controls->addFormField('title', 'Title')->span('auto');
-        $controls->addFormField('slug', 'Slug')->preset(['field' => 'title', 'type' => 'slug'])->span('auto');
+        $host->addFormField('title', 'Title')->span('auto');
+        $host->addFormField('slug', 'Slug')->preset(['field' => 'title', 'type' => 'slug'])->span('auto');
 
-        return $controls->getControls();
+        return $host->getControls();
     }
 
     /**

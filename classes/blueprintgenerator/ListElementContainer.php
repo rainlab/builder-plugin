@@ -39,6 +39,20 @@ class ListElementContainer implements ListElement
     }
 
     /**
+     * getPrimaryControls
+     */
+    public function getPrimaryControls()
+    {
+        $host = new self;
+
+        $host->defineColumn('id', 'ID')->invisible();
+        $host->defineColumn('title', 'Title')->searchable(true);
+        $host->defineColumn('slug', 'Slug')->searchable(true)->invisible();
+
+        return $host->getControls();
+    }
+
+    /**
      * getControls
      */
     public function getControls(): array
