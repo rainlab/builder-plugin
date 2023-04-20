@@ -77,6 +77,10 @@ trait HasExpandoModels
 
         $model->baseClassName = \October\Rain\Database\ExpandoModel::class;
 
+        $model->relationDefinitions = (array) $container->getProcessedRelationDefinitions();
+
+        $model->validationDefinitions = (array) $container->getValidationDefinitions();
+
         $model->addRawContentToModel(<<<PHP
 
     /**
@@ -85,9 +89,21 @@ trait HasExpandoModels
     protected \$expandoPassthru = ['parent_id'];
 PHP);
 
-        $model->relationDefinitions = (array) $container->getProcessedRelationDefinitions();
+        if ($jsonable = $container->getJsonable()) {
+            $jsonableStr = '';
+            foreach ($jsonable as $j) {
+                $jsonableStr = "'".$j."', ";
+            }
+            $jsonableStr = trim($jsonableStr, ', ');
+            $model->addRawContentToModel(<<<PHP
 
-        $model->validationDefinitions = (array) $container->getValidationDefinitions();
+
+    /**
+     * @var array jsonable attribute names that are json encoded and decoded from the database
+     */
+    protected \$jsonable = [$jsonableStr];
+PHP);
+        }
 
         return $model;
     }
@@ -160,7 +176,7 @@ PHP);
 
         $fieldset->defineAllFormFields($container, ['context' => '*']);
 
-        $model->controls = [
+        $model->controls = array_except($formConfig, 'fields') + [
             'fields' => $container->getControls(),
         ];
 

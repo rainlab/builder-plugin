@@ -77,11 +77,28 @@ class FormElementContainer extends FieldsetDefinition implements FormElement
             $fieldObj->span('full');
         }
 
-        if ($fieldObj->type === 'recordfinder') {
-            if ($relatedModelClass = $this->findRelatedModelClass($fieldName)) {
-                $baseClass = mb_strtolower(class_basename($relatedModelClass));
-                $path = $this->sourceModel->getPluginCodeObj()->toPluginDirectoryPath().'/models/'.$baseClass.'/columns.yaml';
-                $fieldObj->list($path);
+            if ($fieldObj->type === 'recordfinder') {
+                $relatedModelClass = $this->findRelatedModelClass($fieldName);
+                if ($relatedModelClass) {
+                    $baseClass = mb_strtolower(class_basename($relatedModelClass));
+                    $path = $this->sourceModel->getPluginCodeObj()->toPluginDirectoryPath().'/models/'.$baseClass;
+                    $fieldObj->list($path.'/columns.yaml');
+                }
+            }
+
+        if ($fieldObj->type === 'repeater') {
+            $modelClass = $this->sourceModel->getBlueprintConfig('modelClass');
+            $baseClass = mb_strtolower(class_basename($modelClass)).mb_strtolower($fieldName).'item';
+            $path = $this->sourceModel->getPluginCodeObj()->toPluginDirectoryPath().'/models/'.$baseClass;
+            if ($fieldObj->groups) {
+                $newGroups = [];
+                foreach ($fieldObj->groups as $groupName => $groupConfig) {
+                    $newGroups[$groupName] = $path."/fields_{$groupName}.yaml";
+                }
+                $fieldObj->groups($newGroups);
+            }
+            else {
+                $fieldObj->form($path.'/fields.yaml');
             }
         }
 

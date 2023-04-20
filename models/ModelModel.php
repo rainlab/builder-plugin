@@ -50,12 +50,12 @@ class ModelModel extends BaseModel
     /**
      * @var array relationDefinitions (belongsTo, belongsToMany, etc.)
      */
-    public $relationDefinitions = [];
+    public $relationDefinitions;
 
     /**
      * @var array validationDefinitions (rules, attributeNames, customMessages)
      */
-    public $validationDefinitions = [];
+    public $validationDefinitions;
 
     /**
      * @var array multisiteDefinition (fields, sync)
@@ -204,7 +204,7 @@ class ModelModel extends BaseModel
         $generator->setVariable('dynamicContents', implode('', $dynamicContents));
 
         // Validation contents
-        $validationDefinitions = $this->validationDefinitions;
+        $validationDefinitions = (array) $this->validationDefinitions;
         foreach ($validationDefinitions as $type => &$definitions) {
             foreach ($definitions as $field => &$rule) {
                 // Cannot process anything other than string at this time

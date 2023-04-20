@@ -38,6 +38,10 @@ trait ContainerUtils
      */
     protected function findRelatedModelClass($relationName)
     {
+        if (!$this->sourceModel) {
+            return null;
+        }
+
         if ($this->relatedBlueprints === null) {
             $this->relatedBlueprints = TailorBlueprintLibrary::instance()->getRelatedBlueprintUuids($this->getBlueprintDefinition()->uuid);
         }
@@ -57,6 +61,10 @@ trait ContainerUtils
      */
     protected function findRelatedBlueprintUuid($relationName)
     {
+        if (!$this->sourceModel) {
+            return null;
+        }
+
         if ($this->relatedBlueprints === null) {
             $this->relatedBlueprints = TailorBlueprintLibrary::instance()->getRelatedBlueprintUuids($this->getBlueprintDefinition()->uuid);
         }

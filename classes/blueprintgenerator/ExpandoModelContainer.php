@@ -1,7 +1,5 @@
 <?php namespace RainLab\Builder\Classes\BlueprintGenerator;
 
-use Str;
-use Model;
 use ApplicationException;
 
 /**
@@ -24,7 +22,7 @@ class ExpandoModelContainer extends ModelContainer
         // Clean up props
         foreach ($definitions as $type => &$relations) {
             foreach ($relations as $name => &$props) {
-                $props = $this->processRelationDefinition($type, $name, $props);
+                $this->processRelationDefinition($type, $name, $props);
             }
         }
 
@@ -38,28 +36,28 @@ class ExpandoModelContainer extends ModelContainer
             if ($field->type === 'entries') {
                 $this->processEntryRelationDefinitions($definitions, $name, $field);
             }
+            if ($field->type === 'repeater') {
+                $this->processRepeaterRelationDefinitions($definitions, $name, $field);
+            }
         }
 
         return $definitions;
     }
 
     /**
-     * getRepeaterTableInfoFor
+     * processRepeaterRelationDefinitions
      */
-    public function getRepeaterTableInfoFor($fieldName, $fieldObj): ?array
+    protected function processRepeaterRelationDefinitions(&$definitions, $fieldName, $fieldObj)
     {
-        $tableName = $this->sourceModel->getBlueprintConfig('tableName');
-        if (!$tableName) {
-            throw new ApplicationException('Missing a table name');
+        foreach ($definitions as $type => &$relations) {
+            foreach ($relations as $name => &$props) {
+                if ($name === $fieldName && isset($props[0]) && $props[0] === \Tailor\Models\RepeaterItem::class) {
+                    // Field to be jsonable (nested)
+                    $this->addJsonable($name);
+                    unset($relations[$name]);
+                    break;
+                }
+            }
         }
-
-        $modelClass = $this->sourceModel->getBlueprintConfig('modelClass');
-        $repeaterTable = $tableName .= '_' . mb_strtolower($fieldName) . '_items';
-        $repeaterModelClass = $modelClass . Str::studly($fieldName) . 'Item';
-
-        return [
-            'tableName' => $repeaterTable,
-            'modelClass' => $repeaterModelClass
-        ];
     }
 }

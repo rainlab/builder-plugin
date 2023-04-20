@@ -1,4 +1,4 @@
-{% if validation %}{% if validation.rules %}
+{% if validation.rules or validation.attributeNames or validation.customMessages %}{% if validation.rules %}
 
     /**
      * @var array rules for validation.

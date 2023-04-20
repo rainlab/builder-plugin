@@ -60,22 +60,63 @@ class ModelContainer extends Model
     {
         $definitions = parent::getRelationDefinitions();
 
-        // Clean up props
+        // Clean up props and replace model classes
         foreach ($definitions as $type => &$relations) {
             foreach ($relations as $name => &$props) {
-                $props = $this->processRelationDefinition($type, $name, $props);
+                $this->processRelationDefinition($type, $name, $props);
             }
         }
 
-        // Process join table entries specifically
+        // Process specific field types
         $fieldset = $this->sourceModel->getBlueprintFieldset();
         foreach ($fieldset->getAllFields() as $name => $field) {
             if ($field->type === 'entries') {
                 $this->processEntryRelationDefinitions($definitions, $name, $field);
             }
+            if ($field->type === 'repeater') {
+                $this->processRepeaterRelationDefinitions($definitions, $name, $field);
+            }
         }
 
         return $definitions;
+    }
+
+    /**
+     * processRepeaterRelationDefinitions
+     */
+    protected function processRepeaterRelationDefinitions(&$definitions, $fieldName, $fieldObj)
+    {
+        foreach ($definitions as $type => &$relations) {
+            foreach ($relations as $name => &$props) {
+                if ($name === $fieldName && isset($props[0]) && $props[0] === \Tailor\Models\RepeaterItem::class) {
+                    $repeaterInfo = $this->getRepeaterTableInfoFor($fieldName, $fieldObj);
+                    $pluginCodeObj = $this->sourceModel->getPluginCodeObj();
+                    $props[0] = $pluginCodeObj->toPluginNamespace().'\\Models\\'.$repeaterInfo['modelClass'];
+                    $props['key'] = 'parent_id';
+                    break;
+                }
+            }
+        }
+    }
+
+    /**
+     * getRepeaterTableInfoFor
+     */
+    public function getRepeaterTableInfoFor($fieldName, $fieldObj): ?array
+    {
+        $tableName = $this->sourceModel->getBlueprintConfig('tableName');
+        if (!$tableName) {
+            throw new ApplicationException('Missing a table name');
+        }
+
+        $modelClass = $this->sourceModel->getBlueprintConfig('modelClass');
+        $repeaterTable = $tableName .= '_' . mb_strtolower($fieldName) . '_items';
+        $repeaterModelClass = $modelClass . Str::studly($fieldName) . 'Item';
+
+        return [
+            'tableName' => $repeaterTable,
+            'modelClass' => $repeaterModelClass
+        ];
     }
 
     /**
@@ -189,11 +230,11 @@ class ModelContainer extends Model
     /**
      * processRelationDefinition
      */
-    protected function processRelationDefinition($type, $name, $props)
+    protected function processRelationDefinition($type, $name, &$props)
     {
         // Ignore file attachments
         if (starts_with($type, 'attach')) {
-            return $props;
+            return;
         }
 
         if ($overrideClass = $this->findRelatedModelClass($name)) {
@@ -204,8 +245,6 @@ class ModelContainer extends Model
         }
 
         unset($props['relationClass']);
-
-        return $props;
     }
 
     /**
