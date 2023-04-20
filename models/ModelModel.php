@@ -31,6 +31,11 @@ class ModelModel extends BaseModel
     public $className;
 
     /**
+     * @var string baseClassName
+     */
+    public $baseClassName = \Model::class;
+
+    /**
      * @var string databaseTable
      */
     public $databaseTable;
@@ -73,10 +78,16 @@ class ModelModel extends BaseModel
     public $skipDbValidation = false;
 
     /**
+     * @var array injectedRawContents
+     */
+    protected $injectedRawContents = [];
+
+    /**
      * @var array fillable
      */
     protected static $fillable = [
         'className',
+        'baseClassName',
         'databaseTable',
         'relationDefinitions',
         'addTimestamps',
@@ -156,6 +167,8 @@ class ModelModel extends BaseModel
         $variables = [
             'namespace' => $namespace,
             'classname' => $this->className,
+            'baseclass' => $this->baseClassName,
+            'baseclassname' => class_basename($this->baseClassName),
             'table' => $this->databaseTable
         ];
 
@@ -185,6 +198,8 @@ class ModelModel extends BaseModel
         if (!$this->addTimestamps) {
             $dynamicContents[] = $generator->getTemplateContents('no-timestamps.php.tpl');
         }
+
+        $dynamicContents = array_merge($dynamicContents, (array) $this->injectedRawContents);
 
         $generator->setVariable('dynamicContents', implode('', $dynamicContents));
 
@@ -292,6 +307,14 @@ class ModelModel extends BaseModel
         }
 
         parent::validate();
+    }
+
+    /**
+     * addRawContentToModel
+     */
+    public function addRawContentToModel($content)
+    {
+        $this->injectedRawContents[] = $content;
     }
 
     /**

@@ -16,6 +16,7 @@ trait HasMigrations
     {
         $this->generateContentTable();
         $this->generateJoinTables();
+        $this->generateRepeaterTables();
     }
 
     /**
@@ -28,16 +29,7 @@ trait HasMigrations
             throw new ApplicationException('Missing a table name');
         }
 
-        $proposedFile = "create_{$tableName}_table.php";
-        $migrationFilePath = $this->sourceModel->getPluginFilePath('updates/'.$proposedFile);
-
-        // Find an available file name
-        $counter = 2;
-        while (File::isFile($migrationFilePath)) {
-            $proposedFile = "create_{$tableName}_table_{$counter}.php";
-            $migrationFilePath = $this->sourceModel->getPluginFilePath('updates/'.$proposedFile);
-            $counter++;
-        }
+        [$proposedFile, $migrationFilePath] = $this->findAvailableMigrationFile($tableName);
 
         // Prepare the schema from the fieldset
         $table = $this->makeSchemaBlueprint($tableName);
@@ -51,52 +43,6 @@ trait HasMigrations
         $code = $this->parseTemplate($this->getTemplatePath('migration.php.tpl'), [
             'migrationCode' => $this->makeTabs(trim($migrationCode, PHP_EOL))
         ]);
-
-        $this->writeFile($migrationFilePath, $code);
-
-        $this->migrationScripts[] = $proposedFile;
-    }
-
-    /**
-     * generateJoinTables
-     */
-    protected function generateJoinTables()
-    {
-        $container = new ModelContainer;
-
-        $container->setSourceModel($this->sourceModel);
-
-        $fieldset = $this->sourceModel->getBlueprintFieldset();
-
-        $fieldset->applyModelExtensions($container);
-
-        foreach ($fieldset->getAllFields() as $name => $field) {
-            if ($field->type === 'entries' && !$field->inverse && $field->maxItems !== 1) {
-                $joinInfo = $container->getJoinTableInfoFor($name, $field);
-                $this->generateJoinTableForEntries($joinInfo);
-            }
-        }
-    }
-
-    /**
-     * generateJoinTableForEntries
-     */
-    protected function generateJoinTableForEntries($joinInfo)
-    {
-        $tableName = $joinInfo['tableName'];
-
-        $proposedFile = "create_{$tableName}_table.php";
-        $migrationFilePath = $this->sourceModel->getPluginFilePath('updates/'.$proposedFile);
-
-        // Find an available file name
-        $counter = 2;
-        while (File::isFile($migrationFilePath)) {
-            $proposedFile = "create_{$tableName}_table_{$counter}.php";
-            $migrationFilePath = $this->sourceModel->getPluginFilePath('updates/'.$proposedFile);
-            $counter++;
-        }
-
-        $code = $this->parseTemplate($this->getTemplatePath('migration-join.php.tpl'), $joinInfo);
 
         $this->writeFile($migrationFilePath, $code);
 
@@ -143,5 +89,98 @@ trait HasMigrations
         }
 
         return $table;
+    }
+
+    /**
+     * generateJoinTables
+     */
+    protected function generateJoinTables()
+    {
+        $container = new ModelContainer;
+
+        $container->setSourceModel($this->sourceModel);
+
+        $fieldset = $this->sourceModel->getBlueprintFieldset();
+
+        $fieldset->applyModelExtensions($container);
+
+        foreach ($fieldset->getAllFields() as $name => $field) {
+            if ($field->type === 'entries' && !$field->inverse && $field->maxItems !== 1) {
+                $joinInfo = $container->getJoinTableInfoFor($name, $field);
+                $this->generateJoinTableForEntries($joinInfo);
+            }
+        }
+    }
+
+    /**
+     * generateJoinTableForEntries
+     */
+    protected function generateJoinTableForEntries($joinInfo)
+    {
+        $tableName = $joinInfo['tableName'];
+
+        [$proposedFile, $migrationFilePath] = $this->findAvailableMigrationFile($tableName);
+
+        $code = $this->parseTemplate($this->getTemplatePath('migration-join.php.tpl'), $joinInfo);
+
+        $this->writeFile($migrationFilePath, $code);
+
+        $this->migrationScripts[] = $proposedFile;
+    }
+
+    /**
+     * generateRepeaterTables
+     */
+    protected function generateRepeaterTables()
+    {
+        $container = new ExpandoModelContainer;
+
+        $container->setSourceModel($this->sourceModel);
+
+        $fieldset = $this->sourceModel->getBlueprintFieldset();
+
+        $fieldset->applyModelExtensions($container);
+
+        foreach ($fieldset->getAllFields() as $name => $field) {
+            if ($field->type === 'repeater') {
+                $repeaterInfo = $container->getRepeaterTableInfoFor($name, $field);
+                $this->generateRepeaterTableForEntries($repeaterInfo);
+            }
+        }
+    }
+
+    /**
+     * generateJoinTableForEntries
+     */
+    protected function generateRepeaterTableForEntries($repeaterInfo)
+    {
+        $tableName = $repeaterInfo['tableName'];
+
+        [$proposedFile, $migrationFilePath] = $this->findAvailableMigrationFile($tableName);
+
+        $code = $this->parseTemplate($this->getTemplatePath('migration-repeater.php.tpl'), $repeaterInfo);
+
+        $this->writeFile($migrationFilePath, $code);
+
+        $this->migrationScripts[] = $proposedFile;
+    }
+
+    /**
+     * findAvailableMigrationFile
+     */
+    protected function findAvailableMigrationFile(string $tableName): array
+    {
+        $proposedFile = "create_{$tableName}_table.php";
+        $migrationFilePath = $this->sourceModel->getPluginFilePath('updates/'.$proposedFile);
+
+        // Find an available file name
+        $counter = 2;
+        while (File::isFile($migrationFilePath)) {
+            $proposedFile = "create_{$tableName}_table_{$counter}.php";
+            $migrationFilePath = $this->sourceModel->getPluginFilePath('updates/'.$proposedFile);
+            $counter++;
+        }
+
+        return [$proposedFile, $migrationFilePath];
     }
 }

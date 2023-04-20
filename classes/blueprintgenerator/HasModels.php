@@ -24,13 +24,13 @@ trait HasModels
         $model = $this->makeModelModel();
         $files[] = $model->getModelFilePath();
 
-        $form = $this->makeModelFormModel();
+        $form = $this->makeModelFormFields();
         $files[] = $form->getYamlFilePath();
 
-        $lists = $this->makeModelListModel();
+        $lists = $this->makeModelListColumns();
         $files[] = $lists->getYamlFilePath();
 
-        $filter = $this->makeModelFilterModel();
+        $filter = $this->makeModelFilterScopes();
         $files[] = $filter->getYamlFilePath();
 
         $this->validateUniqueFiles($files);
@@ -46,15 +46,15 @@ trait HasModels
      */
     protected function generateModel()
     {
-        $filter = $this->makeModelFilterModel();
+        $filter = $this->makeModelFilterScopes();
         $filter->save();
         $this->filesGenerated[] = $filter->getYamlFilePath();
 
-        $lists = $this->makeModelListModel();
+        $lists = $this->makeModelListColumns();
         $lists->save();
         $this->filesGenerated[] = $lists->getYamlFilePath();
 
-        $form = $this->makeModelFormModel();
+        $form = $this->makeModelFormFields();
         $form->save();
         $this->filesGenerated[] = $form->getYamlFilePath();
 
@@ -102,9 +102,11 @@ trait HasModels
 
         $fieldset->applyModelExtensions($container);
 
-        $model->relationDefinitions = (array) $container->getRelationDefinitions();
+        $model->relationDefinitions = (array) $container->getProcessedRelationDefinitions();
 
         $model->validationDefinitions = (array) $container->getValidationDefinitions();
+
+        $model->validationDefinitions['rules'] += ['title' => 'required'];
 
         if ($container->useMultisite()) {
             $model->traits[] = \October\Rain\Database\Traits\Multisite::class;
@@ -114,9 +116,9 @@ trait HasModels
     }
 
     /**
-     * makeModelFormModel
+     * makeModelFormFields
      */
-    protected function makeModelFormModel()
+    protected function makeModelFormFields()
     {
         $model = new ModelFormModel;
 
@@ -143,9 +145,9 @@ trait HasModels
     }
 
     /**
-     * makeModelListModel
+     * makeModelListColumns
      */
-    protected function makeModelListModel()
+    protected function makeModelListColumns()
     {
         $model = new ModelListModel;
 
@@ -169,9 +171,9 @@ trait HasModels
     }
 
     /**
-     * makeModelFilterModel
+     * makeModelFilterScopes
      */
-    protected function makeModelFilterModel()
+    protected function makeModelFilterScopes()
     {
         $model = new ModelFilterModel;
 

@@ -54,9 +54,9 @@ class ModelContainer extends Model
     }
 
     /**
-     * getRelationDefinitions
+     * getProcessedRelationDefinitions
      */
-    public function getRelationDefinitions()
+    public function getProcessedRelationDefinitions()
     {
         $definitions = parent::getRelationDefinitions();
 
@@ -126,7 +126,7 @@ class ModelContainer extends Model
     }
 
     /**
-     * getJoinTableFor
+     * getJoinTableInfoFor
      */
     public function getJoinTableInfoFor($fieldName, $fieldObj): ?array
     {
@@ -154,7 +154,7 @@ class ModelContainer extends Model
     }
 
     /**
-     * getJoinTableFor
+     * getInverseJoinTableInfoFor
      */
     public function getInverseJoinTableInfoFor($fieldName, $fieldObj): ?array
     {
@@ -214,7 +214,7 @@ class ModelContainer extends Model
     public function getValidationDefinitions()
     {
         return [
-            'rules' => $this->rules + ['title' => 'required'],
+            'rules' => $this->rules,
             'attributeNames' => $this->attributeNames,
             'customMessages' => $this->customMessages,
         ];

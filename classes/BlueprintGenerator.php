@@ -21,6 +21,7 @@ class BlueprintGenerator
     use \RainLab\Builder\Classes\BlueprintGenerator\HasControllers;
     use \RainLab\Builder\Classes\BlueprintGenerator\HasPermissions;
     use \RainLab\Builder\Classes\BlueprintGenerator\HasNavigation;
+    use \RainLab\Builder\Classes\BlueprintGenerator\HasExpandoModels;
     use \RainLab\Builder\Classes\BlueprintGenerator\HasModels;
 
     /**
@@ -79,6 +80,7 @@ class BlueprintGenerator
         foreach ($this->sourceBlueprints as $blueprint) {
             $this->setBlueprintContext($blueprint);
             $this->validateModel();
+            $this->validateExpandoModels();
             $this->validatePermission();
             $this->validateController();
         }
@@ -89,6 +91,7 @@ class BlueprintGenerator
                 $this->setBlueprintContext($blueprint);
                 $this->generateMigration();
                 $this->generateModel();
+                $this->generateExpandoModels();
                 $this->generatePermission();
                 $this->generateController();
 

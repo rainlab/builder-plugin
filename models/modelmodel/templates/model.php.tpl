@@ -1,11 +1,11 @@
 <?php namespace {namespace};
 
-use Model;
+use {baseclass};
 
 /**
  * Model
  */
-class {classname} extends Model
+class {classname} extends {baseclassname}
 {
 {traitContents}
 {dynamicContents}
