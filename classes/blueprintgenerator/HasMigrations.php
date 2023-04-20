@@ -170,6 +170,9 @@ trait HasMigrations
      */
     protected function findAvailableMigrationFile(string $tableName): array
     {
+        // Shorten table name
+        $tableName = trim(str_replace($this->sourceModel->getPluginCodeObj()->toDatabasePrefix(), '', $tableName), "_");
+
         $proposedFile = "create_{$tableName}_table.php";
         $migrationFilePath = $this->sourceModel->getPluginFilePath('updates/'.$proposedFile);
 
