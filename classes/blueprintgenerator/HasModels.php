@@ -128,9 +128,11 @@ trait HasModels
 
         $container = new FormElementContainer;
 
+        $container->setSourceModel($this->sourceModel);
+
         $fieldset = $this->sourceModel->getBlueprintFieldset();
 
-        $fieldset->defineAllFormFields($container);
+        $fieldset->defineAllFormFields($container, ['context' => '*']);
 
         $model->controls = [
             'fields' => $container->getPrimaryControls(),

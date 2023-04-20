@@ -10,6 +10,8 @@ use October\Rain\Element\Form\FieldsetDefinition;
  */
 class FormElementContainer extends FieldsetDefinition implements FormElement
 {
+    use \RainLab\Builder\Classes\BlueprintGenerator\ContainerUtils;
+
     /**
      * addFormField adds a field to the fieldset
      */
@@ -47,7 +49,6 @@ class FormElementContainer extends FieldsetDefinition implements FormElement
 
         $controls->addFormField('title', 'Title')->span('auto');
         $controls->addFormField('slug', 'Slug')->preset(['field' => 'title', 'type' => 'slug'])->span('auto');
-        $controls->addFormField('is_enabled', 'Enabled')->displayAs('switch')->defaults(true)->span('full');
 
         return $controls->getControls();
     }
@@ -60,7 +61,7 @@ class FormElementContainer extends FieldsetDefinition implements FormElement
         $result = [];
 
         foreach ($this->getAllFields() as $name => $field) {
-            $result[$name] = $this->parseFieldConfig($field->config);
+            $result[$name] = $this->parseFieldConfig($name, $field);
         }
 
         return $result;
@@ -69,18 +70,33 @@ class FormElementContainer extends FieldsetDefinition implements FormElement
     /**
      * parseFieldConfig
      */
-    protected function parseFieldConfig($config): array
+    protected function parseFieldConfig($fieldName, $fieldObj): array
     {
+        // Apply mutations to field object
+        if ($fieldObj->span === 'adaptive') {
+            $fieldObj->span('full');
+        }
+
+        if ($fieldObj->type === 'recordfinder') {
+            if ($relatedModelClass = $this->findRelatedModelClass($fieldName)) {
+                $baseClass = mb_strtolower(class_basename($relatedModelClass));
+                $path = $this->sourceModel->getPluginCodeObj()->toPluginDirectoryPath().'/models/'.$baseClass.'/columns.yaml';
+                $fieldObj->list($path);
+            }
+        }
+
         // Remove tailor values
         $ignoreConfig = [
             'fieldName',
             'source',
+            'column',
+            'scope',
             'inverse',
             'externalToolbarAppState',
             'externalToolbarEventBus'
         ];
 
-        $parsedConfig = array_except((array) $config, $ignoreConfig);
+        $parsedConfig = array_except((array) $fieldObj->config, $ignoreConfig);
 
         // Remove default values
         $keepDefaults = [
@@ -93,10 +109,6 @@ class FormElementContainer extends FieldsetDefinition implements FormElement
             if (!in_array($key, $keepDefaults) && $defaultField->$key === $value) {
                 unset($parsedConfig[$key]);
             }
-        }
-
-        if (isset($config['span']) && $config['span'] === 'adaptive') {
-            $parsedConfig['span'] = 'full';
         }
 
         return $parsedConfig;

@@ -6,7 +6,7 @@ use Twig;
 use RainLab\Builder\Classes\TailorBlueprintLibrary;
 use ApplicationException;
 use ValidationException;
-use Exception;
+use Throwable;
 
 /**
  * BlueprintGenerator is a helper class for generating controller class files and associated files.
@@ -78,8 +78,8 @@ class BlueprintGenerator
         // Validate
         foreach ($this->sourceBlueprints as $blueprint) {
             $this->setBlueprintContext($blueprint);
-            $this->validatePermission();
             $this->validateModel();
+            $this->validatePermission();
             $this->validateController();
         }
 
@@ -88,14 +88,14 @@ class BlueprintGenerator
             foreach ($this->sourceBlueprints as $blueprint) {
                 $this->setBlueprintContext($blueprint);
                 $this->generateMigration();
-                $this->generatePermission();
                 $this->generateModel();
+                $this->generatePermission();
                 $this->generateController();
 
                 $this->blueprintFiles[] = $blueprint->getFilePath();
             }
         }
-        catch (Exception $ex) {
+        catch (Throwable $ex) {
             $this->rollback();
             throw $ex;
         }

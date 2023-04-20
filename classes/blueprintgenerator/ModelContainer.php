@@ -2,7 +2,6 @@
 
 use Str;
 use Model;
-use RainLab\Builder\Classes\TailorBlueprintLibrary;
 use ApplicationException;
 
 /**
@@ -10,6 +9,8 @@ use ApplicationException;
  */
 class ModelContainer extends Model
 {
+    use \RainLab\Builder\Classes\BlueprintGenerator\ContainerUtils;
+
     /**
      * @var array rules for validation
      *
@@ -34,16 +35,6 @@ class ModelContainer extends Model
     protected $propagatable = [];
 
     /**
-     * @var array relatedBlueprints
-     */
-    protected $relatedBlueprints;
-
-    /**
-     * @var object sourceModel
-     */
-    protected $sourceModel;
-
-    /**
      * addPropagatable attributes for the model.
      * @param  array|string|null  $attributes
      */
@@ -63,22 +54,6 @@ class ModelContainer extends Model
     }
 
     /**
-     * getBlueprintDefinition
-     */
-    public function getBlueprintDefinition()
-    {
-        return $this->sourceModel->getBlueprintObject();
-    }
-
-    /**
-     * setSourceModel
-     */
-    public function setSourceModel($sourceModel)
-    {
-        $this->sourceModel = $sourceModel;
-    }
-
-    /**
      * getRelationDefinitions
      */
     public function getRelationDefinitions()
@@ -95,7 +70,7 @@ class ModelContainer extends Model
         // Process join table entries specifically
         $fieldset = $this->sourceModel->getBlueprintFieldset();
         foreach ($fieldset->getAllFields() as $name => $field) {
-            if ($field->type === 'entries' && $field->maxItems !== 1) {
+            if ($field->type === 'entries') {
                 $this->processEntryRelationDefinitions($definitions, $name, $field);
             }
         }
@@ -108,15 +83,24 @@ class ModelContainer extends Model
      */
     protected function processEntryRelationDefinitions(&$definitions, $fieldName, $fieldObj)
     {
+        if ($fieldObj->maxItems === 1) {
+            return;
+        }
+
         $foundDefinition = null;
+        $foundAsType = null;
         foreach ($definitions as $type => &$relations) {
             foreach ($relations as $name => &$props) {
-                if ($name === $fieldName) {
+                if ($name === $fieldName && isset($props['table'])) {
+                    // (╯°□°)╯︵ ┻━┻
                     $foundDefinition = array_pull($relations, $name);
+                    $foundAsType = $type;
+                    break;
                 }
             }
         }
 
+        // This converts custom tailor relations to standard belongs to many
         if ($foundDefinition) {
             $joinInfo = $fieldObj->inverse
                 ? $this->getInverseJoinTableInfoFor($fieldName, $fieldObj)
@@ -131,9 +115,13 @@ class ModelContainer extends Model
                     $foundDefinition['key'] = $joinInfo['relatedKey'];
                     $foundDefinition['otherKey'] = $joinInfo['parentKey'];
                 }
-            }
 
-            $definitions['belongsToMany'][$fieldName] = $foundDefinition;
+                $definitions['belongsToMany'][$fieldName] = $foundDefinition;
+            }
+            else {
+                // ┬─┬ノ( º _ ºノ)
+                $definitions[$foundAsType][$fieldName] = $foundDefinition;
+            }
         }
     }
 
@@ -218,37 +206,6 @@ class ModelContainer extends Model
         unset($props['relationClass']);
 
         return $props;
-    }
-
-    /**
-     * findRelatedModelClass
-     */
-    protected function findRelatedModelClass($relationName)
-    {
-        if ($this->relatedBlueprints === null) {
-            $this->relatedBlueprints = TailorBlueprintLibrary::instance()->getRelatedBlueprintUuids($this->blueprint->uuid);
-        }
-
-        if (isset($this->relatedBlueprints[$relationName])) {
-            $uuid = $this->relatedBlueprints[$relationName];
-            $modelClass = $this->sourceModel->blueprints[$uuid]['modelClass'] ?? null;
-            if ($modelClass) {
-                $pluginCodeObj = $this->sourceModel->getPluginCodeObj();
-                return $pluginCodeObj->toPluginNamespace().'\\Models\\'.$modelClass;
-            }
-        }
-    }
-
-    /**
-     * findRelatedBlueprintUuid
-     */
-    protected function findRelatedBlueprintUuid($relationName)
-    {
-        if ($this->relatedBlueprints === null) {
-            $this->relatedBlueprints = TailorBlueprintLibrary::instance()->getRelatedBlueprintUuids($this->blueprint->uuid);
-        }
-
-        return $this->relatedBlueprints[$relationName] ?? null;
     }
 
     /**
