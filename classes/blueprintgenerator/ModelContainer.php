@@ -1,7 +1,9 @@
 <?php namespace RainLab\Builder\Classes\BlueprintGenerator;
 
+use Str;
 use Model;
 use RainLab\Builder\Classes\TailorBlueprintLibrary;
+use ApplicationException;
 
 /**
  * ModelContainer
@@ -83,9 +85,18 @@ class ModelContainer extends Model
     {
         $definitions = parent::getRelationDefinitions();
 
+        // Clean up props
         foreach ($definitions as $type => &$relations) {
             foreach ($relations as $name => &$props) {
                 $props = $this->processRelationDefinition($type, $name, $props);
+            }
+        }
+
+        // Process join table entries specifically
+        $fieldset = $this->sourceModel->getBlueprintFieldset();
+        foreach ($fieldset->getAllFields() as $name => $field) {
+            if ($field->type === 'entries' && $field->maxItems !== 1) {
+                $this->processEntryRelationDefinitions($definitions, $name, $field);
             }
         }
 
@@ -93,33 +104,97 @@ class ModelContainer extends Model
     }
 
     /**
-     * getValidationDefinitions
+     * processEntryRelationDefinitions
      */
-    public function getValidationDefinitions()
+    protected function processEntryRelationDefinitions(&$definitions, $fieldName, $fieldObj)
     {
+        $foundDefinition = null;
+        foreach ($definitions as $type => &$relations) {
+            foreach ($relations as $name => &$props) {
+                if ($name === $fieldName) {
+                    $foundDefinition = array_pull($relations, $name);
+                }
+            }
+        }
+
+        if ($foundDefinition) {
+            $joinInfo = $fieldObj->inverse
+                ? $this->getInverseJoinTableInfoFor($fieldName, $fieldObj)
+                : $this->getJoinTableInfoFor($fieldName, $fieldObj);
+
+            if ($joinInfo) {
+                unset($foundDefinition['name']);
+                $foundDefinition['table'] = $joinInfo['tableName'];
+
+                // Swap keys
+                if ($fieldObj->inverse) {
+                    $foundDefinition['key'] = $joinInfo['relatedKey'];
+                    $foundDefinition['otherKey'] = $joinInfo['parentKey'];
+                }
+            }
+
+            $definitions['belongsToMany'][$fieldName] = $foundDefinition;
+        }
+    }
+
+    /**
+     * getJoinTableFor
+     */
+    public function getJoinTableInfoFor($fieldName, $fieldObj): ?array
+    {
+        $tableName = $this->sourceModel->getBlueprintConfig('tableName');
+        if (!$tableName) {
+            throw new ApplicationException('Missing a table name');
+        }
+
+        $joinTable = $tableName .= '_' . mb_strtolower($fieldName) . '_join';
+
+        $modelClass = $this->sourceModel->getBlueprintConfig('modelClass');
+        $relatedModelClass = $this->findRelatedModelClass($fieldName);
+        if (!$relatedModelClass || !$modelClass) {
+            return null;
+        }
+
+        $parentKey = Str::snake(class_basename($modelClass)).'_id';
+        $relatedKey = Str::snake(class_basename($relatedModelClass)).'_id';
+
         return [
-            'rules' => $this->rules + ['title' => 'required'],
-            'attributeNames' => $this->attributeNames,
-            'customMessages' => $this->customMessages,
+            'tableName' => $joinTable,
+            'parentKey' => $relatedKey,
+            'relatedKey' => $parentKey,
         ];
     }
 
     /**
-     * useMultisite
+     * getJoinTableFor
      */
-    public function useMultisite()
+    public function getInverseJoinTableInfoFor($fieldName, $fieldObj): ?array
     {
-        return $this->blueprint->useMultisite();
-    }
+        $relatedUuid = $this->findRelatedBlueprintUuid($fieldName);
+        if (!$relatedUuid) {
+            return null;
+        }
 
-    /**
-     * getMultisiteDefinition
-     */
-    public function getMultisiteDefinition()
-    {
+        $tableName = $this->sourceModel->blueprints[$relatedUuid]['tableName'] ?? null;
+        if (!$tableName) {
+            throw new ApplicationException('Missing a table name');
+        }
+
+        $joinTable = $tableName .= '_' . mb_strtolower($fieldObj->inverse) . '_join';
+
+        $modelClass = $this->sourceModel->getBlueprintConfig('modelClass');
+        $relatedModelClass = $this->findRelatedModelClass($fieldName);
+        if (!$relatedModelClass || !$modelClass) {
+            return null;
+        }
+
+        $parentKey = Str::snake(class_basename($modelClass)).'_id';
+        $relatedKey = Str::snake(class_basename($relatedModelClass)).'_id';
+
         return [
-            'fields' => $this->propagatable,
-            'sync' => $this->blueprint->useMultisiteSync()
+            'tableName' => $joinTable,
+            'parentKey' => $relatedKey,
+            'relatedKey' => $parentKey,
         ];
     }
 
@@ -174,5 +249,36 @@ class ModelContainer extends Model
         }
 
         return $this->relatedBlueprints[$relationName] ?? null;
+    }
+
+    /**
+     * getValidationDefinitions
+     */
+    public function getValidationDefinitions()
+    {
+        return [
+            'rules' => $this->rules + ['title' => 'required'],
+            'attributeNames' => $this->attributeNames,
+            'customMessages' => $this->customMessages,
+        ];
+    }
+
+    /**
+     * useMultisite
+     */
+    public function useMultisite()
+    {
+        return $this->blueprint->useMultisite();
+    }
+
+    /**
+     * getMultisiteDefinition
+     */
+    public function getMultisiteDefinition()
+    {
+        return [
+            'fields' => $this->propagatable,
+            'sync' => $this->blueprint->useMultisiteSync()
+        ];
     }
 }

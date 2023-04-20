@@ -59,11 +59,11 @@ class TailorBlueprintLibrary
         $indexer = BlueprintIndexer::instance();
         $fieldset = $indexer->findContentFieldset($blueprintUuid);
 
+        $relatedFieldTypes = ['entries'];
+
         $result = [];
         foreach ($fieldset->getAllFields() as $name => $field) {
-            // Loose check: if a field includes a "source" it can be considered
-            // a positive match for a related tailor field, so check it
-            if (!$field->source || $field->type === 'mixin') {
+            if (!in_array($field->type, $relatedFieldTypes)) {
                 continue;
             }
 

@@ -221,6 +221,7 @@ class ModelModel extends BaseModel
             ];
 
             foreach ($definitions as $relationName => $definition) {
+                $definition = (array) $definition;
                 $modelClass = array_shift($definition);
 
                 $props = $definition;

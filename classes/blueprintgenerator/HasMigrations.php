@@ -15,6 +15,7 @@ trait HasMigrations
     protected function generateMigration()
     {
         $this->generateContentTable();
+        $this->generateJoinTables();
     }
 
     /**
@@ -50,6 +51,52 @@ trait HasMigrations
         $code = $this->parseTemplate($this->getTemplatePath('migration.php.tpl'), [
             'migrationCode' => $this->makeTabs(trim($migrationCode, PHP_EOL))
         ]);
+
+        $this->writeFile($migrationFilePath, $code);
+
+        $this->migrationScripts[] = $proposedFile;
+    }
+
+    /**
+     * generateJoinTables
+     */
+    protected function generateJoinTables()
+    {
+        $container = new ModelContainer;
+
+        $container->setSourceModel($this->sourceModel);
+
+        $fieldset = $this->sourceModel->getBlueprintFieldset();
+
+        $fieldset->applyModelExtensions($container);
+
+        foreach ($fieldset->getAllFields() as $name => $field) {
+            if ($field->type === 'entries' && !$field->inverse && $field->maxItems !== 1) {
+                $joinInfo = $container->getJoinTableInfoFor($name, $field);
+                $this->generateJoinTableForEntries($joinInfo);
+            }
+        }
+    }
+
+    /**
+     * generateJoinTableForEntries
+     */
+    protected function generateJoinTableForEntries($joinInfo)
+    {
+        $tableName = $joinInfo['tableName'];
+
+        $proposedFile = "create_{$tableName}_table.php";
+        $migrationFilePath = $this->sourceModel->getPluginFilePath('updates/'.$proposedFile);
+
+        // Find an available file name
+        $counter = 2;
+        while (File::isFile($migrationFilePath)) {
+            $proposedFile = "create_{$tableName}_table_{$counter}.php";
+            $migrationFilePath = $this->sourceModel->getPluginFilePath('updates/'.$proposedFile);
+            $counter++;
+        }
+
+        $code = $this->parseTemplate($this->getTemplatePath('migration-join.php.tpl'), $joinInfo);
 
         $this->writeFile($migrationFilePath, $code);
 

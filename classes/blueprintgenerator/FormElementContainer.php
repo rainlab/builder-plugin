@@ -96,7 +96,7 @@ class FormElementContainer extends FieldsetDefinition implements FormElement
         }
 
         if (isset($config['span']) && $config['span'] === 'adaptive') {
-            $config['span'] = 'full';
+            $parsedConfig['span'] = 'full';
         }
 
         return $parsedConfig;

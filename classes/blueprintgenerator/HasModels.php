@@ -48,15 +48,19 @@ trait HasModels
     {
         $filter = $this->makeModelFilterModel();
         $filter->save();
+        $this->filesGenerated[] = $filter->getYamlFilePath();
 
         $lists = $this->makeModelListModel();
         $lists->save();
+        $this->filesGenerated[] = $lists->getYamlFilePath();
 
         $form = $this->makeModelFormModel();
         $form->save();
+        $this->filesGenerated[] = $form->getYamlFilePath();
 
         $model = $this->makeModelModel();
         $model->save();
+        $this->filesGenerated[] = $model->getModelFilePath();
     }
 
     /**
