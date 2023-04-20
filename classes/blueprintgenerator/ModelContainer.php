@@ -60,13 +60,6 @@ class ModelContainer extends Model
     {
         $definitions = parent::getRelationDefinitions();
 
-        // Clean up props and replace model classes
-        foreach ($definitions as $type => &$relations) {
-            foreach ($relations as $name => &$props) {
-                $this->processRelationDefinition($type, $name, $props);
-            }
-        }
-
         // Process specific field types
         $fieldset = $this->sourceModel->getBlueprintFieldset();
         foreach ($fieldset->getAllFields() as $name => $field) {
@@ -93,6 +86,7 @@ class ModelContainer extends Model
                     $pluginCodeObj = $this->sourceModel->getPluginCodeObj();
                     $props[0] = $pluginCodeObj->toPluginNamespace().'\\Models\\'.$repeaterInfo['modelClass'];
                     $props['key'] = 'parent_id';
+                    unset($props['relationClass']);
                     break;
                 }
             }
@@ -124,15 +118,11 @@ class ModelContainer extends Model
      */
     protected function processEntryRelationDefinitions(&$definitions, $fieldName, $fieldObj)
     {
-        if ($fieldObj->maxItems === 1) {
-            return;
-        }
-
         $foundDefinition = null;
         $foundAsType = null;
         foreach ($definitions as $type => &$relations) {
             foreach ($relations as $name => &$props) {
-                if ($name === $fieldName && isset($props['table'])) {
+                if ($name === $fieldName) {
                     // (╯°□°)╯︵ ┻━┻
                     $foundDefinition = array_pull($relations, $name);
                     $foundAsType = $type;
@@ -141,29 +131,41 @@ class ModelContainer extends Model
             }
         }
 
+        if (!$foundDefinition) {
+            return;
+        }
+
+        // Clean up and replace class
+        if ($overrideClass = $this->findRelatedModelClass($fieldObj->source)) {
+            $foundDefinition[0] = $overrideClass;
+        }
+        elseif ($overrideBlueprint = $this->findUuidFromSource($fieldObj->source)) {
+            $foundDefinition['blueprint'] = $overrideBlueprint;
+        }
+
+        unset($foundDefinition['relationClass']);
+
         // This converts custom tailor relations to standard belongs to many
-        if ($foundDefinition) {
+        if (isset($foundDefinition['table'])) {
             $joinInfo = $fieldObj->inverse
                 ? $this->getInverseJoinTableInfoFor($fieldName, $fieldObj)
                 : $this->getJoinTableInfoFor($fieldName, $fieldObj);
 
             if ($joinInfo) {
-                unset($foundDefinition['name']);
+                $foundAsType = 'belongsToMany';
                 $foundDefinition['table'] = $joinInfo['tableName'];
+                unset($foundDefinition['name']);
 
                 // Swap keys
                 if ($fieldObj->inverse) {
                     $foundDefinition['key'] = $joinInfo['relatedKey'];
                     $foundDefinition['otherKey'] = $joinInfo['parentKey'];
                 }
-
-                $definitions['belongsToMany'][$fieldName] = $foundDefinition;
-            }
-            else {
-                // ┬─┬ノ( º _ ºノ)
-                $definitions[$foundAsType][$fieldName] = $foundDefinition;
             }
         }
+
+        // ┬─┬ノ( º _ ºノ)
+        $definitions[$foundAsType][$fieldName] = $foundDefinition;
     }
 
     /**
@@ -179,7 +181,7 @@ class ModelContainer extends Model
         $joinTable = $tableName .= '_' . mb_strtolower($fieldName) . '_join';
 
         $modelClass = $this->sourceModel->getBlueprintConfig('modelClass');
-        $relatedModelClass = $this->findRelatedModelClass($fieldName);
+        $relatedModelClass = $this->findRelatedModelClass($fieldObj->source);
         if (!$relatedModelClass || !$modelClass) {
             return null;
         }
@@ -199,7 +201,7 @@ class ModelContainer extends Model
      */
     public function getInverseJoinTableInfoFor($fieldName, $fieldObj): ?array
     {
-        $relatedUuid = $this->findRelatedBlueprintUuid($fieldName);
+        $relatedUuid = $this->findUuidFromSource($fieldObj->source);
         if (!$relatedUuid) {
             return null;
         }
@@ -212,7 +214,7 @@ class ModelContainer extends Model
         $joinTable = $tableName .= '_' . mb_strtolower($fieldObj->inverse) . '_join';
 
         $modelClass = $this->sourceModel->getBlueprintConfig('modelClass');
-        $relatedModelClass = $this->findRelatedModelClass($fieldName);
+        $relatedModelClass = $this->findRelatedModelClass($fieldObj->source);
         if (!$relatedModelClass || !$modelClass) {
             return null;
         }
@@ -225,26 +227,6 @@ class ModelContainer extends Model
             'parentKey' => $relatedKey,
             'relatedKey' => $parentKey,
         ];
-    }
-
-    /**
-     * processRelationDefinition
-     */
-    protected function processRelationDefinition($type, $name, &$props)
-    {
-        // Ignore file attachments
-        if (starts_with($type, 'attach')) {
-            return;
-        }
-
-        if ($overrideClass = $this->findRelatedModelClass($name)) {
-            $props[0] = $overrideClass;
-        }
-        elseif ($overrideBlueprint = $this->findRelatedBlueprintUuid($name)) {
-            $props['blueprint'] = $overrideBlueprint;
-        }
-
-        unset($props['relationClass']);
     }
 
     /**

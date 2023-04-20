@@ -34,41 +34,38 @@ trait ContainerUtils
     }
 
     /**
-     * findRelatedModelClass
+     * findUuidFromSource
      */
-    protected function findRelatedModelClass($relationName)
+    protected function findUuidFromSource($uuidOrHandle): ?string
     {
         if (!$this->sourceModel) {
             return null;
         }
 
-        if ($this->relatedBlueprints === null) {
-            $this->relatedBlueprints = TailorBlueprintLibrary::instance()->getRelatedBlueprintUuids($this->getBlueprintDefinition()->uuid);
+        $blueprint = TailorBlueprintLibrary::instance()->getBlueprintObject($uuidOrHandle, $uuidOrHandle);
+        if (!$blueprint) {
+            return null;
         }
 
-        if (isset($this->relatedBlueprints[$relationName])) {
-            $uuid = $this->relatedBlueprints[$relationName];
-            $modelClass = $this->sourceModel->blueprints[$uuid]['modelClass'] ?? null;
-            if ($modelClass) {
-                $pluginCodeObj = $this->sourceModel->getPluginCodeObj();
-                return $pluginCodeObj->toPluginNamespace().'\\Models\\'.$modelClass;
-            }
-        }
+        return $blueprint->uuid;
     }
 
     /**
-     * findRelatedBlueprintUuid
+     * findRelatedModelClass
      */
-    protected function findRelatedBlueprintUuid($relationName)
+    protected function findRelatedModelClass($uuidOrHandle): ?string
     {
-        if (!$this->sourceModel) {
+        $uuid = $this->findUuidFromSource($uuidOrHandle);
+        if (!$uuid) {
             return null;
         }
 
-        if ($this->relatedBlueprints === null) {
-            $this->relatedBlueprints = TailorBlueprintLibrary::instance()->getRelatedBlueprintUuids($this->getBlueprintDefinition()->uuid);
+        $modelClass = $this->sourceModel->blueprints[$uuid]['modelClass'] ?? null;
+        if (!$modelClass) {
+            return null;
         }
 
-        return $this->relatedBlueprints[$relationName] ?? null;
+        $pluginCodeObj = $this->sourceModel->getPluginCodeObj();
+        return $pluginCodeObj->toPluginNamespace().'\\Models\\'.$modelClass;
     }
 }

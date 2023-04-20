@@ -1,5 +1,6 @@
 <?php namespace RainLab\Builder\Classes\BlueprintGenerator;
 
+use Str;
 use Backend\Classes\FormField;
 use October\Contracts\Element\FormElement;
 use October\Rain\Element\Form\FieldDefinition;
@@ -77,18 +78,18 @@ class FormElementContainer extends FieldsetDefinition implements FormElement
             $fieldObj->span('full');
         }
 
-            if ($fieldObj->type === 'recordfinder') {
-                $relatedModelClass = $this->findRelatedModelClass($fieldName);
-                if ($relatedModelClass) {
-                    $baseClass = mb_strtolower(class_basename($relatedModelClass));
-                    $path = $this->sourceModel->getPluginCodeObj()->toPluginDirectoryPath().'/models/'.$baseClass;
-                    $fieldObj->list($path.'/columns.yaml');
-                }
+        if ($fieldObj->type === 'recordfinder') {
+            $relatedModelClass = $this->findRelatedModelClass($fieldObj->source);
+            if ($relatedModelClass) {
+                $baseClass = mb_strtolower(class_basename($relatedModelClass));
+                $path = $this->sourceModel->getPluginCodeObj()->toPluginDirectoryPath().'/models/'.$baseClass;
+                $fieldObj->list($path.'/columns.yaml');
             }
+        }
 
         if ($fieldObj->type === 'repeater') {
             $modelClass = $this->sourceModel->getBlueprintConfig('modelClass');
-            $baseClass = mb_strtolower(class_basename($modelClass)).mb_strtolower($fieldName).'item';
+            $baseClass = mb_strtolower(class_basename($modelClass)).mb_strtolower(Str::studly($fieldName)).'item';
             $path = $this->sourceModel->getPluginCodeObj()->toPluginDirectoryPath().'/models/'.$baseClass;
             if ($fieldObj->groups) {
                 $newGroups = [];
@@ -109,6 +110,7 @@ class FormElementContainer extends FieldsetDefinition implements FormElement
             'column',
             'scope',
             'inverse',
+            'validation',
             'externalToolbarAppState',
             'externalToolbarEventBus'
         ];

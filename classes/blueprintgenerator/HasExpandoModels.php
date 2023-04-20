@@ -113,17 +113,24 @@ PHP);
      */
     protected function makeExpandoRepeaterFieldset($field)
     {
-        $formConfig = ['fields' => []];
-        if ($field->groups) {
-            foreach ($field->groups as $config) {
-                $formConfig['fields'] += $config['fields'];
-            }
-        }
-        else {
-            $formConfig = $field->form;
+        if (!$field->groups) {
+            return FieldManager::instance()->makeFieldset((array) $field->form);
         }
 
-        return FieldManager::instance()->makeFieldset($formConfig);
+        // Create a merged fieldset for groups to acquire relations
+        $fieldsets = [];
+        foreach ($field->groups as $config) {
+            $fieldsets[] = FieldManager::instance()->makeFieldset($config);
+        }
+
+        $fieldset = array_shift($fieldsets);
+        foreach ($fieldsets as $otherFieldset) {
+            foreach ($otherFieldset->getAllFields() as $name => $field) {
+                $fieldset->addField($name, $field);
+            }
+        }
+
+        return $fieldset;
     }
 
     /**

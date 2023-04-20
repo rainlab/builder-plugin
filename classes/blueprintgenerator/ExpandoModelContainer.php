@@ -19,13 +19,6 @@ class ExpandoModelContainer extends ModelContainer
     {
         $definitions = parent::getRelationDefinitions();
 
-        // Clean up props
-        foreach ($definitions as $type => &$relations) {
-            foreach ($relations as $name => &$props) {
-                $this->processRelationDefinition($type, $name, $props);
-            }
-        }
-
         if (!$this->repeaterFieldset) {
             throw new ApplicationException('Missing repeater fieldset');
         }
@@ -36,7 +29,7 @@ class ExpandoModelContainer extends ModelContainer
             if ($field->type === 'entries') {
                 $this->processEntryRelationDefinitions($definitions, $name, $field);
             }
-            if ($field->type === 'repeater') {
+            if ($field->type === 'repeater' || $field->type === 'nestedform') {
                 $this->processRepeaterRelationDefinitions($definitions, $name, $field);
             }
         }
