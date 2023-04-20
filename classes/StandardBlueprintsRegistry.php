@@ -87,6 +87,16 @@ class StandardBlueprintsRegistry
                         'message' => "A permission code is required"
                     ]
                 ],
+            ],
+            'menuCode' => [
+                'title' => "Menu Code",
+                'description' => "Menu code used to include navigation for this item.",
+                'type' => 'string',
+                'validation' => [
+                    'required' => [
+                        'message' => "A menu code is required"
+                    ]
+                ],
             ]
         ];
 

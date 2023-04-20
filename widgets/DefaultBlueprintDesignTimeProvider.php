@@ -95,6 +95,7 @@ class DefaultBlueprintDesignTimeProvider extends BlueprintDesignTimeProviderBase
             'modelClass' => Str::singular($handleBase),
             'tableName' => $dbPrefix . Str::snake($handleBase),
             'permissionCode' => $permissionPrefix . Str::snake($handleBase),
+            'menuCode' => Str::snake($handleBase),
         ];
 
         return $result;
@@ -115,6 +116,7 @@ class DefaultBlueprintDesignTimeProvider extends BlueprintDesignTimeProviderBase
             'modelClass' => Str::singular($handleBase),
             'tableName' => $dbPrefix . Str::snake($handleBase),
             'permissionCode' => $permissionPrefix . Str::snake($handleBase),
+            'menuCode' => Str::snake($handleBase),
         ];
 
         return $result;

@@ -43,6 +43,8 @@ trait HasNavigation
 
         $menus = [];
 
+        $parentCodes = [];
+
         // Primary navigation
         foreach ($this->sourceBlueprints as $blueprint) {
             $this->setBlueprintContext($blueprint);
@@ -52,19 +54,20 @@ trait HasNavigation
                 continue;
             }
 
+            $parentCodes[$primaryNav->code] = $blueprint->uuid;
             $menuItem = $primaryNav->toBackendMenuArray();
             $menuItem['url'] = $this->getControllerUrl();
-            $menuItem['code'] = $primaryNav->code;
+            $menuItem['code'] = $this->getNavigationCodeForUuid($blueprint->uuid);
             $menuItem['sideMenu'] = [];
 
             $secondaryNav = $indexer->findSecondaryNavigation($blueprint->uuid);
             if ($secondaryNav && $secondaryNav->hasPrimary) {
                 $subItem = $secondaryNav->toBackendMenuArray();
                 $subItem['url'] = $this->getControllerUrl();
-                $subItem['code'] = $secondaryNav->code;
+                $subItem['code'] = $this->getNavigationCodeForUuid($blueprint->uuid);
                 $subItem['permissions'] = [$this->getConfig('permissionCode')];
                 $menuItem['sideMenu'][$secondaryNav->code] = $subItem;
-                $this->seenMenuItems[$blueprint->uuid] = $primaryNav->code.'||'.$secondaryNav->code;
+                $this->seenMenuItems[$blueprint->uuid] = $menuItem['code'].'||'.$subItem['code'];
             }
 
             $menus[$primaryNav->code] = $menuItem;
@@ -85,9 +88,13 @@ trait HasNavigation
 
             $subItem = $secondaryNav->toBackendMenuArray();
             $subItem['url'] = $this->getControllerUrl();
-            $subItem['code'] = $secondaryNav->code;
+            $subItem['code'] = $this->getNavigationCodeForUuid($blueprint->uuid);
             $subItem['permissions'] = [$this->getConfig('permissionCode')];
-            $this->seenMenuItems[$blueprint->uuid] = $secondaryNav->parentCode.'||'.$secondaryNav->code;
+
+            $parentUuid = $parentCodes[$secondaryNav->parentCode] ?? null;
+            $this->seenMenuItems[$blueprint->uuid] = $parentUuid
+                ? $this->getNavigationCodeForUuid($parentUuid).'||'.$subItem['code']
+                : $subItem['code'];
 
             $menus[$secondaryNav->parentCode]['sideMenu'][$secondaryNav->code] = $subItem;
         }
@@ -101,6 +108,14 @@ trait HasNavigation
         }
 
         return $menus;
+    }
+
+    /**
+     * getNavigationCodeForUuid
+     */
+    protected function getNavigationCodeForUuid($uuid)
+    {
+        return $this->sourceModel->blueprints[$uuid]['menuCode'] ?? 'unknown';
     }
 
     /**
