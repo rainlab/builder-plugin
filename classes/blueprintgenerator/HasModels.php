@@ -100,20 +100,12 @@ trait HasModels
 
         $model->relationDefinitions = (array) $container->getRelationDefinitions();
 
-        $model->validationDefinitions = [
-            'rules' => $container->rules + ['title' => 'required'],
-            'attributeNames' => $container->attributeNames,
-            'customMessages' => $container->customMessages,
-        ];
+        $model->validationDefinitions = (array) $container->getValidationDefinitions();
 
-        $blueprint = $this->sourceModel->getBlueprintObject();
-        if ($blueprint->useMultisite()) {
+        if ($container->useMultisite()) {
             $model->traits[] = \October\Rain\Database\Traits\Multisite::class;
 
-            $model->multisiteDefinition = [
-                'fields' => $container->propagatable,
-                'sync' => $blueprint->useMultisiteSync()
-            ];
+            $model->multisiteDefinition = (array) $container->getMultisiteDefinition();
         }
     }
 

@@ -45,12 +45,9 @@ class FormElementContainer extends FieldsetDefinition implements FormElement
     {
         $controls = new self;
 
-        $controls->addFormField('title', 'Title')->span('full');
-        $controls->addFormField('slug', 'Slug')->preset(['field' => 'title', 'type' => 'slug']);
-        $controls->addFormField('is_enabled', 'Enabled')->displayAs('switch')->defaults(true);
-        $controls->addFormField('published_at', 'Publish Date')->displayAs('datepicker')->defaultTimeMidnight();
-        $controls->addFormField('expired_at', 'Expiry Date')->displayAs('datepicker')->defaultTimeMidnight();
-        $controls->addFormField('parent_id', 'Parent')->displayAs('dropdown');
+        $controls->addFormField('title', 'Title')->span('auto');
+        $controls->addFormField('slug', 'Slug')->preset(['field' => 'title', 'type' => 'slug'])->span('auto');
+        $controls->addFormField('is_enabled', 'Enabled')->displayAs('switch')->defaults(true)->span('full');
 
         return $controls->getControls();
     }

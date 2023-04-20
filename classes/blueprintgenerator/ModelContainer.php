@@ -93,6 +93,37 @@ class ModelContainer extends Model
     }
 
     /**
+     * getValidationDefinitions
+     */
+    public function getValidationDefinitions()
+    {
+        return [
+            'rules' => $this->rules + ['title' => 'required'],
+            'attributeNames' => $this->attributeNames,
+            'customMessages' => $this->customMessages,
+        ];
+    }
+
+    /**
+     * useMultisite
+     */
+    public function useMultisite()
+    {
+        return $this->blueprint->useMultisite();
+    }
+
+    /**
+     * getMultisiteDefinition
+     */
+    public function getMultisiteDefinition()
+    {
+        return [
+            'fields' => $this->propagatable,
+            'sync' => $this->blueprint->useMultisiteSync()
+        ];
+    }
+
+    /**
      * processRelationDefinition
      */
     protected function processRelationDefinition($type, $name, $props)
