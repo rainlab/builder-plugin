@@ -1,7 +1,7 @@
 <?php namespace RainLab\Builder\Models;
 
-use SystemException;
 use ValidationException;
+use SystemException;
 
 /**
  * ModelFormModel represents and manages model forms.
@@ -11,13 +11,27 @@ use ValidationException;
  */
 class ModelFormModel extends ModelYamlModel
 {
+    /**
+     * @var array controls
+     */
     public $controls;
 
+    /**
+     * @var array originals (attributes)
+     */
+    public $originals;
+
+    /**
+     * @var array fillable
+     */
     protected static $fillable = [
         'fileName',
         'controls'
     ];
 
+    /**
+     * @var array validationRules
+     */
     protected $validationRules = [
         'fileName' => ['required', 'regex:/^[a-z0-9\.\-_]+$/i']
     ];
@@ -94,7 +108,7 @@ class ModelFormModel extends ModelYamlModel
      */
     protected function modelToYamlArray()
     {
-        return $this->controls;
+        return array_merge($this->originals, $this->controls);
     }
 
     /**
@@ -103,6 +117,8 @@ class ModelFormModel extends ModelYamlModel
      */
     protected function yamlArrayToModel($array)
     {
+        $this->originals = array_except($array, 'fields');
+
         $this->controls = $array;
     }
 }

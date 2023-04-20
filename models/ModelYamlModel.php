@@ -17,8 +17,14 @@ use Yaml;
  */
 abstract class ModelYamlModel extends YamlModel
 {
+    /**
+     * @var string fileName
+     */
     public $fileName;
 
+    /**
+     * @var string modelClassName
+     */
     protected $modelClassName;
 
     /**
