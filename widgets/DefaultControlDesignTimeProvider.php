@@ -4,17 +4,21 @@ use File;
 use RainLab\Builder\Classes\ControlDesignTimeProviderBase;
 
 /**
- * Default control design-time provider.
+ * DefaultControlDesignTimeProvider is a default control design-time provider.
  *
  * @package rainlab\builder
  * @author Alexey Bobkov, Samuel Georges
  */
 class DefaultControlDesignTimeProvider extends ControlDesignTimeProviderBase
 {
+    /**
+     * @var array defaultControlsTypes
+     */
     protected $defaultControlsTypes = [
         'text',
         'number',
         'password',
+        'email',
         'textarea',
         'checkbox',
         'dropdown',
@@ -23,6 +27,7 @@ class DefaultControlDesignTimeProvider extends ControlDesignTimeProviderBase
         'checkboxlist',
         'switch',
         'section',
+        'ruler',
         'partial',
         'hint',
         'widget',
@@ -40,7 +45,7 @@ class DefaultControlDesignTimeProvider extends ControlDesignTimeProviderBase
     ];
 
     /**
-     * Renders control body.
+     * renderControlBody
      * @param string $type Specifies the control type to render.
      * @param array $properties Control property values.
      * @param  \RainLab\Builder\FormWidgets\FormBuilder $formBuilder FormBuilder widget instance.
@@ -59,7 +64,7 @@ class DefaultControlDesignTimeProvider extends ControlDesignTimeProviderBase
     }
 
     /**
-     * Renders control static body.
+     * renderControlStaticBody renders control static body.
      * The control static body is never updated with AJAX during the form editing.
      * @param string $type Specifies the control type to render.
      * @param array $properties Control property values preprocessed for the Inspector.
@@ -88,19 +93,22 @@ class DefaultControlDesignTimeProvider extends ControlDesignTimeProviderBase
     }
 
     /**
-     * Determines whether a control supports default labels and comments.
+     * controlHasLabels determines whether a control supports default labels and comments.
      * @param string $type Specifies the control type.
      * @return boolean
      */
     public function controlHasLabels($type)
     {
-        if (in_array($type, ['checkbox', 'switch', 'hint', 'partial', 'section'])) {
+        if (in_array($type, ['checkbox', 'switch', 'hint', 'partial', 'section', 'ruler'])) {
             return false;
         }
 
         return true;
     }
 
+    /**
+     * getPropertyValue
+     */
     protected function getPropertyValue($properties, $property)
     {
         if (array_key_exists($property, $properties)) {
@@ -110,6 +118,9 @@ class DefaultControlDesignTimeProvider extends ControlDesignTimeProviderBase
         return null;
     }
 
+    /**
+     * renderUnknownControl
+     */
     protected function renderUnknownControl($type, $properties)
     {
         return $this->makePartial('control-unknowncontrol', [
