@@ -9,7 +9,6 @@ use RainLab\Builder\Classes\StandardBehaviorsRegistry;
 use RainLab\Builder\Classes\StandardBlueprintsRegistry;
 use RainLab\Builder\Rules\Reserved;
 use Doctrine\DBAL\Types\Type as DoctrineType;
-use Validator;
 
 /**
  * Plugin registration file
@@ -74,56 +73,63 @@ class Plugin extends PluginBase
                         'label' => 'rainlab.builder::lang.database.menu_label',
                         'icon' => 'icon-hdd-o',
                         'url' => 'javascript:;',
-                        'attributes' => ['data-menu-item'=>'database'],
+                        'attributes' => ['data-menu-item' => 'database'],
                         'permissions' => ['rainlab.builder.manage_plugins']
                     ],
                     'models' => [
                         'label' => 'rainlab.builder::lang.model.menu_label',
                         'icon' => 'icon-random',
                         'url' => 'javascript:;',
-                        'attributes' => ['data-menu-item'=>'models'],
-                        'permissions' => ['rainlab.builder.manage_plugins']
-                    ],
-                    'permissions' => [
-                        'label' => 'rainlab.builder::lang.permission.menu_label',
-                        'icon' => 'icon-unlock-alt',
-                        'url' => 'javascript:;',
-                        'attributes' => ['data-no-side-panel'=>'true', 'data-builder-command'=>'permission:cmdOpenPermissions', 'data-menu-item'=>'permissions'],
-                        'permissions' => ['rainlab.builder.manage_plugins']
-                    ],
-                    'menus' => [
-                        'label' => 'rainlab.builder::lang.menu.menu_label',
-                        'icon' => 'icon-location-arrow',
-                        'url' => 'javascript:;',
-                        'attributes' => ['data-no-side-panel'=>'true', 'data-builder-command'=>'menus:cmdOpenMenus', 'data-menu-item'=>'menus'],
+                        'attributes' => ['data-menu-item' => 'models'],
                         'permissions' => ['rainlab.builder.manage_plugins']
                     ],
                     'controllers' => [
                         'label' => 'rainlab.builder::lang.controller.menu_label',
                         'icon' => 'icon-asterisk',
                         'url' => 'javascript:;',
-                        'attributes' => ['data-menu-item'=>'controllers'],
+                        'attributes' => ['data-menu-item' => 'controllers'],
+                        'permissions' => ['rainlab.builder.manage_plugins']
+                    ],
+                    'permissions' => [
+                        'label' => 'rainlab.builder::lang.permission.menu_label',
+                        'icon' => 'icon-unlock-alt',
+                        'url' => 'javascript:;',
+                        'attributes' => ['data-no-side-panel' => 'true', 'data-builder-command' => 'permission:cmdOpenPermissions', 'data-menu-item' => 'permissions'],
+                        'permissions' => ['rainlab.builder.manage_plugins']
+                    ],
+                    'menus' => [
+                        'label' => 'rainlab.builder::lang.menu.menu_label',
+                        'icon' => 'icon-location-arrow',
+                        'url' => 'javascript:;',
+                        'attributes' => ['data-no-side-panel' => 'true', 'data-builder-command' => 'menus:cmdOpenMenus', 'data-menu-item' => 'menus'],
                         'permissions' => ['rainlab.builder.manage_plugins']
                     ],
                     'versions' => [
                         'label' => 'rainlab.builder::lang.version.menu_label',
                         'icon' => 'icon-code-fork',
                         'url' => 'javascript:;',
-                        'attributes' => ['data-menu-item'=>'version'],
+                        'attributes' => ['data-menu-item' => 'version'],
                         'permissions' => ['rainlab.builder.manage_plugins']
                     ],
                     'localization' => [
                         'label' => 'rainlab.builder::lang.localization.menu_label',
                         'icon' => 'icon-globe',
                         'url' => 'javascript:;',
-                        'attributes' => ['data-menu-item'=>'localization'],
+                        'attributes' => ['data-menu-item' => 'localization'],
+                        'permissions' => ['rainlab.builder.manage_plugins']
+                    ],
+                    'code' => [
+                        'label' => 'Code',
+                        'icon' => 'icon-file-code-o',
+                        'url' => 'javascript:;',
+                        'attributes' => ['data-menu-item' => 'code'],
                         'permissions' => ['rainlab.builder.manage_plugins']
                     ],
                     'imports' => [
                         'label' => 'Import',
                         'icon' => 'icon-arrow-circle-down',
                         'url' => 'javascript:;',
-                        'attributes' => ['data-no-side-panel'=>'true', 'data-builder-command'=>'imports:cmdOpenImports', 'data-menu-item'=>'imports'],
+                        'attributes' => ['data-no-side-panel' => 'true', 'data-builder-command' => 'imports:cmdOpenImports', 'data-menu-item' => 'imports'],
                         'permissions' => ['rainlab.builder.manage_plugins']
                     ]
                 ]
@@ -173,23 +179,13 @@ class Plugin extends PluginBase
             }
         });
 
-        // Compatibility with v1 legacy
-        if (!class_exists('System')) {
-            Validator::extend('reserved', Reserved::class);
-            Validator::replacer('reserved', function ($message, $attribute, $rule, $parameters) {
+        $this->callAfterResolving('validator', function ($validator) {
+            $validator->extend('reserved', Reserved::class);
+            $validator->replacer('reserved', function ($message, $attribute, $rule, $parameters) {
                 // Fixes lowercase attribute names in the new plugin modal form
                 return ucfirst($message);
             });
-        }
-        else {
-            $this->callAfterResolving('validator', function ($validator) {
-                $validator->extend('reserved', Reserved::class);
-                $validator->replacer('reserved', function ($message, $attribute, $rule, $parameters) {
-                    // Fixes lowercase attribute names in the new plugin modal form
-                    return ucfirst($message);
-                });
-            });
-        }
+        });
 
         // Register doctrine types
         if (!DoctrineType::hasType('timestamp')) {

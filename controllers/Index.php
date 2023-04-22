@@ -8,6 +8,7 @@ use RainLab\Builder\Widgets\ModelList;
 use RainLab\Builder\Widgets\VersionList;
 use RainLab\Builder\Widgets\LanguageList;
 use RainLab\Builder\Widgets\ControllerList;
+use RainLab\Builder\Widgets\CodeList;
 use BackendMenu;
 
 /**
@@ -33,6 +34,7 @@ class Index extends Controller
         \RainLab\Builder\Behaviors\IndexMenusOperations::class,
         \RainLab\Builder\Behaviors\IndexVersionsOperations::class,
         \RainLab\Builder\Behaviors\IndexLocalizationOperations::class,
+        \RainLab\Builder\Behaviors\IndexCodeOperations::class,
         \RainLab\Builder\Behaviors\IndexControllerOperations::class,
         \RainLab\Builder\Behaviors\IndexImportsOperations::class,
         \RainLab\Builder\Behaviors\IndexDataRegistry::class
@@ -72,6 +74,7 @@ class Index extends Controller
         new VersionList($this, 'versionList');
         new LanguageList($this, 'languageList');
         new ControllerList($this, 'controllerList');
+        new CodeList($this, 'codeList');
 
         $this->bindFormWidgetToController();
     }
@@ -99,11 +102,6 @@ class Index extends Controller
     public function index()
     {
         $this->addCss('/plugins/rainlab/builder/assets/css/builder.css', 'RainLab.Builder');
-
-        // Legacy styles for October v1.0
-        if (!class_exists('System')) {
-            $this->addCss('/plugins/rainlab/builder/assets/css/builder-v1.css', 'RainLab.Builder');
-        }
 
         // The table widget scripts should be preloaded
         $this->addJs('/modules/backend/widgets/table/assets/js/build-min.js', 'core');

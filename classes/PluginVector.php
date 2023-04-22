@@ -4,7 +4,7 @@ use System\Classes\PluginBase;
 use System\Classes\PluginManager;
 
 /**
- * Holds a plugin code object and a plugin information class instancd.
+ * PluginVector holds a plugin code object and a plugin information class instance.
  *
  * @package rainlab\builder
  * @author Alexey Bobkov, Samuel Georges
@@ -21,12 +21,18 @@ class PluginVector
      */
     public $pluginCodeObj;
 
+    /**
+     * __construct
+     */
     public function __construct(PluginBase $plugin, PluginCode $pluginCodeObj)
     {
         $this->plugin = $plugin;
         $this->pluginCodeObj = $pluginCodeObj;
     }
 
+    /**
+     * createFromPluginCode
+     */
     public static function createFromPluginCode($pluginCode)
     {
         $pluginCodeObj = new PluginCode($pluginCode);
@@ -42,6 +48,9 @@ class PluginVector
         return null;
     }
 
+    /**
+     * getPluginName
+     */
     public function getPluginName()
     {
         if (!$this->plugin) {

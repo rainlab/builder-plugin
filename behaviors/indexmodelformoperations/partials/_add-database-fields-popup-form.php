@@ -2,9 +2,9 @@
     'data-builder-command'=>'modelForm:cmdAddDatabaseFields'
 ]) ?>
 
-    <div class="modal-header flex-row-reverse">
-        <button type="button" class="close" data-dismiss="popup">&times;</button>
+    <div class="modal-header">
         <h4 class="modal-title"><?= e(trans('rainlab.builder::lang.form.btn_add_database_fields')) ?></h4>
+        <button type="button" class="btn-close" data-dismiss="popup"></button>
     </div>
 
     <div class="modal-body">

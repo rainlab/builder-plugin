@@ -21,7 +21,7 @@
                 <?= $this->widget->modelList->render() ?>
             </form>
 
-            <!-- Controllerss -->
+            <!-- Controllers -->
             <form
                 class="layout hide oc-hide"
                 data-content-id="controllers"
@@ -49,6 +49,16 @@
                 data-type-icon="oc-icon-glove"
                 onsubmit="return false">
                 <?= $this->widget->languageList->render() ?>
+            </form>
+
+            <!-- Code Editor -->
+            <form
+                class="layout hide oc-hide"
+                data-content-id="code"
+                data-template-type="code"
+                data-type-icon="icon-file-code-o"
+                onsubmit="return false">
+                <?= $this->widget->codeList->render() ?>
             </form>
         </div>
     </div>

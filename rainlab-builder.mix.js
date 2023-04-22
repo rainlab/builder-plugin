@@ -23,12 +23,14 @@ module.exports = (mix) => {
         'plugins/rainlab/builder/assets/js/builder.index.entity.permission.js',
         'plugins/rainlab/builder/assets/js/builder.index.entity.menus.js',
         'plugins/rainlab/builder/assets/js/builder.index.entity.imports.js',
+        'plugins/rainlab/builder/assets/js/builder.index.entity.code.js',
         'plugins/rainlab/builder/assets/js/builder.index.entity.version.js',
         'plugins/rainlab/builder/assets/js/builder.index.entity.localization.js',
         'plugins/rainlab/builder/assets/js/builder.index.entity.controller.js',
         'plugins/rainlab/builder/assets/js/builder.index.js',
         'plugins/rainlab/builder/assets/js/builder.localizationinput.js',
         'plugins/rainlab/builder/assets/js/builder.inspector.editor.localization.js',
-        'plugins/rainlab/builder/assets/js/builder.table.processor.localization.js'
+        'plugins/rainlab/builder/assets/js/builder.table.processor.localization.js',
+        'plugins/rainlab/builder/assets/js/builder.codelist.js'
     ], 'plugins/rainlab/builder/assets/js/build-min.js');
 }

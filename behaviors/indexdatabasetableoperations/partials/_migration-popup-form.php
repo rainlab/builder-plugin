@@ -2,9 +2,9 @@
     'data-builder-command'=>'databaseTable:cmdSaveMigration',
     'id'=>'builderTableMigrationPopup'
 ]) ?>
-    <div class="modal-header flex-row-reverse">
-        <button type="button" class="close" data-dismiss="popup">&times;</button>
+    <div class="modal-header">
         <h4 class="modal-title"><?= e(trans('rainlab.builder::lang.migration.entity_name')) ?></h4>
+        <button type="button" class="btn-close" data-dismiss="popup"></button>
     </div>
 
     <?php if (!isset($noChanges)): ?>

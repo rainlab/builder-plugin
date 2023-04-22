@@ -1,6 +1,6 @@
-<div class="modal-header flex-row-reverse">
-    <button type="button" class="close" data-dismiss="popup">&times;</button>
+<div class="modal-header">
     <h4 class="modal-title"><?= e($title) ?></h4>
+    <button type="button" class="btn-close" data-dismiss="popup"></button>
 </div>
 <form autocomplete="off">
     <div class="modal-body">
