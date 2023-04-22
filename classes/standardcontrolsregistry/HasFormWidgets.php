@@ -9,92 +9,6 @@ use RainLab\Builder\Classes\ControlLibrary;
 trait HasFormWidgets
 {
     /**
-     * registerRepeaterWidget
-     */
-    protected function registerRepeaterWidget()
-    {
-        $properties = [
-            'prompt' =>  [
-                'title' => Lang::get('rainlab.builder::lang.form.property_prompt'),
-                'description' => Lang::get('rainlab.builder::lang.form.property_prompt_description'),
-                'type' => 'string',
-                'ignoreIfEmpty' => true,
-                'default' => Lang::get('rainlab.builder::lang.form.property_prompt_default'),
-                'sortOrder' => 81
-            ],
-            'titleFrom' =>  [
-                'title' => Lang::get('rainlab.builder::lang.form.property_title_from'),
-                'description' => Lang::get('rainlab.builder::lang.form.property_title_from_description'),
-                'type' => 'string',
-                'ignoreIfEmpty' => true,
-                'sortOrder' => 82
-            ],
-            'form' => [
-                'type' => 'control-container'
-            ],
-            'minItems' =>  [
-                'title' => Lang::get('rainlab.builder::lang.form.property_min_items'),
-                'description' => Lang::get('rainlab.builder::lang.form.property_min_items_description'),
-                'type' => 'string',
-                'ignoreIfEmpty' => true,
-                'sortOrder' => 83,
-                'validation' => [
-                    'integer' => [
-                        'message' => Lang::get('rainlab.builder::lang.form.property_min_items_integer'),
-                        'allowNegative' => false,
-                    ]
-                ],
-            ],
-            'maxItems' =>  [
-                'title' => Lang::get('rainlab.builder::lang.form.property_max_items'),
-                'description' => Lang::get('rainlab.builder::lang.form.property_max_items_description'),
-                'type' => 'string',
-                'ignoreIfEmpty' => true,
-                'sortOrder' => 84,
-                'validation' => [
-                    'integer' => [
-                        'message' => Lang::get('rainlab.builder::lang.form.property_max_items_integer'),
-                        'allowNegative' => false,
-                    ]
-                ],
-            ],
-            'style' => [
-                'title' => Lang::get('rainlab.builder::lang.form.property_style'),
-                'description' => Lang::get('rainlab.builder::lang.form.property_style_description'),
-                'type' => 'dropdown',
-                'default' => 'default',
-                'options' => [
-                    'default' => Lang::get('rainlab.builder::lang.form.style_default'),
-                    'collapsed' => Lang::get('rainlab.builder::lang.form.style_collapsed'),
-                    'accordion' => Lang::get('rainlab.builder::lang.form.style_accordion'),
-                ],
-                'sortOrder' => 85,
-            ]
-        ];
-
-        $excludeProperties = [
-            'stretch',
-            'placeholder',
-            'default',
-            'required',
-            'defaultFrom',
-            'dependsOn',
-            'preset',
-            'attributes'
-        ];
-
-        $this->controlLibrary->registerControl(
-            'repeater',
-            'rainlab.builder::lang.form.control_repeater',
-            'rainlab.builder::lang.form.control_repeater_description',
-            ControlLibrary::GROUP_WIDGETS,
-            'icon-server',
-            $this->controlLibrary->getStandardProperties($excludeProperties, $properties),
-            null
-        );
-    }
-
-    /**
      * registerCodeEditorWidget
      */
     protected function registerCodeEditorWidget()
@@ -308,13 +222,44 @@ trait HasFormWidgets
         ];
 
         $properties = [
-            'availableColors' =>  [
+            'availableColors' => [
                 'title' => Lang::get('rainlab.builder::lang.form.property_available_colors'),
                 'description' => Lang::get('rainlab.builder::lang.form.property_available_colors_description'),
+                'group' => Lang::get('rainlab.builder::lang.form.property_group_colorpicker'),
                 'type' => 'stringList',
                 'ignoreIfEmpty' => true,
                 'sortOrder' => 81
-            ]
+            ],
+            'allowEmpty' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_allow_empty'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_allow_empty_description'),
+                'group' => Lang::get('rainlab.builder::lang.form.property_group_colorpicker'),
+                'type' => 'checkbox',
+                'default' => true,
+                'ignoreIfEmpty' => true,
+            ],
+            'allowCustom' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_allow_custom'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_allow_custom_description'),
+                'group' => Lang::get('rainlab.builder::lang.form.property_group_colorpicker'),
+                'type' => 'checkbox',
+                'default' => true,
+                'ignoreIfEmpty' => true,
+            ],
+            'showAlpha' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_show_alpha'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_show_alpha_description'),
+                'group' => Lang::get('rainlab.builder::lang.form.property_group_colorpicker'),
+                'type' => 'checkbox',
+                'ignoreIfEmpty' => true,
+            ],
+            'showInput' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_show_input'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_show_input_description'),
+                'group' => Lang::get('rainlab.builder::lang.form.property_group_colorpicker'),
+                'type' => 'checkbox',
+                'ignoreIfEmpty' => true,
+            ],
         ];
 
         $this->controlLibrary->registerControl(
@@ -323,6 +268,105 @@ trait HasFormWidgets
             'rainlab.builder::lang.form.control_colorpicker_description',
             ControlLibrary::GROUP_WIDGETS,
             'icon-eyedropper',
+            $this->controlLibrary->getStandardProperties($excludeProperties, $properties),
+            null
+        );
+    }
+
+    /**
+     * registerDataTableWidget
+     */
+    protected function registerDataTableWidget()
+    {
+        $excludeProperties = [
+            'stretch'
+        ];
+
+        $properties = [
+            'oc.columns' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_columns'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_columns_description'),
+                'group' => Lang::get('rainlab.builder::lang.form.property_group_datatable'),
+                'type' => 'objectList',
+                'ignoreIfEmpty' => true,
+                'titleProperty' => 'title',
+                'itemProperties' => [
+                    [
+                        'property' => 'type',
+                        'title' => Lang::get('rainlab.builder::lang.form.property_datatable_type'),
+                        'type' => 'dropdown',
+                        'default' => 'string',
+                        'options' => [
+                            'string' => "String",
+                            'checkbox' => "Checkbox",
+                            'dropdown' => "Dropdown",
+                            'autocomplete' => "Autocomplete",
+                        ],
+                    ],
+                    [
+                        'property' => 'code',
+                        'title' => Lang::get('rainlab.builder::lang.form.property_datatable_code'),
+                        'type' => 'string',
+                        'validation' => [
+                            'required' => [
+                                'message' => Lang::get('rainlab.builder::lang.form.property_datatable_code_regex'),
+                            ]
+                        ],
+                    ],
+                    [
+                        'property' => 'title',
+                        'title' => Lang::get('rainlab.builder::lang.form.property_datatable_title'),
+                        'type' => 'string'
+                    ],
+                    [
+                        'property' => 'options',
+                        'title' => Lang::get('rainlab.builder::lang.form.property_options'),
+                        'type' => 'dictionary',
+                        'ignoreIfEmpty' => true,
+                    ],
+                    [
+                        'property' => 'width',
+                        'title' => Lang::get('rainlab.builder::lang.form.property_datatable_width'),
+                        'type' => 'string',
+                        'validation' => [
+                            'regex' => [
+                                'pattern' => '^[0-9]+$',
+                                'message' => Lang::get('rainlab.builder::lang.form.property_datatable_width_regex')
+                            ]
+                        ],
+                    ]
+                ],
+                'sortOrder' => 81
+            ],
+            'adding' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_datatable_adding'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_datatable_adding_description'),
+                'group' => Lang::get('rainlab.builder::lang.form.property_group_datatable'),
+                'type' => 'checkbox',
+                'ignoreIfEmpty' => true,
+            ],
+            'deleting' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_datatable_deleting'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_datatable_deleting_description'),
+                'group' => Lang::get('rainlab.builder::lang.form.property_group_datatable'),
+                'type' => 'checkbox',
+                'ignoreIfEmpty' => true,
+            ],
+            'searching' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_datatable_searching'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_datatable_searching_description'),
+                'group' => Lang::get('rainlab.builder::lang.form.property_group_datatable'),
+                'type' => 'checkbox',
+                'ignoreIfEmpty' => true,
+            ],
+        ];
+
+        $this->controlLibrary->registerControl(
+            'datatable',
+            'rainlab.builder::lang.form.control_datatable',
+            'rainlab.builder::lang.form.control_datatable_description',
+            ControlLibrary::GROUP_WIDGETS,
+            'icon-table',
             $this->controlLibrary->getStandardProperties($excludeProperties, $properties),
             null
         );
@@ -338,8 +382,9 @@ trait HasFormWidgets
         ];
 
         $properties = [
-            'mode' =>  [
+            'mode' => [
                 'title' => Lang::get('rainlab.builder::lang.form.property_datepicker_mode'),
+                'group' => Lang::get('rainlab.builder::lang.form.property_group_datepicker'),
                 'type' => 'dropdown',
                 'default' => 'datetime',
                 'options' => [
@@ -349,23 +394,34 @@ trait HasFormWidgets
                 ],
                 'sortOrder' => 81
             ],
-            'minDate' => [
-                'title' => Lang::get('rainlab.builder::lang.form.property_datepicker_min_date'),
-                'description' => Lang::get('rainlab.builder::lang.form.property_datepicker_min_date_description'),
+            'format' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_datepicker_format'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_datepicker_year_format_description'),
+                'group' => Lang::get('rainlab.builder::lang.form.property_group_datepicker'),
                 'type' => 'string',
                 'ignoreIfEmpty' => true,
                 'sortOrder' => 82
             ],
-            'maxDate' => [
-                'title' => Lang::get('rainlab.builder::lang.form.property_datepicker_max_date'),
-                'description' => Lang::get('rainlab.builder::lang.form.property_datepicker_max_date_description'),
+            'minDate' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_datepicker_min_date'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_datepicker_min_date_description'),
+                'group' => Lang::get('rainlab.builder::lang.form.property_group_datepicker'),
                 'type' => 'string',
                 'ignoreIfEmpty' => true,
                 'sortOrder' => 83
             ],
+            'maxDate' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_datepicker_max_date'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_datepicker_max_date_description'),
+                'group' => Lang::get('rainlab.builder::lang.form.property_group_datepicker'),
+                'type' => 'string',
+                'ignoreIfEmpty' => true,
+                'sortOrder' => 84
+            ],
             'yearRange' => [
                 'title' => Lang::get('rainlab.builder::lang.form.property_datepicker_year_range'),
                 'description' => Lang::get('rainlab.builder::lang.form.property_datepicker_year_range_description'),
+                'group' => Lang::get('rainlab.builder::lang.form.property_group_datepicker'),
                 'type' => 'string',
                 'ignoreIfEmpty' => true,
                 'validation' => [
@@ -374,15 +430,38 @@ trait HasFormWidgets
                         'message' => Lang::get('rainlab.builder::lang.form.property_datepicker_year_range_invalid_format')
                     ]
                 ],
-                'sortOrder' => 84
-            ],
-            'format' => [
-                'title' => Lang::get('rainlab.builder::lang.form.property_datepicker_format'),
-                'description' => Lang::get('rainlab.builder::lang.form.property_datepicker_year_format_description'),
-                'type' => 'string',
-                'ignoreIfEmpty' => true,
                 'sortOrder' => 85
-            ]
+            ],
+            'firstDay' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_datepicker_first_day'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_datepicker_first_day_description'),
+                'group' => Lang::get('rainlab.builder::lang.form.property_group_datepicker'),
+                'type' => 'string',
+                'validation' => [
+                    'regex' => [
+                        'pattern' => '^[0-9]+$',
+                        'message' => Lang::get('rainlab.builder::lang.form.property_datepicker_first_day_regex')
+                    ]
+                ],
+                'ignoreIfEmpty' => true,
+                'sortOrder' => 86
+            ],
+            'twelveHour' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_datepicker_twelve_hour'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_datepicker_twelve_hour_description'),
+                'group' => Lang::get('rainlab.builder::lang.form.property_group_datepicker'),
+                'type' => 'checkbox',
+                'ignoreIfEmpty' => true,
+                'sortOrder' => 87
+            ],
+            'showWeekNumber' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_datepicker_show_week_number'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_datepicker_show_week_number_description'),
+                'group' => Lang::get('rainlab.builder::lang.form.property_group_datepicker'),
+                'type' => 'checkbox',
+                'ignoreIfEmpty' => true,
+                'sortOrder' => 88
+            ],
         ];
 
         $this->controlLibrary->registerControl(
@@ -391,173 +470,6 @@ trait HasFormWidgets
             'rainlab.builder::lang.form.control_datepicker_description',
             ControlLibrary::GROUP_WIDGETS,
             'icon-calendar',
-            $this->controlLibrary->getStandardProperties($excludeProperties, $properties),
-            null
-        );
-    }
-
-    /**
-     * registerRichEditorWidget
-     */
-    protected function registerRichEditorWidget()
-    {
-        $properties = $this->getFieldSizeProperties();
-
-        $properties['mode'] = [
-            'title' => Lang::get('rainlab.builder::lang.form.property_richeditor_toolbar_buttons'),
-            'description' => Lang::get('rainlab.builder::lang.form.property_richeditor_toolbar_buttons_description'),
-            'group' => Lang::get('rainlab.builder::lang.form.property_group_rich_editor'),
-            'type' => 'text',
-            'ignoreIfEmpty' => true,
-            'sortOrder' => 81
-        ];
-
-        $this->controlLibrary->registerControl(
-            'richeditor',
-            'rainlab.builder::lang.form.control_richeditor',
-            'rainlab.builder::lang.form.control_richeditor_description',
-            ControlLibrary::GROUP_WIDGETS,
-            'icon-indent',
-            $this->controlLibrary->getStandardProperties([], $properties),
-            null
-        );
-    }
-
-    /**
-     * getFieldSizeProperties
-     */
-    protected function getFieldSizeProperties()
-    {
-        return [
-            'size' =>  [
-                'title' => Lang::get('rainlab.builder::lang.form.property_attributes_size'),
-                'type' => 'dropdown',
-                'options' => [
-                    'tiny' => Lang::get('rainlab.builder::lang.form.property_attributes_size_tiny'),
-                    'small' => Lang::get('rainlab.builder::lang.form.property_attributes_size_small'),
-                    'large' => Lang::get('rainlab.builder::lang.form.property_attributes_size_large'),
-                    'huge' => Lang::get('rainlab.builder::lang.form.property_attributes_size_huge'),
-                    'giant' => Lang::get('rainlab.builder::lang.form.property_attributes_size_giant')
-                ],
-                'sortOrder' => 51
-            ]
-        ];
-    }
-
-    /**
-     * registerMarkdownWidget
-     */
-    protected function registerMarkdownWidget()
-    {
-        $properties = $this->getFieldSizeProperties();
-
-        $properties = array_merge($properties, [
-            'mode' => [
-                'title' => Lang::get('rainlab.builder::lang.form.property_markdown_mode'),
-                'type' => 'dropdown',
-                'default' => 'tab',
-                'options' => [
-                    'split' => Lang::get('rainlab.builder::lang.form.property_markdown_mode_split'),
-                    'tab' => Lang::get('rainlab.builder::lang.form.property_markdown_mode_tab')
-                ],
-                'sortOrder' => 81
-            ]
-        ]);
-
-        $this->controlLibrary->registerControl(
-            'markdown',
-            'rainlab.builder::lang.form.control_markdown',
-            'rainlab.builder::lang.form.control_markdown_description',
-            ControlLibrary::GROUP_WIDGETS,
-            'icon-columns',
-            $this->controlLibrary->getStandardProperties([], $properties),
-            null
-        );
-    }
-
-    /**
-     * registerTagListWidget
-     */
-    protected function registerTagListWidget()
-    {
-        $excludeProperties = [
-            'stretch',
-            'readOnly'
-        ];
-
-        $properties = [
-            'mode' => [
-                'title' => Lang::get('rainlab.builder::lang.form.property_taglist_mode'),
-                'description' => Lang::get('rainlab.builder::lang.form.property_taglist_mode_description'),
-                'group' => Lang::get('rainlab.builder::lang.form.property_group_taglist'),
-                'type' => 'dropdown',
-                'options' => [
-                    'string' => Lang::get('rainlab.builder::lang.form.property_taglist_mode_string'),
-                    'array' => Lang::get('rainlab.builder::lang.form.property_taglist_mode_array'),
-                    'relation' => Lang::get('rainlab.builder::lang.form.property_taglist_mode_relation')
-                ],
-                'default' => 'string',
-                'sortOrder' => 83
-            ],
-            'separator' => [
-                'title' => Lang::get('rainlab.builder::lang.form.property_taglist_separator'),
-                'group' => Lang::get('rainlab.builder::lang.form.property_group_taglist'),
-                'type' => 'dropdown',
-                'options' => [
-                    'comma' => Lang::get('rainlab.builder::lang.form.property_taglist_separator_comma'),
-                    'space' => Lang::get('rainlab.builder::lang.form.property_taglist_separator_space')
-                ],
-                'default' => 'comma',
-                'sortOrder' => 84
-            ],
-            'customTags' => [
-                'title' => Lang::get('rainlab.builder::lang.form.property_taglist_custom_tags'),
-                'description' => Lang::get('rainlab.builder::lang.form.property_taglist_custom_tags_description'),
-                'group' => Lang::get('rainlab.builder::lang.form.property_group_taglist'),
-                'type' => 'checkbox',
-                'default' => true,
-                'sortOrder' => 86
-            ],
-            'options' => [
-                'title' => Lang::get('rainlab.builder::lang.form.property_taglist_options'),
-                'group' => Lang::get('rainlab.builder::lang.form.property_group_taglist'),
-                'type' => 'stringList',
-                'ignoreIfEmpty' => true,
-                'sortOrder' => 85
-            ],
-            'optionsMethod' => [
-                'title' => "Options Method",
-                'description' => "Request options from this method name defined on the model or as a static method (Class::method).",
-                'group' => Lang::get('rainlab.builder::lang.form.property_group_taglist'),
-                'type' => 'string',
-                'ignoreIfEmpty' => true,
-                'sortOrder' => 86
-            ],
-            'nameFrom' => [
-                'title' => Lang::get('rainlab.builder::lang.form.property_taglist_name_from'),
-                'description' => Lang::get('rainlab.builder::lang.form.property_taglist_name_from_description'),
-                'group' => Lang::get('rainlab.builder::lang.form.property_group_taglist'),
-                'type' => 'string',
-                'ignoreIfEmpty' => true,
-                'sortOrder' => 87
-            ],
-            'useKey' => [
-                'title' => Lang::get('rainlab.builder::lang.form.property_taglist_use_key'),
-                'description' => Lang::get('rainlab.builder::lang.form.property_taglist_use_key_description'),
-                'group' => Lang::get('rainlab.builder::lang.form.property_group_taglist'),
-                'type' => 'checkbox',
-                'default' => false,
-                'ignoreIfEmpty' => true,
-                'sortOrder' => 88
-            ]
-        ];
-
-        $this->controlLibrary->registerControl(
-            'taglist',
-            'rainlab.builder::lang.form.control_taglist',
-            'rainlab.builder::lang.form.control_taglist_description',
-            ControlLibrary::GROUP_WIDGETS,
-            'icon-tags',
             $this->controlLibrary->getStandardProperties($excludeProperties, $properties),
             null
         );
@@ -589,14 +501,6 @@ trait HasFormWidgets
                     'image' => Lang::get('rainlab.builder::lang.form.property_fileupload_mode_image')
                 ],
                 'sortOrder' => 81
-            ],
-            'prompt' => [
-                'title' => Lang::get('rainlab.builder::lang.form.property_fileupload_prompt'),
-                'description' => Lang::get('rainlab.builder::lang.form.property_fileupload_prompt_description'),
-                'group' => Lang::get('rainlab.builder::lang.form.property_group_fileupload'),
-                'type' => 'string',
-                'ignoreIfEmpty' => true,
-                'sortOrder' => 82
             ],
             'imageWidth' => [
                 'title' => Lang::get('rainlab.builder::lang.form.property_fileupload_image_width'),
@@ -650,40 +554,7 @@ trait HasFormWidgets
                 'default' => true,
                 'sortOrder' => 87
             ],
-            'thumbOptions' => [
-                'title' => Lang::get('rainlab.builder::lang.form.property_fileupload_thumb_options'),
-                'description' => Lang::get('rainlab.builder::lang.form.property_fileupload_thumb_options_description'),
-                'group' => Lang::get('rainlab.builder::lang.form.property_group_fileupload'),
-                'type' => 'object',
-                'properties' => [
-                    [
-                        'property' => 'mode',
-                        'title' => Lang::get('rainlab.builder::lang.form.property_fileupload_thumb_mode'),
-                        'type' => 'dropdown',
-                        'default' => 'crop',
-                        'options' => [
-                            'auto' => Lang::get('rainlab.builder::lang.form.property_fileupload_thumb_auto'),
-                            'exact' => Lang::get('rainlab.builder::lang.form.property_fileupload_thumb_exact'),
-                            'portrait' => Lang::get('rainlab.builder::lang.form.property_fileupload_thumb_portrait'),
-                            'landscape' => Lang::get('rainlab.builder::lang.form.property_fileupload_thumb_landscape'),
-                            'crop' => Lang::get('rainlab.builder::lang.form.property_fileupload_thumb_crop')
-                        ]
-                    ],
-                    [
-                        'property' => 'extension',
-                        'title' => Lang::get('rainlab.builder::lang.form.property_fileupload_thumb_extension'),
-                        'type' => 'dropdown',
-                        'default' => 'auto',
-                        'options' => [
-                            'auto' => Lang::get('rainlab.builder::lang.form.property_fileupload_thumb_auto'),
-                            'jpg' => 'jpg',
-                            'gif' => 'gif',
-                            'png' => 'png'
-                        ]
-                    ]
-                ],
-                'sortOrder' => 88
-            ],
+            'thumbOptions' => $this->getFieldThumbOptionsProperties()['thumbOptions'],
             'maxFilesize' => [
                 'title' => Lang::get('rainlab.builder::lang.form.property_fileupload_maxfilesize'),
                 'description' => Lang::get('rainlab.builder::lang.form.property_fileupload_maxfilesize_description'),
@@ -726,6 +597,146 @@ trait HasFormWidgets
     }
 
     /**
+     * registerMarkdownWidget
+     */
+    protected function registerMarkdownWidget()
+    {
+        $properties = $this->getFieldSizeProperties() + [
+            'sideBySide' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_side_by_side'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_side_by_side_description'),
+                'type' => 'checkbox',
+                'sortOrder' => 81
+            ]
+        ];
+
+        $this->controlLibrary->registerControl(
+            'markdown',
+            'rainlab.builder::lang.form.control_markdown',
+            'rainlab.builder::lang.form.control_markdown_description',
+            ControlLibrary::GROUP_WIDGETS,
+            'icon-columns',
+            $this->controlLibrary->getStandardProperties([], $properties),
+            null
+        );
+    }
+
+    /**
+     * registerMediaFinderWidget
+     */
+    protected function registerMediaFinderWidget()
+    {
+        $excludeProperties = [
+            'stretch',
+            'default',
+            'placeholder',
+            'defaultFrom',
+            'dependsOn',
+            'preset',
+            'attributes',
+            'disabled'
+        ];
+
+        $properties = [
+            'mode' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_mediafinder_mode'),
+                'type' => 'dropdown',
+                'default' => 'file',
+                'options' => [
+                    'file' => Lang::get('rainlab.builder::lang.form.property_mediafinder_mode_file'),
+                    'image' => Lang::get('rainlab.builder::lang.form.property_mediafinder_mode_image')
+                ],
+                'sortOrder' => 81
+            ],
+            'imageWidth' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_fileupload_image_width'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_mediafinder_image_width_description'),
+                'type' => 'string',
+                'ignoreIfEmpty' => true,
+                'validation' => [
+                    'regex' => [
+                        'pattern' => '^[0-9]+$',
+                        'message' => Lang::get('rainlab.builder::lang.form.property_fileupload_invalid_dimension')
+                    ]
+                ],
+                'sortOrder' => 82
+            ],
+            'imageHeight' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_fileupload_image_height'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_mediafinder_image_height_description'),
+                'type' => 'string',
+                'ignoreIfEmpty' => true,
+                'validation' => [
+                    'regex' => [
+                        'pattern' => '^[0-9]+$',
+                        'message' => Lang::get('rainlab.builder::lang.form.property_fileupload_invalid_dimension')
+                    ]
+                ],
+                'sortOrder' => 83
+            ],
+            'maxItems' => $this->getFieldMaxItemsProperties()['maxItems'],
+            'thumbOptions' => $this->getFieldThumbOptionsProperties()['thumbOptions'],
+        ];
+
+        $this->controlLibrary->registerControl(
+            'mediafinder',
+            'rainlab.builder::lang.form.control_mediafinder',
+            'rainlab.builder::lang.form.control_mediafinder_description',
+            ControlLibrary::GROUP_WIDGETS,
+            'icon-picture-o',
+            $this->controlLibrary->getStandardProperties($excludeProperties, $properties),
+            null
+        );
+    }
+
+    /**
+     * registerNestedFormWidget
+     */
+    protected function registerNestedFormWidget()
+    {
+        $properties = [
+            'form' => [
+                'type' => 'control-container'
+            ],
+            'showPanel' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_nestedform_show_panel'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_nestedform_show_panel_description'),
+                'type' => 'checkbox',
+                'ignoreIfEmpty' => true,
+                'sortOrder' => 87,
+            ],
+            'defaultCreate' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_nestedform_default_create'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_nestedform_default_create_description'),
+                'type' => 'checkbox',
+                'ignoreIfEmpty' => true,
+                'sortOrder' => 88,
+            ],
+        ];
+
+        $excludeProperties = [
+            'stretch',
+            'placeholder',
+            'default',
+            'required',
+            'defaultFrom',
+            'dependsOn',
+            'preset',
+            'attributes'
+        ];
+
+        $this->controlLibrary->registerControl(
+            'nestedform',
+            'rainlab.builder::lang.form.control_nestedform',
+            'rainlab.builder::lang.form.control_nestedform_description',
+            ControlLibrary::GROUP_WIDGETS,
+            'icon-object-group',
+            $this->controlLibrary->getStandardProperties($excludeProperties, $properties),
+            null
+        );
+    }
+
+    /**
      * registerRecordFinderWidget
      */
     protected function registerRecordFinderWidget()
@@ -758,9 +769,9 @@ trait HasFormWidgets
                 'default' => 'description',
                 'sortOrder' => 82
             ],
-            'prompt' => [
-                'title' => Lang::get('rainlab.builder::lang.form.property_recordfinder_prompt'),
-                'description' => Lang::get('rainlab.builder::lang.form.property_recordfinder_prompt_description'),
+            'title' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_recordfinder_title'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_recordfinder_title_description'),
                 'group' => Lang::get('rainlab.builder::lang.form.property_group_recordfinder'),
                 'type' => 'builderLocalization',
                 'ignoreIfEmpty' => true,
@@ -778,7 +789,8 @@ trait HasFormWidgets
                     ]
                 ],
                 'sortOrder' => 83
-            ]
+            ],
+            'scope' => $this->getFieldConditionsProperties()['scope'],
         ];
 
         $this->controlLibrary->registerControl(
@@ -787,79 +799,6 @@ trait HasFormWidgets
             'rainlab.builder::lang.form.control_recordfinder_description',
             ControlLibrary::GROUP_WIDGETS,
             'icon-search',
-            $this->controlLibrary->getStandardProperties($excludeProperties, $properties),
-            null
-        );
-    }
-
-    /**
-     * registerMediaFinderWidget
-     */
-    protected function registerMediaFinderWidget()
-    {
-        $excludeProperties = [
-            'stretch',
-            'default',
-            'placeholder',
-            'defaultFrom',
-            'dependsOn',
-            'preset',
-            'attributes',
-            'disabled'
-        ];
-
-        $properties = [
-            'mode' => [
-                'title' => Lang::get('rainlab.builder::lang.form.property_mediafinder_mode'),
-                'type' => 'dropdown',
-                'default' => 'file',
-                'options' => [
-                    'file' => Lang::get('rainlab.builder::lang.form.property_mediafinder_mode_file'),
-                    'image' => Lang::get('rainlab.builder::lang.form.property_mediafinder_mode_image')
-                ],
-                'sortOrder' => 81
-            ],
-            'prompt' => [
-                'title' => Lang::get('rainlab.builder::lang.form.property_mediafinder_prompt'),
-                'description' => Lang::get('rainlab.builder::lang.form.property_mediafinder_prompt_description'),
-                'ignoreIfEmpty' => true,
-                'type' => 'string',
-                'sortOrder' => 82
-            ],
-            'imageWidth' => [
-                'title' => Lang::get('rainlab.builder::lang.form.property_fileupload_image_width'),
-                'description' => Lang::get('rainlab.builder::lang.form.property_mediafinder_image_width_description'),
-                'type' => 'string',
-                'ignoreIfEmpty' => true,
-                'validation' => [
-                    'regex' => [
-                        'pattern' => '^[0-9]+$',
-                        'message' => Lang::get('rainlab.builder::lang.form.property_fileupload_invalid_dimension')
-                    ]
-                ],
-                'sortOrder' => 83
-            ],
-            'imageHeight' => [
-                'title' => Lang::get('rainlab.builder::lang.form.property_fileupload_image_height'),
-                'description' => Lang::get('rainlab.builder::lang.form.property_mediafinder_image_height_description'),
-                'type' => 'string',
-                'ignoreIfEmpty' => true,
-                'validation' => [
-                    'regex' => [
-                        'pattern' => '^[0-9]+$',
-                        'message' => Lang::get('rainlab.builder::lang.form.property_fileupload_invalid_dimension')
-                    ]
-                ],
-                'sortOrder' => 84
-            ],
-        ];
-
-        $this->controlLibrary->registerControl(
-            'mediafinder',
-            'rainlab.builder::lang.form.control_mediafinder',
-            'rainlab.builder::lang.form.control_mediafinder_description',
-            ControlLibrary::GROUP_WIDGETS,
-            'icon-picture-o',
             $this->controlLibrary->getStandardProperties($excludeProperties, $properties),
             null
         );
@@ -916,14 +855,7 @@ trait HasFormWidgets
                 'ignoreIfEmpty' => true,
                 'sortOrder' => 84
             ],
-            'scope' => [
-                'title' => Lang::get('rainlab.builder::lang.form.property_relation_scope'),
-                'description' => Lang::get('rainlab.builder::lang.form.property_relation_scope_description'),
-                'group' => Lang::get('rainlab.builder::lang.form.property_group_relation'),
-                'type' => 'string',
-                'ignoreIfEmpty' => true,
-                'sortOrder' => 85
-            ]
+            'scope' => $this->getFieldConditionsProperties()['scope'],
         ];
 
         $this->controlLibrary->registerControl(
@@ -935,5 +867,403 @@ trait HasFormWidgets
             $this->controlLibrary->getStandardProperties($excludeProperties, $properties),
             null
         );
+    }
+
+    /**
+     * registerRepeaterWidget
+     */
+    protected function registerRepeaterWidget()
+    {
+        $properties = [
+            'prompt' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_prompt'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_prompt_description'),
+                'type' => 'string',
+                'ignoreIfEmpty' => true,
+                'default' => Lang::get('rainlab.builder::lang.form.property_prompt_default'),
+                'sortOrder' => 81
+            ],
+            'titleFrom' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_title_from'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_title_from_description'),
+                'type' => 'string',
+                'ignoreIfEmpty' => true,
+                'sortOrder' => 82
+            ],
+            'form' => [
+                'type' => 'control-container'
+            ],
+            'minItems' => $this->getFieldMaxItemsProperties()['minItems'],
+            'maxItems' => $this->getFieldMaxItemsProperties()['maxItems'],
+            'displayMode' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_display_mode'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_display_mode_description'),
+                'type' => 'dropdown',
+                'default' => 'default',
+                'options' => [
+                    'builder' => Lang::get('rainlab.builder::lang.form.display_mode_builder'),
+                    'accordion' => Lang::get('rainlab.builder::lang.form.display_mode_accordion'),
+                ],
+                'sortOrder' => 85,
+            ],
+            // @todo this needs work, the control container doesn't support tabs
+            // 'useTabs' => [
+            //     'title' => "Use Tabs",
+            //     'description' => "Shows tabs when enabled, allowing fields to specify a tab property.",
+            //     'type' => 'checkbox',
+            //     'ignoreIfEmpty' => true,
+            //     'sortOrder' => 86,
+            // ],
+            'showReorder' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_repeater_show_reorder'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_repeater_show_reorder_description'),
+                'type' => 'checkbox',
+                'ignoreIfEmpty' => true,
+                'sortOrder' => 87,
+            ],
+            'showDuplicate' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_repeater_show_duplicate'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_repeater_show_duplicate_description'),
+                'type' => 'checkbox',
+                'ignoreIfEmpty' => true,
+                'sortOrder' => 88,
+            ],
+        ];
+
+        $excludeProperties = [
+            'stretch',
+            'placeholder',
+            'default',
+            'required',
+            'defaultFrom',
+            'dependsOn',
+            'preset',
+            'attributes'
+        ];
+
+        $this->controlLibrary->registerControl(
+            'repeater',
+            'rainlab.builder::lang.form.control_repeater',
+            'rainlab.builder::lang.form.control_repeater_description',
+            ControlLibrary::GROUP_WIDGETS,
+            'icon-server',
+            $this->controlLibrary->getStandardProperties($excludeProperties, $properties),
+            null
+        );
+    }
+
+    /**
+     * registerRichEditorWidget
+     */
+    protected function registerRichEditorWidget()
+    {
+        $properties = $this->getFieldSizeProperties() + [
+            'toolbarButtons' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_richeditor_toolbar_buttons'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_richeditor_toolbar_buttons_description'),
+                'group' => Lang::get('rainlab.builder::lang.form.property_group_rich_editor'),
+                'type' => 'string',
+                'ignoreIfEmpty' => true,
+                'sortOrder' => 81
+            ],
+        ];
+
+        $this->controlLibrary->registerControl(
+            'richeditor',
+            'rainlab.builder::lang.form.control_richeditor',
+            'rainlab.builder::lang.form.control_richeditor_description',
+            ControlLibrary::GROUP_WIDGETS,
+            'icon-indent',
+            $this->controlLibrary->getStandardProperties([], $properties),
+            null
+        );
+    }
+
+    /**
+     * registerPageFinderWidget
+     */
+    protected function registerPageFinderWidget()
+    {
+        $properties = [
+            'singleMode' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_pagefinder_single_mode'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_pagefinder_single_mode_description'),
+                'type' => 'checkbox',
+                'sortOrder' => 81
+            ]
+        ];
+
+        $this->controlLibrary->registerControl(
+            'pagefinder',
+            'rainlab.builder::lang.form.control_pagefinder',
+            'rainlab.builder::lang.form.control_pagefinder_description',
+            ControlLibrary::GROUP_WIDGETS,
+            'icon-paperclip',
+            $this->controlLibrary->getStandardProperties(['stretch'], $properties),
+            null
+        );
+    }
+
+    /**
+     * registerSensitiveWidget
+     */
+    protected function registerSensitiveWidget()
+    {
+        $properties = [
+            'mode' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_display_mode'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_display_mode_description'),
+                'group' => Lang::get('rainlab.builder::lang.form.property_group_sensitive'),
+                'type' => 'dropdown',
+                'options' => [
+                    'text' => "Text",
+                    'textarea' => "Textarea",
+                ],
+                'ignoreIfDefault' => true,
+                'default' => 'text',
+                'sortOrder' => 83
+            ],
+            'allowCopy' => [
+                'title' => Lang::get('rainlab.builder::lang.form.allow_copy'),
+                'description' => Lang::get('rainlab.builder::lang.form.allow_copy_description'),
+                'group' => Lang::get('rainlab.builder::lang.form.property_group_sensitive'),
+                'type' => 'checkbox',
+                'ignoreIfDefault' => true,
+                'sortOrder' => 84,
+                'default' => true
+            ],
+            'hiddenPlaceholder' => [
+                'title' => Lang::get('rainlab.builder::lang.form.hidden_placeholder'),
+                'description' => Lang::get('rainlab.builder::lang.form.hidden_placeholder_description'),
+                'group' => Lang::get('rainlab.builder::lang.form.property_group_sensitive'),
+                'type' => 'string',
+                'default' => '__hidden__',
+                'ignoreIfDefault' => true,
+                'sortOrder' => 85
+            ],
+            'hideOnTabChange' => [
+                'title' => Lang::get('rainlab.builder::lang.form.hide_on_tab_change'),
+                'description' => Lang::get('rainlab.builder::lang.form.hide_on_tab_change_description'),
+                'group' => Lang::get('rainlab.builder::lang.form.property_group_sensitive'),
+                'type' => 'checkbox',
+                'ignoreIfDefault' => true,
+                'sortOrder' => 86,
+                'default' => true
+            ],
+        ];
+
+        $this->controlLibrary->registerControl(
+            'sensitive',
+            'rainlab.builder::lang.form.control_sensitive',
+            'rainlab.builder::lang.form.control_sensitive_description',
+            ControlLibrary::GROUP_WIDGETS,
+            'icon-eye-slash',
+            $this->controlLibrary->getStandardProperties(['stretch'], $properties),
+            null
+        );
+    }
+
+    /**
+     * registerTagListWidget
+     */
+    protected function registerTagListWidget()
+    {
+        $excludeProperties = [
+            'stretch',
+            'readOnly'
+        ];
+
+        $properties = [
+            'mode' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_taglist_mode'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_taglist_mode_description'),
+                'group' => Lang::get('rainlab.builder::lang.form.property_group_taglist'),
+                'type' => 'dropdown',
+                'options' => [
+                    'string' => Lang::get('rainlab.builder::lang.form.property_taglist_mode_string'),
+                    'array' => Lang::get('rainlab.builder::lang.form.property_taglist_mode_array'),
+                    'relation' => Lang::get('rainlab.builder::lang.form.property_taglist_mode_relation')
+                ],
+                'default' => 'string',
+                'sortOrder' => 83
+            ],
+            'separator' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_taglist_separator'),
+                'group' => Lang::get('rainlab.builder::lang.form.property_group_taglist'),
+                'type' => 'dropdown',
+                'options' => [
+                    'comma' => Lang::get('rainlab.builder::lang.form.property_taglist_separator_comma'),
+                    'space' => Lang::get('rainlab.builder::lang.form.property_taglist_separator_space')
+                ],
+                'default' => 'comma',
+                'sortOrder' => 84
+            ],
+            'customTags' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_taglist_custom_tags'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_taglist_custom_tags_description'),
+                'group' => Lang::get('rainlab.builder::lang.form.property_group_taglist'),
+                'type' => 'checkbox',
+                'default' => true,
+                'sortOrder' => 86
+            ],
+            'options' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_taglist_options'),
+                'group' => Lang::get('rainlab.builder::lang.form.property_group_taglist'),
+                'type' => 'stringList',
+                'ignoreIfEmpty' => true,
+                'sortOrder' => 85
+            ],
+            'optionsMethod' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_options_method'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_options_method_description'),
+                'group' => Lang::get('rainlab.builder::lang.form.property_group_taglist'),
+                'type' => 'string',
+                'ignoreIfEmpty' => true,
+                'sortOrder' => 86
+            ],
+            'nameFrom' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_taglist_name_from'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_taglist_name_from_description'),
+                'group' => Lang::get('rainlab.builder::lang.form.property_group_taglist'),
+                'type' => 'string',
+                'ignoreIfEmpty' => true,
+                'sortOrder' => 87
+            ],
+            'useKey' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_taglist_use_key'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_taglist_use_key_description'),
+                'group' => Lang::get('rainlab.builder::lang.form.property_group_taglist'),
+                'type' => 'checkbox',
+                'default' => false,
+                'ignoreIfEmpty' => true,
+                'sortOrder' => 88
+            ]
+        ];
+
+        $this->controlLibrary->registerControl(
+            'taglist',
+            'rainlab.builder::lang.form.control_taglist',
+            'rainlab.builder::lang.form.control_taglist_description',
+            ControlLibrary::GROUP_WIDGETS,
+            'icon-tags',
+            $this->controlLibrary->getStandardProperties($excludeProperties, $properties),
+            null
+        );
+    }
+
+    /**
+     * getFieldThumbOptionsProperties
+     */
+    protected function getFieldThumbOptionsProperties(): array
+    {
+        return [
+            'thumbOptions' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_fileupload_thumb_options'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_fileupload_thumb_options_description'),
+                'group' => Lang::get('rainlab.builder::lang.form.property_group_fileupload'),
+                'type' => 'object',
+                'properties' => [
+                    [
+                        'property' => 'mode',
+                        'title' => Lang::get('rainlab.builder::lang.form.property_fileupload_thumb_mode'),
+                        'type' => 'dropdown',
+                        'default' => 'crop',
+                        'options' => [
+                            'auto' => Lang::get('rainlab.builder::lang.form.property_fileupload_thumb_auto'),
+                            'exact' => Lang::get('rainlab.builder::lang.form.property_fileupload_thumb_exact'),
+                            'portrait' => Lang::get('rainlab.builder::lang.form.property_fileupload_thumb_portrait'),
+                            'landscape' => Lang::get('rainlab.builder::lang.form.property_fileupload_thumb_landscape'),
+                            'crop' => Lang::get('rainlab.builder::lang.form.property_fileupload_thumb_crop')
+                        ]
+                    ],
+                    [
+                        'property' => 'extension',
+                        'title' => Lang::get('rainlab.builder::lang.form.property_fileupload_thumb_extension'),
+                        'type' => 'dropdown',
+                        'default' => 'auto',
+                        'options' => [
+                            'auto' => Lang::get('rainlab.builder::lang.form.property_fileupload_thumb_auto'),
+                            'jpg' => 'jpg',
+                            'gif' => 'gif',
+                            'png' => 'png'
+                        ]
+                    ]
+                ],
+                'sortOrder' => 88
+            ]
+        ];
+    }
+
+    /**
+     * getFieldMaxItemsProperties
+     */
+    protected function getFieldMaxItemsProperties(): array
+    {
+        return [
+            'minItems' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_min_items'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_min_items_description'),
+                'type' => 'string',
+                'ignoreIfEmpty' => true,
+                'sortOrder' => 83,
+                'validation' => [
+                    'integer' => [
+                        'message' => Lang::get('rainlab.builder::lang.form.property_min_items_integer'),
+                        'allowNegative' => false,
+                    ]
+                ],
+            ],
+            'maxItems' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_max_items'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_max_items_description'),
+                'type' => 'string',
+                'ignoreIfEmpty' => true,
+                'sortOrder' => 84,
+                'validation' => [
+                    'integer' => [
+                        'message' => Lang::get('rainlab.builder::lang.form.property_max_items_integer'),
+                        'allowNegative' => false,
+                    ]
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * getFieldConditionsProperties
+     */
+    protected function getFieldConditionsProperties(): array
+    {
+        return [
+            'scope' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_relation_scope'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_relation_scope_description'),
+                'group' => Lang::get('rainlab.builder::lang.form.property_group_relation'),
+                'type' => 'string',
+                'ignoreIfEmpty' => true,
+                'sortOrder' => 85
+            ]
+        ];
+    }
+
+    /**
+     * getFieldSizeProperties
+     */
+    protected function getFieldSizeProperties(): array
+    {
+        return [
+            'size' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_attributes_size'),
+                'type' => 'dropdown',
+                'options' => [
+                    'tiny' => Lang::get('rainlab.builder::lang.form.property_attributes_size_tiny'),
+                    'small' => Lang::get('rainlab.builder::lang.form.property_attributes_size_small'),
+                    'large' => Lang::get('rainlab.builder::lang.form.property_attributes_size_large'),
+                    'huge' => Lang::get('rainlab.builder::lang.form.property_attributes_size_huge'),
+                    'giant' => Lang::get('rainlab.builder::lang.form.property_attributes_size_giant')
+                ],
+                'sortOrder' => 51
+            ]
+        ];
     }
 }

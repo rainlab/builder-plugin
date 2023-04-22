@@ -62,17 +62,17 @@ trait HasFormUi
                 'type' => 'string',
                 'sortOrder' => 81
             ],
-            'mode' =>  [
-                'title' => "Mode",
-                'description' => "Visual display mode.",
+            'mode' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_display_mode'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_display_mode_description'),
                 'type' => 'dropdown',
                 'default' => 'info',
                 'options' => [
-                    'tip' => "Tip",
-                    'info' => "Info",
-                    'warning' => "Warning",
-                    'danger' => "Danger",
-                    'success' => "Success",
+                    'tip' => Lang::get('rainlab.builder::lang.form.class_mode_tip'),
+                    'info' => Lang::get('rainlab.builder::lang.form.class_mode_info'),
+                    'warning' => Lang::get('rainlab.builder::lang.form.class_mode_warning'),
+                    'danger' => Lang::get('rainlab.builder::lang.form.class_mode_danger'),
+                    'success' => Lang::get('rainlab.builder::lang.form.class_mode_success'),
                 ],
                 'sortOrder' => 82
             ]

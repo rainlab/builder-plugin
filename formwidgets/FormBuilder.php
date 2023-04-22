@@ -7,7 +7,7 @@ use Input;
 use Lang;
 
 /**
- * Form builder widget.
+ * FormBuilder widget.
  *
  * @package october\backend
  * @author Alexey Bobkov, Samuel Georges
@@ -19,12 +19,24 @@ class FormBuilder extends FormWidgetBase
      */
     protected $defaultAlias = 'formbuilder';
 
+    /**
+     * @var array designTimeProviders
+     */
     protected $designTimeProviders = [];
 
+    /**
+     * @var string tabConfigurationSchema
+     */
     protected $tabConfigurationSchema = null;
 
+    /**
+     * @var string tabsConfigurationSchema
+     */
     protected $tabsConfigurationSchema = null;
 
+    /**
+     * @var array controlInfoCache
+     */
     protected $controlInfoCache = [];
 
     /**
@@ -62,6 +74,9 @@ class FormBuilder extends FormWidgetBase
         $this->addJs('js/formbuilder.controlpalette.js', 'builder');
     }
 
+    /**
+     * renderControlList
+     */
     public function renderControlList($controls, $listName = '')
     {
         return $this->makePartial('controllist', [
@@ -70,10 +85,9 @@ class FormBuilder extends FormWidgetBase
         ]);
     }
 
-    /*
-     * Event handlers
+    /**
+     * onModelFormRenderControlWrapper
      */
-
     public function onModelFormRenderControlWrapper()
     {
         $type = Input::get('controlType');
@@ -91,6 +105,9 @@ class FormBuilder extends FormWidgetBase
         ];
     }
 
+    /**
+     * onModelFormRenderControlBody
+     */
     public function onModelFormRenderControlBody()
     {
         $type = Input::get('controlType');
@@ -103,6 +120,9 @@ class FormBuilder extends FormWidgetBase
         ];
     }
 
+    /**
+     * onModelFormLoadControlPalette
+     */
     public function onModelFormLoadControlPalette()
     {
         $controlId = Input::get('controlId');
@@ -118,6 +138,9 @@ class FormBuilder extends FormWidgetBase
         ];
     }
 
+    /**
+     * getPluginCode
+     */
     public function getPluginCode()
     {
         $pluginCode = Input::get('plugin_code');
@@ -132,6 +155,9 @@ class FormBuilder extends FormWidgetBase
     // Methods for the internal use
     //
 
+    /**
+     * getControlDesignTimeProvider
+     */
     protected function getControlDesignTimeProvider($providerClass)
     {
         if (array_key_exists($providerClass, $this->designTimeProviders)) {
@@ -141,6 +167,9 @@ class FormBuilder extends FormWidgetBase
         return $this->designTimeProviders[$providerClass] = new $providerClass($this->controller);
     }
 
+    /**
+     * getPropertyValue
+     */
     protected function getPropertyValue($properties, $property)
     {
         if (array_key_exists($property, $properties)) {
@@ -150,6 +179,9 @@ class FormBuilder extends FormWidgetBase
         return null;
     }
 
+    /**
+     * propertiesToInspectorSchema
+     */
     protected function propertiesToInspectorSchema($propertyConfiguration)
     {
         $result = [];
@@ -188,6 +220,9 @@ class FormBuilder extends FormWidgetBase
         return $result;
     }
 
+    /**
+     * getControlInfo
+     */
     protected function getControlInfo($type)
     {
         if (array_key_exists($type, $this->controlInfoCache)) {
@@ -204,6 +239,9 @@ class FormBuilder extends FormWidgetBase
         return $this->controlInfoCache[$type] = $controlInfo;
     }
 
+    /**
+     * renderControlBody
+     */
     protected function renderControlBody($type, $properties)
     {
         $controlInfo = $this->getControlInfo($type);
@@ -216,6 +254,9 @@ class FormBuilder extends FormWidgetBase
         ]);
     }
 
+    /**
+     * renderControlStaticBody
+     */
     protected function renderControlStaticBody($type, $properties, $controlConfiguration)
     {
         // The control body footer is never updated with AJAX and currently
@@ -227,6 +268,9 @@ class FormBuilder extends FormWidgetBase
         return $provider->renderControlStaticBody($type, $properties, $controlConfiguration, $this);
     }
 
+    /**
+     * renderControlWrapper
+     */
     protected function renderControlWrapper($type, $properties = [], $controlConfiguration = [])
     {
         // This method renders the entire control, including
@@ -247,6 +291,15 @@ class FormBuilder extends FormWidgetBase
             $properties['oc.commentPosition'] = 'above';
         }
 
+        // Data table columns (TODO: move to design time provider? -sg 2023)
+        if ($type === 'datatable' && is_array($properties['columns'])) {
+            $ocColumns = [];
+            foreach ($properties['columns'] as $key => $config) {
+                $ocColumns[] = ['code' => $key] + $config;
+            }
+            $properties['oc.columns'] = $ocColumns;
+        }
+
         $provider = $this->getControlDesignTimeProvider($controlInfo['designTimeProvider']);
         return $this->makePartial('controlwrapper', [
             'fieldsConfiguration' => $this->propertiesToInspectorSchema($controlInfo['properties']),
@@ -256,6 +309,9 @@ class FormBuilder extends FormWidgetBase
         ]);
     }
 
+    /**
+     * getSpan
+     */
     protected function getSpan($currentSpan, $prevSpan, $isPlaceholder = false)
     {
         if ($currentSpan == 'auto' || !strlen($currentSpan)) {
@@ -270,6 +326,9 @@ class FormBuilder extends FormWidgetBase
         return $currentSpan;
     }
 
+    /**
+     * preprocessPropertyValues
+     */
     protected function preprocessPropertyValues($controlName, $properties, $controlInfo)
     {
         $properties['oc.fieldName'] = $controlName;
@@ -287,6 +346,9 @@ class FormBuilder extends FormWidgetBase
         return $properties;
     }
 
+    /**
+     * getControlRenderingInfo
+     */
     protected function getControlRenderingInfo($controlName, $properties, $prevProperties)
     {
         $type = isset($properties['type']) ? $properties['type'] : 'text';
@@ -312,6 +374,9 @@ class FormBuilder extends FormWidgetBase
         ];
     }
 
+    /**
+     * getTabConfigurationSchema
+     */
     protected function getTabConfigurationSchema()
     {
         if ($this->tabConfigurationSchema !== null) {
@@ -334,6 +399,9 @@ class FormBuilder extends FormWidgetBase
         return $this->tabConfigurationSchema = json_encode($result);
     }
 
+    /**
+     * getTabsConfigurationSchema
+     */
     protected function getTabsConfigurationSchema()
     {
         if ($this->tabsConfigurationSchema !== null) {
@@ -358,6 +426,9 @@ class FormBuilder extends FormWidgetBase
         return $this->tabsConfigurationSchema = json_encode($result);
     }
 
+    /**
+     * getTabConfigurationValues
+     */
     protected function getTabConfigurationValues($values)
     {
         if (!count($values)) {
@@ -367,6 +438,9 @@ class FormBuilder extends FormWidgetBase
         return json_encode($values);
     }
 
+    /**
+     * getTabsConfigurationValues
+     */
     protected function getTabsConfigurationValues($values)
     {
         if (!count($values)) {
@@ -376,6 +450,9 @@ class FormBuilder extends FormWidgetBase
         return json_encode($values);
     }
 
+    /**
+     * getTabsFields
+     */
     protected function getTabsFields($tabsName, $fields)
     {
         $result = [];

@@ -32,22 +32,40 @@ trait HasFormFields
         // Extra properties
         $extraProps = [
             'min' => [
-                'title' => "Min",
-                'description' => "The client-side minimum value.",
+                'title' => Lang::get('rainlab.builder::lang.form.property_min'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_min_description'),
                 'type' => 'string',
                 'ignoreIfEmpty' => true,
+                'validation' => [
+                    'regex' => [
+                        'pattern' => '^[0-9]+$',
+                        'message' => Lang::get('rainlab.builder::lang.form.property_min_number')
+                    ]
+                ],
             ],
             'max' => [
-                'title' => "Max",
-                'description' => "The client-side maximum value.",
+                'title' => Lang::get('rainlab.builder::lang.form.property_max'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_max_description'),
                 'type' => 'string',
                 'ignoreIfEmpty' => true,
+                'validation' => [
+                    'regex' => [
+                        'pattern' => '^[0-9]+$',
+                        'message' => Lang::get('rainlab.builder::lang.form.property_max_number')
+                    ]
+                ],
             ],
             'step' => [
-                'title' => "Step",
-                'description' => "The client-side step increment.",
+                'title' => Lang::get('rainlab.builder::lang.form.property_step'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_step_description'),
                 'type' => 'string',
                 'ignoreIfEmpty' => true,
+                'validation' => [
+                    'regex' => [
+                        'pattern' => '^[0-9]+$',
+                        'message' => Lang::get('rainlab.builder::lang.form.property_step_number')
+                    ]
+                ],
             ],
         ];
 
@@ -125,8 +143,8 @@ trait HasFormFields
                 'sortOrder' => 81
             ],
             'optionsMethod' => [
-                'title' => "Options Method",
-                'description' => "Request options from this method name defined on the model or as a static method (Class::method).",
+                'title' => Lang::get('rainlab.builder::lang.form.property_options_method'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_options_method_description'),
                 'type' => 'string',
                 'ignoreIfEmpty' => true,
                 'sortOrder' => 82
@@ -171,8 +189,8 @@ trait HasFormFields
                 'sortOrder' => 81
             ],
             'optionsMethod' => [
-                'title' => "Options Method",
-                'description' => "Request options from this method name defined on the model or as a static method (Class::method).",
+                'title' => Lang::get('rainlab.builder::lang.form.property_options_method'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_options_method_description'),
                 'type' => 'string',
                 'ignoreIfEmpty' => true,
                 'sortOrder' => 82
@@ -211,8 +229,8 @@ trait HasFormFields
                 'sortOrder' => 81
             ],
             'optionsMethod' => [
-                'title' => "Options Method",
-                'description' => "Request options from this method name defined on the model or as a static method (Class::method).",
+                'title' => Lang::get('rainlab.builder::lang.form.property_options_method'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_options_method_description'),
                 'type' => 'string',
                 'ignoreIfEmpty' => true,
                 'sortOrder' => 82
@@ -259,21 +277,21 @@ trait HasFormFields
                 'sortOrder' => 81
             ],
             'optionsMethod' => [
-                'title' => "Options Method",
-                'description' => "Request options from this method name defined on the model or as a static method (Class::method).",
+                'title' => Lang::get('rainlab.builder::lang.form.property_options_method'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_options_method_description'),
                 'type' => 'string',
                 'ignoreIfEmpty' => true,
                 'sortOrder' => 82
             ],
             'quickselect' =>  [
-                'title' => "Quick Select",
-                'description' => "Show the quick selection buttons.",
+                'title' => Lang::get('rainlab.builder::lang.form.property_quickselect'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_quickselect_description'),
                 'type' => 'checkbox',
                 'ignoreIfEmpty' => true,
             ],
             'inlineOptions' =>  [
-                'title' => "Inline Options",
-                'description' => "Display the options side-by-side instead of stacked, when less than 10 options.",
+                'title' => Lang::get('rainlab.builder::lang.form.property_inline_options'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_inline_options_description'),
                 'type' => 'checkbox',
                 'ignoreIfEmpty' => true,
             ]

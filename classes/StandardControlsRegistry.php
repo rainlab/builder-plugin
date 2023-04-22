@@ -56,14 +56,18 @@ class StandardControlsRegistry
         // Widgets
         $this->registerCodeEditorWidget();
         $this->registerColorPickerWidget();
+        $this->registerDataTableWidget();
         $this->registerDatepickerWidget();
-        $this->registerRichEditorWidget();
-        $this->registerMarkdownWidget();
-        $this->registerTagListWidget();
         $this->registerFileUploadWidget();
-        $this->registerRecordFinderWidget();
+        $this->registerMarkdownWidget();
         $this->registerMediaFinderWidget();
+        $this->registerNestedFormWidget();
+        $this->registerRecordFinderWidget();
         $this->registerRelationWidget();
         $this->registerRepeaterWidget();
+        $this->registerRichEditorWidget();
+        $this->registerPageFinderWidget();
+        $this->registerSensitiveWidget();
+        $this->registerTagListWidget();
     }
 }

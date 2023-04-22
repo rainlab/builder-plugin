@@ -31,17 +31,21 @@ class DefaultControlDesignTimeProvider extends ControlDesignTimeProviderBase
         'partial',
         'hint',
         'widget',
-        'repeater',
         'codeeditor',
         'colorpicker',
+        'datatable',
         'datepicker',
-        'richeditor',
-        'markdown',
-        'taglist',
         'fileupload',
-        'recordfinder',
+        'markdown',
         'mediafinder',
-        'relation'
+        'nestedform',
+        'recordfinder',
+        'relation',
+        'repeater',
+        'richeditor',
+        'pagefinder',
+        'sensitive',
+        'taglist',
     ];
 
     /**
@@ -58,7 +62,7 @@ class DefaultControlDesignTimeProvider extends ControlDesignTimeProviderBase
         }
 
         return $this->makePartial('control-'.$type, [
-            'properties'=>$properties,
+            'properties' => $properties,
             'formBuilder' => $formBuilder
         ]);
     }
@@ -78,7 +82,7 @@ class DefaultControlDesignTimeProvider extends ControlDesignTimeProviderBase
             return null;
         }
 
-        $partialName = 'control-static-'.$type;
+        $partialName = 'control-'.$type.'-static';
         $partialPath = $this->getViewPath('_'.$partialName.'.php');
 
         if (!File::exists($partialPath)) {
@@ -86,7 +90,7 @@ class DefaultControlDesignTimeProvider extends ControlDesignTimeProviderBase
         }
 
         return $this->makePartial($partialName, [
-            'properties'=>$properties,
+            'properties' => $properties,
             'controlConfiguration' => $controlConfiguration,
             'formBuilder' => $formBuilder
         ]);

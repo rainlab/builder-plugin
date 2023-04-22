@@ -11,14 +11,30 @@
 
     function getControlPropertyValues(item)  {
         for (var i=0, len=item.children.length; i<len; i++) {
-            var child = item.children[i]
+            var child = item.children[i];
 
             if (child.tagName === 'INPUT' && child.hasAttribute('data-inspector-values')) {
-                return $.parseJSON(child.value)
+                return $.parseJSON(child.value);
             }
         }
 
-        return false
+        return false;
+    }
+
+    function preProcessDatatableProperties(properties) {
+        if (!Array.isArray(properties['oc.columns'])) {
+            return;
+        }
+
+        var yamlColumns = {};
+        properties['oc.columns'].forEach(function(column) {
+            var columnName = column['code'];
+            delete column['code'];
+            yamlColumns[columnName] = column;
+        });
+
+        delete properties['oc.columns'];
+        properties['columns'] = yamlColumns;
     }
 
     function preProcessSpecialProperties(properties) {
@@ -66,7 +82,7 @@
                 continue
             }
 
-            var containerName = String(child.getAttribute('data-container-name')), 
+            var containerName = String(child.getAttribute('data-container-name')),
                 childControls = containerToJson(child)
 
             result[containerName] = childControls
@@ -77,49 +93,53 @@
 
     function listToJson(list, injectProperties) {
         var listItems = list.children,
-            result = {}
+            result = {};
 
         for (var i=0, len=listItems.length; i<len; i++) {
-            var listItem = listItems[i]
+            var listItem = listItems[i];
 
             if (!listItem.hasAttribute('data-control-type')) {
                 // There could be other items - placeholders
                 // and clear-row elements
-                continue
+                continue;
             }
 
             var values = getControlPropertyValues(listItem)
             if (values === null) {
-                throw new Error('Property values are not found for a control list item.')
+                throw new Error('Property values are not found for a control list item.');
             }
 
             if (values['oc.fieldName'] === undefined) {
-                throw new Error('Field name property is not found for a control.')
+                throw new Error('Field name property is not found for a control.');
             }
 
-            var fieldName = values['oc.fieldName']
+            var fieldName = values['oc.fieldName'];
 
-            values.type = listItem.getAttribute('data-control-type')
-            preProcessSpecialProperties(values)
+            values.type = listItem.getAttribute('data-control-type');
+            preProcessSpecialProperties(values);
+
+            if (values.type === 'datatable') {
+                preProcessDatatableProperties(values);
+            }
 
             if (injectProperties !== undefined) {
-                values = $.extend(values, injectProperties)
+                values = $.extend(values, injectProperties);
             }
 
             if (result[fieldName] !== undefined) {
-                throw new Error('Duplicate field name: ' + fieldName)
+                throw new Error('Duplicate field name: ' + fieldName);
             }
 
             // If a control contains control containers, parse them
             // and assign parsed object to the current control property.
 
-            var childControls = parseControlControlContainer(listItem)
+            var childControls = parseControlControlContainer(listItem);
 
             if (!$.isEmptyObject(childControls)) {
-                values = $.extend(values, childControls)
+                values = $.extend(values, childControls);
             }
 
-            result[fieldName] = values
+            result[fieldName] = values;
 
             // TODO: for the Repeater we should check if the control element
             // has containers. See "Form builder" section in the Builder's notes.ft.
@@ -254,7 +274,7 @@
             if (isControlListContainer) {
                 mergeListContainerControlsToResult(result, currentElement)
                 continue
-            } 
+            }
             else {
                 if (!currentElement.hasAttribute('data-control-list')) {
                     throw new Error('Control container can contain only UL elements with data-control-list attribute or control list containers.')
@@ -263,7 +283,7 @@
 
             // This part processes control lists (UL) defined directly in the control container.
             // Lists can have names, in that case a property with the corresponding name
-            // is created in the result object, and controls are injected to the fields sub-property 
+            // is created in the result object, and controls are injected to the fields sub-property
             // of that property (result.listname.fields). If a list doesn't have a name, its controls
             // are injected directly to the result's fields property (result.fields).
             //
