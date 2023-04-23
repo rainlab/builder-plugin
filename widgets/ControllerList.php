@@ -45,7 +45,9 @@ class ControllerList extends WidgetBase
      */
     public function updateList()
     {
-        return ['#'.$this->getId('plugin-controller-list') => $this->makePartial('items', $this->getRenderData())];
+        return [
+            '#'.$this->getId('plugin-controller-list') => $this->makePartial('items', $this->getRenderData())
+        ];
     }
 
     /**
@@ -53,7 +55,9 @@ class ControllerList extends WidgetBase
      */
     public function refreshActivePlugin()
     {
-        return ['#'.$this->getId('body') => $this->makePartial('widget-contents', $this->getRenderData())];
+        return [
+            '#'.$this->getId('body') => $this->makePartial('widget-contents', $this->getRenderData())
+        ];
     }
 
     /**

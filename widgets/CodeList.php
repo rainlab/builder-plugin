@@ -100,6 +100,16 @@ class CodeList extends WidgetBase
     }
 
     /**
+     * refreshActivePlugin
+     */
+    public function refreshActivePlugin()
+    {
+        return [
+            '#'.$this->getId('code-list') => $this->makePartial('items', ['items' => $this->getData()])
+        ];
+    }
+
+    /**
      * onRefresh
      */
     public function onRefresh()
@@ -444,7 +454,7 @@ class CodeList extends WidgetBase
      */
     protected function getAssetsPath()
     {
-        return base_path('plugins/'.$this->getActivePluginObj()->toFilesystemPath());
+        return base_path('plugins/'.$this->getActivePluginObj()?->toFilesystemPath());
     }
 
     /**
@@ -452,7 +462,7 @@ class CodeList extends WidgetBase
      */
     protected function getPluginFileUrl($path)
     {
-        return Url::to('plugins/'.$this->getActivePluginObj()->toFilesystemPath().$path);
+        return Url::to('plugins/'.$this->getActivePluginObj()?->toFilesystemPath().$path);
     }
 
     /**
@@ -648,7 +658,7 @@ class CodeList extends WidgetBase
      */
     protected function getPluginCode()
     {
-        return $this->getActivePluginObj()->toCode();
+        return $this->getActivePluginObj()?->toCode();
     }
 
     /**
@@ -662,7 +672,7 @@ class CodeList extends WidgetBase
 
         $activePluginVector = $this->controller->getBuilderActivePluginVector();
         if (!$activePluginVector) {
-            throw new ApplicationException(trans('rainlab.builder::lang.common.plugin_not_selected'));
+            return null;
         }
 
         return $this->plugin = $activePluginVector->pluginCodeObj;

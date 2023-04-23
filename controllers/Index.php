@@ -128,7 +128,8 @@ class Index extends Controller
             $this->widget->modelList->refreshActivePlugin(),
             $this->widget->versionList->refreshActivePlugin(),
             $this->widget->languageList->refreshActivePlugin(),
-            $this->widget->controllerList->refreshActivePlugin()
+            $this->widget->controllerList->refreshActivePlugin(),
+            $this->widget->codeList->refreshActivePlugin()
         );
 
         return $result;
