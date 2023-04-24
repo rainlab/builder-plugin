@@ -181,10 +181,16 @@
         });
     }
 
-    $(document).ready(function(){
+    $(document).on('render', function() {
+        var $container = $('#code-list-container');
+        if ($container.data('oc.codeListAttached') === true) {
+            return;
+        }
+
+        $container.data('oc.codeListAttached', true);
         new CodeList(
-            $('#code-list-container').closest('form'),
-            $('#code-list-container').data('alias')
+            $container.closest('form'),
+            $container.data('alias')
         );
     });
 

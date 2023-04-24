@@ -77,7 +77,7 @@ class CodeList extends WidgetBase
     public function render()
     {
         return $this->makePartial('body', [
-           'data' => $this->getData(),
+           'items' => $this->getData(),
            'pluginCode' => $this->getPluginCode()
         ]);
     }
@@ -104,8 +104,13 @@ class CodeList extends WidgetBase
      */
     public function refreshActivePlugin()
     {
+        $this->plugin = null;
+
         return [
-            '#'.$this->getId('code-list') => $this->makePartial('items', ['items' => $this->getData()])
+            '#'.$this->getId('body') => $this->makePartial('widget-contents', [
+                'items' => $this->getData(),
+                'pluginCode' => $this->getPluginCode()
+            ])
         ];
     }
 

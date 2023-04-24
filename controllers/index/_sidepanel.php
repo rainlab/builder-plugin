@@ -8,7 +8,7 @@
                 data-template-type="database"
                 data-type-icon="oc-icon-table"
                 onsubmit="return false">
-                <?= $this->widget->databaseTabelList->render() ?>
+                <?= $this->widget->databaseTableList->render() ?>
             </form>
 
             <!-- Models -->
