@@ -49,7 +49,7 @@ trait HasMigrations
 
         $this->writeFile($migrationFilePath, $code);
 
-        $this->migrationScripts[] = $proposedFile;
+        $this->migrationScripts[$proposedFile] = __("Create :name Content Table", ['name' => $this->getConfig('name')]);
     }
 
     /**
@@ -129,7 +129,10 @@ trait HasMigrations
 
         $this->writeFile($migrationFilePath, $code);
 
-        $this->migrationScripts[] = $proposedFile;
+        $this->migrationScripts[$proposedFile] = __("Create :name Pivot Table for :field", [
+            'name' => $this->getConfig('name'),
+            'field' => $joinInfo['fieldName'] ?? '??'
+        ]);
     }
 
     /**
@@ -167,7 +170,10 @@ trait HasMigrations
 
         $this->writeFile($migrationFilePath, $code);
 
-        $this->migrationScripts[] = $proposedFile;
+        $this->migrationScripts[$proposedFile] = __("Create :name Repeater Table for :field", [
+            'name' => $this->getConfig('name'),
+            'field' => $repeaterInfo['fieldName'] ?? '??'
+        ]);
     }
 
     /**

@@ -17,16 +17,17 @@ trait HasVersionFile
     {
         $versionFilePath = $this->sourceModel->getPluginFilePath('updates/version.yaml');
 
-        $nextVersion = $this->getNextVersion();
-
         $versionInformation = $this->sourceModel->getPluginVersionInformation();
 
-        $versionInformation[$nextVersion] = [
-            "Imported Blueprints from Tailor"
-        ];
+        $nextVersion = $this->getNextVersion();
 
-        foreach ($this->migrationScripts as $scriptName) {
-            $versionInformation[$nextVersion][] = $scriptName;
+        foreach ($this->migrationScripts as $scriptName => $comment) {
+            $versionInformation['v'.$nextVersion] = [
+                $comment,
+                $scriptName
+            ];
+
+            $nextVersion = $this->getNextVersion($nextVersion);
         }
 
         $yamlData = Yaml::render($versionInformation);
@@ -41,8 +42,16 @@ trait HasVersionFile
     /**
      * getNextVersion returns the next version for this plugin
      */
-    protected function getNextVersion()
+    protected function getNextVersion($fromVersion = null)
     {
+        if ($fromVersion) {
+            $parts = explode('.', $fromVersion);
+
+            $parts[count($parts)-1]++;
+
+            return implode('.', $parts);
+        }
+
         $migration = new MigrationModel;
 
         $migration->setPluginCodeObj($this->sourceModel->getPluginCodeObj());

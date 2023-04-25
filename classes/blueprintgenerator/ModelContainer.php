@@ -108,6 +108,7 @@ class ModelContainer extends Model
         $repeaterModelClass = $modelClass . Str::studly($fieldName) . 'Item';
 
         return [
+            'fieldName' => $fieldName,
             'tableName' => $repeaterTable,
             'modelClass' => $repeaterModelClass
         ];
@@ -197,6 +198,7 @@ class ModelContainer extends Model
             : 'relation_id';
 
         return [
+            'fieldName' => $fieldName,
             'tableName' => $joinTable,
             'parentKey' => $parentKey,
             'relatedKey' => $relatedKey,
