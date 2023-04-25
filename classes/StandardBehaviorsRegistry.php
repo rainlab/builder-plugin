@@ -30,8 +30,8 @@ class StandardBehaviorsRegistry
      */
     protected function registerBehaviors()
     {
-        $this->registerListBehavior();
         $this->registerFormBehavior();
+        $this->registerListBehavior();
         $this->registerImportExportBehavior();
     }
 
@@ -272,12 +272,62 @@ class StandardBehaviorsRegistry
                 'type' => 'checkbox',
                 'ignoreIfEmpty' => true,
             ],
-            'showSorting' => [
-                'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_show_sorting'),
-                'type' => 'checkbox',
-                'ignoreIfEmpty' => false,
-                'default' => true,
-                'ignoreIfDefault' => true,
+            'structure' => [
+                'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_structure'),
+                'ignoreIfEmpty' => true,
+                'type' => 'object',
+                'ignoreIfPropertyEmpty' => 'maxDepth',
+                'properties' => [
+                    [
+                        'property' => 'maxDepth',
+                        'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_max_depth'),
+                        'type' => 'string',
+                        'ignoreIfEmpty' => true,
+                        'validation' => [
+                            'regex' => [
+                                'pattern' => '^[0-9]+$',
+                                'message' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_max_depth_regex')
+                            ]
+                        ],
+                    ],
+                    [
+                        'property' => 'showTree',
+                        'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_show_tree'),
+                        'description' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_show_tree_description'),
+                        'type' => 'checkbox',
+                        'default' => true,
+                        'ignoreIfDefault' => true,
+                    ],
+                    [
+                        'property' => 'treeExpanded',
+                        'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_tree_expanded'),
+                        'description' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_tree_expanded_description'),
+                        'type' => 'checkbox',
+                        'default' => true,
+                        'ignoreIfDefault' => true,
+                    ],
+                    [
+                        'property' => 'showReorder',
+                        'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_show_reorder'),
+                        'type' => 'checkbox',
+                        'default' => true,
+                        'ignoreIfDefault' => true,
+                    ],
+                    [
+                        'property' => 'showSorting',
+                        'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_show_sorting'),
+                        'type' => 'checkbox',
+                        'default' => true,
+                        'ignoreIfDefault' => true,
+                    ],
+                    [
+                        'property' => 'dragRow',
+                        'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_drag_row'),
+                        'type' => 'checkbox',
+                        'default' => true,
+                        'ignoreIfDefault' => true,
+                    ],
+                ],
             ],
             'defaultSort' => [
                 'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_default_sort'),
@@ -335,18 +385,6 @@ class StandardBehaviorsRegistry
                 'description' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_onclick_description'),
                 'ignoreIfEmpty' => true,
                 'type' => 'string'
-            ],
-            'showTree' => [
-                'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_show_tree'),
-                'description' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_show_tree_description'),
-                'type' => 'checkbox',
-                'ignoreIfEmpty' => true
-            ],
-            'treeExpanded' => [
-                'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_tree_expanded'),
-                'description' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_tree_expanded_description'),
-                'type' => 'checkbox',
-                'ignoreIfEmpty' => true
             ],
             'filter' => [
                 'type' => 'string', // Should be configurable in place later
@@ -424,7 +462,6 @@ class StandardBehaviorsRegistry
                 'ignoreIfEmpty' => true,
                 'group' => Lang::get('rainlab.builder::lang.controller.property_group_import'),
             ],
-
             'export.title' => [
                 'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_export_title'),
                 'type' => 'builderLocalization',

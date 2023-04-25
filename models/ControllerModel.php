@@ -8,7 +8,6 @@ use RainLab\Builder\Classes\ControllerFileParser;
 use RainLab\Builder\Classes\ControllerGenerator;
 use RainLab\Builder\Models\ModelModel;
 use RainLab\Builder\Classes\PluginCode;
-use Symfony\Component\Yaml\Dumper as YamlDumper;
 use ApplicationException;
 use DirectoryIterator;
 use SystemException;
@@ -23,7 +22,7 @@ use Exception;
 class ControllerModel extends BaseModel
 {
     /**
-     * @var object controller
+     * @var string controller
      */
     public $controller;
 
@@ -432,12 +431,14 @@ class ControllerModel extends BaseModel
         }
 
         if ($behaviorClass === \Backend\Behaviors\ImportExportController::class) {
-            $this->processImportExportConfig($configuration);
+            $this->processImportExportBehaviorConfig($configuration);
+        }
+        elseif ($behaviorClass === \Backend\Behaviors\ListController::class) {
+            $this->processListBehaviorConfig($configuration);
         }
 
-        $dumper = new YamlDumper();
         if ($configuration !== null) {
-            $yamlData = $dumper->dump($configuration, 20, 0, false, true);
+            $yamlData = Yaml::render($configuration);
         }
         else {
             $yamlData = '';
@@ -448,33 +449,6 @@ class ControllerModel extends BaseModel
         }
 
         @File::chmod($filePath);
-    }
-
-    /**
-     * processImportExportConfig converts import. and export. keys to and from their config
-     */
-    protected function processImportExportConfig(array &$configuration, $isLoad = false)
-    {
-        if ($isLoad) {
-            foreach ($configuration as $key => $value) {
-                if (!is_array($value) || !in_array($key, ['import', 'export'])) {
-                    continue;
-                }
-
-                foreach ($value as $k => $v) {
-                    $configuration[$key.'.'.$k] = $v;
-                }
-
-                unset($configuration[$key]);
-            }
-        }
-        else {
-            foreach ($configuration as $key => $value) {
-                if (starts_with($key, ['import.', 'export.'])) {
-                    array_set($configuration, $key, array_pull($configuration, $key));
-                }
-            }
-        }
     }
 
     /**
@@ -504,5 +478,81 @@ class ControllerModel extends BaseModel
         }
 
         return true;
+    }
+
+    /**
+     * processListBehaviorConfig converts booleans
+     */
+    protected function processListBehaviorConfig(array &$configuration, $isLoad = false)
+    {
+        if (!isset($configuration['structure'])) {
+            return;
+        }
+
+        $booleanFields = [
+            'showTree',
+            'treeExpanded',
+            'showReorder',
+            'showSorting',
+            'dragRow',
+        ];
+
+traceLog($configuration);
+
+        foreach ($booleanFields as $booleanField) {
+            if (!array_key_exists($booleanField, $configuration['structure'])) {
+                continue;
+            }
+
+            $value = $configuration['structure'][$booleanField];
+            if ($value == '1' || $value == 'true') {
+                $value = true;
+            }
+            else {
+                $value = false;
+            }
+
+
+            $configuration['structure'][$booleanField] = $value;
+        }
+
+        $numericFields = [
+            'maxDepth'
+        ];
+
+        foreach ($numericFields as $numericField) {
+            if (!array_key_exists($numericField, $configuration['structure'])) {
+                continue;
+            }
+
+            $configuration['structure'][$numericField] = +$configuration['structure'][$numericField];
+        }
+    }
+
+    /**
+     * processImportExportConfig converts import. and export. keys to and from their config
+     */
+    protected function processImportExportBehaviorConfig(array &$configuration, $isLoad = false)
+    {
+        if ($isLoad) {
+            foreach ($configuration as $key => $value) {
+                if (!is_array($value) || !in_array($key, ['import', 'export'])) {
+                    continue;
+                }
+
+                foreach ($value as $k => $v) {
+                    $configuration[$key.'.'.$k] = $v;
+                }
+
+                unset($configuration[$key]);
+            }
+        }
+        else {
+            foreach ($configuration as $key => $value) {
+                if (starts_with($key, ['import.', 'export.'])) {
+                    array_set($configuration, $key, array_pull($configuration, $key));
+                }
+            }
+        }
     }
 }

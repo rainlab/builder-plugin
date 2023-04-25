@@ -235,8 +235,8 @@ class IndexModelFormOperations extends IndexOperationsBehaviorBase
     }
 
     /**
-     * Returns the configuration for the DataTable widget that
-     * is used in the "add database fields" popup.
+     * getAddDatabaseFieldsDataTableConfig returns the configuration for the DataTable widget
+     * that is used in the "add database fields" popup.
      *
      * @return array
      */
