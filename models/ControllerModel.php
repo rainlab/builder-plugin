@@ -497,8 +497,6 @@ class ControllerModel extends BaseModel
             'dragRow',
         ];
 
-traceLog($configuration);
-
         foreach ($booleanFields as $booleanField) {
             if (!array_key_exists($booleanField, $configuration['structure'])) {
                 continue;

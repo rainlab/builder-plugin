@@ -106,8 +106,9 @@ trait HasMigrations
 
         foreach ($fieldset->getAllFields() as $name => $field) {
             if ($field->type === 'entries' && !$field->inverse && $field->maxItems !== 1) {
-                $joinInfo = $container->getJoinTableInfoFor($name, $field);
-                $this->generateJoinTableForEntries($joinInfo);
+                if ($joinInfo = $container->getJoinTableInfoFor($name, $field)) {
+                    $this->generateJoinTableForEntries($joinInfo);
+                }
             }
         }
     }
@@ -143,8 +144,9 @@ trait HasMigrations
 
         foreach ($fieldset->getAllFields() as $name => $field) {
             if ($field->type === 'repeater') {
-                $repeaterInfo = $container->getRepeaterTableInfoFor($name, $field);
-                $this->generateRepeaterTableForEntries($repeaterInfo);
+                if ($repeaterInfo = $container->getRepeaterTableInfoFor($name, $field)) {
+                    $this->generateRepeaterTableForEntries($repeaterInfo);
+                }
             }
         }
     }

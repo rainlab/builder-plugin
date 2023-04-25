@@ -156,6 +156,11 @@ class ModelContainer extends Model
                 $foundDefinition['table'] = $joinInfo['tableName'];
                 unset($foundDefinition['name']);
 
+                // Generic key for blueprints
+                if ($joinInfo['isBlueprint']) {
+                    $foundDefinition['otherKey'] = $joinInfo['relatedKey'];
+                }
+
                 // Swap keys
                 if ($fieldObj->inverse) {
                     $foundDefinition['key'] = $joinInfo['relatedKey'];
@@ -182,17 +187,20 @@ class ModelContainer extends Model
 
         $modelClass = $this->sourceModel->getBlueprintConfig('modelClass');
         $relatedModelClass = $this->findRelatedModelClass($fieldObj->source);
-        if (!$relatedModelClass || !$modelClass) {
+        if (!$modelClass) {
             return null;
         }
 
         $parentKey = Str::snake(class_basename($modelClass)).'_id';
-        $relatedKey = Str::snake(class_basename($relatedModelClass)).'_id';
+        $relatedKey = $relatedModelClass
+            ? Str::snake(class_basename($relatedModelClass)).'_id'
+            : 'relation_id';
 
         return [
             'tableName' => $joinTable,
-            'parentKey' => $relatedKey,
-            'relatedKey' => $parentKey,
+            'parentKey' => $parentKey,
+            'relatedKey' => $relatedKey,
+            'isBlueprint' => !$relatedModelClass
         ];
     }
 
@@ -215,17 +223,21 @@ class ModelContainer extends Model
 
         $modelClass = $this->sourceModel->getBlueprintConfig('modelClass');
         $relatedModelClass = $this->findRelatedModelClass($fieldObj->source);
-        if (!$relatedModelClass || !$modelClass) {
+        if (!$modelClass) {
             return null;
         }
 
+
         $parentKey = Str::snake(class_basename($modelClass)).'_id';
-        $relatedKey = Str::snake(class_basename($relatedModelClass)).'_id';
+        $relatedKey = $relatedModelClass
+            ? Str::snake(class_basename($relatedModelClass)).'_id'
+            : 'relation_id';
 
         return [
             'tableName' => $joinTable,
-            'parentKey' => $relatedKey,
-            'relatedKey' => $parentKey,
+            'parentKey' => $parentKey,
+            'relatedKey' => $relatedKey,
+            'isBlueprint' => !$relatedModelClass
         ];
     }
 
