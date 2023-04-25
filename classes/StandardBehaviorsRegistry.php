@@ -32,7 +32,7 @@ class StandardBehaviorsRegistry
     {
         $this->registerListBehavior();
         $this->registerFormBehavior();
-        $this->registerReorderBehavior();
+        $this->registerImportExportBehavior();
     }
 
     /**
@@ -185,7 +185,7 @@ class StandardBehaviorsRegistry
         ];
 
         $this->behaviorLibrary->registerBehavior(
-            'Backend\Behaviors\FormController',
+            \Backend\Behaviors\FormController::class,
             'rainlab.builder::lang.controller.behavior_form_controller',
             'rainlab.builder::lang.controller.behavior_form_controller_description',
             $properties,
@@ -361,7 +361,7 @@ class StandardBehaviorsRegistry
         ];
 
         $this->behaviorLibrary->registerBehavior(
-            'Backend\Behaviors\ListController',
+            \Backend\Behaviors\ListController::class,
             'rainlab.builder::lang.controller.behavior_list_controller',
             'rainlab.builder::lang.controller.behavior_list_controller_description',
             $properties,
@@ -373,74 +373,119 @@ class StandardBehaviorsRegistry
     }
 
     /**
-     * registerReorderBehavior
+     * registerImportExportBehavior
      */
-    protected function registerReorderBehavior()
+    protected function registerImportExportBehavior()
     {
         $properties = [
-            'title' => [
-                'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_reorder_title'),
+            'import.title' => [
+                'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_import_title'),
                 'type' => 'builderLocalization',
                 'validation' => [
                     'required' => [
-                        'message' => Lang::get('rainlab.builder::lang.controller.property_behavior_reorder_title_required')
+                        'message' => Lang::get('rainlab.builder::lang.controller.property_behavior_import_title_required')
                     ]
                 ],
+                'group' => Lang::get('rainlab.builder::lang.controller.property_group_import'),
             ],
-            'modelClass' => [
-                'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_reorder_model_class'),
-                'description' => Lang::get('rainlab.builder::lang.controller.property_behavior_reorder_model_class_description'),
-                'placeholder' => Lang::get('rainlab.builder::lang.controller.property_behavior_reorder_model_placeholder'),
+            'import.modelClass' => [
+                'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_import_model_class'),
+                'description' => Lang::get('rainlab.builder::lang.controller.property_behavior_import_model_class_description'),
+                'placeholder' => Lang::get('rainlab.builder::lang.controller.property_behavior_import_model_class_placeholder'),
                 'type' => 'dropdown',
                 'fillFrom' => 'model-classes',
                 'validation' => [
                     'required' => [
-                        'message' => Lang::get('rainlab.builder::lang.controller.property_behavior_reorder_model_class_required')
+                        'message' => Lang::get('rainlab.builder::lang.controller.property_behavior_import_model_class_required')
                     ]
                 ],
+                'group' => Lang::get('rainlab.builder::lang.controller.property_group_import'),
             ],
-            'nameFrom' => [
-                'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_reorder_name_from'),
-                'description' => Lang::get('rainlab.builder::lang.controller.property_behavior_reorder_name_from_description'),
+            'import.list' => [
+                'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_file'),
+                'placeholder' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_placeholder'),
+                'description' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_file_description'),
                 'type' => 'autocomplete',
-                'fillFrom' => 'model-columns',
-                'subtypeFrom' => 'modelClass',
-                'depends' => ['modelClass'],
+                'fillFrom' => 'model-lists',
+                'subtypeFrom' => 'import.modelClass',
+                'depends' => ['import.modelClass'],
                 'validation' => [
                     'required' => [
-                        'message' => Lang::get('rainlab.builder::lang.controller.property_behavior_reorder_name_from_required')
+                        'message' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_file_required')
                     ]
                 ],
+                'group' => Lang::get('rainlab.builder::lang.controller.property_group_import'),
             ],
-            'toolbar' => [
-                'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_reorder_toolbar'),
-                'type' => 'object',
+            'import.redirect' => [
+                'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_import_redirect'),
+                'description' => Lang::get('rainlab.builder::lang.controller.property_behavior_import_redirect_description'),
+                'type' => 'autocomplete',
+                'fillFrom' => 'controller-urls',
                 'ignoreIfEmpty' => true,
-                'properties' => [
-                    [
-                        'property' => 'buttons',
-                        'type' => 'string',
-                        'ignoreIfEmpty' => true,
-                        'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_reorder_toolbar_buttons'),
-                        'description' => Lang::get('rainlab.builder::lang.controller.property_behavior_reorder_toolbar_buttons_description'),
+                'group' => Lang::get('rainlab.builder::lang.controller.property_group_import'),
+            ],
+
+            'export.title' => [
+                'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_export_title'),
+                'type' => 'builderLocalization',
+                'validation' => [
+                    'required' => [
+                        'message' => Lang::get('rainlab.builder::lang.controller.property_behavior_import_title_required')
                     ]
-                ]
+                ],
+                'group' => Lang::get('rainlab.builder::lang.controller.property_group_export'),
+            ],
+            'export.modelClass' => [
+                'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_export_model_class'),
+                'description' => Lang::get('rainlab.builder::lang.controller.property_behavior_export_model_class_description'),
+                'placeholder' => Lang::get('rainlab.builder::lang.controller.property_behavior_import_model_class_placeholder'),
+                'type' => 'dropdown',
+                'fillFrom' => 'model-classes',
+                'validation' => [
+                    'required' => [
+                        'message' => Lang::get('rainlab.builder::lang.controller.property_behavior_import_model_class_required')
+                    ]
+                ],
+                'group' => Lang::get('rainlab.builder::lang.controller.property_group_export'),
+            ],
+            'export.list' => [
+                'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_file'),
+                'placeholder' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_placeholder'),
+                'description' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_file_description'),
+                'type' => 'autocomplete',
+                'fillFrom' => 'model-lists',
+                'subtypeFrom' => 'export.modelClass',
+                'depends' => ['export.modelClass'],
+                'validation' => [
+                    'required' => [
+                        'message' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_file_required')
+                    ]
+                ],
+                'group' => Lang::get('rainlab.builder::lang.controller.property_group_export'),
+            ],
+            'export.redirect' => [
+                'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_import_redirect'),
+                'description' => Lang::get('rainlab.builder::lang.controller.property_behavior_import_redirect_description'),
+                'type' => 'autocomplete',
+                'fillFrom' => 'controller-urls',
+                'ignoreIfEmpty' => true,
+                'group' => Lang::get('rainlab.builder::lang.controller.property_group_export'),
             ],
         ];
 
         $templates = [
-            '$/rainlab/builder/classes/standardbehaviorsregistry/reordercontroller/templates/reorder.htm.tpl',
-            '$/rainlab/builder/classes/standardbehaviorsregistry/reordercontroller/templates/_reorder_toolbar.htm.tpl'
+            '$/rainlab/builder/classes/standardbehaviorsregistry/importexportcontroller/templates/import.php.tpl',
+            '$/rainlab/builder/classes/standardbehaviorsregistry/importexportcontroller/templates/export.php.tpl',
         ];
 
         $this->behaviorLibrary->registerBehavior(
-            'Backend\Behaviors\ReorderController',
-            'rainlab.builder::lang.controller.behavior_reorder_controller',
-            'rainlab.builder::lang.controller.behavior_reorder_controller_description',
+            \Backend\Behaviors\ImportExportController::class,
+            'rainlab.builder::lang.controller.behavior_import_export_controller',
+            'rainlab.builder::lang.controller.behavior_import_export_controller_description',
             $properties,
-            'reorderConfig',
+            'importExportConfig',
             null,
-            'config_reorder.yaml',
+            'config_import_export.yaml',
             $templates
         );
     }

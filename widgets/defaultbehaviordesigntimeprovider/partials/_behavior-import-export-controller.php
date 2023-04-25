@@ -1,4 +1,4 @@
-<div class="reorder-behavior">
+<div class="import-export-behavior">
     <div class="list">
         <table>
             <tbody>

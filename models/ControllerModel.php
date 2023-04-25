@@ -22,16 +22,34 @@ use Exception;
  */
 class ControllerModel extends BaseModel
 {
+    /**
+     * @var object controller
+     */
     public $controller;
 
+    /**
+     * @var array behaviors
+     */
     public $behaviors = [];
 
+    /**
+     * @var string baseModelClassName
+     */
     public $baseModelClassName;
 
+    /**
+     * @var array permissions
+     */
     public $permissions = [];
 
+    /**
+     * @var object menuItem
+     */
     public $menuItem;
 
+    /**
+     * @var array fillable
+     */
     protected static $fillable = [
         'controller',
         'behaviors',
@@ -40,6 +58,9 @@ class ControllerModel extends BaseModel
         'menuItem'
     ];
 
+    /**
+     * @var array validationRules
+     */
     protected $validationRules = [
         'controller' => ['regex:/^[A-Z]+[a-zA-Z0-9_]+$/']
     ];
@@ -58,6 +79,9 @@ class ControllerModel extends BaseModel
         $this->exists = true;
     }
 
+    /**
+     * save
+     */
     public function save()
     {
         if ($this->isNewModel()) {
@@ -68,6 +92,9 @@ class ControllerModel extends BaseModel
         }
     }
 
+    /**
+     * fill
+     */
     public function fill(array $attributes)
     {
         parent::fill($attributes);
@@ -81,6 +108,9 @@ class ControllerModel extends BaseModel
         }
     }
 
+    /**
+     * listPluginControllers
+     */
     public static function listPluginControllers($pluginCodeObj)
     {
         $controllersDirectoryPath = $pluginCodeObj->toPluginDirectoryPath().'/controllers';
@@ -107,6 +137,9 @@ class ControllerModel extends BaseModel
         return $result;
     }
 
+    /**
+     * getBaseModelClassNameOptions
+     */
     public function getBaseModelClassNameOptions()
     {
         $models = ModelModel::listPluginModels($this->getPluginCodeObj());
@@ -119,6 +152,9 @@ class ControllerModel extends BaseModel
         return $result;
     }
 
+    /**
+     * getBehaviorsOptions
+     */
     public function getBehaviorsOptions()
     {
         $library = ControllerBehaviorLibrary::instance();
@@ -132,9 +168,15 @@ class ControllerModel extends BaseModel
             ];
         }
 
+        // Support for this is added via import tool
+        unset($result[\Backend\Behaviors\ImportExportController::class]);
+
         return $result;
     }
 
+    /**
+     * getPermissionsOptions
+     */
     public function getPermissionsOptions()
     {
         $model = new PermissionsModel();
@@ -154,6 +196,9 @@ class ControllerModel extends BaseModel
         return $result;
     }
 
+    /**
+     * getMenuItemOptions
+     */
     public function getMenuItemOptions()
     {
         $model = new MenusModel();
@@ -270,6 +315,9 @@ class ControllerModel extends BaseModel
         }
     }
 
+    /**
+     * generateController
+     */
     protected function generateController()
     {
         $this->validationMessages = [
@@ -284,6 +332,9 @@ class ControllerModel extends BaseModel
         $generator->generate();
     }
 
+    /**
+     * loadControllerBehaviors
+     */
     protected function loadControllerBehaviors()
     {
         $filePath = $this->getControllerFilePath();
@@ -304,7 +355,6 @@ class ControllerModel extends BaseModel
         $this->behaviors = [];
         foreach ($behaviors as $behaviorClass) {
             $behaviorInfo = $library->getBehaviorInfo($behaviorClass);
-
             if (!$behaviorInfo) {
                 continue;
             }
@@ -324,6 +374,9 @@ class ControllerModel extends BaseModel
         }
     }
 
+    /**
+     * loadBehaviorConfiguration
+     */
     protected function loadBehaviorConfiguration($fileName, $behaviorClass)
     {
         if (!preg_match('/^[a-z0-9\.\-_]+$/i', $fileName)) {
@@ -343,13 +396,20 @@ class ControllerModel extends BaseModel
         }
 
         try {
-            return Yaml::parse(File::get($filePath));
+            $configuration = Yaml::parse(File::get($filePath));
+            if ($behaviorClass === \Backend\Behaviors\ImportExportController::class) {
+                $this->processImportExportConfig($configuration, true);
+            }
+            return $configuration;
         }
         catch (Exception $ex) {
             throw new ApplicationException(Lang::get('rainlab.builder::lang.controller.error_invalid_yaml_configuration', ['file'=>$fileName]));
         }
     }
 
+    /**
+     * saveBehaviorConfiguration
+     */
     protected function saveBehaviorConfiguration($fileName, $configuration, $behaviorClass)
     {
         if (!preg_match('/^[a-z0-9\.\-_]+$/i', $fileName)) {
@@ -371,6 +431,10 @@ class ControllerModel extends BaseModel
             }
         }
 
+        if ($behaviorClass === \Backend\Behaviors\ImportExportController::class) {
+            $this->processImportExportConfig($configuration);
+        }
+
         $dumper = new YamlDumper();
         if ($configuration !== null) {
             $yamlData = $dumper->dump($configuration, 20, 0, false, true);
@@ -386,6 +450,36 @@ class ControllerModel extends BaseModel
         @File::chmod($filePath);
     }
 
+    /**
+     * processImportExportConfig converts import. and export. keys to and from their config
+     */
+    protected function processImportExportConfig(array &$configuration, $isLoad = false)
+    {
+        if ($isLoad) {
+            foreach ($configuration as $key => $value) {
+                if (!is_array($value) || !in_array($key, ['import', 'export'])) {
+                    continue;
+                }
+
+                foreach ($value as $k => $v) {
+                    $configuration[$key.'.'.$k] = $v;
+                }
+
+                unset($configuration[$key]);
+            }
+        }
+        else {
+            foreach ($configuration as $key => $value) {
+                if (starts_with($key, ['import.', 'export.'])) {
+                    array_set($configuration, $key, array_pull($configuration, $key));
+                }
+            }
+        }
+    }
+
+    /**
+     * trimExtension
+     */
     protected function trimExtension($fileName)
     {
         if (substr($fileName, -4) == '.php') {
@@ -395,6 +489,9 @@ class ControllerModel extends BaseModel
         return $fileName;
     }
 
+    /**
+     * validateFileName
+     */
     protected function validateFileName($fileName)
     {
         if (!preg_match('/^[a-z0-9\.\-_]+$/i', $fileName)) {

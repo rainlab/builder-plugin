@@ -16,9 +16,9 @@ use ApplicationException;
 class DefaultBehaviorDesignTimeProvider extends BehaviorDesignTimeProviderBase
 {
     protected $defaultBehaviorClasses = [
-        'Backend\Behaviors\FormController' => 'form-controller',
-        'Backend\Behaviors\ListController' => 'list-controller',
-        'Backend\Behaviors\ReorderController' => 'reorder-controller'
+        \Backend\Behaviors\FormController::class => 'form-controller',
+        \Backend\Behaviors\ListController::class => 'list-controller',
+        \Backend\Behaviors\ImportExportController::class => 'import-export-controller'
     ];
 
     /**
@@ -56,15 +56,18 @@ class DefaultBehaviorDesignTimeProvider extends BehaviorDesignTimeProviderBase
         }
 
         switch ($class) {
-            case 'Backend\Behaviors\FormController':
+            case \Backend\Behaviors\FormController::class:
                 return $this->getFormControllerDefaultConfiguration($controllerModel, $controllerGenerator);
-            case 'Backend\Behaviors\ListController':
+            case \Backend\Behaviors\ListController::class:
                 return $this->getListControllerDefaultConfiguration($controllerModel, $controllerGenerator);
-            case 'Backend\Behaviors\ReorderController':
-                return $this->getReorderControllerDefaultConfiguration($controllerModel, $controllerGenerator);
+            case \Backend\Behaviors\ImportExportController::class:
+                return $this->getImportExportControllerDefaultConfiguration($controllerModel, $controllerGenerator);
         }
     }
 
+    /**
+     * renderUnknownControl
+     */
     protected function renderUnknownControl($class, $properties)
     {
         return $this->makePartial('behavior-unknown', [
@@ -145,7 +148,7 @@ class DefaultBehaviorDesignTimeProvider extends BehaviorDesignTimeProviderBase
             ]
         ];
 
-        if (in_array('Backend\Behaviors\FormController', $controllerModel->behaviors)) {
+        if (in_array(\Backend\Behaviors\FormController::class, $controllerModel->behaviors)) {
             $updateUrl = $this->getControllerUrl($pluginCodeObj, $controllerModel->controller).'/update/:id';
             $createUrl = $this->getControllerUrl($pluginCodeObj, $controllerModel->controller).'/create';
 
@@ -155,34 +158,35 @@ class DefaultBehaviorDesignTimeProvider extends BehaviorDesignTimeProviderBase
             $controllerGenerator->setTemplateVariable('createUrl', $createUrl);
         }
 
-        if (in_array('Backend\Behaviors\ReorderController', $controllerModel->behaviors)) {
-            $reorderUrl = $this->getControllerUrl($pluginCodeObj, $controllerModel->controller).'/reorder';
-            $controllerGenerator->setTemplateVariable('hasReorderBehavior', true);
-            $controllerGenerator->setTemplateVariable('reorderUrl', $reorderUrl);
+        if (in_array(\Backend\Behaviors\ImportExportController::class, $controllerModel->behaviors)) {
+            $importUrl = $this->getControllerUrl($pluginCodeObj, $controllerModel->controller).'/import';
+            $exportUrl = $this->getControllerUrl($pluginCodeObj, $controllerModel->controller).'/export';
+            $controllerGenerator->setTemplateVariable('hasImportExportBehavior', true);
+            $controllerGenerator->setTemplateVariable('importUrl', $importUrl);
+            $controllerGenerator->setTemplateVariable('exportUrl', $exportUrl);
         }
 
         return $result;
     }
 
     /**
-     * getReorderControllerDefaultConfiguration
+     * getImportExportControllerDefaultConfiguration
      */
-    protected function getReorderControllerDefaultConfiguration($controllerModel, $controllerGenerator)
+    protected function getImportExportControllerDefaultConfiguration($controllerModel, $controllerGenerator)
     {
         if (!$controllerModel->baseModelClassName) {
             throw new ApplicationException(Lang::get('rainlab.builder::lang.controller.error_behavior_requires_base_model', [
-                'behavior' => 'Reorder Controller'
+                'behavior' => 'Import Export Controller'
             ]));
         }
 
         $pluginCodeObj = $controllerModel->getPluginCodeObj();
 
         $result = [
-            'title' => $controllerModel->controller,
-            'modelClass' => $this->getFullModelClass($pluginCodeObj, $controllerModel->baseModelClassName),
-            'toolbar' => [
-                'buttons' => 'reorder_toolbar',
-            ]
+            'import.title' => $controllerModel->controller,
+            'import.modelClass' => $this->getFullModelClass($pluginCodeObj, $controllerModel->baseModelClassName),
+            'export.title' => $controllerModel->controller,
+            'export.modelClass' => $this->getFullModelClass($pluginCodeObj, $controllerModel->baseModelClassName),
         ];
 
         return $result;

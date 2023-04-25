@@ -6,8 +6,13 @@
         <?= e(trans('backend::lang.form.create')) ?>
     </a>
 {% endif %}
-{% if hasReorderBehavior %}
-    <a href="<?= Backend::url('{{ reorderUrl }}') ?>" class="btn btn-default oc-icon-list"><?= e(trans('backend::lang.reorder.default_title')) ?></a>
+{% if hasImportExportBehavior %}
+    <a href="<?= Backend::url('{{ exportUrl }}') ?>" class="btn btn-default oc-icon-download">
+        <?= __("Export") ?>
+    </a>
+    <a href="<?= Backend::url('{{ importUrl }}') ?>" class="btn btn-default oc-icon-upload">
+        <?= __("Import") ?>
+    </a>
 {% endif %}
     <button
         class="btn btn-default oc-icon-trash-o"
