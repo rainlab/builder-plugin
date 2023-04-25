@@ -133,12 +133,12 @@ class StandardBlueprintsRegistry
     {
         $properties = [
             'name' => [
-                'title' => "Singular Name",
-                'description' => "A singular reference to the blueprint object",
+                'title' => "Name",
+                'description' => "The name to use for this blueprint in the user interface",
                 'type' => 'string',
                 'validation' => [
                     'required' => [
-                        'message' => "A singular name is required"
+                        'message' => "A name is required"
                     ]
                 ],
             ],
@@ -148,7 +148,7 @@ class StandardBlueprintsRegistry
                 'type' => 'string',
                 'validation' => [
                     'required' => [
-                        'message' => "A singular name is required"
+                        'message' => "A controller name is required"
                     ]
                 ],
             ],
@@ -158,10 +158,30 @@ class StandardBlueprintsRegistry
                 'type' => 'string',
                 'validation' => [
                     'required' => [
-                        'message' => "A singular name is required"
+                        'message' => "A model name is required"
                     ]
                 ],
             ],
+            'permissionCode' => [
+                'title' => "Permission Code",
+                'description' => "Permission code used to manage this item.",
+                'type' => 'string',
+                'validation' => [
+                    'required' => [
+                        'message' => "A permission code is required"
+                    ]
+                ],
+            ],
+            'menuCode' => [
+                'title' => "Menu Code",
+                'description' => "Menu code used to include navigation for this item.",
+                'type' => 'string',
+                'validation' => [
+                    'required' => [
+                        'message' => "A menu code is required"
+                    ]
+                ],
+            ]
         ];
 
         $this->blueprintLibrary->registerBlueprint(

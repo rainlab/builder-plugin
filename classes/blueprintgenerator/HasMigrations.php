@@ -14,7 +14,10 @@ trait HasMigrations
      */
     protected function generateMigration()
     {
-        $this->generateContentTable();
+        if ($this->sourceModel->wantsDatabaseMigration()) {
+            $this->generateContentTable();
+        }
+
         $this->generateJoinTables();
         $this->generateRepeaterTables();
     }

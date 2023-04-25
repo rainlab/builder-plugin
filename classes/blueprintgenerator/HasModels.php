@@ -1,5 +1,6 @@
 <?php namespace RainLab\Builder\Classes\BlueprintGenerator;
 
+use Tailor\Classes\Blueprint\GlobalBlueprint;
 use RainLab\Builder\Models\ModelModel;
 use RainLab\Builder\Models\ModelFormModel;
 use RainLab\Builder\Models\ModelListModel;
@@ -92,6 +93,10 @@ trait HasModels
 
         $model->traits[] = \Tailor\Traits\BlueprintRelationModel::class;
 
+        if ($this->sourceModel->useSettingModel()) {
+            $model->baseClassName = \System\Models\SettingModel::class;
+        }
+
         $this->extendModelWithModelSpecs($model);
 
         return $model;
@@ -174,6 +179,10 @@ trait HasModels
         $container->postProcessControls();
 
         $model->columns = $container->getPrimaryControls() + $container->getControls();
+
+        if (!$model->columns) {
+            return null;
+        }
 
         return $model;
     }

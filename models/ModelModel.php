@@ -159,9 +159,12 @@ class ModelModel extends BaseModel
 
         $modelFilePath = $this->getFilePath();
         $namespace = $this->getPluginCodeObj()->toPluginNamespace().'\\Models';
+        $templateFile = $this->baseClassName === \System\Models\SettingModel::class
+            ? 'settingmodel.php.tpl'
+            : 'model.php.tpl';
 
         $structure = [
-            $modelFilePath => 'model.php.tpl'
+            $modelFilePath => $templateFile
         ];
 
         $variables = [

@@ -2,8 +2,8 @@
 
 use Lang;
 use File;
-use Tailor\Classes\Blueprint\GlobalBlueprint;
 use Tailor\Classes\Blueprint\EntryBlueprint;
+use Tailor\Classes\Blueprint\GlobalBlueprint;
 use Tailor\Classes\Blueprint\SingleBlueprint;
 use RainLab\Builder\Classes\BlueprintGenerator;
 use RainLab\Builder\Classes\PluginVersion;
@@ -76,21 +76,6 @@ class ImportsModel extends BaseModel
     public function getBlueprintObject()
     {
         return $this->activeBlueprint;
-    }
-
-    /**
-     * useListController
-     */
-    public function useListController(): bool
-    {
-        if (
-            $this->activeBlueprint instanceof SingleBlueprint ||
-            $this->activeBlueprint instanceof GlobalBlueprint
-        ) {
-            return false;
-        }
-
-        return true;
     }
 
     /**
@@ -193,5 +178,44 @@ class ImportsModel extends BaseModel
         }
 
         return $fieldset;
+    }
+
+    /**
+     * useListController
+     */
+    public function useListController(): bool
+    {
+        if (
+            $this->activeBlueprint instanceof SingleBlueprint ||
+            $this->activeBlueprint instanceof GlobalBlueprint
+        ) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * useSettingModel
+     */
+    public function useSettingModel(): bool
+    {
+        if ($this->activeBlueprint instanceof GlobalBlueprint) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * wantsDatabaseMigration
+     */
+    public function wantsDatabaseMigration(): bool
+    {
+        if ($this->useSettingModel()) {
+            return false;
+        }
+
+        return true;
     }
 }
