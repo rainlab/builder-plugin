@@ -4,6 +4,7 @@ use Lang;
 use File;
 use Tailor\Classes\Blueprint\GlobalBlueprint;
 use Tailor\Classes\Blueprint\EntryBlueprint;
+use Tailor\Classes\Blueprint\SingleBlueprint;
 use RainLab\Builder\Classes\BlueprintGenerator;
 use RainLab\Builder\Classes\PluginVersion;
 use Tailor\Classes\BlueprintIndexer;
@@ -75,6 +76,21 @@ class ImportsModel extends BaseModel
     public function getBlueprintObject()
     {
         return $this->activeBlueprint;
+    }
+
+    /**
+     * useListController
+     */
+    public function useListController(): bool
+    {
+        if (
+            $this->activeBlueprint instanceof SingleBlueprint ||
+            $this->activeBlueprint instanceof GlobalBlueprint
+        ) {
+            return false;
+        }
+
+        return true;
     }
 
     /**

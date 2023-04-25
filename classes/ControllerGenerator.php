@@ -319,8 +319,17 @@ class ControllerGenerator
             $templateParts = "";
         }
 
+        $noListTemplate = "";
+        if (
+            !in_array(\Backend\Behaviors\ListController::class, $this->sourceModel->behaviors) &&
+            in_array(\Backend\Behaviors\FormController::class, $this->sourceModel->behaviors)
+        ) {
+            $noListTemplate = $this->parseTemplate($this->getTemplatePath('controller-no-list.php.tpl'));
+        }
+
         $code = $this->parseTemplate($this->getTemplatePath('controller.php.tpl'), [
-            'templateParts' => $templateParts
+            'templateParts' => $templateParts,
+            'noListTemplate' => $noListTemplate,
         ]);
 
         $controllerFilePath = $this->sourceModel->getControllerFilePath();

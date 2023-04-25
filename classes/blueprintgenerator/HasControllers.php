@@ -14,12 +14,13 @@ trait HasControllers
     {
         $files = [];
 
-        $model = $this->makeControllerModel();
-        $files[] = $model->getControllerFilePath();
+        if ($model = $this->makeControllerModel()) {
+            $files[] = $model->getControllerFilePath();
+        }
 
         $this->validateUniqueFiles($files);
 
-        $model->validate();
+        $model && $model->validate();
     }
 
     /**
@@ -27,8 +28,9 @@ trait HasControllers
      */
     protected function generateController()
     {
-        $controller = $this->makeControllerModel();
-        $controller->save();
+        if ($controller = $this->makeControllerModel()) {
+            $controller->save();
+        }
     }
 
     /**
@@ -36,7 +38,7 @@ trait HasControllers
      */
     protected function makeControllerModel()
     {
-        $controller = new ControllerModel();
+        $controller = new ControllerModel;
 
         $controller->setPluginCodeObj($this->sourceModel->getPluginCodeObj());
 
@@ -48,10 +50,13 @@ trait HasControllers
 
         $controller->permissions = [$this->getConfig('permissionCode')];
 
-        $controller->behaviors = [
-            \Backend\Behaviors\ListController::class,
-            \Backend\Behaviors\FormController::class,
-        ];
+        $controller->behaviors = [];
+
+        if ($this->sourceModel->useListController()) {
+            $controller->behaviors[] = \Backend\Behaviors\ListController::class;
+        }
+
+        $controller->behaviors[] = \Backend\Behaviors\FormController::class;
 
         return $controller;
     }

@@ -21,24 +21,28 @@ trait HasModels
     {
         $files = [];
 
-        $model = $this->makeModelModel();
-        $files[] = $model->getModelFilePath();
+        if ($model = $this->makeModelModel()) {
+            $files[] = $model->getModelFilePath();
+        }
 
-        $form = $this->makeModelFormFields();
-        $files[] = $form->getYamlFilePath();
+        if ($form = $this->makeModelFormFields()) {
+            $files[] = $form->getYamlFilePath();
+        }
 
-        $lists = $this->makeModelListColumns();
-        $files[] = $lists->getYamlFilePath();
+        if ($lists = $this->makeModelListColumns()) {
+            $files[] = $lists->getYamlFilePath();
+        }
 
-        $filter = $this->makeModelFilterScopes();
-        $files[] = $filter->getYamlFilePath();
+        if ($filter = $this->makeModelFilterScopes()) {
+            $files[] = $filter->getYamlFilePath();
+        }
 
         $this->validateUniqueFiles($files);
 
-        $model->validate();
-        $form->validate();
-        $lists->validate();
-        $filter->validate();
+        $model && $model->validate();
+        $form && $form->validate();
+        $lists && $lists->validate();
+        $filter && $filter->validate();
     }
 
     /**
@@ -46,21 +50,25 @@ trait HasModels
      */
     protected function generateModel()
     {
-        $filter = $this->makeModelFilterScopes();
-        $filter->save();
-        $this->filesGenerated[] = $filter->getYamlFilePath();
+        if ($filter = $this->makeModelFilterScopes()) {
+            $filter->save();
+            $this->filesGenerated[] = $filter->getYamlFilePath();
+        }
 
-        $lists = $this->makeModelListColumns();
-        $lists->save();
-        $this->filesGenerated[] = $lists->getYamlFilePath();
+        if ($lists = $this->makeModelListColumns()) {
+            $lists->save();
+            $this->filesGenerated[] = $lists->getYamlFilePath();
+        }
 
-        $form = $this->makeModelFormFields();
-        $form->save();
-        $this->filesGenerated[] = $form->getYamlFilePath();
+        if ($form = $this->makeModelFormFields()) {
+            $form->save();
+            $this->filesGenerated[] = $form->getYamlFilePath();
+        }
 
-        $model = $this->makeModelModel();
-        $model->save();
-        $this->filesGenerated[] = $model->getModelFilePath();
+        if ($model = $this->makeModelModel()) {
+            $model->save();
+            $this->filesGenerated[] = $model->getModelFilePath();
+        }
     }
 
     /**
@@ -190,6 +198,10 @@ trait HasModels
         $fieldset->defineAllFilterScopes($container);
 
         $model->scopes = $container->getControls();
+
+        if (!$model->scopes) {
+            return null;
+        }
 
         return $model;
     }

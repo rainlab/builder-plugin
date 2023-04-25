@@ -100,17 +100,11 @@ class StandardBlueprintsRegistry
             ]
         ];
 
-        $templates = [];
-
         $this->blueprintLibrary->registerBlueprint(
             \Tailor\Classes\Blueprint\EntryBlueprint::class,
             'Entry Blueprint',
             'The standard content structure that supports drafts.',
             $properties,
-            'formConfig',
-            null,
-            'config_form.yaml',
-            $templates
         );
 
         $this->blueprintLibrary->registerBlueprint(
@@ -118,10 +112,6 @@ class StandardBlueprintsRegistry
             'Stream Blueprint',
             'A stream of time stamped entries.',
             $properties,
-            'formConfig',
-            null,
-            'config_form.yaml',
-            $templates
         );
 
         $this->blueprintLibrary->registerBlueprint(
@@ -129,10 +119,6 @@ class StandardBlueprintsRegistry
             'Single Blueprint',
             'A single entry with dedicated fields.',
             $properties,
-            'formConfig',
-            null,
-            'config_form.yaml',
-            $templates
         );
 
         $this->blueprintLibrary->registerBlueprint(
@@ -140,10 +126,6 @@ class StandardBlueprintsRegistry
             'Structure Blueprint',
             'A defined structure of entries.',
             $properties,
-            'formConfig',
-            null,
-            'config_form.yaml',
-            $templates
         );
     }
 
@@ -182,17 +164,11 @@ class StandardBlueprintsRegistry
             ],
         ];
 
-        $templates = [];
-
         $this->blueprintLibrary->registerBlueprint(
             \Tailor\Classes\Blueprint\GlobalBlueprint::class,
             'Global Blueprint',
             'A single record in the database and is often used for settings and configuration.',
             $properties,
-            'listConfig',
-            null,
-            'config_list.yaml',
-            $templates
         );
     }
 }
