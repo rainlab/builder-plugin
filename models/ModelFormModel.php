@@ -108,7 +108,7 @@ class ModelFormModel extends ModelYamlModel
      */
     protected function modelToYamlArray()
     {
-        return array_merge($this->originals, $this->controls);
+        return array_merge((array) $this->originals, $this->controls);
     }
 
     /**

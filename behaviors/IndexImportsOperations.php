@@ -1,10 +1,12 @@
 <?php namespace RainLab\Builder\Behaviors;
 
+use ApplicationException;
 use RainLab\Builder\Classes\IndexOperationsBehaviorBase;
 use RainLab\Builder\Models\ImportsModel;
 use RainLab\Builder\Classes\PluginCode;
 use System\Classes\VersionManager;
 use Flash;
+use Lang;
 
 /**
  * IndexImportsOperations functionality for the Builder index controller
@@ -48,6 +50,12 @@ class IndexImportsOperations extends IndexOperationsBehaviorBase
     {
         $pluginCodeObj = new PluginCode(post('plugin_code'));
         $pluginCode = $pluginCodeObj->toCode();
+
+        // Validate plugin code matches
+        $vectorCode = $this->controller->getBuilderActivePluginVector()->pluginCodeObj->toCode();
+        if ($pluginCode !== $vectorCode) {
+            throw new ApplicationException(Lang::get('rainlab.builder::lang.common.not_match'));
+        }
 
         $model = $this->loadOrCreateBaseModel($pluginCodeObj->toCode());
         $model->setPluginCodeObj($pluginCodeObj);

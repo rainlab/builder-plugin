@@ -1,10 +1,7 @@
-@color-filelist-norecords-text: #666666;
-@color-text-title:              #405261;
-@color-text-description:        #8f8f8f;
-@color-filelist-norecords-text: #666666;
-@color-filelist-norecords-bg:   #eeeeee;
-@color-filelist-cb-border:      #cccccc;
-@color-filelist-title-hero:     #2b3e50;
+
+
+@color-text-title:              @text-color;
+@color-text-description:        @primary-color;
 
 [data-entity="code"] .secondary-content-tabs .nav-tabs {
     display: none;
@@ -14,7 +11,7 @@
     p.no-data {
         padding: 22px;
         margin: 0;
-        color: @color-filelist-norecords-text;
+        color: @text-muted;
         font-size: 14px;
         text-align: center;
         font-weight: 400;
@@ -93,7 +90,8 @@
         &.parent {
             a.link {
                 padding-left: 41px;
-                background-color: @color-list-parent-bg;
+                background-color: @primary-bg;
+                color: @primary-color;
                 word-wrap: break-word;
 
                 &:before {
@@ -105,13 +103,13 @@
                     top: 0;
                     width: 100%;
                     height: 1px;
-                    background: #ecf0f1;
+                    background: @primary-border;
                 }
 
 
                 &:after {
                     font-size: 13px;
-                    color: @color-list-nav-arrow;
+                    color: @primary-color;
                     width: 18px;
                     height: 18px;
                     top: 11px;
@@ -124,7 +122,8 @@
     }
 
     p.parent a.link:hover {
-        background: @color-list-active!important;
+        background: @editor-section-bg !important;
+        color: @editor-section-color !important;
 
         &:after {
             opacity: 1;
@@ -145,7 +144,11 @@
             position: relative;
             list-style: none;
 
-            &.active a.link, a.link:hover {background: @color-list-active;}
+            &.active a.link, a.link:hover {
+                background: @editor-section-bg;
+                color: @editor-section-color;
+            }
+
             &.active a.link {
                 position: relative;
                 &:after {
@@ -154,7 +157,7 @@
                     width: 4px;
                     left: 0;
                     top: 0;
-                    background: @color-list-active-border;
+                    background: @primary-border;
                     display: block;
                     content: ' ';
                 }
@@ -202,7 +205,9 @@
             }
 
             &:hover {
-                background: @color-list-active;
+                background: @editor-section-bg;
+                color: @editor-section-color;
+
                 div.controls, a.control {
                     display: block !important;
 
@@ -219,10 +224,6 @@
 
                 label {
                     margin-right: 0;
-
-                    &:before {
-                        border-color: @color-filelist-cb-border;
-                    }
                 }
             }
         }
