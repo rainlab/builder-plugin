@@ -44,6 +44,8 @@ trait HasControllers
 
         $controller->baseModelClassName = $this->getConfig('modelClass');
 
+        $controller->controllerName = $this->getConfig('name');
+
         $controller->controller = $this->getConfig('controllerClass');
 
         $controller->menuItem = $this->getActiveMenuItemCode();

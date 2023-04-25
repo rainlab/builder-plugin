@@ -75,6 +75,8 @@ trait HasExpandoModels
 
         $model->skipDbValidation = true;
 
+        $model->traits[] = \Tailor\Traits\BlueprintRelationModel::class;
+
         $model->baseClassName = \October\Rain\Database\ExpandoModel::class;
 
         $model->relationDefinitions = (array) $container->getProcessedRelationDefinitions();

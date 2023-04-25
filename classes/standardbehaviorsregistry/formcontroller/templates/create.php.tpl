@@ -1,6 +1,6 @@
 <?php Block::put('breadcrumb') ?>
     <ul>
-        <li><a href="<?= Backend::url('{{ controllerUrl }}') ?>">{{ controller }}</a></li>
+        <li><a href="<?= Backend::url('{{ controllerUrl }}') ?>">{{ controllerName }}</a></li>
         <li><?= e($this->pageTitle) ?></li>
     </ul>
 <?php Block::endPut() ?>
@@ -23,7 +23,7 @@
                     class="btn btn-primary">
                     <?= e(trans('backend::lang.form.create')) ?>
                 </button>
-                <button 
+                <button
                     type="button"
                     data-request="onSave"
                     data-request-data="close:1"

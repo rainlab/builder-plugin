@@ -217,6 +217,7 @@ class ControllerGenerator
         $this->templateVars['pluginCode'] = $pluginCodeObj->toCode();
         $this->templateVars['permissions'] = $this->sourceModel->permissions;
         $this->templateVars['controller'] = $this->sourceModel->controller;
+        $this->templateVars['controllerName'] = $this->sourceModel->controllerName;
         $this->templateVars['baseModelClassName'] = $this->sourceModel->baseModelClassName;
 
         $this->templateVars['controllerUrl'] = $pluginCodeObj->toUrl().'/'.strtolower($this->sourceModel->controller);

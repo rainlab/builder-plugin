@@ -97,7 +97,7 @@ class DefaultBehaviorDesignTimeProvider extends BehaviorDesignTimeProviderBase
         $controllerUrl = $this->getControllerUrl($pluginCodeObj, $controllerModel->controller);
 
         $result = [
-            'name' => $controllerModel->controller,
+            'name' => $controllerModel->controllerName,
             'form' => $this->getModelFilePath($pluginCodeObj, $controllerModel->baseModelClassName, $forms[0]),
             'modelClass' => $this->getFullModelClass($pluginCodeObj, $controllerModel->baseModelClassName),
             'defaultRedirect' => $controllerUrl,

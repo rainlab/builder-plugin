@@ -27,6 +27,11 @@ class ControllerModel extends BaseModel
     public $controller;
 
     /**
+     * @var string controllerName
+     */
+    public $controllerName;
+
+    /**
      * @var array behaviors
      */
     public $behaviors = [];
@@ -51,6 +56,7 @@ class ControllerModel extends BaseModel
      */
     protected static $fillable = [
         'controller',
+        'controllerName',
         'behaviors',
         'baseModelClassName',
         'permissions',
@@ -83,6 +89,10 @@ class ControllerModel extends BaseModel
      */
     public function save()
     {
+        if (!$this->controllerName) {
+            $this->controllerName = $this->controller;
+        }
+
         if ($this->isNewModel()) {
             $this->generateController();
         }
