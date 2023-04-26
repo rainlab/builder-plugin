@@ -183,15 +183,17 @@ class ModelListModel extends ModelYamlModel
      */
     protected function preprocessColumnDataBeforeSave($column)
     {
+        // Filter empty values, if not array
+        $column = array_filter($column, function ($value) {
+            return !is_array($value) && strlen($value) > 0;
+        });
+
+        // Cast booleans
         $booleanFields = [
             'searchable',
             'invisible',
             'sortable'
         ];
-
-        $column = array_filter($column, function ($value) {
-            return strlen($value) > 0;
-        });
 
         foreach ($booleanFields as $booleanField) {
             if (!array_key_exists($booleanField, $column)) {

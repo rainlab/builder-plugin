@@ -1,2 +1,1 @@
-1.0.1:
-    - Initialize plugin.
+v1.0.1: Initialize plugin

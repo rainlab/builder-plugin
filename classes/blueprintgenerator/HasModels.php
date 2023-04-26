@@ -93,8 +93,11 @@ trait HasModels
 
         $model->traits[] = \Tailor\Traits\BlueprintRelationModel::class;
 
+        // Custom logic for settings models
         if ($this->sourceModel->useSettingModel()) {
             $model->baseClassName = \System\Models\SettingModel::class;
+
+            $model->addSoftDeleting = false;
         }
 
         $this->extendModelWithModelSpecs($model);

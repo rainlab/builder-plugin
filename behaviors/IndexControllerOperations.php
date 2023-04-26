@@ -92,6 +92,9 @@ class IndexControllerOperations extends IndexOperationsBehaviorBase
         return $result;
     }
 
+    /**
+     * onControllerSave
+     */
     public function onControllerSave()
     {
         $controller = Input::get('controller');
@@ -107,6 +110,9 @@ class IndexControllerOperations extends IndexOperationsBehaviorBase
         return $result;
     }
 
+    /**
+     * onControllerShowCreatePopup
+     */
     public function onControllerShowCreatePopup()
     {
         $pluginCodeObj = $this->getPluginCode();
@@ -115,7 +121,7 @@ class IndexControllerOperations extends IndexOperationsBehaviorBase
             'pluginCode' => $pluginCodeObj->toCode()
         ];
 
-        $this->baseFormConfigFile = '~/plugins/rainlab/builder/models/controllermodel/new-controller-fields.yaml';
+        $this->baseFormConfigFile = '~/plugins/rainlab/builder/models/controllermodel/fields_new_controller.yaml';
         $widget = $this->makeBaseFormWidget(null, $options);
 
         return $this->makePartial('create-controller-popup-form', [
@@ -124,6 +130,9 @@ class IndexControllerOperations extends IndexOperationsBehaviorBase
         ]);
     }
 
+    /**
+     * getTabName
+     */
     protected function getTabName($model)
     {
         $pluginName = Lang::get($model->getModelPluginName());
@@ -131,11 +140,17 @@ class IndexControllerOperations extends IndexOperationsBehaviorBase
         return $pluginName.'/'.$model->controller;
     }
 
+    /**
+     * getTabId
+     */
     protected function getTabId($pluginCode, $controller)
     {
         return 'controller-'.$pluginCode.'-'.$controller;
     }
 
+    /**
+     * loadModelFromPost
+     */
     protected function loadModelFromPost()
     {
         $pluginCodeObj = new PluginCode(Request::input('plugin_code'));
@@ -148,6 +163,9 @@ class IndexControllerOperations extends IndexOperationsBehaviorBase
         return $this->loadOrCreateBaseModel($controller, $options);
     }
 
+    /**
+     * loadOrCreateBaseModel
+     */
     protected function loadOrCreateBaseModel($controller, $options = [])
     {
         $model = new ControllerModel();
@@ -164,6 +182,9 @@ class IndexControllerOperations extends IndexOperationsBehaviorBase
         return $model;
     }
 
+    /**
+     * mergeRegistryDataIntoResult
+     */
     protected function mergeRegistryDataIntoResult(&$result, $pluginCodeObj)
     {
         if (!array_key_exists('builderResponseData', $result)) {

@@ -751,7 +751,7 @@
   ],
   'migration' => [
     'entity_name' => 'Migration',
-    'error_version_invalid' => 'The version should be specified in format 1.0.1',
+    'error_version_invalid' => 'The version should be specified in format v1.0.1',
     'field_version' => 'Version',
     'field_description' => 'Description',
     'field_code' => 'Code',

@@ -24,6 +24,16 @@ class ImportsModel extends BaseModel
     public $blueprints = [];
 
     /**
+     * @var bool disableBlueprints when complete
+     */
+    public $disableBlueprints = false;
+
+    /**
+     * @var bool deleteBlueprintData when complete
+     */
+    public $deleteBlueprintData = false;
+
+    /**
      * @var string pluginName
      */
     protected $pluginName;
@@ -43,6 +53,8 @@ class ImportsModel extends BaseModel
      */
     protected static $fillable = [
         'blueprints',
+        'disableBlueprints',
+        'deleteBlueprintData',
     ];
 
     /**

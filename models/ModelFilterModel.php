@@ -183,11 +183,13 @@ class ModelFilterModel extends ModelYamlModel
      */
     protected function preprocessScopeDataBeforeSave($scope)
     {
-        $booleanFields = [];
-
+        // Filter empty values
         $scope = array_filter($scope, function ($value) {
-            return strlen($value) > 0;
+            return !is_array($value) && strlen($value) > 0;
         });
+
+        // Cast booleans
+        $booleanFields = [];
 
         foreach ($booleanFields as $booleanField) {
             if (!array_key_exists($booleanField, $scope)) {

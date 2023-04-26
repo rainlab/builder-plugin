@@ -105,7 +105,10 @@ class BlueprintGenerator
 
         $this->generateNavigation();
         $this->generateVersionUpdate();
-        $this->disableGeneratedBlueprints();
+
+        if ($this->sourceModel->disableBlueprints) {
+            $this->disableGeneratedBlueprints();
+        }
     }
 
     /**

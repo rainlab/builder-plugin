@@ -22,13 +22,18 @@ class IndexImportsOperations extends IndexOperationsBehaviorBase
     protected $baseFormConfigFile = '~/plugins/rainlab/builder/models/importsmodel/fields.yaml';
 
     /**
+     * @var string selectFormConfigFile
+     */
+    protected $selectFormConfigFile = '~/plugins/rainlab/builder/models/importsmodel/fields.yaml';
+
+    /**
      * onImportsOpen
      */
     public function onImportsOpen()
     {
         $pluginCodeObj = $this->getPluginCode();
         $pluginCode = $pluginCodeObj->toCode();
-        $widget = $this->makeBaseFormWidget($pluginCode);
+        $widget = $this->makeSelectionFormWidget($pluginCode);
 
         $result = [
             'tabTitle' => $widget->model->getPluginName().'/'.__("Import"),
@@ -46,8 +51,35 @@ class IndexImportsOperations extends IndexOperationsBehaviorBase
     /**
      * onImportsSave
      */
+    public function onImportsShowConfirmPopup()
+    {
+        $pluginCodeObj = $this->getPluginCode();
+
+        $options = [
+            'pluginCode' => $pluginCodeObj->toCode()
+        ];
+
+        $this->baseFormConfigFile = '~/plugins/rainlab/builder/models/importsmodel/fields_import.yaml';
+        $widget = $this->makeBaseFormWidget(null, $options);
+
+        return $this->makePartial('import-blueprints-popup-form', [
+            'form' => $widget,
+            'pluginCode' => $pluginCodeObj->toCode()
+        ]);
+    }
+
+    /**
+     * onImportsSave
+     */
     public function onImportsSave()
     {
+        if (post('delete_blueprint_data')) {
+            $confirmText = trim(strtolower(post('delete_blueprint_data_confirm')));
+            if ($confirmText !== 'ok') {
+                throw new ApplicationException(__("Type OK in the field to confirm you want to destroy the existing blueprint data."));
+            }
+        }
+
         $pluginCodeObj = new PluginCode(post('plugin_code'));
         $pluginCode = $pluginCodeObj->toCode();
 
@@ -58,9 +90,26 @@ class IndexImportsOperations extends IndexOperationsBehaviorBase
         }
 
         $model = $this->loadOrCreateBaseModel($pluginCodeObj->toCode());
+
+        // Disable blueprints when finished
+        if (post('disable_blueprints')) {
+            $model->disableBlueprints = true;
+        }
+
+        // Disable blueprints when finished
+        if (post('delete_blueprint_data')) {
+            $model->deleteBlueprintData = true;
+        }
+
+        // Perform import
         $model->setPluginCodeObj($pluginCodeObj);
         $model->fill(post());
         $model->import();
+
+        // Migrate database
+        if (post('migrate_database')) {
+            VersionManager::instance()->updatePlugin($pluginCode);
+        }
 
         Flash::success(__("Import Complete"));
 
@@ -104,5 +153,20 @@ class IndexImportsOperations extends IndexOperationsBehaviorBase
         $model = new ImportsModel;
         $model->loadPlugin($pluginCode);
         return $model;
+    }
+
+    /**
+     * makeBaseFormWidget
+     */
+    protected function makeSelectionFormWidget($modelCode, $options = [])
+    {
+        if (!strlen($this->selectFormConfigFile)) {
+            throw new ApplicationException(sprintf('Base form configuration file is not specified for %s behavior', get_class($this)));
+        }
+
+        $widgetConfig = $this->makeConfig($this->selectFormConfigFile);
+        $widgetConfig->model = $this->loadOrCreateBaseModel($modelCode, $options);
+
+        return $this->makeWidget(\Backend\Widgets\Form::class, $widgetConfig);
     }
 }

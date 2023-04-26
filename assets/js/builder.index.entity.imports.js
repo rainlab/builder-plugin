@@ -35,20 +35,26 @@
         this.indexController.openOrLoadMasterTab($(ev.target), 'onImportsOpen', this.makeTabId(currentPlugin));
     }
 
-    Imports.prototype.cmdSaveImports = function(ev) {
+    Imports.prototype.cmdConfirmImports = function(ev) {
         var $target = $(ev.currentTarget);
-        $.oc.confirm($target.data('confirm'), this.proxy(this.saveImportsConfirmed));
+
+        $target.popup({
+            handler: 'onImportsShowConfirmPopup'
+        });
     }
 
-    Imports.prototype.saveImportsConfirmed = function(ev) {
+    Imports.prototype.cmdSaveImports = function(ev) {
         var $masterTabPane = this.getMasterTabsActivePane(),
-            $form = $masterTabPane.find('form');
+            $form = $masterTabPane.find('form'),
+            $popup = $(ev.currentTarget);
 
         $form.request('onImportsSave', {
-            data: {}
-        }).done(
-            this.proxy(this.saveImportsDone)
-        );
+            data: oc.serializeJSON($popup.get(0))
+        })
+        .done(() => {
+            $popup.trigger('close.oc.popup');
+            this.saveImportsDone();
+        });
     }
 
     Imports.prototype.cmdMigrateDatabase = function(ev) {
@@ -68,10 +74,6 @@
     // ============================
 
     Imports.prototype.saveImportsDone = function(data) {
-        if (data['builderResponseData'] === undefined) {
-            throw new Error('Invalid response data');
-        }
-
         this.hideInspector();
         $('#blueprintList').html('');
 
