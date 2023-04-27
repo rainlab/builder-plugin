@@ -1,5 +1,6 @@
 <?php namespace RainLab\Builder\Models;
 
+use Arr;
 use Yaml;
 use Lang;
 use File;
@@ -108,7 +109,12 @@ class ControllerModel extends BaseModel
     {
         parent::fill($attributes);
 
-        if (!$this->isNewModel() && is_array($this->behaviors)) {
+        if (is_array($this->behaviors)) {
+            // Convert [1,2,3] to [1=>[], 2=>[], 3=>[]]
+            if (Arr::isList($this->behaviors)) {
+                $this->behaviors = array_combine($this->behaviors, array_fill(0, count($this->behaviors), []));
+            }
+
             foreach ($this->behaviors as $class => &$configuration) {
                 if (is_scalar($configuration)) {
                     $configuration = json_decode($configuration, true);

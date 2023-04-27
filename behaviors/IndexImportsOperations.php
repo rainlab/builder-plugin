@@ -53,6 +53,10 @@ class IndexImportsOperations extends IndexOperationsBehaviorBase
      */
     public function onImportsShowConfirmPopup()
     {
+        if (!post('blueprints')) {
+            throw new ApplicationException(__("There are no blueprints to import, please select a blueprint and try again."));
+        }
+
         $pluginCodeObj = $this->getPluginCode();
 
         $options = [

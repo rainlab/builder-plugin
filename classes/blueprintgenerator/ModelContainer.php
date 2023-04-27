@@ -256,14 +256,6 @@ class ModelContainer extends Model
     }
 
     /**
-     * useMultisite
-     */
-    public function useMultisite()
-    {
-        return $this->blueprint->useMultisite();
-    }
-
-    /**
      * getMultisiteDefinition
      */
     public function getMultisiteDefinition()

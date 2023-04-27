@@ -148,7 +148,7 @@ class DefaultBehaviorDesignTimeProvider extends BehaviorDesignTimeProviderBase
             ]
         ];
 
-        if (in_array(\Backend\Behaviors\FormController::class, $controllerModel->behaviors)) {
+        if (array_key_exists(\Backend\Behaviors\FormController::class, $controllerModel->behaviors)) {
             $updateUrl = $this->getControllerUrl($pluginCodeObj, $controllerModel->controller).'/update/:id';
             $createUrl = $this->getControllerUrl($pluginCodeObj, $controllerModel->controller).'/create';
 

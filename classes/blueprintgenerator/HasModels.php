@@ -124,10 +124,14 @@ trait HasModels
 
         $model->validationDefinitions['rules'] += ['title' => 'required'];
 
-        if ($container->useMultisite()) {
+        if ($this->sourceModel->useMultisite()) {
             $model->traits[] = \October\Rain\Database\Traits\Multisite::class;
 
             $model->multisiteDefinition = (array) $container->getMultisiteDefinition();
+        }
+
+        if ($this->sourceModel->useStructure()) {
+            $model->traits[] = \October\Rain\Database\Traits\NestedTree::class;
         }
     }
 

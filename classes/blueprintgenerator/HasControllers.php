@@ -55,10 +55,16 @@ trait HasControllers
         $controller->behaviors = [];
 
         if ($this->sourceModel->useListController()) {
-            $controller->behaviors[] = \Backend\Behaviors\ListController::class;
+            $listConfig = [];
+
+            if ($this->sourceModel->useStructure()) {
+                $listConfig['structure'] = $this->sourceModel->getBlueprintObject()->structure ?? true;
+            }
+
+            $controller->behaviors[\Backend\Behaviors\ListController::class] = $listConfig;
         }
 
-        $controller->behaviors[] = \Backend\Behaviors\FormController::class;
+        $controller->behaviors[\Backend\Behaviors\FormController::class] = [];
 
         return $controller;
     }

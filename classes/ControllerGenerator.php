@@ -102,7 +102,7 @@ class ControllerGenerator
         $behaviorLibrary = ControllerBehaviorLibrary::instance();
 
         $knownTemplates = [];
-        foreach ($this->sourceModel->behaviors as $behaviorClass) {
+        foreach ($this->sourceModel->behaviors as $behaviorClass => $behaviorConfig) {
             $behaviorInfo = $behaviorLibrary->getBehaviorInfo($behaviorClass);
             if (!$behaviorInfo) {
                 throw new ValidationException([
@@ -150,6 +150,9 @@ class ControllerGenerator
         }
     }
 
+    /**
+     * validateBehaviorConfigSettings
+     */
     protected function validateBehaviorConfigSettings()
     {
         if (!$this->sourceModel->behaviors) {
@@ -162,7 +165,7 @@ class ControllerGenerator
         $behaviorLibrary = ControllerBehaviorLibrary::instance();
 
         $knownConfigFiles = [];
-        foreach ($this->sourceModel->behaviors as $behaviorClass) {
+        foreach ($this->sourceModel->behaviors as $behaviorClass => $behaviorConfig) {
             $behaviorInfo = $behaviorLibrary->getBehaviorInfo($behaviorClass);
             $configFileName = $behaviorInfo['configFileName'];
 
@@ -176,8 +179,6 @@ class ControllerGenerator
                         'file' => $configFileName
                     ])
                 ]);
-
-                throw new ApplicationException();
             }
 
             $knownConfigFiles[] = $configFileName;
@@ -196,6 +197,9 @@ class ControllerGenerator
         }
     }
 
+    /**
+     * validateControllerUnique
+     */
     protected function validateControllerUnique()
     {
         $controllerFilePath = $this->sourceModel->getControllerFilePath();
@@ -209,6 +213,9 @@ class ControllerGenerator
         }
     }
 
+    /**
+     * setTemplateVars
+     */
     protected function setTemplateVars()
     {
         $pluginCodeObj = $this->sourceModel->getPluginCodeObj();
@@ -233,7 +240,7 @@ class ControllerGenerator
         }
 
         if ($this->sourceModel->behaviors) {
-            $this->templateVars['behaviors'] = $this->sourceModel->behaviors;
+            $this->templateVars['behaviors'] = array_keys($this->sourceModel->behaviors);
         }
         else {
             $this->templateVars['behaviors'] = [];
@@ -322,8 +329,8 @@ class ControllerGenerator
 
         $noListTemplate = "";
         if (
-            !in_array(\Backend\Behaviors\ListController::class, $this->sourceModel->behaviors) &&
-            in_array(\Backend\Behaviors\FormController::class, $this->sourceModel->behaviors)
+            !array_key_exists(\Backend\Behaviors\ListController::class, $this->sourceModel->behaviors) &&
+            array_key_exists(\Backend\Behaviors\FormController::class, $this->sourceModel->behaviors)
         ) {
             $noListTemplate = $this->parseTemplate($this->getTemplatePath('controller-no-list.php.tpl'));
         }
@@ -363,7 +370,7 @@ class ControllerGenerator
         $behaviorLibrary = ControllerBehaviorLibrary::instance();
         $dumper = new YamlDumper();
 
-        foreach ($this->sourceModel->behaviors as $behaviorClass) {
+        foreach ($this->sourceModel->behaviors as $behaviorClass => $behaviorConfig) {
             $behaviorInfo = $behaviorLibrary->getBehaviorInfo($behaviorClass);
             $configFileName = $behaviorInfo['configFileName'];
 
@@ -381,6 +388,8 @@ class ControllerGenerator
             catch (Exception $ex) {
                 throw new ValidationException(['baseModelClassName' => $ex->getMessage()]);
             }
+
+            $configArray = array_merge($configArray, $behaviorConfig);
 
             $code = $dumper->dump($configArray, 20, 0, false, true);
 

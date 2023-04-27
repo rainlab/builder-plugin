@@ -46,7 +46,9 @@
     Imports.prototype.cmdSaveImports = function(ev) {
         var $masterTabPane = this.getMasterTabsActivePane(),
             $form = $masterTabPane.find('form'),
-            $popup = $(ev.currentTarget);
+            $popup = $(ev.currentTarget).closest('.control-popup');
+
+        $popup.removeClass('show').popup('setLoading', true);
 
         $form.request('onImportsSave', {
             data: oc.serializeJSON($popup.get(0))
@@ -54,6 +56,9 @@
         .done(() => {
             $popup.trigger('close.oc.popup');
             this.saveImportsDone();
+        })
+        .fail(() => {
+            $popup.addClass('show').popup('setLoading', false).popup('setShake');
         });
     }
 

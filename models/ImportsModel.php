@@ -5,6 +5,7 @@ use File;
 use Tailor\Classes\Blueprint\EntryBlueprint;
 use Tailor\Classes\Blueprint\GlobalBlueprint;
 use Tailor\Classes\Blueprint\SingleBlueprint;
+use Tailor\Classes\Blueprint\StructureBlueprint;
 use RainLab\Builder\Classes\BlueprintGenerator;
 use RainLab\Builder\Classes\PluginVersion;
 use Tailor\Classes\BlueprintIndexer;
@@ -126,7 +127,7 @@ class ImportsModel extends BaseModel
     public function import()
     {
         if (!$this->blueprints || !is_array($this->blueprints)) {
-            throw new ApplicationException("There are no blueprints to import, please select a blueprint and try again.");
+            throw new ApplicationException(__("There are no blueprints to import, please select a blueprint and try again."));
         }
 
         $generator = new BlueprintGenerator($this);
@@ -229,5 +230,25 @@ class ImportsModel extends BaseModel
         }
 
         return true;
+    }
+
+    /**
+     * useMultisite
+     */
+    public function useMultisite()
+    {
+        return $this->activeBlueprint->useMultisite();
+    }
+
+    /**
+     * useStructure
+     */
+    public function useStructure()
+    {
+        if ($this->activeBlueprint instanceof StructureBlueprint) {
+            return true;
+        }
+
+        return false;
     }
 }

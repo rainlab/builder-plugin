@@ -44,7 +44,8 @@ trait HasMigrations
         }
 
         $code = $this->parseTemplate($this->getTemplatePath('migration.php.tpl'), [
-            'migrationCode' => $this->makeTabs(trim($migrationCode, PHP_EOL))
+            'migrationCode' => $this->makeTabs(trim($migrationCode, PHP_EOL)),
+            'useStructure' => $this->sourceModel->useStructure()
         ]);
 
         $this->writeFile($migrationFilePath, $code);

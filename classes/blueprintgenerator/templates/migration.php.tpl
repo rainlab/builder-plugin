@@ -17,6 +17,12 @@ return new class extends Migration
             $table->string('title')->nullable();
             $table->string('slug')->nullable()->index();
 {{ migrationCode|raw }}
+{% if useStructure %}
+            $table->integer('parent_id')->nullable();
+            $table->integer('nest_left')->nullable();
+            $table->integer('nest_right')->nullable();
+            $table->integer('nest_depth')->nullable();
+{% endif %}
             $table->softDeletes();
             $table->timestamps();
         });
