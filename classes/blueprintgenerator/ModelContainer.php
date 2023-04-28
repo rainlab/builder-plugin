@@ -222,7 +222,7 @@ class ModelContainer extends Model
             $joinTable = $tableName .= '_' . mb_strtolower($fieldObj->inverse) . '_join';
         }
         else {
-            $joinTable = $foundDefinition['table'];
+            $joinTable = $foundDefinition['table'] ?? 'unknown';
         }
 
         $modelClass = $this->sourceModel->getBlueprintConfig('modelClass');
