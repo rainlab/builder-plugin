@@ -3,6 +3,7 @@
 use Lang;
 use File;
 use Twig;
+use Schema;
 use RainLab\Builder\Classes\TailorBlueprintLibrary;
 use ApplicationException;
 use ValidationException;
@@ -142,6 +143,10 @@ class BlueprintGenerator
         $this->generateNavigation();
         $this->generateVersionUpdate();
 
+        if ($this->sourceModel->deleteBlueprintData) {
+            $this->deleteGeneratedBlueprintData();
+        }
+
         if ($this->sourceModel->disableBlueprints) {
             $this->disableGeneratedBlueprints();
         }
@@ -184,6 +189,23 @@ class BlueprintGenerator
                 $filePath,
                 str_replace('.yaml', '.yaml.bak', $filePath)
             );
+        }
+    }
+
+    /**
+     * deleteGeneratedBlueprintData
+     */
+    protected function deleteGeneratedBlueprintData()
+    {
+        foreach ($this->sourceBlueprints as $blueprint) {
+            $contentTable = $blueprint->getContentTableName();
+            Schema::dropIfExists($contentTable);
+
+            $joinTable = $blueprint->getJoinTableName();
+            Schema::dropIfExists($joinTable);
+
+            $repeaterTable = $blueprint->getRepeaterTableName();
+            Schema::dropIfExists($repeaterTable);
         }
     }
 

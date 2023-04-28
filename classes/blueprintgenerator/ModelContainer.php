@@ -100,7 +100,7 @@ class ModelContainer extends Model
     {
         $tableName = $this->sourceModel->getBlueprintConfig('tableName');
         if (!$tableName) {
-            throw new ApplicationException('Missing a table name');
+            throw new ApplicationException('Missing a table name for repeaters');
         }
 
         $modelClass = $this->sourceModel->getBlueprintConfig('modelClass');
@@ -149,7 +149,7 @@ class ModelContainer extends Model
         // This converts custom tailor relations to standard belongs to many
         if (isset($foundDefinition['table'])) {
             $joinInfo = $fieldObj->inverse
-                ? $this->getInverseJoinTableInfoFor($fieldName, $fieldObj)
+                ? $this->getInverseJoinTableInfoFor($fieldName, $fieldObj, $foundDefinition)
                 : $this->getJoinTableInfoFor($fieldName, $fieldObj);
 
             if ($joinInfo) {
@@ -181,7 +181,7 @@ class ModelContainer extends Model
     {
         $tableName = $this->sourceModel->getBlueprintConfig('tableName');
         if (!$tableName) {
-            throw new ApplicationException('Missing a table name');
+            throw new ApplicationException('Missing a table name for joins');
         }
 
         $joinTable = $tableName .= '_' . mb_strtolower($fieldName) . '_join';
@@ -209,19 +209,21 @@ class ModelContainer extends Model
     /**
      * getInverseJoinTableInfoFor
      */
-    public function getInverseJoinTableInfoFor($fieldName, $fieldObj): ?array
+    public function getInverseJoinTableInfoFor($fieldName, $fieldObj, $foundDefinition): ?array
     {
         $relatedUuid = $this->findUuidFromSource($fieldObj->source);
         if (!$relatedUuid) {
             return null;
         }
 
+        // Determine join table
         $tableName = $this->sourceModel->blueprints[$relatedUuid]['tableName'] ?? null;
-        if (!$tableName) {
-            return null;
+        if ($tableName) {
+            $joinTable = $tableName .= '_' . mb_strtolower($fieldObj->inverse) . '_join';
         }
-
-        $joinTable = $tableName .= '_' . mb_strtolower($fieldObj->inverse) . '_join';
+        else {
+            $joinTable = $foundDefinition['table'];
+        }
 
         $modelClass = $this->sourceModel->getBlueprintConfig('modelClass');
         $relatedModelClass = $this->findRelatedModelClass($fieldObj->source);

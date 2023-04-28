@@ -162,6 +162,16 @@ class StandardBlueprintsRegistry
                     ]
                 ],
             ],
+            'tableName' => [
+                'title' => "Table Name",
+                'description' => "Table name defines the table name in the database.",
+                'type' => 'string',
+                'validation' => [
+                    'required' => [
+                        'message' => "A table name is required"
+                    ]
+                ],
+            ],
             'permissionCode' => [
                 'title' => "Permission Code",
                 'description' => "Permission code used to manage this item.",

@@ -287,6 +287,8 @@ class BlueprintBuilder extends FormWidgetBase
         // Inspect the generated output files
         $importsModel = $this->makeImportsModelInstance();
 
+        $importsModel->fill(post());
+
         $importsModel->blueprints[$blueprintObj->uuid] = $blueprintConfig;
 
         $inspectedOutput = $importsModel->inspect($blueprintObj);

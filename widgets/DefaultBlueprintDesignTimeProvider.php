@@ -2,7 +2,6 @@
 
 use Str;
 use RainLab\Builder\Classes\BlueprintDesignTimeProviderBase;
-use ApplicationException;
 use SystemException;
 
 /**
