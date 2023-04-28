@@ -135,6 +135,20 @@ class ImportsModel extends BaseModel
     }
 
     /**
+     * inspect a blueprint before import
+     */
+    public function inspect($blueprint): array
+    {
+        if (!$this->blueprints || !is_array($this->blueprints)) {
+            throw new ApplicationException(__("There are no blueprints to import, please select a blueprint and try again."));
+        }
+
+        $generator = new BlueprintGenerator($this);
+
+        return $generator->inspect($blueprint);
+    }
+
+    /**
      * getBlueprintUuidOptions
      */
     public function getBlueprintUuidOptions()

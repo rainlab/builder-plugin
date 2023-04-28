@@ -16,14 +16,30 @@ trait HasExpandoModels
      */
     protected function validateExpandoModels()
     {
-        $this->generateExpandoModels(true);
+        foreach ($this->makeExpandoModels(true) as $model) {
+            $this->validateUniqueFiles([$model->getModelFilePath()]);
+            $model->validate();
+        }
     }
 
     /**
      * generateExpandoModels
      */
-    protected function generateExpandoModels($isValidate = false)
+    protected function generateExpandoModels()
     {
+        foreach ($this->makeExpandoModels() as $model) {
+            $model->save();
+            $this->filesGenerated[] = $model->getModelFilePath();
+        }
+    }
+
+    /**
+     * makeExpandoModels
+     */
+    protected function makeExpandoModels($isValidate = false)
+    {
+        $models = [];
+
         $fieldset = $this->sourceModel->getBlueprintFieldset();
 
         foreach ($fieldset->getAllFields() as $name => $field) {
@@ -43,23 +59,16 @@ trait HasExpandoModels
             $this->generateExpandoModelFormFields($container, $name, $field, $isValidate);
 
             // Generate model
-            $model = $this->makeExpandoModelModel($container, $name, $field, $isValidate);
-
-            if ($isValidate) {
-                $this->validateUniqueFiles([$model->getModelFilePath()]);
-                $model->validate();
-            }
-            else {
-                $model->save();
-                $this->filesGenerated[] = $model->getModelFilePath();
-            }
+            $models[] = $this->makeExpandoModelModel($container, $name, $field);
         }
+
+        return $models;
     }
 
     /**
      * generateExpandoModelModel
      */
-    protected function makeExpandoModelModel($container, $name, $field, $isValidate = false)
+    protected function makeExpandoModelModel($container, $name, $field)
     {
         $repeaterInfo = $container->getRepeaterTableInfoFor($name, $field);
 

@@ -65,6 +65,42 @@ class BlueprintGenerator
     /**
      * generate
      */
+    public function inspect($blueprint)
+    {
+        $this->setBlueprintContext($blueprint);
+
+        $result = [
+            'controllerFile' => null,
+            'modelFiles' => [],
+            'migrationFiles' => [],
+            'errorMessage' => null
+        ];
+
+        try {
+            if ($model = $this->makeControllerModel()) {
+                $result['controllerFile'] = $model->getControllerFilePath();
+            }
+
+            if ($model = $this->makeModelModel()) {
+                $result['modelFiles'][] = $model->getModelFilePath();
+            }
+
+            foreach ($this->makeExpandoModels(true) as $model) {
+                $result['modelFiles'][] = $model->getModelFilePath();
+            }
+
+            $result['migrationFiles'] = array_keys($this->inspectMigrations());
+        }
+        catch (Throwable $ex) {
+            $result['errorMessage'] = $ex->getMessage();
+        }
+
+        return $result;
+    }
+
+    /**
+     * generate
+     */
     public function generate()
     {
         $this->templateVars = [];
@@ -89,7 +125,7 @@ class BlueprintGenerator
         try {
             foreach ($this->sourceBlueprints as $blueprint) {
                 $this->setBlueprintContext($blueprint);
-                $this->generateMigration();
+                $this->generateMigrations();
                 $this->generateModel();
                 $this->generateExpandoModels();
                 $this->generatePermission();

@@ -11,12 +11,12 @@
         BaseProto = Base.prototype
 
     var FormBuilder = function() {
-        Base.call(this)
+        Base.call(this);
 
-        this.placeholderIdIndex = 0
-        this.updateControlBodyTimer = null
+        this.placeholderIdIndex = 0;
+        this.updateControlBodyTimer = null;
 
-        this.init()
+        this.init();
     }
 
     FormBuilder.prototype = Object.create(BaseProto)

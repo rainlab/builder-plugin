@@ -3,6 +3,7 @@
 
     ul.tailor-blueprint-list {
         .clearfix();
+        cursor: pointer;
         padding: 20px;
         margin-bottom: 0;
         list-style: none;
@@ -13,7 +14,7 @@
             h4 {
                 text-align: center;
                 border-bottom: 1px dotted @builder-control-border-color;
-                margin: 0 -20px 40px;
+                margin: 0 -20px 30px;
 
                 span {
                     display: inline-block;
@@ -26,6 +27,31 @@
                     line-height: 100%;
                     position: relative;
                     top: 14px;
+                }
+            }
+
+            table.table {
+                margin: 0;
+                td {
+                    font-size: 0.875em;
+
+                    > span {
+                        font-family: var(--bs-font-monospace);
+                        color: @secondary-color;
+                        word-wrap: break-word;
+                        word-break: break-word;
+                    }
+                }
+                th {
+                    font-size: 0.875em;
+                }
+                th:not(.table-danger) {
+                    color: @text-color;
+                }
+                tr:last-child {
+                    td, th {
+                        border-bottom: none;
+                    }
                 }
             }
 
@@ -57,6 +83,37 @@
                     display: block;
                 }
             }
+
+            &.updating-blueprint:after {
+                background-image:url(../images/loader-transparent.svg);
+                background-size: 15px 15px;
+                background-position: 50% 50%;
+                display: inline-block;
+                width: 15px;
+                height: 15px;
+                content: ' ';
+                margin-right: 13px;
+                position: relative;
+                top: 2px;
+                animation: spin 1s linear infinite;
+            }
+
+            &.updating-blueprint:after {
+                position: absolute;
+                right: -8px;
+                top: 35px;
+            }
+
+            &.updating-blueprint:before {
+                content: '';
+                position: absolute;
+                right: 0;
+                top: 30px;
+                width: 25px;
+                height: 25px;
+                background: rgba(127, 127, 127, 0.1);
+                border-radius: 4px;
+            }
         }
 
         .blueprint-container {
@@ -65,7 +122,7 @@
             .tailor-blueprint {
                 div.form {
                     .clearfix();
-                    padding: 25px 25px 0 25px;
+                    // padding: 25px;
                     border: 2px solid @builder-control-border-color;
                     margin-bottom: 20px;
                     border-radius: 4px;

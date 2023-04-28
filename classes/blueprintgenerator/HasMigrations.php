@@ -10,9 +10,26 @@ use ApplicationException;
 trait HasMigrations
 {
     /**
-     * generateMigration for a blueprint, returns the migration file name
+     * @var bool dryRunMigrations
      */
-    protected function generateMigration()
+    protected $dryRunMigrations = false;
+
+    /**
+     * inspectMigrations
+     */
+    protected function inspectMigrations(): array
+    {
+        $this->dryRunMigrations = true;
+
+        $this->generateMigrations();
+
+        return $this->migrationScripts;
+    }
+
+    /**
+     * generateMigrations for a blueprint
+     */
+    protected function generateMigrations()
     {
         if ($this->sourceModel->wantsDatabaseMigration()) {
             $this->generateContentTable();
@@ -29,10 +46,16 @@ trait HasMigrations
     {
         $tableName = $this->getConfig('tableName');
         if (!$tableName) {
-            throw new ApplicationException('Missing a table name');
+            throw new ApplicationException('Missing a table name for migrations');
         }
 
         [$proposedFile, $migrationFilePath] = $this->findAvailableMigrationFile($tableName);
+
+        $this->migrationScripts[$proposedFile] = __("Create :name Content Table", ['name' => $this->getConfig('name')]);
+
+        if ($this->dryRunMigrations) {
+            return;
+        }
 
         // Prepare the schema from the fieldset
         $table = $this->makeSchemaBlueprint($tableName);
@@ -49,8 +72,6 @@ trait HasMigrations
         ]);
 
         $this->writeFile($migrationFilePath, $code);
-
-        $this->migrationScripts[$proposedFile] = __("Create :name Content Table", ['name' => $this->getConfig('name')]);
     }
 
     /**
@@ -126,14 +147,18 @@ trait HasMigrations
 
         [$proposedFile, $migrationFilePath] = $this->findAvailableMigrationFile($tableName);
 
-        $code = $this->parseTemplate($this->getTemplatePath('migration-join.php.tpl'), $joinInfo);
-
-        $this->writeFile($migrationFilePath, $code);
-
         $this->migrationScripts[$proposedFile] = __("Create :name Pivot Table for :field", [
             'name' => $this->getConfig('name'),
             'field' => $joinInfo['fieldName'] ?? '??'
         ]);
+
+        if ($this->dryRunMigrations) {
+            return;
+        }
+
+        $code = $this->parseTemplate($this->getTemplatePath('migration-join.php.tpl'), $joinInfo);
+
+        $this->writeFile($migrationFilePath, $code);
     }
 
     /**
@@ -167,14 +192,18 @@ trait HasMigrations
 
         [$proposedFile, $migrationFilePath] = $this->findAvailableMigrationFile($tableName);
 
-        $code = $this->parseTemplate($this->getTemplatePath('migration-repeater.php.tpl'), $repeaterInfo);
-
-        $this->writeFile($migrationFilePath, $code);
-
         $this->migrationScripts[$proposedFile] = __("Create :name Repeater Table for :field", [
             'name' => $this->getConfig('name'),
             'field' => $repeaterInfo['fieldName'] ?? '??'
         ]);
+
+        if ($this->dryRunMigrations) {
+            return;
+        }
+
+        $code = $this->parseTemplate($this->getTemplatePath('migration-repeater.php.tpl'), $repeaterInfo);
+
+        $this->writeFile($migrationFilePath, $code);
     }
 
     /**

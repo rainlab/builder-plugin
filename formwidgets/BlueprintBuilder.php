@@ -66,6 +66,21 @@ class BlueprintBuilder extends FormWidgetBase
     }
 
     /**
+     * onRefreshBlueprintContainer
+     */
+    public function onRefreshBlueprintContainer()
+    {
+        $uuid = post('blueprint_uuid');
+        $blueprintInfo = $this->getBlueprintInfo($uuid);
+        $blueprintConfig = (array) post('properties');
+
+        return [
+            'markup' => $this->renderBlueprintBody($blueprintInfo, $blueprintConfig),
+            'blueprintUuid' => $uuid
+        ];
+    }
+
+    /**
      * onShowSelectBlueprintForm
      */
     public function onShowSelectBlueprintForm()
@@ -268,6 +283,15 @@ class BlueprintBuilder extends FormWidgetBase
         $blueprintObj = $blueprintInfo['blueprintObj'];
 
         $provider = $this->getBlueprintDesignTimeProvider($blueprintInfo['designTimeProvider']);
+
+        // Inspect the generated output files
+        $importsModel = $this->makeImportsModelInstance();
+
+        $importsModel->blueprints[$blueprintObj->uuid] = $blueprintConfig;
+
+        $inspectedOutput = $importsModel->inspect($blueprintObj);
+
+        $blueprintConfig['inspectedOutput'] = $inspectedOutput;
 
         return $provider->renderBlueprintBody($blueprintClass, $blueprintConfig, $blueprintObj);
     }

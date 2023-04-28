@@ -11,10 +11,10 @@ abstract class BlueprintDesignTimeProviderBase extends WidgetBase
      * renderBlueprintBody
      * @param string $class Specifies the behavior class to render.
      * @param array $properties Blueprint property values.
-     * @param  \RainLab\Builder\FormWidgets\ControllerBuilder $controllerBuilder ControllerBuilder widget instance.
-     * @return string Returns HTML markup string.
+     * @param  object $blueprintObj
+     * @return string
      */
-    abstract public function renderBlueprintBody($class, $properties, $controllerBuilder);
+    abstract public function renderBlueprintBody($class, $properties, $blueprintObj);
 
     /**
      * getPropertyValue

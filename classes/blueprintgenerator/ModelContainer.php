@@ -218,7 +218,7 @@ class ModelContainer extends Model
 
         $tableName = $this->sourceModel->blueprints[$relatedUuid]['tableName'] ?? null;
         if (!$tableName) {
-            throw new ApplicationException('Missing a table name');
+            return null;
         }
 
         $joinTable = $tableName .= '_' . mb_strtolower($fieldObj->inverse) . '_join';
@@ -228,7 +228,6 @@ class ModelContainer extends Model
         if (!$modelClass) {
             return null;
         }
-
 
         $parentKey = Str::snake(class_basename($modelClass)).'_id';
         $relatedKey = $relatedModelClass
