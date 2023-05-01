@@ -46,6 +46,11 @@ class BlueprintGenerator
     protected $filesGenerated;
 
     /**
+     * @var array filesValidated by this process
+     */
+    protected $filesValidated;
+
+    /**
      * @var array blueprintFiles to decommission
      */
     protected $blueprintFiles = [];
@@ -106,6 +111,7 @@ class BlueprintGenerator
     {
         $this->templateVars = [];
         $this->filesGenerated = [];
+        $this->filesValidated = [];
         $this->blueprintFiles = [];
         $this->migrationScripts = [];
         $this->sourceBlueprints = [];
@@ -118,8 +124,8 @@ class BlueprintGenerator
             $this->setBlueprintContext($blueprint);
             $this->validateModel();
             $this->validateExpandoModels();
-            $this->validatePermission();
             $this->validateController();
+            $this->validatePermission();
         }
 
         // Generate
@@ -129,8 +135,8 @@ class BlueprintGenerator
                 $this->generateMigrations();
                 $this->generateModel();
                 $this->generateExpandoModels();
-                $this->generatePermission();
                 $this->generateController();
+                $this->generatePermission();
 
                 $this->blueprintFiles[] = $blueprint->getFilePath();
             }
@@ -297,14 +303,21 @@ class BlueprintGenerator
      */
     protected function validateUniqueFiles(array $files)
     {
+        if (!is_array($this->filesValidated)) {
+            $this->filesValidated = [];
+        }
+
         foreach ($files as $path) {
-            if (File::isFile($path)) {
+            if (File::isFile($path) || in_array($path, $this->filesValidated)) {
                 throw new ValidationException([
-                    'modelClass' => __("File [:file] already exists for this plugin", [
-                        'file' => basename($path)
+                    'modelClass' => __("File [:file] already exists when trying to import [:blueprint]", [
+                        'file' => basename(dirname($path)) . '/' . basename($path),
+                        'blueprint' => $this->sourceModel->getBlueprintObject()->handle ?? 'unknown'
                     ])
                 ]);
             }
         }
+
+        $this->filesValidated = array_merge($this->filesValidated, $files);
     }
 }

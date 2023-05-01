@@ -40,7 +40,7 @@ trait HasPermissions
     {
         return [
             'permission' => $code,
-            'tab' => __("Builder"),
+            'tab' => $this->sourceModel->getPluginName(),
             'label' => __("Manage :name Items", ['name' => $blueprint->name]),
         ];
     }

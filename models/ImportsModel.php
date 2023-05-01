@@ -167,6 +167,8 @@ class ImportsModel extends BaseModel
             }
         }
 
+        asort($result);
+
         return $result;
     }
 

@@ -102,27 +102,31 @@ class BlueprintBuilder extends FormWidgetBase
     public function onSelectBlueprint()
     {
         $widget = $this->getSelectFormWidget();
-
         $data = $widget->getSaveData();
-
-        $uuid = $data['blueprint_uuid'] ?? null;
-        if (!$uuid) {
-            throw new ApplicationException('Missing blueprint uuid');
+        $uuids = (array) ($data['blueprint_uuid'] ?? []);
+        if (!$uuids) {
+            throw new ApplicationException(__("There are no blueprints to import, please select a blueprint and try again."));
         }
 
-        $blueprintInfo = $this->getBlueprintInfo($uuid);
-        $blueprintConfig = $this->generateBlueprintConfiguration($blueprintInfo);
-
         $result = [];
-        $result[] = $this->makePartial('blueprint', [
-            'blueprintUuid' => $uuid,
-            'blueprintConfig' => $blueprintConfig
-        ]);
+        $availableUuids = $this->getSelectFormWidget()->getModel()->getBlueprintUuidOptions();
+        foreach ($uuids as $uuid) {
+            $blueprintInfo = $this->getBlueprintInfo($uuid);
+            $blueprintConfig = $this->generateBlueprintConfiguration($blueprintInfo);
 
-        if (post('BlueprintBuilder[include_related]')) {
-            $availableUuids = $this->getSelectFormWidget()->getModel()->getBlueprintUuidOptions();
+            $result[] = $this->makePartial('blueprint', [
+                'blueprintUuid' => $uuid,
+                'blueprintConfig' => $blueprintConfig
+            ]);
+
             unset($availableUuids[$uuid]);
-            $this->appendRelatedBlueprintsToOutput($uuid, $result, $availableUuids);
+        }
+
+        $includeRelated = (bool) ($data['include_related'] ?? false);
+        if ($includeRelated) {
+            foreach ($uuids as $uuid) {
+                $this->appendRelatedBlueprintsToOutput($uuid, $result, $availableUuids);
+            }
         }
 
         return ['@#blueprintList' => implode(PHP_EOL, $result)];

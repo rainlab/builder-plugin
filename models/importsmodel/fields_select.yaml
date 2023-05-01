@@ -5,7 +5,7 @@
 fields:
     blueprint_uuid:
         label: Blueprint Handle
-        type: dropdown
+        type: checkboxlist
 
     include_related:
         type: checkbox

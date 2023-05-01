@@ -4,6 +4,7 @@ use ApplicationException;
 use RainLab\Builder\Classes\IndexOperationsBehaviorBase;
 use RainLab\Builder\Models\ImportsModel;
 use RainLab\Builder\Classes\PluginCode;
+use System\Helpers\Cache as CacheHelper;
 use System\Classes\VersionManager;
 use Flash;
 use Lang;
@@ -114,6 +115,8 @@ class IndexImportsOperations extends IndexOperationsBehaviorBase
         if (post('migrate_database')) {
             VersionManager::instance()->updatePlugin($pluginCode);
         }
+
+        CacheHelper::instance()->clearBlueprintCache();
 
         Flash::success(__("Import Complete"));
 
