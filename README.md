@@ -224,7 +224,7 @@ When visiting the Import tab, use the **Add Blueprint** button to select the Tai
 
 Once added, each blueprint can be customized, which includes the Controller Class, Model Class, Table Name, Permission Code and Menu Code names. When these fields are modified, they will adjust the filenames of the generated files.
 
-Clicking the Import button will begin the conversion process. Some import are options shown to control how the import should proceed.
+Clicking the Import button will begin the conversion process. Some import options are shown to control how the import should proceed.
 
 - **Migrate Database** performs a database migration after the import is finished. This optional and you can migrate the database later.
 
@@ -234,7 +234,7 @@ Clicking the Import button will begin the conversion process. Some import are op
 
 Before clicking **Import**, be sure to double check the selected blueprints. The import process creates multiple scaffold files for the selected plugin. This process can be difficult to undo, so it is a good idea to practice on a test plugin first, without migrating the database or disabling the blueprints.
 
-When everything is done, you should see multiple controller, model and migration files generated for your selected plugin.
+When everything is done, you should see the controller, model and migration files generated for your selected plugin.
 
 ## Displaying Plugin Records on CMS Pages
 
