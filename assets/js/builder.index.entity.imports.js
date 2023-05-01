@@ -82,8 +82,8 @@
         this.hideInspector();
         $('#blueprintList').html('');
 
-        if ($.oc.mainMenu && data && data.mainMenu && data.mainMenuLeft && data.sidenavResponsive) {
-            $.oc.mainMenu.reload(data.mainMenu, data.mainMenuLeft, data.sidenavResponsive);
+        if ($.oc.mainMenu && data && data.mainMenu && data.mainMenuLeft) {
+            $.oc.mainMenu.reload(data.mainMenu, data.mainMenuLeft);
         }
 
         var $masterTabPane = this.getMasterTabsActivePane();

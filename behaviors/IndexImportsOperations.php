@@ -139,7 +139,6 @@ class IndexImportsOperations extends IndexOperationsBehaviorBase
 
             $result['mainMenu'] = $this->controller->makeLayoutPartial('mainmenu');
             $result['mainMenuLeft'] = $this->controller->makeLayoutPartial('mainmenu', ['isVerticalMenu'=>true]);
-            $result['sidenavResponsive'] = $this->controller->makeLayoutPartial('sidenav-responsive');
         }
         catch (Throwable $ex) {}
 

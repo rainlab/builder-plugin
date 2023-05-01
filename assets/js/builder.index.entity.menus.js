@@ -75,8 +75,8 @@
 
         var $masterTabPane = this.getMasterTabsActivePane();
 
-        if ($.oc.mainMenu && data.mainMenu && data.mainMenuLeft && data.sidenavResponsive) {
-            $.oc.mainMenu.reload(data.mainMenu, data.mainMenuLeft, data.sidenavResponsive);
+        if ($.oc.mainMenu && data.mainMenu && data.mainMenuLeft) {
+            $.oc.mainMenu.reload(data.mainMenu, data.mainMenuLeft);
         }
 
         this.getIndexController().unchangeTab($masterTabPane);
