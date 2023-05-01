@@ -53,9 +53,9 @@
         $form.request('onImportsSave', {
             data: oc.serializeJSON($popup.get(0))
         })
-        .done(() => {
+        .done((data) => {
             $popup.trigger('close.oc.popup');
-            this.saveImportsDone();
+            this.saveImportsDone(data);
         })
         .fail(() => {
             $popup.addClass('show').popup('setLoading', false).popup('setShake');
@@ -81,6 +81,10 @@
     Imports.prototype.saveImportsDone = function(data) {
         this.hideInspector();
         $('#blueprintList').html('');
+
+        if ($.oc.mainMenu && data && data.mainMenu && data.mainMenuLeft && data.sidenavResponsive) {
+            $.oc.mainMenu.reload(data.mainMenu, data.mainMenuLeft, data.sidenavResponsive);
+        }
 
         var $masterTabPane = this.getMasterTabsActivePane();
         this.getIndexController().unchangeTab($masterTabPane);

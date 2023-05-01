@@ -70,12 +70,16 @@
 
     Menus.prototype.saveMenusDone = function(data) {
         if (data['builderResponseData'] === undefined) {
-            throw new Error('Invalid response data')
+            throw new Error('Invalid response data');
         }
 
-        var $masterTabPane = this.getMasterTabsActivePane()
+        var $masterTabPane = this.getMasterTabsActivePane();
 
-        this.getIndexController().unchangeTab($masterTabPane)
+        if ($.oc.mainMenu && data.mainMenu && data.mainMenuLeft && data.sidenavResponsive) {
+            $.oc.mainMenu.reload(data.mainMenu, data.mainMenuLeft, data.sidenavResponsive);
+        }
+
+        this.getIndexController().unchangeTab($masterTabPane);
     }
 
     // REGISTRATION

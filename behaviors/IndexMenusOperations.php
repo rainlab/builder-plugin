@@ -1,8 +1,11 @@
 <?php namespace RainLab\Builder\Behaviors;
 
+use BackendMenu;
+use System\Classes\PluginManager;
 use RainLab\Builder\Classes\IndexOperationsBehaviorBase;
 use RainLab\Builder\Models\MenusModel;
 use RainLab\Builder\Classes\PluginCode;
+use Throwable;
 use Request;
 use Flash;
 use Lang;
@@ -62,6 +65,17 @@ class IndexMenusOperations extends IndexOperationsBehaviorBase
             'tabId' => $this->getTabId($pluginCode),
             'tabTitle' => $model->getPluginName().'/'.Lang::get('rainlab.builder::lang.menu.tab'),
         ];
+
+        // Feature is nice to have, only supported in >3.3.9
+        try {
+            PluginManager::instance()->reloadPlugins();
+            BackendMenu::resetCache();
+
+            $result['mainMenu'] = $this->controller->makeLayoutPartial('mainmenu');
+            $result['mainMenuLeft'] = $this->controller->makeLayoutPartial('mainmenu', ['isVerticalMenu'=>true]);
+            $result['sidenavResponsive'] = $this->controller->makeLayoutPartial('sidenav-responsive');
+        }
+        catch (Throwable $ex) {}
 
         return $result;
     }

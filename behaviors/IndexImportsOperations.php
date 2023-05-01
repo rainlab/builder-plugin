@@ -1,11 +1,14 @@
 <?php namespace RainLab\Builder\Behaviors;
 
-use ApplicationException;
+use BackendMenu;
 use RainLab\Builder\Classes\IndexOperationsBehaviorBase;
 use RainLab\Builder\Models\ImportsModel;
 use RainLab\Builder\Classes\PluginCode;
+use System\Classes\PluginManager;
 use System\Helpers\Cache as CacheHelper;
 use System\Classes\VersionManager;
+use ApplicationException;
+use Throwable;
 use Flash;
 use Lang;
 
@@ -128,6 +131,17 @@ class IndexImportsOperations extends IndexOperationsBehaviorBase
         // Refresh everything
         $result = $this->controller->setBuilderActivePlugin($pluginCode);
         $result['builderResponseData'] = $builderResponseData;
+
+        // Feature is nice to have, only supported in >3.3.9
+        try {
+            PluginManager::instance()->reloadPlugins();
+            BackendMenu::resetCache();
+
+            $result['mainMenu'] = $this->controller->makeLayoutPartial('mainmenu');
+            $result['mainMenuLeft'] = $this->controller->makeLayoutPartial('mainmenu', ['isVerticalMenu'=>true]);
+            $result['sidenavResponsive'] = $this->controller->makeLayoutPartial('sidenav-responsive');
+        }
+        catch (Throwable $ex) {}
 
         return $result;
     }
