@@ -40,3 +40,4 @@ v1.2.2: Compatibility updates.
 v1.2.3: Fixes issue when removing items from permissions and menus.
 v1.2.5: Fixes validator conflict with other plugins.
 v1.2.6: Compatibility with October v3.1
+v2.0.1: Adds Tailor blueprint importer and code editor.
