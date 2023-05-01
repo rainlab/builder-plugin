@@ -35,12 +35,13 @@
         var path = $(ev.currentTarget).data('path'),
             pluginCode = $(ev.currentTarget).data('pluginCode');
 
-        this.indexController.openOrLoadMasterTab($(ev.target), 'onCodeOpen', this.makeTabId(pluginCode+'-'+path), {
+        var result = this.indexController.openOrLoadMasterTab($(ev.target), 'onCodeOpen', this.makeTabId(pluginCode+'-'+path), {
             fileName: path
-        })
-        .done(() => {
-            this.updateFormEditorMode();
         });
+
+        if (result !== false) {
+            result.done(this.proxy(this.updateFormEditorMode, this));
+        }
     }
 
     Code.prototype.cmdSaveCode = function(ev) {
