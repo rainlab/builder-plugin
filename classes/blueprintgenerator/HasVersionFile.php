@@ -22,13 +22,16 @@ trait HasVersionFile
         $nextVersion = $this->getNextVersion();
 
         foreach ($this->migrationScripts as $scriptName => $comment) {
-            $versionInformation['v'.$nextVersion] = [
+            $versionInformation[$nextVersion] = [
                 $comment,
                 $scriptName
             ];
 
             $nextVersion = $this->getNextVersion($nextVersion);
         }
+
+        // Add "v" to the version information
+        $versionInformation = $this->normalizeVersions((array) $versionInformation);
 
         $yamlData = Yaml::render($versionInformation);
 
@@ -57,5 +60,18 @@ trait HasVersionFile
         $migration->setPluginCodeObj($this->sourceModel->getPluginCodeObj());
 
         return $migration->getNextVersion();
+    }
+
+    /**
+     * normalizeVersions checks some versions start with v and others not
+     */
+    protected function normalizeVersions(array $versions): array
+    {
+        $result = [];
+        foreach ($versions as $key => $value) {
+            $version = rtrim(ltrim((string) $key, 'v'), '.');
+            $result['v'.$version] = $value;
+        }
+        return $result;
     }
 }

@@ -141,7 +141,8 @@ class MigrationModel extends BaseModel
 
         try {
             $originalVersionData = $this->insertOrUpdateVersion();
-        } catch (Exception $ex) {
+        }
+        catch (Exception $ex) {
             // Remove the script file, but don't rollback
             // the version.yaml.
             $this->rollbackSaving(null, $originalFileContents);
@@ -506,6 +507,9 @@ class MigrationModel extends BaseModel
             }
         }
 
+        // Add "v" to the version information
+        $versionInformation = $this->normalizeVersions((array) $versionInformation);
+
         $yamlData = Yaml::render($versionInformation);
 
         if (!File::put($versionFilePath, $yamlData)) {
@@ -593,5 +597,18 @@ class MigrationModel extends BaseModel
         }, $value);
 
         return $value;
+    }
+
+    /**
+     * normalizeVersions checks some versions start with v and others not
+     */
+    protected function normalizeVersions(array $versions): array
+    {
+        $result = [];
+        foreach ($versions as $key => $value) {
+            $version = rtrim(ltrim((string) $key, 'v'), '.');
+            $result['v'.$version] = $value;
+        }
+        return $result;
     }
 }
