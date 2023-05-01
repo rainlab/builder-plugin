@@ -6,6 +6,32 @@ Builder implements a Rapid Application Development process that automates the bo
 
 Plugins created with the help of Builder are no different to plugins that you would usually create by hand. That means that you can continue to use your usual “hands on” workflow for updating your servers, managing the code versions and sharing work with your teammates.
 
+**What's New!** Builder has been revamped to support October CMS v3, including dark mode, updated specifications, a Tailor import tool, and a new inline code editor.
+
+## Requirements
+
+- October CMS 3.3 or above
+
+### Installation
+
+Run the following to install this plugin:
+
+```bash
+php artisan plugin:install RainLab.Builder
+```
+
+To uninstall this plugin:
+
+```bash
+php artisan plugin:remove RainLab.Builder
+```
+
+If you are using October CMS v1 or v2, install v1.2 with the following commands:
+
+```bash
+composer require rainlab/builder-plugin "^1.2"
+```
+
 ## Video Tutorial
 
 We also recorded a video tutorial showing how to use the plugin to build a simple library plugin: [watch the video](https://vimeo.com/154415433).
