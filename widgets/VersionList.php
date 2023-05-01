@@ -18,6 +18,9 @@ class VersionList extends WidgetBase
 
     public $noRecordsMessage = 'rainlab.builder::lang.version.no_records';
 
+    /**
+     * __construct
+     */
     public function __construct($controller, $alias)
     {
         $this->alias = $alias;
@@ -30,7 +33,7 @@ class VersionList extends WidgetBase
     }
 
     /**
-     * Renders the widget.
+     * render the widget.
      * @return string
      */
     public function render()
@@ -38,31 +41,42 @@ class VersionList extends WidgetBase
         return $this->makePartial('body', $this->getRenderData());
     }
 
+    /**
+     * updateList
+     */
     public function updateList()
     {
         return ['#'.$this->getId('plugin-version-list') => $this->makePartial('items', $this->getRenderData())];
     }
 
+    /**
+     * refreshActivePlugin
+     */
     public function refreshActivePlugin()
     {
         return ['#'.$this->getId('body') => $this->makePartial('widget-contents', $this->getRenderData())];
     }
 
-    /*
-     * Event handlers
+    /**
+     * onUpdate
      */
-
     public function onUpdate()
     {
         return $this->updateList();
     }
 
+    /**
+     * onSearch
+     */
     public function onSearch()
     {
         $this->setSearchTerm(Input::get('search'));
         return $this->updateList();
     }
 
+    /**
+     * onSort
+     */
     public function onSort()
     {
         $this->config->sort = Input::input('sort');
@@ -72,10 +86,9 @@ class VersionList extends WidgetBase
         return ['#' . $this->getId('body') => $this->makePartial('widget-contents', $this->getRenderData())];
     }
 
-    /*
-     * Methods for the internal use
+    /**
+     * getRenderData
      */
-
     protected function getRenderData()
     {
         $activePluginVector = $this->controller->getBuilderActivePluginVector();
@@ -122,6 +135,9 @@ class VersionList extends WidgetBase
         ];
     }
 
+    /**
+     * getVersionDescription
+     */
     protected function getVersionDescription($versionInfo)
     {
         if (is_array($versionInfo)) {

@@ -1,7 +1,7 @@
 <?php namespace RainLab\Builder\Behaviors;
 
 use RainLab\Builder\Classes\IndexOperationsBehaviorBase;
-use RainLab\Builder\Classes\PermissionsModel;
+use RainLab\Builder\Models\PermissionsModel;
 use RainLab\Builder\Classes\PluginCode;
 use ApplicationException;
 use Exception;
@@ -18,7 +18,7 @@ use Lang;
  */
 class IndexPermissionsOperations extends IndexOperationsBehaviorBase
 {
-    protected $baseFormConfigFile = '~/plugins/rainlab/builder/classes/permissionsmodel/fields.yaml';
+    protected $baseFormConfigFile = '~/plugins/rainlab/builder/models/permissionsmodel/fields.yaml';
 
     public function onPermissionsOpen()
     {

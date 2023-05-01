@@ -1,23 +1,26 @@
 <?php namespace RainLab\Builder\Behaviors;
 
 use RainLab\Builder\Classes\IndexOperationsBehaviorBase;
-use RainLab\Builder\Classes\ModelModel;
-use Backend\Behaviors\FormController;
+use RainLab\Builder\Models\ModelModel;
 use ApplicationException;
-use Exception;
 use Request;
-use Input;
 
 /**
- * Model management functionality for the Builder index controller
+ * IndexModelOperations is model management functionality for the Builder index controller
  *
  * @package rainlab\builder
  * @author Alexey Bobkov, Samuel Georges
  */
 class IndexModelOperations extends IndexOperationsBehaviorBase
 {
-    protected $baseFormConfigFile = '~/plugins/rainlab/builder/classes/modelmodel/fields.yaml';
+    /**
+     * @var string baseFormConfigFile
+     */
+    protected $baseFormConfigFile = '~/plugins/rainlab/builder/models/modelmodel/fields.yaml';
 
+    /**
+     * onModelLoadPopup
+     */
     public function onModelLoadPopup()
     {
         $pluginCodeObj = $this->getPluginCode();
@@ -35,6 +38,9 @@ class IndexModelOperations extends IndexOperationsBehaviorBase
         return $this->makePartial('model-popup-form');
     }
 
+    /**
+     * onModelSave
+     */
     public function onModelSave()
     {
         $pluginCode = Request::input('plugin_code');
@@ -59,6 +65,9 @@ class IndexModelOperations extends IndexOperationsBehaviorBase
         return $result;
     }
 
+    /**
+     * loadOrCreateBaseModel
+     */
     protected function loadOrCreateBaseModel($className, $options = [])
     {
         // Editing model is not supported, always return

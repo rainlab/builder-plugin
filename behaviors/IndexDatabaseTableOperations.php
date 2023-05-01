@@ -1,8 +1,8 @@
 <?php namespace RainLab\Builder\Behaviors;
 
 use RainLab\Builder\Classes\IndexOperationsBehaviorBase;
-use RainLab\Builder\Classes\DatabaseTableModel;
-use RainLab\Builder\Classes\MigrationModel;
+use RainLab\Builder\Models\DatabaseTableModel;
+use RainLab\Builder\Models\MigrationModel;
 use RainLab\Builder\Classes\TableMigrationCodeGenerator;
 use RainLab\Builder\Classes\PluginCode;
 use RainLab\Builder\Models\Settings as PluginSettings;
@@ -24,12 +24,12 @@ class IndexDatabaseTableOperations extends IndexOperationsBehaviorBase
     /**
      * @var string baseFormConfigFile
      */
-    protected $baseFormConfigFile = '~/plugins/rainlab/builder/classes/databasetablemodel/fields.yaml';
+    protected $baseFormConfigFile = '~/plugins/rainlab/builder/models/databasetablemodel/fields.yaml';
 
     /**
      * @var string migrationFormConfigFile
      */
-    protected $migrationFormConfigFile = '~/plugins/rainlab/builder/classes/migrationmodel/fields.yaml';
+    protected $migrationFormConfigFile = '~/plugins/rainlab/builder/models/migrationmodel/fields.yaml';
 
     /**
      * extendBaseFormWidgetConfig
@@ -135,7 +135,7 @@ class IndexDatabaseTableOperations extends IndexOperationsBehaviorBase
             throw new ApplicationException($ex->getMessage());
         }
 
-        $result = $this->controller->widget->databaseTabelList->updateList();
+        $result = $this->controller->widget->databaseTableList->updateList();
 
         $result = array_merge(
             $result,

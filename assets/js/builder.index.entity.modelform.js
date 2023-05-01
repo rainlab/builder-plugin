@@ -67,14 +67,14 @@
         var $target = $(ev.currentTarget)
 
         // Always use the first placeholder to add controls
-        var $placeholder = this.getMasterTabsActivePane().find('.builder-control-list .control.placeholder:first')[0]
+        var $placeholder = this.getMasterTabsActivePane().find('.builder-control-list .control.oc-placeholder:first')[0]
 
         // Filter all fields from the DataTable that have the "add" checkbox checked.
         var fields = $target.find('.control-table').data('oc.table').dataSource.data.filter(function (column) {
             return column.add
         }).reverse()
 
-        // Hide the poup and initialize the load indicator.
+        // Hide the popup and initialize the load indicator.
         $target.closest('.control-popup').data('oc.popup').hide()
         $.oc.stripeLoadIndicator.show()
 

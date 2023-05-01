@@ -11,12 +11,12 @@
         BaseProto = Base.prototype
 
     var FormBuilder = function() {
-        Base.call(this)
+        Base.call(this);
 
-        this.placeholderIdIndex = 0
-        this.updateControlBodyTimer = null
+        this.placeholderIdIndex = 0;
+        this.updateControlBodyTimer = null;
 
-        this.init()
+        this.init();
     }
 
     FormBuilder.prototype = Object.create(BaseProto)
@@ -38,7 +38,7 @@
 
         $(document).on('change', '.builder-control-list > li.control', this.proxy(this.onControlChange))
         $(document).on('click', '.builder-control-list > li.control div[data-builder-remove-control]', this.proxy(this.onRemoveControl))
-        $(document).on('click', '.builder-control-list > li.placeholder', this.proxy(this.onPlaceholderClick))
+        $(document).on('click', '.builder-control-list > li.oc-placeholder', this.proxy(this.onPlaceholderClick))
         $(document).on('showing.oc.inspector', '.builder-control-list > li.control', this.proxy(this.onInspectorShowing))
         $(document).on('livechange', '.builder-control-list > li.control', this.proxy(this.onControlLiveChange))
         $(document).on('autocompleteitems.oc.inspector', '.builder-control-list > li.control', this.proxy(this.onAutocompleteItems))
@@ -162,7 +162,7 @@
                     prevSpan = 'right'
                 }
                 else {
-                    if (!$.oc.foundation.element.hasClass(item, 'placeholder')) {
+                    if (!$.oc.foundation.element.hasClass(item, 'oc-placeholder')) {
                         $.oc.foundation.element.addClass(item, 'span-left')
                     }
                     else {
@@ -414,7 +414,7 @@
 
         // Replace the placeholder class with control
         // loading indicator
-        $.oc.foundation.element.removeClass(placeholder, 'placeholder')
+        $.oc.foundation.element.removeClass(placeholder, 'oc-placeholder')
         $.oc.foundation.element.addClass(placeholder, 'loading-control')
         $.oc.foundation.element.removeClass(placeholder, 'control-palette-open')
         placeholder.innerHTML = ''
@@ -539,7 +539,7 @@
         for (var i=children.length-1; i>=0; i--) {
             var element = children[i]
 
-            if (element.tagName === 'LI' && $.oc.foundation.element.hasClass(element, 'placeholder')) {
+            if (element.tagName === 'LI' && $.oc.foundation.element.hasClass(element, 'oc-placeholder')) {
                 return element
             }
         }

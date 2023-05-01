@@ -3,28 +3,29 @@
  */
 +function ($) { "use strict";
 
-    if ($.oc.builder === undefined)
-        $.oc.builder = {}
+    if ($.oc.builder === undefined) {
+        $.oc.builder = {};
+    }
 
     var Base = $.oc.foundation.base,
-        BaseProto = Base.prototype
+        BaseProto = Base.prototype;
 
     var Builder = function() {
-        Base.call(this)
+        Base.call(this);
 
-        this.$masterTabs = null
-        this.masterTabsObj = null
-        this.hideStripeIndicatorProxy = null
-        this.entityControllers = {}
+        this.$masterTabs = null;
+        this.masterTabsObj = null;
+        this.hideStripeIndicatorProxy = null;
+        this.entityControllers = {};
 
-        this.init()
+        this.init();
     }
 
     Builder.prototype = Object.create(BaseProto)
     Builder.prototype.constructor = Builder
 
     Builder.prototype.dispose = function() {
-        // We don't really care about disposing the 
+        // We don't really care about disposing the
         // index controller, as it's used only once
         // and always exists during the page life.
         BaseProto.dispose.call(this)
@@ -34,30 +35,30 @@
     // ============================
 
     Builder.prototype.openOrLoadMasterTab = function($form, serverHandlerName, tabId, data) {
-        if (this.masterTabsObj.goTo(tabId))
-            return false
+        if (this.masterTabsObj.goTo(tabId)) {
+            return false;
+        }
 
-        var requestData = data === undefined ? {} : data
+        var requestData = data === undefined ? {} : data;
 
-        $.oc.stripeLoadIndicator.show()
-        var promise = $form.request(
-                serverHandlerName, 
-                { data: requestData }
-            )
+        $.oc.stripeLoadIndicator.show();
+
+        var promise = $form
+            .request(serverHandlerName, {
+                data: requestData
+            })
             .done(this.proxy(this.addMasterTab))
-            .always(
-                this.hideStripeIndicatorProxy
-            )
+            .always(this.hideStripeIndicatorProxy);
 
-        return promise
+        return promise;
     }
 
     Builder.prototype.getMasterTabActivePane = function() {
-        return this.$masterTabs.find('> .tab-content > .tab-pane.active')
+        return this.$masterTabs.find('> .tab-content > .tab-pane.active');
     }
 
     Builder.prototype.unchangeTab = function($pane) {
-        $pane.find('form').trigger('unchange.oc.changeMonitor')
+        $pane.find('form').trigger('unchange.oc.changeMonitor');
     }
 
     Builder.prototype.triggerCommand = function(command, ev) {
@@ -93,43 +94,43 @@
     Builder.prototype.createEntityControllers = function() {
         for (var controller in $.oc.builder.entityControllers) {
             if (controller == "base") {
-                continue
+                continue;
             }
 
-            this.entityControllers[controller] = new $.oc.builder.entityControllers[controller](this)
+            this.entityControllers[controller] = new $.oc.builder.entityControllers[controller](this);
         }
     }
 
     Builder.prototype.registerHandlers = function() {
-        $(document).on('click', '[data-builder-command]', this.proxy(this.onCommand))
-        $(document).on('submit', '[data-builder-command]', this.proxy(this.onCommand))
+        $(document).on('click', '[data-builder-command]', this.proxy(this.onCommand));
+        $(document).on('submit', '[data-builder-command]', this.proxy(this.onCommand));
 
-        this.$masterTabs.on('changed.oc.changeMonitor', this.proxy(this.onFormChanged))
-        this.$masterTabs.on('unchanged.oc.changeMonitor', this.proxy(this.onFormUnchanged))
-        this.$masterTabs.on('shown.bs.tab', this.proxy(this.onTabShown))
-        this.$masterTabs.on('afterAllClosed.oc.tab', this.proxy(this.onAllTabsClosed))
-        this.$masterTabs.on('closed.oc.tab', this.proxy(this.onTabClosed))
-        this.$masterTabs.on('autocompleteitems.oc.inspector', this.proxy(this.onDataRegistryItems))
-        this.$masterTabs.on('dropdownoptions.oc.inspector', this.proxy(this.onDataRegistryItems))
+        this.$masterTabs.on('changed.oc.changeMonitor', this.proxy(this.onFormChanged));
+        this.$masterTabs.on('unchanged.oc.changeMonitor', this.proxy(this.onFormUnchanged));
+        this.$masterTabs.on('shown.bs.tab', this.proxy(this.onTabShown));
+        this.$masterTabs.on('afterAllClosed.oc.tab', this.proxy(this.onAllTabsClosed));
+        this.$masterTabs.on('closed.oc.tab', this.proxy(this.onTabClosed));
+        this.$masterTabs.on('autocompleteitems.oc.inspector', this.proxy(this.onDataRegistryItems));
+        this.$masterTabs.on('dropdownoptions.oc.inspector', this.proxy(this.onDataRegistryItems));
 
         for (var controller in this.entityControllers) {
             if (this.entityControllers[controller].registerHandlers !== undefined) {
-                this.entityControllers[controller].registerHandlers()
+                this.entityControllers[controller].registerHandlers();
             }
         }
     }
 
     Builder.prototype.hideStripeIndicator = function() {
-        $.oc.stripeLoadIndicator.hide()
+        $.oc.stripeLoadIndicator.hide();
     }
 
     Builder.prototype.addMasterTab = function(data) {
         this.masterTabsObj.addTab(data.tabTitle, data.tab, data.tabId, 'oc-' + data.tabIcon)
 
         if (data.isNewRecord) {
-            var $masterTabPane = this.getMasterTabActivePane()
+            var $masterTabPane = this.getMasterTabActivePane();
 
-            $masterTabPane.find('form').one('ready.oc.changeMonitor', this.proxy(this.onChangeMonitorReady))
+            $masterTabPane.find('form').one('ready.oc.changeMonitor', this.proxy(this.onChangeMonitorReady));
         }
     }
 
@@ -139,9 +140,11 @@
             models: { menu: 'models', count: 0 },
             permissions: { menu: 'permissions', count: 0 },
             menus: { menu: 'menus', count: 0 },
+            imports: { menu: 'imports', count: 0 },
             versions: { menu: 'versions', count: 0 },
             localization: { menu: 'localization', count: 0 },
-            controller: { menu: 'controllers', count: 0 }
+            controller: { menu: 'controllers', count: 0 },
+            code: { menu: 'code', count: 0 }
         }
 
         $('> div.tab-content > div.tab-pane[data-modified] > form', this.$masterTabs).each(function(){
@@ -194,23 +197,22 @@
     Builder.prototype.onCommand = function(ev) {
         if (ev.currentTarget.tagName == 'FORM' && ev.type == 'click') {
             // The form elements could have data-builder-command attribute,
-            // but for them we only handle the submit event and ignore clicks. 
-
-            return
+            // but for them we only handle the submit event and ignore clicks.
+            return;
         }
 
-        var command = $(ev.currentTarget).data('builderCommand')
-        this.triggerCommand(command, ev)
+        var command = $(ev.currentTarget).data('builderCommand');
+        this.triggerCommand(command, ev);
 
         // Prevent default for everything except drop-down menu items
         //
-        var $target = $(ev.currentTarget)
+        var $target = $(ev.currentTarget);
         if (ev.currentTarget.tagName === 'A' && $target.attr('role') == 'menuitem' && $target.attr('href') == 'javascript:;') {
-            return
+            return;
         }
 
-        ev.preventDefault()
-        return false
+        ev.preventDefault();
+        return false;
     }
 
     Builder.prototype.onFormChanged = function(ev) {
@@ -260,13 +262,14 @@
     Builder.prototype.onDataRegistryItems = function(ev, data) {
         var self = this
 
-        if (data.propertyDefinition.fillFrom == 'model-classes' || 
-            data.propertyDefinition.fillFrom == 'model-forms' || 
-            data.propertyDefinition.fillFrom == 'model-lists' || 
+        if (data.propertyDefinition.fillFrom == 'model-classes' ||
+            data.propertyDefinition.fillFrom == 'model-forms' ||
+            data.propertyDefinition.fillFrom == 'model-lists' ||
             data.propertyDefinition.fillFrom == 'controller-urls' ||
-            data.propertyDefinition.fillFrom == 'model-columns' || 
-            data.propertyDefinition.fillFrom == 'plugin-lists' || 
-            data.propertyDefinition.fillFrom == 'permissions') {
+            data.propertyDefinition.fillFrom == 'model-columns' ||
+            data.propertyDefinition.fillFrom == 'plugin-lists' ||
+            data.propertyDefinition.fillFrom == 'permissions'
+        ) {
             ev.preventDefault()
 
             var subtype = null,

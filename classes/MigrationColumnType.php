@@ -3,10 +3,11 @@
 use SystemException;
 use ApplicationException;
 use Doctrine\DBAL\Types\Type as DoctrineType;
+use RainLab\Builder\Models\BaseModel;
 use Lang;
 
 /**
- * Represents a database column type used in migrations.
+ * MigrationColumnType represents a database column type used in migrations.
  *
  * Important: some Doctrine types map to multiple migration types, for example -
  * Doctrine boolean could be boolean and tinyInteger in migrations.
@@ -46,6 +47,9 @@ class MigrationColumnType extends BaseModel
     const REGEX_LENGTH_SINGLE = '/^([0-9]+)$/';
     const REGEX_LENGTH_DOUBLE = '/^([0-9]+)\,([0-9]+)$/';
 
+    /**
+     * getIntegerTypes
+     */
     public static function getIntegerTypes()
     {
         return [
@@ -55,6 +59,9 @@ class MigrationColumnType extends BaseModel
         ];
     }
 
+    /**
+     * getDecimalTypes
+     */
     public static function getDecimalTypes()
     {
         return [
@@ -63,6 +70,9 @@ class MigrationColumnType extends BaseModel
         ];
     }
 
+    /**
+     * getDoctrineTypeMap
+     */
     public static function getDoctrineTypeMap()
     {
         return [
@@ -203,7 +213,7 @@ class MigrationColumnType extends BaseModel
     }
 
     /**
-     * Converts Doctrine length, precision and scale to migration-compatible length string
+     * doctrineLengthToMigrationLength converts Doctrine length, precision and scale to migration-compatible length string
      * @return string
      */
     public static function doctrineLengthToMigrationLength($column)

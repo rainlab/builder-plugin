@@ -1,5 +1,5 @@
 .builder-building-area {
-    background: white;
+    background: var(--bs-body-bg, white);
 
     ul.builder-control-list {
         .clearfix();
@@ -11,24 +11,28 @@
             position: relative;
             margin-bottom: 20px;
             cursor: pointer;
-            .user-select(none);
+            user-select: none;
 
             &[data-unknown] {
                 cursor: default;
             }
 
-            &.placeholder, &.loading-control {
+            &.oc-placeholder, &.loading-control {
                 padding: 10px 12px;
                 position: relative;
                 text-align: center;
-                border: 2px dotted #dde0e2;
+                border: 2px dotted var(--bs-border-color, #dae0e0);
                 margin-top: 20px;
-                .border-radius(4px);
-                color: #dae0e0;
+                border-radius: 4px;
+                color: var(--bs-emphasis-color, #dae0e0);
 
                 i {
                     margin-right: 8px;
                 }
+            }
+
+            &.loading-control {
+                background: var(--oc-secondary-bg);
             }
 
             &.clear-row {
@@ -41,9 +45,9 @@
                 text-align: left;
             }
 
-            &.updating-control:after, 
+            &.updating-control:after,
             &.loading-control:before {
-                background-image:url(../../../../../modules/system/assets/ui/images/loader-transparent.svg);
+                background-image:url(../images/loader-transparent.svg);
                 background-size: 15px 15px;
                 background-position: 50% 50%;
                 display: inline-block;
@@ -53,7 +57,7 @@
                 margin-right: 13px;
                 position: relative;
                 top: 2px;
-                .animation(spin 1s linear infinite);
+                animation: spin 1s linear infinite;
             }
 
             &.loading-control:after {
@@ -75,7 +79,7 @@
                 width: 25px;
                 height: 25px;
                 background: rgba(127, 127, 127, 0.1);
-                .border-radius(4px);
+                border-radius: 4px;
             }
 
             &.drag-over {
@@ -109,7 +113,7 @@
                 display: none;
             }
 
-            &:not(.placeholder):not(.loading-control):not(.updating-control):hover > {
+            &:not(.oc-placeholder):not(.loading-control):not(.updating-control):hover > {
                 > div.remove-control {
                     font-family: sans-serif;
                     display: block;
@@ -123,9 +127,9 @@
                     font-size: 16px;
                     font-weight: bold;
                     line-height: 21px;
-                    .border-radius(20px);
-                    background: #ecf0f1;
-                    color: #95a5a6 !important;
+                    border-radius: 20px;
+                    background: var(--oc-toolbar-border, #ecf0f1);
+                    color: var(--oc-toolbar-color, #95a5a6) !important;
 
                     &:hover {
                         color: white !important;
@@ -158,25 +162,26 @@
             > .control-wrapper,
             > .control-static-contents {
                 position: relative;
-                .transition(margin 0.1s);
+                transition: margin 0.1s;
             }
         }
 
-        > li.placeholder:hover,
-        > li.placeholder.popover-highlight,
-        > li.placeholder.control-palette-open {
+        > li.oc-placeholder:hover,
+        > li.oc-placeholder.popover-highlight,
+        > li.oc-placeholder.control-palette-open {
             background-color: @builder-hover-color!important;
             color: white!important;
             border-style: solid;
             border-color: @builder-hover-color;
+            opacity: 1;
         }
 
-        > li.control:not(.placeholder):not(.loading-control):not([data-unknown]):hover > .control-wrapper *,
-        > li.control.inspector-open:not(.placeholder):not(.loading-control) > .control-wrapper * {
+        > li.control:not(.oc-placeholder):not(.loading-control):not([data-unknown]):hover > .control-wrapper *,
+        > li.control.inspector-open:not(.oc-placeholder):not(.loading-control) > .control-wrapper * {
             color: @builder-hover-color!important;
         }
 
-        > li.control.drag-over:not(.placeholder) {
+        > li.control.drag-over:not(.oc-placeholder) {
             &:before {
                 position: absolute;
                 content: '';
@@ -184,7 +189,7 @@
                 left: 0;
                 width: 10px;
                 height: 100%;
-                .border-radius(5px);
+                border-radius: 5px;
                 background-color: @builder-hover-color;
             }
 
@@ -199,13 +204,13 @@
     .control-body {
         &.field-disabled,
         &.field-hidden {
-            .opacity(0.5);
+            opacity: 0.5;
         }
     }
 
     .builder-control-label {
         margin-bottom: 10px;
-        color: #555555;
+        color: var(--oc-builder-control-color);
         font-size: 14px;
         font-weight: 600;
 
@@ -229,7 +234,7 @@
         margin-top: 6px;
     }
 
-    .builder-control-comment-above, 
+    .builder-control-comment-above,
     .builder-control-comment-below {
         color: #737373;
         font-size: 12px;
@@ -247,5 +252,11 @@ html.gecko.mac {
         div[data-root-control-wrapper] {
             margin-right: 17px;
         }
+    }
+}
+
+[data-bs-theme="dark"] {
+    .builder-building-area {
+        background: @body-bg;
     }
 }

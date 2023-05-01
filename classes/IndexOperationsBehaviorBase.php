@@ -1,7 +1,6 @@
 <?php namespace RainLab\Builder\Classes;
 
 use Backend\Classes\ControllerBehavior;
-use Backend\Behaviors\FormController;
 use ApplicationException;
 
 /**
@@ -18,6 +17,18 @@ abstract class IndexOperationsBehaviorBase extends ControllerBehavior
     protected $baseFormConfigFile = null;
 
     /**
+     * bindFormWidgetToController used for AJAX requests
+     */
+    public function bindFormWidgetToController($alias = null)
+    {
+        $pluginCodeObj = $this->getPluginCode();
+        $pluginCode = $pluginCodeObj->toCode();
+        $widget = $this->makeBaseFormWidget($pluginCode, ['alias' => $alias]);
+        $widget->bindToController();
+        return $widget;
+    }
+
+    /**
      * makeBaseFormWidget
      */
     protected function makeBaseFormWidget($modelCode, $options = [])
@@ -28,7 +39,7 @@ abstract class IndexOperationsBehaviorBase extends ControllerBehavior
 
         $widgetConfig = $this->makeConfig($this->baseFormConfigFile);
         $widgetConfig->model = $this->loadOrCreateBaseModel($modelCode, $options);
-        $widgetConfig->alias = 'form_'.md5(get_class($this)).uniqid();
+        $widgetConfig->alias = $options['alias'] ?? 'form_'.md5(get_class($this)).uniqid();
 
         $widgetConfig = $this->extendBaseFormWidgetConfig($widgetConfig);
 

@@ -1,0 +1,17 @@
+# ===================================
+#  Form Field Definitions
+# ===================================
+
+fields:
+    toolbar:
+        type: partial
+        path: $/rainlab/builder/behaviors/indeximportsoperations/partials/_toolbar.php
+        cssClass: collapse-visible
+
+secondaryTabs:
+    stretch: true
+    fields:
+        blueprints:
+            stretch: true
+            tab: Blueprints
+            type: RainLab\Builder\FormWidgets\BlueprintBuilder

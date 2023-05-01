@@ -148,6 +148,7 @@
                         > div {
                             padding: 5px 5px 0 5px;
                             border-top: 2px solid #e5e5e5;
+                            background: white;
 
                             > span {
                                 position: relative;
@@ -284,7 +285,7 @@
 
                         > div.tab-container {
                             > div {
-                                color: #555555;
+                                color: var(--oc-builder-control-color);
                                 padding-right: 30px;
                             }
                         }
@@ -304,3 +305,16 @@
 //         }
 //     }
 // }
+
+
+[data-bs-theme="dark"] {
+    .builder-tabs.primary > .tabs > ul.tabs > li.active:before,
+    .builder-tabs.primary > .tabs > ul.tabs > li > div.tab-container > div {
+        background: #202124;
+    }
+
+    .builder-tabs.primary > .tabs > ul.tabs > li > div.tab-container:before,
+    .builder-tabs.primary > .tabs > ul.tabs > li > div.tab-container:after {
+        background-image: url(../images/tab-dark.png);
+    }
+}

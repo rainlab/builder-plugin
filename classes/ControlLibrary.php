@@ -4,7 +4,7 @@ use Event;
 use Lang;
 
 /**
- * Manages Builder form control library.
+ * ControlLibrary manages Builder form control library.
  *
  * @package rainlab\builder
  * @author Alexey Bobkov, Samuel Georges
@@ -15,6 +15,7 @@ class ControlLibrary
 
     const GROUP_STANDARD = 0;
     const GROUP_WIDGETS = 1;
+    const GROUP_UI = 2;
     const DEFAULT_DESIGN_TIME_PROVIDER = 'RainLab\Builder\Widgets\DefaultControlDesignTimeProvider';
 
     protected $controls = [];
@@ -22,7 +23,7 @@ class ControlLibrary
     protected $groupedControls = null;
 
     /**
-     * Returns a list of all known form controls grouped by control groups.
+     * listControls returns a list of all known form controls grouped by control groups.
      * @param boolean $returnGrouped Indicates whether controls should be grouped in the result.
      * @return array
      */
@@ -34,7 +35,8 @@ class ControlLibrary
 
         $this->groupedControls = [
             $this->resolveControlGroupName(self::GROUP_STANDARD) => [],
-            $this->resolveControlGroupName(self::GROUP_WIDGETS) => []
+            $this->resolveControlGroupName(self::GROUP_WIDGETS) => [],
+            $this->resolveControlGroupName(self::GROUP_UI) => []
         ];
 
         Event::fire('pages.builder.registerControls', [$this]);
@@ -53,7 +55,7 @@ class ControlLibrary
     }
 
     /**
-     * Returns information about a control by its code.
+     * getControlInfo returns information about a control by its code.
      * @param string $code Specifies the control code.
      * @return array Returns an associative array or null if the control is not registered.
      */
@@ -75,7 +77,7 @@ class ControlLibrary
     }
 
     /**
-     * Registers a control.
+     * registerControl registers a control.
      * @param string $code Specifies the control code, for example "codeeditor".
      * @param string $name Specifies the control name, for example "Code editor".
      * @param string $description Specifies the control descritpion, can be empty.
@@ -108,18 +110,15 @@ class ControlLibrary
         ];
     }
 
+    /**
+     * getStandardProperties
+     */
     public function getStandardProperties($excludeProperties = [], $addProperties = [])
     {
         $result = [
             'label' => [
                 'title' => Lang::get('rainlab.builder::lang.form.property_label_title'),
                 'type' => 'builderLocalization',
-                'validation' => [
-                    // Label is technically not a required field -sg
-                    // 'required' => [
-                    //     'message' => Lang::get('rainlab.builder::lang.form.property_label_required')
-                    // ]
-                ]
             ],
             'oc.comment' => [
                 'title' => Lang::get('rainlab.builder::lang.form.property_comment_title'),
@@ -302,6 +301,9 @@ class ControlLibrary
         return $result;
     }
 
+    /**
+     * resolveControlGroupName
+     */
     protected function resolveControlGroupName($group)
     {
         if ($group === self::GROUP_STANDARD) {
@@ -310,6 +312,10 @@ class ControlLibrary
 
         if ($group === self::GROUP_WIDGETS) {
             return Lang::get('rainlab.builder::lang.form.control_group_widgets');
+        }
+
+        if ($group === self::GROUP_UI) {
+            return Lang::get('rainlab.builder::lang.form.control_group_ui');
         }
 
         return Lang::get($group);

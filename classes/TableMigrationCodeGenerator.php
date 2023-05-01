@@ -6,6 +6,7 @@ use File;
 use Doctrine\DBAL\Schema\Comparator;
 use Doctrine\DBAL\Schema\TableDiff;
 use October\Rain\Parse\Bracket as TextParser;
+use RainLab\Builder\Models\BaseModel;
 
 /**
  * Generates migration code for creating, updates and deleting tables.
@@ -19,9 +20,15 @@ class TableMigrationCodeGenerator extends BaseModel
     const COLUMN_MODE_CHANGE = 'change';
     const COLUMN_MODE_REVERT = 'revert';
 
+    /**
+     * @var string indent characters
+     */
     protected $indent = '    ';
 
-    protected $eol = PHP_EOL;
+    /**
+     * @var string eol character
+     */
+    protected $eol = "\n";
 
     /**
      * Generates code for creating or updating a database table.
@@ -84,7 +91,7 @@ class TableMigrationCodeGenerator extends BaseModel
      */
     public function wrapMigrationCode($scriptFilename, $code, $pluginCodeObj)
     {
-        $templatePath = '$/rainlab/builder/classes/databasetablemodel/templates/full-migration-code.php.tpl';
+        $templatePath = '$/rainlab/builder/models/databasetablemodel/templates/full-migration-code.php.tpl';
         $templatePath = File::symbolizePath($templatePath);
 
         $fileContents = File::get($templatePath);
@@ -125,7 +132,7 @@ class TableMigrationCodeGenerator extends BaseModel
 
     protected function generateMigrationCode($upCode, $downCode)
     {
-        $templatePath = '$/rainlab/builder/classes/databasetablemodel/templates/migration-code.php.tpl';
+        $templatePath = '$/rainlab/builder/models/databasetablemodel/templates/migration-code.php.tpl';
         $templatePath = File::symbolizePath($templatePath);
 
         $fileContents = File::get($templatePath);
@@ -321,11 +328,6 @@ class TableMigrationCodeGenerator extends BaseModel
         $tableFunction = $isNewTable ? 'create' : 'table';
         $result = sprintf('\tSchema::%s(\'%s\', function($table)', $tableFunction, $tableName).$this->eol;
         $result .= '\t{'.$this->eol;
-
-        if ($isNewTable) {
-            $result .= '\t\t$table->engine = \'InnoDB\';'.$this->eol;
-        }
-
         return $result;
     }
 

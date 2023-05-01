@@ -1,25 +1,31 @@
 <?php namespace RainLab\Builder\Behaviors;
 
+use BackendMenu;
+use System\Classes\PluginManager;
 use RainLab\Builder\Classes\IndexOperationsBehaviorBase;
-use RainLab\Builder\Classes\MenusModel;
+use RainLab\Builder\Models\MenusModel;
 use RainLab\Builder\Classes\PluginCode;
-use ApplicationException;
-use Exception;
+use Throwable;
 use Request;
 use Flash;
-use Input;
 use Lang;
 
 /**
- * Plugin back-end menu management functionality for the Builder index controller
+ * IndexMenusOperations is plugin backend menu management functionality for the Builder index controller
  *
  * @package rainlab\builder
  * @author Alexey Bobkov, Samuel Georges
  */
 class IndexMenusOperations extends IndexOperationsBehaviorBase
 {
-    protected $baseFormConfigFile = '~/plugins/rainlab/builder/classes/menusmodel/fields.yaml';
+    /**
+     * @var string baseFormConfigFile
+     */
+    protected $baseFormConfigFile = '~/plugins/rainlab/builder/models/menusmodel/fields.yaml';
 
+    /**
+     * onMenusOpen
+     */
     public function onMenusOpen()
     {
         $pluginCodeObj = $this->getPluginCode();
@@ -40,6 +46,9 @@ class IndexMenusOperations extends IndexOperationsBehaviorBase
         return $result;
     }
 
+    /**
+     * onMenusSave
+     */
     public function onMenusSave()
     {
         $pluginCodeObj = new PluginCode(Request::input('plugin_code'));
@@ -57,19 +66,36 @@ class IndexMenusOperations extends IndexOperationsBehaviorBase
             'tabTitle' => $model->getPluginName().'/'.Lang::get('rainlab.builder::lang.menu.tab'),
         ];
 
+        // Feature is nice to have, only supported in >3.3.9
+        try {
+            PluginManager::instance()->reloadPlugins();
+            BackendMenu::resetCache();
+
+            $result['mainMenu'] = $this->controller->makeLayoutPartial('mainmenu');
+            $result['mainMenuLeft'] = $this->controller->makeLayoutPartial('mainmenu', ['isVerticalMenu'=>true]);
+        }
+        catch (Throwable $ex) {}
+
         return $result;
     }
 
+    /**
+     * getTabId
+     */
     protected function getTabId($pluginCode)
     {
         return 'menus-'.$pluginCode;
     }
 
+    /**
+     * loadOrCreateBaseModel
+     */
     protected function loadOrCreateBaseModel($pluginCode, $options = [])
     {
         $model = new MenusModel();
 
         $model->loadPlugin($pluginCode);
+
         return $model;
     }
 }

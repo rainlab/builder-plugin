@@ -1,0 +1,31 @@
+# ===================================
+#  Form Field Definitions
+# ===================================
+
+fields:
+    toolbar:
+        type: partial
+        path: $/rainlab/builder/behaviors/indexpermissionsoperations/partials/_toolbar.php
+        cssClass: collapse-visible
+
+tabs:
+    cssClass: master-area
+    stretch: true
+    fields:
+        permissions:
+            stretch: true
+            cssClass: frameless
+            tab: rainlab.builder::lang.permission.form_tab_permissions
+            type: datatable
+            btnAddRowLabel: rainlab.builder::lang.permission.btn_add_permission
+            btnDeleteRowLabel: rainlab.builder::lang.permission.btn_delete_permission
+            columns:
+                permission:
+                    title: rainlab.builder::lang.permission.column_permission_label
+                    type: string
+                tab:
+                    title: rainlab.builder::lang.permission.column_tab_label
+                    type: builderLocalization
+                label:
+                    title: rainlab.builder::lang.permission.column_label_label
+                    type: builderLocalization

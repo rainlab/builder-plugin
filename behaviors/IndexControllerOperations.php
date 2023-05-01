@@ -1,25 +1,29 @@
 <?php namespace RainLab\Builder\Behaviors;
 
 use RainLab\Builder\Classes\IndexOperationsBehaviorBase;
-use RainLab\Builder\Classes\ControllerModel;
+use RainLab\Builder\Models\ControllerModel;
 use RainLab\Builder\Classes\PluginCode;
-use ApplicationException;
-use Exception;
 use Request;
 use Flash;
 use Input;
 use Lang;
 
 /**
- * Plugin controller management functionality for the Builder index controller
+ * IndexControllerOperations is plugin controller management functionality for the Builder index controller
  *
  * @package rainlab\builder
  * @author Alexey Bobkov, Samuel Georges
  */
 class IndexControllerOperations extends IndexOperationsBehaviorBase
 {
-    protected $baseFormConfigFile = '~/plugins/rainlab/builder/classes/controllermodel/fields.yaml';
+    /**
+     * @var string baseFormConfigFile
+     */
+    protected $baseFormConfigFile = '~/plugins/rainlab/builder/models/controllermodel/fields.yaml';
 
+    /**
+     * onControllerOpen
+     */
     public function onControllerOpen()
     {
         $controller = Input::get('controller');
@@ -45,6 +49,9 @@ class IndexControllerOperations extends IndexOperationsBehaviorBase
         return $result;
     }
 
+    /**
+     * onControllerCreate
+     */
     public function onControllerCreate()
     {
         $pluginCodeObj = new PluginCode(Request::input('plugin_code'));
@@ -62,9 +69,7 @@ class IndexControllerOperations extends IndexOperationsBehaviorBase
         $result = $this->controller->widget->controllerList->updateList();
 
         if ($model->behaviors) {
-            // Create a new tab only for controllers
-            // with behaviors.
-
+            // Create a new tab only for controllers with behaviors.
             $widget = $this->makeBaseFormWidget($model->controller, $options);
 
             $tab = [
@@ -85,6 +90,9 @@ class IndexControllerOperations extends IndexOperationsBehaviorBase
         return $result;
     }
 
+    /**
+     * onControllerSave
+     */
     public function onControllerSave()
     {
         $controller = Input::get('controller');
@@ -100,6 +108,9 @@ class IndexControllerOperations extends IndexOperationsBehaviorBase
         return $result;
     }
 
+    /**
+     * onControllerShowCreatePopup
+     */
     public function onControllerShowCreatePopup()
     {
         $pluginCodeObj = $this->getPluginCode();
@@ -108,15 +119,18 @@ class IndexControllerOperations extends IndexOperationsBehaviorBase
             'pluginCode' => $pluginCodeObj->toCode()
         ];
 
-        $this->baseFormConfigFile = '~/plugins/rainlab/builder/classes/controllermodel/new-controller-fields.yaml';
+        $this->baseFormConfigFile = '~/plugins/rainlab/builder/models/controllermodel/fields_new_controller.yaml';
         $widget = $this->makeBaseFormWidget(null, $options);
 
         return $this->makePartial('create-controller-popup-form', [
-            'form'=>$widget,
-            'pluginCode' =>  $pluginCodeObj->toCode()
+            'form' => $widget,
+            'pluginCode' => $pluginCodeObj->toCode()
         ]);
     }
 
+    /**
+     * getTabName
+     */
     protected function getTabName($model)
     {
         $pluginName = Lang::get($model->getModelPluginName());
@@ -124,11 +138,17 @@ class IndexControllerOperations extends IndexOperationsBehaviorBase
         return $pluginName.'/'.$model->controller;
     }
 
+    /**
+     * getTabId
+     */
     protected function getTabId($pluginCode, $controller)
     {
         return 'controller-'.$pluginCode.'-'.$controller;
     }
 
+    /**
+     * loadModelFromPost
+     */
     protected function loadModelFromPost()
     {
         $pluginCodeObj = new PluginCode(Request::input('plugin_code'));
@@ -141,6 +161,9 @@ class IndexControllerOperations extends IndexOperationsBehaviorBase
         return $this->loadOrCreateBaseModel($controller, $options);
     }
 
+    /**
+     * loadOrCreateBaseModel
+     */
     protected function loadOrCreateBaseModel($controller, $options = [])
     {
         $model = new ControllerModel();
@@ -157,6 +180,9 @@ class IndexControllerOperations extends IndexOperationsBehaviorBase
         return $model;
     }
 
+    /**
+     * mergeRegistryDataIntoResult
+     */
     protected function mergeRegistryDataIntoResult(&$result, $pluginCodeObj)
     {
         if (!array_key_exists('builderResponseData', $result)) {

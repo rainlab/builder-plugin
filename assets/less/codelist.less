@@ -1,0 +1,249 @@
+
+
+@color-text-title:              @text-color;
+@color-text-description:        @primary-color;
+
+[data-entity="code"] .secondary-content-tabs .nav-tabs {
+    display: none;
+}
+
+.control-codelist {
+    p.no-data {
+        padding: 22px;
+        margin: 0;
+        color: @text-muted;
+        font-size: 14px;
+        text-align: center;
+        font-weight: 400;
+        border-radius: @border-radius-base;
+    }
+
+    p.parent, ul li {
+        font-weight: 300;
+        line-height: 150%;
+        margin-bottom: 0;
+
+        &.active a {
+            background: @color-list-active;
+            position: relative;
+            &:after {
+                position: absolute;
+                height: 100%;
+                width: 4px;
+                left: 0;
+                top: 0;
+                background: @color-list-active-border;
+                display: block;
+                content: ' ';
+            }
+        }
+
+        a.link {
+            display: block;
+            position: relative;
+            word-wrap: break-word;
+            padding: 10px 50px 10px 20px;
+            outline: none;
+            font-weight: 400;
+            color: @color-text-title;
+            font-size: 14px;
+
+            &:hover, &:focus, &:active {
+                text-decoration: none;
+            }
+
+            span {
+                display: block;
+
+                &.description {
+                    color: @color-text-description;
+                    font-size: 12px;
+                    font-weight: 400;
+                    word-wrap: break-word;
+
+                    strong {
+                        color: @color-text-title;
+                        font-weight: 400;
+                    }
+                }
+            }
+        }
+
+        &.directory, &.parent {
+            a.link {
+                padding-left: 40px;
+
+                &:after {
+                    display: block;
+                    position: absolute;
+                    width: 10px;
+                    height: 10px;
+                    top: 10px;
+                    left: 20px;
+                    .icon(@folder);
+                    color: @color-list-icon;
+                    font-size: 14px;
+                }
+            }
+        }
+
+        &.parent {
+            a.link {
+                padding-left: 41px;
+                background-color: @primary-bg;
+                color: @primary-color;
+                word-wrap: break-word;
+
+                &:before {
+                    content: '';
+                    height: 1px;
+                    display: block;
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    width: 100%;
+                    height: 1px;
+                    background: @primary-border;
+                }
+
+
+                &:after {
+                    font-size: 13px;
+                    color: @primary-color;
+                    width: 18px;
+                    height: 18px;
+                    top: 11px;
+                    left: 22px;
+                    opacity: 0.5;
+                    .icon(@chevron-left);
+                }
+            }
+        }
+    }
+
+    p.parent a.link:hover {
+        background: @editor-section-bg !important;
+        color: @editor-section-color !important;
+
+        &:after {
+            opacity: 1;
+        }
+
+        &:before {
+            display: none;
+        }
+    }
+
+    ul {
+        padding: 0;
+        margin: 0;
+
+        li {
+            font-weight: 300;
+            line-height: 150%;
+            position: relative;
+            list-style: none;
+
+            &.active a.link, a.link:hover {
+                background: @editor-section-bg;
+                color: @editor-section-color;
+            }
+
+            &.active a.link {
+                position: relative;
+                &:after {
+                    position: absolute;
+                    height: 100%;
+                    width: 4px;
+                    left: 0;
+                    top: 0;
+                    background: @primary-border;
+                    display: block;
+                    content: ' ';
+                }
+            }
+
+            div.controls {
+                position: absolute;
+                right: 45px;
+                top: 10px;
+
+                .dropdown {
+                    width: 14px;
+                    height: 21px;
+
+                    &.open a.control {
+                        display: block!important;
+                        &:before {
+                            visibility: visible;
+                            display: block;
+                        }
+                    }
+                }
+
+                a.control {
+                    color: @color-text-title;
+                    font-size: 14px;
+                    visibility: hidden;
+                    overflow: hidden;
+                    width: 14px;
+                    height: 21px;
+                    display: none;
+                    text-decoration: none;
+                    cursor: pointer;
+                    opacity: 0.5;
+                    &:before {
+                        visibility: visible;
+                        display: block;
+                        margin-right: 0;
+                    }
+
+                    &:hover {
+                        opacity: 1;
+                    }
+                }
+            }
+
+            &:hover {
+                background: @editor-section-bg;
+                color: @editor-section-color;
+
+                div.controls, a.control {
+                    display: block !important;
+
+                    > a.control {
+                        display: block !important;
+                    }
+                }
+            }
+
+            .form-check {
+                position: absolute;
+                top: 10px;
+                right: 5px;
+
+                label {
+                    margin-right: 0;
+                }
+            }
+        }
+    }
+
+    div.list-container {
+        position: relative;
+        .translate(0, 0);
+
+        &.animate ul {
+            .transition(all 0.2s ease);
+        }
+
+        &.goForward ul {
+            .translate(-350px, 0);
+        }
+
+        &.goBackward ul {
+            .translate(350px, 0);
+        }
+
+    }
+}

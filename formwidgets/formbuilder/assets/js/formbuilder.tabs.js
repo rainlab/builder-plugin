@@ -75,7 +75,7 @@
         if (properties.length == 0) {
             properties = '{}'
         }
-        
+
         return $.parseJSON(properties)
     }
 
@@ -92,7 +92,7 @@
     }
 
     TabManager.prototype.tabHasControls = function($tab) {
-        return this.findTabPanel($tab).find('ul[data-control-list] li.control:not(.placeholder)').length > 0
+        return this.findTabPanel($tab).find('ul[data-control-list] li.control:not(.oc-placeholder)').length > 0
     }
 
     TabManager.prototype.tabNameExists = function($tabList, name, $ignoreTab) {
@@ -139,7 +139,7 @@
             $newTabControl = $tabList.find('> li[data-builder-new-tab]')
 
         $('[data-tab-title]', $newTab).text(tabName)
-        
+
         $newTab.insertBefore($newTabControl)
         this.getPanelList($tabControl).append(panelTemplate)
 

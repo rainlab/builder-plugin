@@ -1,0 +1,24 @@
+# ===================================
+#  Field Definitions
+# ===================================
+
+fields:
+    fileName:
+        label: cms::lang.editor.filename
+        attributes:
+            default-focus: 1
+            spellcheck: 'false'
+
+    toolbar:
+        type: partial
+        path: $/rainlab/builder/behaviors/indexmodelformoperations/partials/_toolbar.php
+        cssClass: collapse-visible
+
+secondaryTabs:
+    stretch: true
+    fields:
+        formBuilder:
+            type: RainLab\Builder\FormWidgets\FormBuilder
+            stretch: true
+            cssClass: layout
+            tab: rainlab.builder::lang.form.controls

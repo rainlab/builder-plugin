@@ -1,0 +1,6 @@
+{
+  "Builder": "Builder",
+  "Provides visual tools for building October plugins.": "Provides visual tools for building October plugins.",
+  "Options Method": "Options Method",
+  "Request options from this method name defined on the model or as a static method (Class::method).": "Request options from this method name defined on the model or as a static method (Class::method)."
+}

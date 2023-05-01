@@ -1,15 +1,12 @@
 <?php namespace RainLab\Builder\Behaviors;
 
 use RainLab\Builder\Classes\IndexOperationsBehaviorBase;
-use RainLab\Builder\Classes\ModelFormModel;
-use RainLab\Builder\Classes\PluginCode;
+use RainLab\Builder\Models\ModelFormModel;
 use RainLab\Builder\FormWidgets\FormBuilder;
-use RainLab\Builder\Classes\ModelModel;
+use RainLab\Builder\Models\ModelModel;
 use RainLab\Builder\Classes\ControlLibrary;
 use Backend\Classes\FormField;
 use Backend\FormWidgets\DataTable;
-use ApplicationException;
-use Exception;
 use Request;
 use Flash;
 use Input;
@@ -23,8 +20,14 @@ use Lang;
  */
 class IndexModelFormOperations extends IndexOperationsBehaviorBase
 {
-    protected $baseFormConfigFile = '~/plugins/rainlab/builder/classes/modelformmodel/fields.yaml';
+    /**
+     * @var string baseFormConfigFile
+     */
+    protected $baseFormConfigFile = '~/plugins/rainlab/builder/models/modelformmodel/fields.yaml';
 
+    /**
+     * __construct
+     */
     public function __construct($controller)
     {
         parent::__construct($controller);
@@ -32,11 +35,14 @@ class IndexModelFormOperations extends IndexOperationsBehaviorBase
         // Create the form builder instance to handle AJAX
         // requests.
         $defaultBuilderField = new FormField('default', 'default');
-        $formBulder = new FormBuilder($controller, $defaultBuilderField);
-        $formBulder->alias = 'defaultFormBuilder';
-        $formBulder->bindToController();
+        $formBuilder = new FormBuilder($controller, $defaultBuilderField);
+        $formBuilder->alias = 'defaultFormBuilder';
+        $formBuilder->bindToController();
     }
 
+    /**
+     * onModelFormCreateOrOpen
+     */
     public function onModelFormCreateOrOpen()
     {
         $fileName = Input::get('file_name');
@@ -67,6 +73,9 @@ class IndexModelFormOperations extends IndexOperationsBehaviorBase
         return $result;
     }
 
+    /**
+     * onModelFormSave
+     */
     public function onModelFormSave()
     {
         $model = $this->loadOrCreateFormFromPost();
@@ -90,6 +99,9 @@ class IndexModelFormOperations extends IndexOperationsBehaviorBase
         return $result;
     }
 
+    /**
+     * onModelFormDelete
+     */
     public function onModelFormDelete()
     {
         $model = $this->loadOrCreateFormFromPost();
@@ -104,6 +116,9 @@ class IndexModelFormOperations extends IndexOperationsBehaviorBase
         return $result;
     }
 
+    /**
+     * onModelFormGetModelFields
+     */
     public function onModelFormGetModelFields()
     {
         $columnNames = ModelModel::getModelFields($this->getPluginCode(), Input::get('model_class'));
@@ -129,6 +144,9 @@ class IndexModelFormOperations extends IndexOperationsBehaviorBase
         ];
     }
 
+    /**
+     * onModelShowAddDatabaseFieldsPopup
+     */
     public function onModelShowAddDatabaseFieldsPopup()
     {
         $columns = ModelModel::getModelColumnsAndTypes($this->getPluginCode(), Input::get('model_class'));
@@ -147,6 +165,9 @@ class IndexModelFormOperations extends IndexOperationsBehaviorBase
         ]);
     }
 
+    /**
+     * loadOrCreateFormFromPost
+     */
     protected function loadOrCreateFormFromPost()
     {
         $pluginCode = Request::input('plugin_code');
@@ -161,6 +182,9 @@ class IndexModelFormOperations extends IndexOperationsBehaviorBase
         return $this->loadOrCreateBaseModel($fileName, $options);
     }
 
+    /**
+     * getTabId
+     */
     protected function getTabId($modelClass, $fileName)
     {
         if (!strlen($fileName)) {
@@ -170,6 +194,9 @@ class IndexModelFormOperations extends IndexOperationsBehaviorBase
         return 'modelForm-'.$modelClass.'-'.$fileName;
     }
 
+    /**
+     * loadOrCreateBaseModel
+     */
     protected function loadOrCreateBaseModel($fileName, $options = [])
     {
         $model = new ModelFormModel();
@@ -189,6 +216,9 @@ class IndexModelFormOperations extends IndexOperationsBehaviorBase
         return $model;
     }
 
+    /**
+     * mergeRegistryDataIntoResult
+     */
     protected function mergeRegistryDataIntoResult(&$result, $model, $modelClass)
     {
         if (!array_key_exists('builderResponseData', $result)) {
@@ -205,36 +235,36 @@ class IndexModelFormOperations extends IndexOperationsBehaviorBase
     }
 
     /**
-     * Returns the configuration for the DataTable widget that
-     * is used in the "add database fields" popup.
+     * getAddDatabaseFieldsDataTableConfig returns the configuration for the DataTable widget
+     * that is used in the "add database fields" popup.
      *
      * @return array
      */
     protected function getAddDatabaseFieldsDataTableConfig()
     {
         // Get all registered controls and build an array that uses the control types as key and value for each entry.
-        $controls   = ControlLibrary::instance()->listControls();
+        $controls = ControlLibrary::instance()->listControls();
         $fieldTypes = array_merge(array_keys($controls['Standard']), array_keys($controls['Widgets']));
-        $options    = array_combine($fieldTypes, $fieldTypes);
+        $options = array_combine($fieldTypes, $fieldTypes);
 
         return [
             'toolbar' => false,
             'columns' => [
-                'add'    => [
+                'add' => [
                     'title' => 'rainlab.builder::lang.common.add',
-                    'type'  => 'checkbox',
+                    'type' => 'checkbox',
                     'width' => '50px',
                 ],
                 'column' => [
-                    'title'    => 'rainlab.builder::lang.database.column_name_name',
+                    'title' => 'rainlab.builder::lang.database.column_name_name',
                     'readOnly' => true,
                 ],
                 'label'  => [
                     'title' => 'rainlab.builder::lang.list.column_name_label',
                 ],
                 'type'   => [
-                    'title'   => 'rainlab.builder::lang.form.control_widget_type',
-                    'type'    => 'dropdown',
+                    'title' => 'rainlab.builder::lang.form.control_widget_type',
+                    'type' => 'dropdown',
                     'options' => $options,
                 ],
             ],
@@ -242,38 +272,37 @@ class IndexModelFormOperations extends IndexOperationsBehaviorBase
     }
 
     /**
-     * Returns the initial value for the DataTable widget that
+     * getAddDatabaseFieldsDataTableValue returns the initial value for the DataTable widget that
      * is used in the "add database columns" popup.
      *
      * @param array $columns
-     *
      * @return array
      */
     protected function getAddDatabaseFieldsDataTableValue(array $columns)
     {
         // Map database column types to widget types.
         $typeMap = [
-            'string'       => 'text',
-            'integer'      => 'number',
-            'text'         => 'textarea',
-            'timestamp'    => 'datepicker',
+            'string' => 'text',
+            'integer' => 'number',
+            'text' => 'textarea',
+            'timestamp' => 'datepicker',
             'smallInteger' => 'number',
-            'bigInteger'   => 'number',
-            'date'         => 'datepicker',
-            'time'         => 'datepicker',
-            'dateTime'     => 'datepicker',
-            'binary'       => 'checkbox',
-            'boolean'      => 'checkbox',
-            'decimal'      => 'number',
-            'double'       => 'number',
+            'bigInteger' => 'number',
+            'date' => 'datepicker',
+            'time' => 'datepicker',
+            'dateTime' => 'datepicker',
+            'binary' => 'checkbox',
+            'boolean' => 'checkbox',
+            'decimal' => 'number',
+            'double' => 'number',
         ];
 
-        return array_map(function ($column) use ($typeMap) {
+        return array_map(function($column) use ($typeMap) {
             return [
                 'column' => $column['name'],
-                'label'  => str_replace('_', ' ', ucfirst($column['name'])),
-                'type'   => $typeMap[$column['type']] ?? $column['type'],
-                'add'    => false,
+                'label' => str_replace('_', ' ', ucfirst($column['name'])),
+                'type' => $typeMap[$column['type']] ?? $column['type'],
+                'add' => false,
             ];
         }, $columns);
     }

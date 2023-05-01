@@ -1,0 +1,91 @@
+# ===================================
+#  Form Field Definitions
+# ===================================
+
+fields:
+    name:
+        label: rainlab.builder::lang.database.field_name
+        attributes:
+            default-focus: 1
+            spellcheck: 'false'
+
+    toolbar:
+        type: partial
+        path: $/rainlab/builder/behaviors/indexdatabasetableoperations/partials/_toolbar.php
+        cssClass: collapse-visible
+
+tabs:
+    stretch: true
+    cssClass: master-area
+    fields:
+        columns:
+            stretch: true
+            cssClass: frameless
+            tab: rainlab.builder::lang.database.tab_columns
+            type: datatable
+            btnAddRowLabel: rainlab.builder::lang.database.btn_add_column
+            btnDeleteRowLabel: rainlab.builder::lang.database.btn_delete_column
+            height: 100
+            dynamicHeight: true
+            columns:
+                name:
+                    title: rainlab.builder::lang.database.column_name_name
+                    validation:
+                        required:
+                            message: rainlab.builder::lang.database.column_name_required
+                        regex:
+                            pattern: ^[0-9_a-z]+$
+                            message: rainlab.builder::lang.database.column_validation_title
+                type:
+                    title: rainlab.builder::lang.database.column_name_type
+                    type: dropdown
+                    options:
+                        integer: Integer
+                        smallInteger: Small Integer
+                        bigInteger: Big Integer
+                        date: Date
+                        time: Time
+                        dateTime: Date and Time
+                        timestamp: Timestamp
+                        string: String
+                        text: Text
+                        binary: Binary
+                        boolean: Boolean
+                        decimal: Decimal
+                        double: Double
+                    validation:
+                        required:
+                            message: rainlab.builder::lang.database.column_type_required
+                length:
+                    title: rainlab.builder::lang.database.column_name_length
+                    validation:
+                        regex:
+                            pattern: (^[0-9]+$)|(^[0-9]+,[0-9]+$)
+                            message: rainlab.builder::lang.database.column_validation_length
+                    width: 8%
+
+                default:
+                    title: rainlab.builder::lang.database.column_default
+
+                unsigned:
+                    title: rainlab.builder::lang.database.column_name_unsigned
+                    type: checkbox
+                    width: 8%
+
+                allow_null:
+                    title: rainlab.builder::lang.database.column_name_nullable
+                    type: checkbox
+                    width: 8%
+
+                auto_increment:
+                    title: rainlab.builder::lang.database.column_auto_increment
+                    type: checkbox
+                    width: 8%
+
+                primary_key:
+                    title: rainlab.builder::lang.database.column_auto_primary_key
+                    type: checkbox
+                    width: 8%
+
+                comment:
+                    title: rainlab.builder::lang.database.column_comment

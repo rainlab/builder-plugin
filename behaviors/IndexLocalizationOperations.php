@@ -1,7 +1,7 @@
 <?php namespace RainLab\Builder\Behaviors;
 
 use RainLab\Builder\Classes\IndexOperationsBehaviorBase;
-use RainLab\Builder\Classes\LocalizationModel;
+use RainLab\Builder\Models\LocalizationModel;
 use RainLab\Builder\Classes\PluginCode;
 use ApplicationException;
 use Exception;
@@ -18,7 +18,7 @@ use Lang;
  */
 class IndexLocalizationOperations extends IndexOperationsBehaviorBase
 {
-    protected $baseFormConfigFile = '~/plugins/rainlab/builder/classes/localizationmodel/fields.yaml';
+    protected $baseFormConfigFile = '~/plugins/rainlab/builder/models/localizationmodel/fields.yaml';
 
     public function onLanguageCreateOrOpen()
     {
