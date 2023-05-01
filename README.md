@@ -216,7 +216,25 @@ Use this to make code adjustments without the need for a code editor, which incl
 
 ## Importing Tailor Blueprints (New in v2)
 
-TBA
+The Import tab of the Builder can generate scaffold files using [Tailor blueprints](https://docs.octobercms.com/3.x/cms/tailor/blueprints.html) as a source. In combination, Tailor and Builder work together to create a super-scaffolding tool since it can generate multiple files in one process. First, design your fields and preview them using Tailor, and then when you are ready, import them in to Builder to start working directly with the files.
+
+It important to note that importing blueprints is a one-way function, and in some cases it is better to leave content within Tailor for the benefits that come with its dynamic models, especially for content. This design decision is up to you.
+
+When visiting the Import tab, use the **Add Blueprint** button to select the Tailor blueprints you wish to import. You can select multiple blueprints and it is recommended to include related blueprints so the relationships between blueprints are preserved.
+
+Once added, each blueprint can be customized, which includes the Controller Class, Model Class, Table Name, Permission Code and Menu Code names. When these fields are modified, they will adjust the filenames of the generated files.
+
+Clicking the Import button will begin the conversion process. Some import are options shown to control how the import should proceed.
+
+- **Migrate Database** performs a database migration after the import is finished. This optional and you can migrate the database later.
+
+- **Disable Blueprints** will rename the blueprint files to use a backup extension (.bak) to disable them.
+
+- **Delete Blueprint Data** will delete any existing data and tables for the selected blueprints found within Tailor.
+
+Before clicking **Import**, be sure to double check the selected blueprints. The import process creates multiple scaffold files for the selected plugin. This process can be difficult to undo, so it is a good idea to practice on a test plugin first, without migrating the database or disabling the blueprints.
+
+When everything is done, you should see multiple controller, model and migration files generated for your selected plugin.
 
 ## Displaying Plugin Records on CMS Pages
 
