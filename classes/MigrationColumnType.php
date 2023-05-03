@@ -2,7 +2,7 @@
 
 use SystemException;
 use ApplicationException;
-use Doctrine\DBAL\Types\Type as DoctrineType;
+use Doctrine\DBAL\Types\Types as DoctrineType;
 use RainLab\Builder\Models\BaseModel;
 use Lang;
 
@@ -79,10 +79,10 @@ class MigrationColumnType extends BaseModel
             self::TYPE_INTEGER => DoctrineType::INTEGER,
             self::TYPE_SMALLINTEGER => DoctrineType::SMALLINT,
             self::TYPE_BIGINTEGER => DoctrineType::BIGINT,
-            self::TYPE_DATE => DoctrineType::DATE,
-            self::TYPE_TIME => DoctrineType::TIME,
-            self::TYPE_DATETIME => DoctrineType::DATETIME,
-            self::TYPE_TIMESTAMP => DoctrineType::DATETIME,
+            self::TYPE_DATE => DoctrineType::DATE_MUTABLE,
+            self::TYPE_TIME => DoctrineType::TIME_MUTABLE,
+            self::TYPE_DATETIME => DoctrineType::DATETIME_MUTABLE,
+            self::TYPE_TIMESTAMP => DoctrineType::DATETIME_MUTABLE,
             self::TYPE_STRING => DoctrineType::STRING,
             self::TYPE_TEXT => DoctrineType::TEXT,
             self::TYPE_BINARY => DoctrineType::BLOB,
@@ -122,7 +122,7 @@ class MigrationColumnType extends BaseModel
         // Some guessing could be required in this method. The method is not
         // 100% reliable.
 
-        if ($type == DoctrineType::DATETIME) {
+        if ($type == DoctrineType::DATETIME_MUTABLE) {
             // The datetime type maps to datetime and timestamp. Use the name
             // guessing as the only possible solution.
 
