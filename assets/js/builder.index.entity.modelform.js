@@ -83,7 +83,7 @@
         // addControlToPlaceholder requires a proper reflow of the whole form layout before
         // a new field can be added. This addField helper function makes sure that all
         // Promises are run in sequence to achieve this.
-        function addField (field) {
+        function addField(field) {
             return function () {
                 var defer = $.Deferred()
                 $.oc.builder.formbuilder.controller.addControlToPlaceholder(

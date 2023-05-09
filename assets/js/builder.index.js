@@ -127,11 +127,13 @@
     Builder.prototype.addMasterTab = function(data) {
         this.masterTabsObj.addTab(data.tabTitle, data.tab, data.tabId, 'oc-' + data.tabIcon)
 
-        if (data.isNewRecord) {
-            var $masterTabPane = this.getMasterTabActivePane();
+        var $masterTabPane = this.getMasterTabActivePane();
 
+        if (data.isNewRecord) {
             $masterTabPane.find('form').one('ready.oc.changeMonitor', this.proxy(this.onChangeMonitorReady));
         }
+
+        $('[data-builder-tabs]', $masterTabPane).dragScroll();
     }
 
     Builder.prototype.updateModifiedCounter = function() {
