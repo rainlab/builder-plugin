@@ -899,7 +899,7 @@ trait HasFormWidgets
                 'title' => Lang::get('rainlab.builder::lang.form.property_display_mode'),
                 'description' => Lang::get('rainlab.builder::lang.form.property_display_mode_description'),
                 'type' => 'dropdown',
-                'default' => 'default',
+                'default' => 'accordion',
                 'options' => [
                     'builder' => Lang::get('rainlab.builder::lang.form.display_mode_builder'),
                     'accordion' => Lang::get('rainlab.builder::lang.form.display_mode_accordion'),
