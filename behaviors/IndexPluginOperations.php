@@ -2,9 +2,7 @@
 
 use RainLab\Builder\Classes\IndexOperationsBehaviorBase;
 use RainLab\Builder\Models\PluginBaseModel;
-use Backend\Behaviors\FormController;
 use ApplicationException;
-use Exception;
 use Input;
 
 /**
@@ -78,7 +76,7 @@ class IndexPluginOperations extends IndexOperationsBehaviorBase
 
     protected function loadOrCreateBaseModel($pluginCode, $options = [])
     {
-        $model = new PluginBaseModel();
+        $model = new PluginBaseModel;
 
         if (!$pluginCode) {
             $model->initDefaults();
