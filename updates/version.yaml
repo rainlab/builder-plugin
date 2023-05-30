@@ -43,3 +43,4 @@ v1.2.6: Compatibility with October v3.1
 v2.0.1: Adds Tailor blueprint importer and code editor.
 v2.0.2: Fixes visual bug when tab fields overflow.
 v2.0.3: Fixes missing import in CMS components.
+v2.0.4: Fixes bad method name in controller model.

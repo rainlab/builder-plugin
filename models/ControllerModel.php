@@ -413,7 +413,7 @@ class ControllerModel extends BaseModel
         try {
             $configuration = Yaml::parse(File::get($filePath));
             if ($behaviorClass === \Backend\Behaviors\ImportExportController::class) {
-                $this->processImportExportConfig($configuration, true);
+                $this->processImportExportBehaviorConfig($configuration, true);
             }
             return $configuration;
         }
@@ -544,7 +544,7 @@ class ControllerModel extends BaseModel
     }
 
     /**
-     * processImportExportConfig converts import. and export. keys to and from their config
+     * processImportExportBehaviorConfig converts import. and export. keys to and from their config
      */
     protected function processImportExportBehaviorConfig(array &$configuration, $isLoad = false)
     {
