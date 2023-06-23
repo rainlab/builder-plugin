@@ -44,3 +44,4 @@ v2.0.1: Adds Tailor blueprint importer and code editor.
 v2.0.2: Fixes visual bug when tab fields overflow.
 v2.0.3: Fixes missing import in CMS components.
 v2.0.4: Fixes bad method name in controller model.
+v2.0.5: Fixes bug adding data table controls.

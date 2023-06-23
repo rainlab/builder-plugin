@@ -292,7 +292,7 @@ class FormBuilder extends FormWidgetBase
         }
 
         // Data table columns (TODO: move to design time provider? -sg 2023)
-        if ($type === 'datatable' && is_array($properties['columns'])) {
+        if ($type === 'datatable' && isset($properties['columns']) && is_array($properties['columns'])) {
             $ocColumns = [];
             foreach ($properties['columns'] as $key => $config) {
                 $ocColumns[] = ['code' => $key] + $config;
