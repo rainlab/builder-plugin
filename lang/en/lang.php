@@ -565,6 +565,7 @@
     'property_behavior_list_show_sorting' => 'Show Sorting',
     'property_behavior_list_show_reorder' => 'Show Reorder',
     'property_behavior_list_max_depth' => 'Max Depth',
+    'property_behavior_list_max_depth_description' => 'Maximum depth - use 0 for unlimited depth. This field must be set to activate the structure.',
     'property_behavior_list_max_depth_regex' => 'Max depth should be an integer value',
     'property_behavior_list_drag_row' => 'Draw Row',
     'property_behavior_list_default_sort' => 'Default Sorting',

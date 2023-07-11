@@ -281,6 +281,7 @@ class StandardBehaviorsRegistry
                     [
                         'property' => 'maxDepth',
                         'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_max_depth'),
+                        'description' => Lang::get('rainlab.builder::lang.controller.property_behavior_list_max_depth_description'),
                         'type' => 'string',
                         'ignoreIfEmpty' => true,
                         'validation' => [
