@@ -4,7 +4,6 @@
 
 fields:
     blueprint_uuid:
-        label: Blueprint Handle
         type: checkboxlist
 
     include_related:
