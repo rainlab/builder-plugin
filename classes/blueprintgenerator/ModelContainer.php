@@ -261,9 +261,12 @@ class ModelContainer extends Model
      */
     public function getMultisiteDefinition()
     {
+        $multisiteSync = $this->blueprint instanceof \Tailor\Classes\Blueprint\EntryBlueprint &&
+            $this->blueprint->useMultisiteSync();
+
         return [
             'fields' => $this->propagatable,
-            'sync' => $this->blueprint->useMultisiteSync()
+            'sync' => $multisiteSync
         ];
     }
 }
