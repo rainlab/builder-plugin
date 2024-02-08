@@ -1,5 +1,6 @@
 <?php namespace RainLab\Builder\Classes;
 
+use RainLab\Builder\Models\BaseModel;
 use SystemException;
 use File;
 use Yaml;
@@ -12,6 +13,9 @@ use Yaml;
  */
 class PluginVersion extends BaseModel
 {
+    /**
+     * getPluginVersionInformation returns version information for a plugin.
+     */
     public function getPluginVersionInformation($pluginCodeObj)
     {
         $filePath = $this->getPluginUpdatesPath($pluginCodeObj, 'version.yaml');
@@ -32,9 +36,19 @@ class PluginVersion extends BaseModel
             });
         }
 
-        return $versionInfo;
+        // Normalize result
+        $result = [];
+
+        foreach ($versionInfo as $version => $info) {
+            $result[$this->normalizeVersion($version)] = $info;
+        }
+
+        return $result;
     }
 
+    /**
+     * getPluginUpdatesPath
+     */
     protected function getPluginUpdatesPath($pluginCodeObj, $fileName = null)
     {
         $filePath = '$/'.$pluginCodeObj->toFilesystemPath().'/updates';
@@ -45,5 +59,13 @@ class PluginVersion extends BaseModel
         }
 
         return $filePath;
+    }
+
+    /**
+     * normalizeVersion checks some versions start with v and others not
+     */
+    protected function normalizeVersion($version): string
+    {
+        return rtrim(ltrim((string) $version, 'v'), '.');
     }
 }

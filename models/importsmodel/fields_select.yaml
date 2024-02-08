@@ -1,0 +1,13 @@
+# ===================================
+#  Form Field Definitions
+# ===================================
+
+fields:
+    blueprint_uuid:
+        type: checkboxlist
+
+    include_related:
+        type: checkbox
+        label: Include Related Blueprints
+        comment: Scan the selected blueprint for any related blueprints and include them in the selection.
+        default: true

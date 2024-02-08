@@ -1,5 +1,5 @@
 .builder-controllers-builder-area {
-    background: white;
+    background: var(--bs-body-bg, white);
 
     ul.controller-behavior-list {
         .clearfix();
@@ -11,15 +11,15 @@
         li {
             h4 {
                 text-align: center;
-                border-bottom: 1px dotted @builder-control-border-color; 
+                border-bottom: 1px dotted @builder-control-border-color;
                 margin: 0 -20px 40px;
 
                 span {
                     display: inline-block;
+                    background: @builder-control-tooltip-color;
                     color: white;
                     margin: 0 auto;
-                    .border-radius(8px);
-                    background: @builder-control-border-color;
+                    border-radius: 8px;
                     padding: 7px 10px;
                     font-size: 13px;
                     line-height: 100%;
@@ -34,8 +34,8 @@
             .clearfix();
             cursor: pointer;
 
-            .list-behavior, .reorder-behavior {
-                .border-radius(4px);
+            .list-behavior, .import-export-behavior {
+                border-radius: 4px;
                 border: 2px solid @builder-control-border-color;
                 padding: 25px 10px 25px 10px;
 
@@ -53,8 +53,8 @@
                         }
                     }
 
-                    .placeholder {
-                        background: #EEF2F4;
+                    .oc-placeholder {
+                        background: var(--oc-secondary-bg, #EEF2F4);
                         height: 25px;
                     }
 
@@ -64,9 +64,9 @@
                 }
             }
 
-            .reorder-behavior {
+            .import-export-behavior {
                 table {
-                    i.icon-bars, .placeholder {
+                    i.icon-bars, .oc-placeholder {
                         float: left;
                     }
 
@@ -103,7 +103,7 @@
                     }
 
                     div.label {
-                        background: #EEF2F4;
+                        background: var(--oc-secondary-bg, #EEF2F4);
                         height: 25px;
                         margin-bottom: 10px;
 
@@ -121,14 +121,14 @@
                     }
 
                     div.control {
-                        background: #EEF2F4;
+                        background: var(--oc-secondary-bg, #EEF2F4);
                         height: 35px;
                         margin-bottom: 25px;
                     }
                 }
 
                 div.button {
-                    background: #EEF2F4;
+                    background: var(--oc-secondary-bg, #EEF2F4);
                     height: 35px;
                     margin-right: 20px;
                     .border-radius(4px);

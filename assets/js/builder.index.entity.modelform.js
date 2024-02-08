@@ -34,7 +34,7 @@
     ModelForm.prototype.cmdSaveForm = function(ev) {
         var $target = $(ev.currentTarget),
             $form = $target.closest('form'),
-            $rootContainer = $('[data-root-control-wrapper] > [data-control-container]', $form), 
+            $rootContainer = $('[data-root-control-wrapper] > [data-control-container]', $form),
             $inspectorContainer = $form.find('.inspector-container'),
             controls = $.oc.builder.formbuilder.domToPropertyJson.convert($rootContainer.get(0))
 
@@ -61,6 +61,52 @@
         }).done(
             this.proxy(this.saveFormDone)
         )
+    }
+
+    ModelForm.prototype.cmdAddDatabaseFields = function (ev) {
+        var $target = $(ev.currentTarget)
+
+        // Always use the first placeholder to add controls
+        var $placeholder = this.getMasterTabsActivePane().find('.builder-control-list .control.oc-placeholder:first')[0]
+
+        // Filter all fields from the DataTable that have the "add" checkbox checked.
+        var fields = $target.find('.control-table').data('oc.table').dataSource.data.filter(function (column) {
+            return column.add
+        }).reverse()
+
+        // Hide the popup and initialize the load indicator.
+        $target.closest('.control-popup').data('oc.popup').hide()
+        $.oc.stripeLoadIndicator.show()
+
+        // When a control is added, an AJAX request is made which returns the widget's markup.
+        // We need to wait for each request to finish before we can add another field, since the
+        // addControlToPlaceholder requires a proper reflow of the whole form layout before
+        // a new field can be added. This addField helper function makes sure that all
+        // Promises are run in sequence to achieve this.
+        function addField(field) {
+            return function () {
+                var defer = $.Deferred()
+                $.oc.builder.formbuilder.controller.addControlToPlaceholder(
+                    $placeholder,
+                    field.type,
+                    field.label ? field.label : field.column,
+                    false,
+                    field.column
+                ).always(function () {
+                    defer.resolve()
+                })
+                return defer.promise()
+            };
+        }
+
+        /// Add all fields in sequence.
+        var allFields = $.when({})
+        $.each(fields, function (index, field) {
+            allFields = allFields.then(addField(field))
+        });
+
+        // Once everything is done, hide the load indicator.
+        $.when(allFields).always($.oc.builder.indexController.hideStripeIndicatorProxy)
     }
 
     ModelForm.prototype.cmdOpenForm = function(ev) {

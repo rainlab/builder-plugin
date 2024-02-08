@@ -1,20 +1,29 @@
 <?php namespace RainLab\Builder\Classes;
 
 /**
- * Parses controller source files.
+ * ControllerFileParser parses controller source files.
  *
  * @package rainlab\builder
  * @author Alexey Bobkov, Samuel Georges
  */
 class ControllerFileParser
 {
+    /**
+     * @var object stream
+     */
     protected $stream;
 
+    /**
+     * @var __construct
+     */
     public function __construct($fileContents)
     {
         $this->stream = new PhpSourceStream($fileContents);
     }
 
+    /**
+     * listBehaviors
+     */
     public function listBehaviors()
     {
         $this->stream->reset();
@@ -31,6 +40,9 @@ class ControllerFileParser
         }
     }
 
+    /**
+     * getStringPropertyValue
+     */
     public function getStringPropertyValue($property)
     {
         $this->stream->reset();
@@ -47,6 +59,9 @@ class ControllerFileParser
         }
     }
 
+    /**
+     * extractBehaviors
+     */
     protected function extractBehaviors()
     {
         if ($this->stream->getNextExpected(T_WHITESPACE) === null) {
@@ -77,8 +92,8 @@ class ControllerFileParser
         }
 
         $result = [];
-        while ($line = $this->stream->getNextExpectedTerminated([T_CONSTANT_ENCAPSED_STRING, T_WHITESPACE], [',', ']', ')'])) {
-            $line = $this->stream->unquotePhpString(trim($line));
+        while ($line = $this->stream->getNextExpectedTerminated([T_CONSTANT_ENCAPSED_STRING, T_NAME_FULLY_QUALIFIED, T_WHITESPACE], [',', ']', ')'], [T_DOUBLE_COLON, T_CLASS])) {
+            $line = $this->stream->unquotePhpString(trim($line), $line);
             if (!strlen($line)) {
                 continue;
             }
@@ -89,6 +104,9 @@ class ControllerFileParser
         return $result;
     }
 
+    /**
+     * extractPropertyValue
+     */
     protected function extractPropertyValue($property)
     {
         if ($this->stream->getNextExpected(T_WHITESPACE) === null) {
@@ -117,6 +135,9 @@ class ControllerFileParser
         return $value;
     }
 
+    /**
+     * normalizeBehaviorClassName
+     */
     protected function normalizeBehaviorClassName($className)
     {
         $className = str_replace('.', '\\', trim($className));

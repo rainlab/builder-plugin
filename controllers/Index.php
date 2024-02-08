@@ -1,45 +1,57 @@
 <?php namespace RainLab\Builder\Controllers;
 
+use Request;
 use Backend\Classes\Controller;
-use Backend\Traits\InspectableContainer;
 use RainLab\Builder\Widgets\PluginList;
 use RainLab\Builder\Widgets\DatabaseTableList;
 use RainLab\Builder\Widgets\ModelList;
 use RainLab\Builder\Widgets\VersionList;
 use RainLab\Builder\Widgets\LanguageList;
 use RainLab\Builder\Widgets\ControllerList;
-use Backend;
+use RainLab\Builder\Widgets\CodeList;
 use BackendMenu;
-use Config;
 
 /**
- * Builder index controller
+ * Index controller for Builder
  *
  * @package rainlab\builder
  * @author Alexey Bobkov, Samuel Georges
  */
 class Index extends Controller
 {
-    use InspectableContainer;
+    use \Backend\Traits\InspectableContainer;
 
+    /**
+     * @var array implement
+     */
     public $implement = [
-        'RainLab.Builder.Behaviors.IndexPluginOperations',
-        'RainLab.Builder.Behaviors.IndexDatabaseTableOperations',
-        'RainLab.Builder.Behaviors.IndexModelOperations',
-        'RainLab.Builder.Behaviors.IndexModelFormOperations',
-        'RainLab.Builder.Behaviors.IndexModelListOperations',
-        'RainLab.Builder.Behaviors.IndexPermissionsOperations',
-        'RainLab.Builder.Behaviors.IndexMenusOperations',
-        'RainLab.Builder.Behaviors.IndexVersionsOperations',
-        'RainLab.Builder.Behaviors.IndexLocalizationOperations',
-        'RainLab.Builder.Behaviors.IndexControllerOperations',
-        'RainLab.Builder.Behaviors.IndexDataRegistry'
+        \RainLab\Builder\Behaviors\IndexPluginOperations::class,
+        \RainLab\Builder\Behaviors\IndexDatabaseTableOperations::class,
+        \RainLab\Builder\Behaviors\IndexModelOperations::class,
+        \RainLab\Builder\Behaviors\IndexModelFormOperations::class,
+        \RainLab\Builder\Behaviors\IndexModelListOperations::class,
+        \RainLab\Builder\Behaviors\IndexPermissionsOperations::class,
+        \RainLab\Builder\Behaviors\IndexMenusOperations::class,
+        \RainLab\Builder\Behaviors\IndexVersionsOperations::class,
+        \RainLab\Builder\Behaviors\IndexLocalizationOperations::class,
+        \RainLab\Builder\Behaviors\IndexCodeOperations::class,
+        \RainLab\Builder\Behaviors\IndexControllerOperations::class,
+        \RainLab\Builder\Behaviors\IndexImportsOperations::class,
+        \RainLab\Builder\Behaviors\IndexDataRegistry::class
     ];
 
+    /**
+     * @var array requiredPermissions
+     */
     public $requiredPermissions = ['rainlab.builder.manage_plugins'];
 
     /**
-     * Constructor.
+     * @var bool turboVisitControl
+     */
+    public $turboVisitControl = 'reload';
+
+    /**
+     * __construct
      */
     public function __construct()
     {
@@ -47,38 +59,60 @@ class Index extends Controller
 
         BackendMenu::setContext('RainLab.Builder', 'builder', 'database');
 
-        $this->bodyClass = 'compact-container';
-        $this->pageTitle = 'rainlab.builder::lang.plugin.name';
+        $this->bodyClass = 'compact-container sidenav-responsive';
+        $this->pageTitle = "Builder";
+    }
 
+    /**
+     * beforeDisplay
+     */
+    public function beforeDisplay()
+    {
         new PluginList($this, 'pluginList');
-        new DatabaseTableList($this, 'databaseTabelList');
+        new DatabaseTableList($this, 'databaseTableList');
         new ModelList($this, 'modelList');
         new VersionList($this, 'versionList');
         new LanguageList($this, 'languageList');
         new ControllerList($this, 'controllerList');
+        new CodeList($this, 'codeList');
+
+        $this->bindFormWidgetToController();
     }
 
+    /**
+     * bindFormWidgetToController
+     */
+    protected function bindFormWidgetToController()
+    {
+        if (!Request::ajax() || !post('operationClass') || !post('formWidgetAlias')) {
+            return;
+        }
+
+        $extension = $this->asExtension(post('operationClass'));
+        if (!$extension) {
+            return;
+        }
+
+        $extension->bindFormWidgetToController(post('formWidgetAlias'));
+    }
+
+    /**
+     * index
+     */
     public function index()
     {
         $this->addCss('/plugins/rainlab/builder/assets/css/builder.css', 'RainLab.Builder');
 
         // The table widget scripts should be preloaded
         $this->addJs('/modules/backend/widgets/table/assets/js/build-min.js', 'core');
-
-        if (Config::get('develop.decompileBackendAssets', false)) {
-            // Allow decompiled backend assets for RainLab Builder
-            $assets = Backend::decompileAsset('../../plugins/rainlab/builder/assets/js/build.js', true);
-
-            foreach ($assets as $asset) {
-                $this->addJs($asset, 'RainLab.Builder');
-            }
-        } else {
-            $this->addJs('/plugins/rainlab/builder/assets/js/build-min.js', 'RainLab.Builder');
-        }
+        $this->addJs('/plugins/rainlab/builder/assets/js/build-min.js', 'RainLab.Builder');
 
         $this->pageTitleTemplate = '%s Builder';
     }
 
+    /**
+     * setBuilderActivePlugin
+     */
     public function setBuilderActivePlugin($pluginCode, $refreshPluginList = false)
     {
         $this->widget->pluginList->setActivePlugin($pluginCode);
@@ -90,21 +124,28 @@ class Index extends Controller
 
         $result = array_merge(
             $result,
-            $this->widget->databaseTabelList->refreshActivePlugin(),
+            $this->widget->databaseTableList->refreshActivePlugin(),
             $this->widget->modelList->refreshActivePlugin(),
             $this->widget->versionList->refreshActivePlugin(),
             $this->widget->languageList->refreshActivePlugin(),
-            $this->widget->controllerList->refreshActivePlugin()
+            $this->widget->controllerList->refreshActivePlugin(),
+            $this->widget->codeList->refreshActivePlugin()
         );
 
         return $result;
     }
 
+    /**
+     * getBuilderActivePluginVector
+     */
     public function getBuilderActivePluginVector()
     {
         return $this->widget->pluginList->getActivePluginVector();
     }
 
+    /**
+     * updatePluginList
+     */
     public function updatePluginList()
     {
         return $this->widget->pluginList->updateList();

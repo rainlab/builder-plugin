@@ -2,11 +2,12 @@
 
 use SystemException;
 use ApplicationException;
-use Doctrine\DBAL\Types\Type as DoctrineType;
+use Doctrine\DBAL\Types\Types as DoctrineType;
+use RainLab\Builder\Models\BaseModel;
 use Lang;
 
 /**
- * Represents a database column type used in migrations.
+ * MigrationColumnType represents a database column type used in migrations.
  *
  * Important: some Doctrine types map to multiple migration types, for example -
  * Doctrine boolean could be boolean and tinyInteger in migrations.
@@ -46,6 +47,9 @@ class MigrationColumnType extends BaseModel
     const REGEX_LENGTH_SINGLE = '/^([0-9]+)$/';
     const REGEX_LENGTH_DOUBLE = '/^([0-9]+)\,([0-9]+)$/';
 
+    /**
+     * getIntegerTypes
+     */
     public static function getIntegerTypes()
     {
         return [
@@ -55,6 +59,9 @@ class MigrationColumnType extends BaseModel
         ];
     }
 
+    /**
+     * getDecimalTypes
+     */
     public static function getDecimalTypes()
     {
         return [
@@ -63,16 +70,19 @@ class MigrationColumnType extends BaseModel
         ];
     }
 
+    /**
+     * getDoctrineTypeMap
+     */
     public static function getDoctrineTypeMap()
     {
         return [
             self::TYPE_INTEGER => DoctrineType::INTEGER,
             self::TYPE_SMALLINTEGER => DoctrineType::SMALLINT,
             self::TYPE_BIGINTEGER => DoctrineType::BIGINT,
-            self::TYPE_DATE => DoctrineType::DATE,
-            self::TYPE_TIME => DoctrineType::TIME,
-            self::TYPE_DATETIME => DoctrineType::DATETIME,
-            self::TYPE_TIMESTAMP => DoctrineType::DATETIME,
+            self::TYPE_DATE => DoctrineType::DATE_MUTABLE,
+            self::TYPE_TIME => DoctrineType::TIME_MUTABLE,
+            self::TYPE_DATETIME => DoctrineType::DATETIME_MUTABLE,
+            self::TYPE_TIMESTAMP => DoctrineType::DATETIME_MUTABLE,
             self::TYPE_STRING => DoctrineType::STRING,
             self::TYPE_TEXT => DoctrineType::TEXT,
             self::TYPE_BINARY => DoctrineType::BLOB,
@@ -112,7 +122,7 @@ class MigrationColumnType extends BaseModel
         // Some guessing could be required in this method. The method is not
         // 100% reliable.
 
-        if ($type == DoctrineType::DATETIME) {
+        if ($type == DoctrineType::DATETIME_MUTABLE) {
             // The datetime type maps to datetime and timestamp. Use the name
             // guessing as the only possible solution.
 
@@ -203,7 +213,7 @@ class MigrationColumnType extends BaseModel
     }
 
     /**
-     * Converts Doctrine length, precision and scale to migration-compatible length string
+     * doctrineLengthToMigrationLength converts Doctrine length, precision and scale to migration-compatible length string
      * @return string
      */
     public static function doctrineLengthToMigrationLength($column)

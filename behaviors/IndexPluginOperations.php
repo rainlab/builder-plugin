@@ -1,10 +1,8 @@
 <?php namespace RainLab\Builder\Behaviors;
 
 use RainLab\Builder\Classes\IndexOperationsBehaviorBase;
-use RainLab\Builder\Classes\PluginBaseModel;
-use Backend\Behaviors\FormController;
+use RainLab\Builder\Models\PluginBaseModel;
 use ApplicationException;
-use Exception;
 use Input;
 
 /**
@@ -15,7 +13,7 @@ use Input;
  */
 class IndexPluginOperations extends IndexOperationsBehaviorBase
 {
-    protected $baseFormConfigFile = '~/plugins/rainlab/builder/classes/pluginbasemodel/fields.yaml';
+    protected $baseFormConfigFile = '~/plugins/rainlab/builder/models/pluginbasemodel/fields.yaml';
 
     public function onPluginLoadPopup()
     {
@@ -37,7 +35,7 @@ class IndexPluginOperations extends IndexOperationsBehaviorBase
         $pluginCode = Input::get('pluginCode');
 
         $model = $this->loadOrCreateBaseModel($pluginCode);
-        $model->fill($_POST);
+        $model->fill(post());
         $model->save();
 
         if (!$pluginCode) {
@@ -78,7 +76,7 @@ class IndexPluginOperations extends IndexOperationsBehaviorBase
 
     protected function loadOrCreateBaseModel($pluginCode, $options = [])
     {
-        $model = new PluginBaseModel();
+        $model = new PluginBaseModel;
 
         if (!$pluginCode) {
             $model->initDefaults();

@@ -1,0 +1,17 @@
+# ===================================
+#  Form Field Definitions
+# ===================================
+
+fields:
+    toolbar:
+        type: partial
+        path: $/rainlab/builder/behaviors/indexmenusoperations/partials/_toolbar.php
+        cssClass: collapse-visible
+
+secondaryTabs:
+    stretch: true
+    fields:
+        menus:
+            stretch: true
+            tab: rainlab.builder::lang.menu.items
+            type: RainLab\Builder\FormWidgets\MenuEditor

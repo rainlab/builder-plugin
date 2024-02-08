@@ -1,0 +1,186 @@
+.builder-tailor-builder-area {
+    background: var(--bs-body-bg, white);
+
+    ul.tailor-blueprint-list {
+        .clearfix();
+        cursor: pointer;
+        padding: 20px;
+        margin-bottom: 0;
+        list-style: none;
+
+        li {
+            position: relative;
+
+            h4 {
+                text-align: center;
+                border-bottom: 1px dotted @builder-control-border-color;
+                margin: 0 -20px 30px;
+
+                span {
+                    display: inline-block;
+                    color: white;
+                    margin: 0 auto;
+                    border-radius: 8px;
+                    background: @builder-control-tooltip-color;
+                    padding: 7px 10px;
+                    font-size: 13px;
+                    line-height: 100%;
+                    position: relative;
+                    top: 14px;
+                }
+            }
+
+            table.table {
+                margin: 0;
+                td {
+                    font-size: 0.875em;
+
+                    > span {
+                        font-family: var(--bs-font-monospace);
+                        color: @secondary-color;
+                        word-wrap: break-word;
+                        word-break: break-word;
+                    }
+                }
+                th {
+                    font-size: 0.875em;
+                    text-align: right;
+                }
+                th:not(.table-danger) {
+                    color: @text-color;
+                }
+                tr:last-child {
+                    td, th {
+                        border-bottom: none;
+                    }
+                }
+            }
+
+            div.remove-blueprint {
+                font-family: sans-serif;
+                display: none;
+                position: absolute;
+                right: 0;
+                top: 20px;
+                cursor: pointer;
+                width: 21px;
+                height: 21px;
+                padding-left: 6px;
+                font-size: 16px;
+                font-weight: bold;
+                line-height: 21px;
+                border-radius: 20px;
+                background: var(--oc-toolbar-border, #ecf0f1);
+                color: var(--oc-toolbar-color, #95a5a6) !important;
+
+                &:hover {
+                    color: white !important;
+                    background: #c03f31;
+                }
+            }
+
+            &:hover {
+                div.remove-blueprint {
+                    display: block;
+                }
+            }
+
+            &.updating-blueprint:after {
+                background-image:url(../images/loader-transparent.svg);
+                background-size: 15px 15px;
+                background-position: 50% 50%;
+                display: inline-block;
+                width: 15px;
+                height: 15px;
+                content: ' ';
+                margin-right: 13px;
+                position: relative;
+                top: 2px;
+                animation: spin 1s linear infinite;
+            }
+
+            &.updating-blueprint:after {
+                position: absolute;
+                right: -8px;
+                top: 35px;
+            }
+
+            &.updating-blueprint:before {
+                content: '';
+                position: absolute;
+                right: 0;
+                top: 30px;
+                width: 25px;
+                height: 25px;
+                background: rgba(127, 127, 127, 0.1);
+                border-radius: 4px;
+            }
+        }
+
+        .blueprint-container {
+            .clearfix();
+
+            .tailor-blueprint {
+                div.form {
+                    .clearfix();
+                    border: 2px solid @builder-control-border-color;
+                    margin-bottom: 20px;
+                    border-radius: 4px;
+                }
+            }
+
+            &:hover, &.inspector-open {
+                * {
+                    border-color: @builder-hover-color!important;
+                }
+            }
+        }
+    }
+
+    .add-blueprint-button {
+        font-size: 16px;
+        text-align: center;
+        border: 2px dotted var(--oc-dropdown-trigger-border, #dde0e2);
+        height: 64px;
+        margin: 0 20px 40px;
+
+        a {
+            padding: 20px 15px;
+            height: 60px;
+            display: block;
+            text-decoration: none;
+            color: var(--oc-dropdown-trigger-color, #bdc3c7);
+        }
+
+        i {
+            margin-right: 5px;
+        }
+
+        span {
+            position: relative;
+            top: -1px;
+        }
+
+        span.title {
+            font-size: 14px;
+        }
+
+        &:hover {
+            border: 2px dotted @builder-hover-color;
+            background: @builder-hover-color!important;
+
+            a {
+                color: white;
+            }
+        }
+    }
+}
+
+// Fix for the Mac firefox
+html.gecko.mac {
+    .builder-tailor-builder-area {
+        ul.tailor-blueprint-list {
+            padding-right: 40px;
+        }
+    }
+}

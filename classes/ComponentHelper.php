@@ -2,9 +2,10 @@
 
 use Cache;
 use Input;
-use Exception;
-use October\Rain\Support\Traits\Singleton;
+use RainLab\Builder\Models\PluginBaseModel;
+use RainLab\Builder\Models\ModelModel;
 use ApplicationException;
+use Exception;
 
 /**
  * Provides helper methods for Builder CMS components.
@@ -14,10 +15,16 @@ use ApplicationException;
  */
 class ComponentHelper
 {
-    use Singleton;
+    use \October\Rain\Support\Traits\Singleton;
 
+    /**
+     * @var array|null modelListCache
+     */
     protected $modelListCache = null;
 
+    /**
+     * listGlobalModels
+     */
     public function listGlobalModels()
     {
         if ($this->modelListCache !== null) {
@@ -59,6 +66,9 @@ class ComponentHelper
         return $this->modelListCache = $result;
     }
 
+    /**
+     * getModelClassDesignTime
+     */
     public function getModelClassDesignTime()
     {
         $modelClass = trim(Input::get('modelClass'));
@@ -79,6 +89,9 @@ class ComponentHelper
         return $modelClass;
     }
 
+    /**
+     * listModelColumnNames
+     */
     public function listModelColumnNames()
     {
         $modelClass = $this->getModelClassDesignTime();

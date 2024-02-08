@@ -253,12 +253,12 @@
                 $pane = tabsObject.findPaneFromTab($tab)
 
             if (isApplied) {
-                $pane.find('[data-builder-command="version:cmdApplyVersion"]').addClass('hide')
-                $pane.find('[data-builder-command="version:cmdRollbackVersion"]').removeClass('hide')
+                $pane.find('[data-builder-command="version:cmdApplyVersion"]').addClass('hide oc-hide')
+                $pane.find('[data-builder-command="version:cmdRollbackVersion"]').removeClass('hide oc-hide')
             }
             else {
-                $pane.find('[data-builder-command="version:cmdApplyVersion"]').removeClass('hide')
-                $pane.find('[data-builder-command="version:cmdRollbackVersion"]').addClass('hide')
+                $pane.find('[data-builder-command="version:cmdApplyVersion"]').removeClass('hide oc-hide')
+                $pane.find('[data-builder-command="version:cmdRollbackVersion"]').addClass('hide oc-hide')
             }
         }
 

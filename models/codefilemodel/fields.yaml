@@ -1,0 +1,21 @@
+# ===================================
+#  Form Field Definitions
+# ===================================
+
+fields:
+    fileName:
+        label: cms::lang.editor.filename
+        attributes:
+            default-focus: 1
+
+    toolbar:
+        type: partial
+        path: $/rainlab/builder/behaviors/indexcodeoperations/partials/_toolbar.php
+        cssClass: collapse-visible
+
+secondaryTabs:
+    stretch: true
+    fields:
+        content:
+            stretch: true
+            type: codeeditor

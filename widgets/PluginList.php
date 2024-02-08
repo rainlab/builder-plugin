@@ -1,8 +1,8 @@
 <?php namespace RainLab\Builder\Widgets;
 
 use Str;
-use Input;
 use File;
+use Input;
 use Backend\Classes\WidgetBase;
 use System\Classes\PluginManager;
 use RainLab\Builder\Classes\PluginCode;
@@ -20,10 +20,14 @@ class PluginList extends WidgetBase
 {
     use \Backend\Traits\SearchableWidget;
 
-    protected $theme;
-
+    /**
+     * @var string noRecordsMessage
+     */
     public $noRecordsMessage = 'rainlab.builder::lang.plugin.no_records';
 
+    /**
+     * __construct
+     */
     public function __construct($controller, $alias)
     {
         $this->alias = $alias;
@@ -33,7 +37,7 @@ class PluginList extends WidgetBase
     }
 
     /**
-     * Renders the widget.
+     * render the widget.
      * @return string
      */
     public function render()
@@ -41,6 +45,9 @@ class PluginList extends WidgetBase
         return $this->makePartial('body', $this->getRenderData());
     }
 
+    /**
+     * setActivePlugin
+     */
     public function setActivePlugin($pluginCode)
     {
         $pluginCodeObj = new PluginCode($pluginCode);
@@ -48,6 +55,9 @@ class PluginList extends WidgetBase
         $this->putSession('activePlugin', $pluginCodeObj->toCode());
     }
 
+    /**
+     * getActivePluginVector
+     */
     public function getActivePluginVector()
     {
         $pluginCode = $this->getActivePluginCode();
@@ -75,26 +85,34 @@ class PluginList extends WidgetBase
         return null;
     }
 
+    /**
+     * updateList
+     */
     public function updateList()
     {
         return ['#'.$this->getId('plugin-list') => $this->makePartial('items', $this->getRenderData())];
     }
 
-    /*
-     * Event handlers
+    /**
+     * onUpdate
      */
-
     public function onUpdate()
     {
         return $this->updateList();
     }
 
+    /**
+     * onSearch
+     */
     public function onSearch()
     {
         $this->setSearchTerm(Input::get('search'));
         return $this->updateList();
     }
 
+    /**
+     * onToggleFilter
+     */
     public function onToggleFilter()
     {
         $mode = $this->getFilterMode();
@@ -106,10 +124,9 @@ class PluginList extends WidgetBase
         return $result;
     }
 
-    /*
-     * Methods for the internal use
+    /**
+     * getData
      */
-
     protected function getData()
     {
         $plugins = $this->getPluginList();
@@ -149,6 +166,9 @@ class PluginList extends WidgetBase
         return $plugins;
     }
 
+    /**
+     * getPluginList
+     */
     protected function getPluginList()
     {
         $plugins = PluginManager::instance()->getPlugins();
@@ -170,28 +190,40 @@ class PluginList extends WidgetBase
             $result[$code] = $itemInfo;
         }
 
-        uasort($result, function ($a, $b) {
+        uasort($result, function($a, $b) {
             return strcmp(trans($a['name']), trans($b['name']));
         });
 
         return $result;
     }
 
+    /**
+     * setFilterMode
+     */
     protected function setFilterMode($mode)
     {
         $this->putSession('filter', $mode);
     }
 
+    /**
+     * getFilterMode
+     */
     protected function getFilterMode()
     {
         return $this->getSession('filter', 'my');
     }
 
+    /**
+     * getActivePluginCode
+     */
     protected function getActivePluginCode()
     {
         return $this->getSession('activePlugin');
     }
 
+    /**
+     * getRenderData
+     */
     protected function getRenderData()
     {
         return [

@@ -1,0 +1,36 @@
+# ===================================
+#  Field Definitions
+# ===================================
+
+fields:
+    migrate_database:
+        label: Migrate Database
+        comment: Perform a database migration after the import is finished. This optional and you can migrate the database later.
+        type: checkbox
+
+    disable_blueprints:
+        label: Disable Blueprints
+        comment: When the process is complete, rename the blueprint files to use a backup extension (.bak) to disable them.
+        type: checkbox
+
+    delete_blueprint_data:
+        label: Delete Blueprint Data
+        comment: Check this field to delete the data and tables for the selected blueprints.
+        commentHtml: true
+        type: checkbox
+
+    delete_blueprint_data_confirm:
+        type: text
+        comment: Type OK in the field to confirm you want to destroy the existing blueprint data.
+        cssClass: field-indent
+        trigger:
+            action: show
+            field: delete_blueprint_data
+            condition: checked
+    _ruler:
+        type: ruler
+
+    _hint:
+        type: hint
+        mode: warning
+        label: Before clicking Import, please double check the selected blueprints. The import process creates multiple scaffold files for the selected plugin.

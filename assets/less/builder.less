@@ -1,15 +1,26 @@
 @import "../../../../../modules/backend/assets/less/core/boot.less";
 
-@builder-control-border-color: #bdc3c7;
+@builder-control-border-color: var(--oc-document-ruler-tick, #bdc3c7);
+@builder-control-tooltip-color: #72809d;
 @builder-control-text-color: #95a5a6;
-@builder-hover-color: #2581b8;
+@builder-hover-color: var(--oc-selection);
+
+:root, [data-bs-theme="light"] {
+    --oc-builder-control-color: #555;
+}
+
+[data-bs-theme="dark"] {
+    --oc-builder-control-color: #888;
+}
 
 @import "buildingarea.less";
 @import "controlblueprint.less";
 @import "behaviors.less";
 @import "tabs.less";
 @import "menus.less";
+@import "imports.less";
 @import "localization.less";
+@import "codelist.less";
 
 .control-filelist ul li.group.model > h4 a:after {
     content: @random;
@@ -57,7 +68,7 @@ html.gecko .control-filelist ul li.group {
 
 .builder-inspector-container {
     width: 350px;
-    border-left: 1px solid #d9d9d9;
+    border-left: 1px solid var(--bs-border-color, #d9d9d9);
 
     &:empty {
         display: none!important;
@@ -84,7 +95,8 @@ form.hide-secondary-tabs {
 
 // Full height database columns table
 
-form[data-entity=database] {
+form[data-entity=database],
+form[data-entity=models] {
     div.field-datatable {
         position: absolute;
         width: 100%;
@@ -112,19 +124,6 @@ form[data-entity=database] {
     }
 }
 
-// Custom buttons for the toolbar
-
-div.control-table .toolbar a.builder-custom-table-button {
-    &:before {
-        line-height: 17px;
-        font-size: 21px;
-        color: #323e50;
-        margin-right: 5px;
-        top: 3px;
-        .opacity(1);
-    }
-}
-
 // TODO: Move the aux tab styles to the tab.less
 
 .control-tabs {
@@ -147,7 +146,7 @@ div.control-table .toolbar a.builder-custom-table-button {
             padding-bottom: 2px;
             background: white;
             position: relative;
-            
+
             &:before {
                 .border-top(#95a5a6);
             }

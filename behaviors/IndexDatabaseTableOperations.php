@@ -1,11 +1,12 @@
 <?php namespace RainLab\Builder\Behaviors;
 
 use RainLab\Builder\Classes\IndexOperationsBehaviorBase;
-use RainLab\Builder\Classes\DatabaseTableModel;
-use Backend\Behaviors\FormController;
-use RainLab\Builder\Classes\MigrationModel;
+use RainLab\Builder\Models\DatabaseTableModel;
+use RainLab\Builder\Models\MigrationModel;
 use RainLab\Builder\Classes\TableMigrationCodeGenerator;
 use RainLab\Builder\Classes\PluginCode;
+use RainLab\Builder\Models\Settings as PluginSettings;
+use Backend\Behaviors\FormController;
 use ApplicationException;
 use Exception;
 use Request;
@@ -13,22 +14,49 @@ use Input;
 use Lang;
 
 /**
- * Database table management functionality for the Builder index controller
+ * IndexDatabaseTableOperations functionality for the Builder index controller
  *
  * @package rainlab\builder
  * @author Alexey Bobkov, Samuel Georges
  */
 class IndexDatabaseTableOperations extends IndexOperationsBehaviorBase
 {
-    protected $baseFormConfigFile = '~/plugins/rainlab/builder/classes/databasetablemodel/fields.yaml';
-    protected $migrationFormConfigFile = '~/plugins/rainlab/builder/classes/migrationmodel/fields.yaml';
+    /**
+     * @var string baseFormConfigFile
+     */
+    protected $baseFormConfigFile = '~/plugins/rainlab/builder/models/databasetablemodel/fields.yaml';
 
+    /**
+     * @var string migrationFormConfigFile
+     */
+    protected $migrationFormConfigFile = '~/plugins/rainlab/builder/models/migrationmodel/fields.yaml';
+
+    /**
+     * extendBaseFormWidgetConfig
+     */
+    protected function extendBaseFormWidgetConfig($config)
+    {
+        if (PluginSettings::instance()->use_table_comments) {
+            return $config;
+        }
+
+        $configMod = (array) $config;
+
+        array_forget($configMod, 'tabs.fields.columns.columns.comment');
+
+        return (object) $configMod;
+    }
+
+    /**
+     * onDatabaseTableCreateOrOpen
+     */
     public function onDatabaseTableCreateOrOpen()
     {
         $tableName = Input::get('table_name');
         $pluginCodeObj = $this->getPluginCode();
 
         $widget = $this->makeBaseFormWidget($tableName);
+
         $this->vars['tableName'] = $tableName;
 
         $result = [
@@ -45,18 +73,22 @@ class IndexDatabaseTableOperations extends IndexOperationsBehaviorBase
         return $result;
     }
 
+    /**
+     * onDatabaseTableValidateAndShowPopup
+     */
     public function onDatabaseTableValidateAndShowPopup()
     {
         $tableName = Input::get('table_name');
 
         $model = $this->loadOrCreateBaseModel($tableName);
-        $model->fill($this->processColumnData($_POST));
+        $model->fill($this->processColumnData(post()));
 
         $pluginCode = Request::input('plugin_code');
         $model->setPluginCode($pluginCode);
         try {
             $model->validate();
-        } catch (Exception $ex) {
+        }
+        catch (Exception $ex) {
             throw new ApplicationException($ex->getMessage());
         }
 
@@ -76,13 +108,16 @@ class IndexDatabaseTableOperations extends IndexOperationsBehaviorBase
         ]);
     }
 
+    /**
+     * onDatabaseTableMigrationApply
+     */
     public function onDatabaseTableMigrationApply()
     {
         $pluginCode = new PluginCode(Request::input('plugin_code'));
         $model = new MigrationModel();
         $model->setPluginCodeObj($pluginCode);
 
-        $model->fill($_POST);
+        $model->fill(post());
 
         $operation = Input::get('operation');
         $table = Input::get('table');
@@ -100,7 +135,7 @@ class IndexDatabaseTableOperations extends IndexOperationsBehaviorBase
             throw new ApplicationException($ex->getMessage());
         }
 
-        $result = $this->controller->widget->databaseTabelList->updateList();
+        $result = $this->controller->widget->databaseTableList->updateList();
 
         $result = array_merge(
             $result,
@@ -116,7 +151,8 @@ class IndexDatabaseTableOperations extends IndexOperationsBehaviorBase
                 'operation' => $operation,
                 'pluginCode' => $pluginCode->toCode()
             ];
-        } else {
+        }
+        else {
             $widget = $this->makeBaseFormWidget($table);
             $this->vars['tableName'] = $table;
 
@@ -138,6 +174,9 @@ class IndexDatabaseTableOperations extends IndexOperationsBehaviorBase
         return $result;
     }
 
+    /**
+     * onDatabaseTableShowDeletePopup
+     */
     public function onDatabaseTableShowDeletePopup()
     {
         $tableName = Input::get('table_name');
@@ -156,6 +195,9 @@ class IndexDatabaseTableOperations extends IndexOperationsBehaviorBase
         ]);
     }
 
+    /**
+     * getTabTitle
+     */
     protected function getTabTitle($tableName)
     {
         if (!strlen($tableName)) {
@@ -165,6 +207,9 @@ class IndexDatabaseTableOperations extends IndexOperationsBehaviorBase
         return $tableName;
     }
 
+    /**
+     * getTabId
+     */
     protected function getTabId($tableName)
     {
         if (!strlen($tableName)) {
@@ -174,13 +219,15 @@ class IndexDatabaseTableOperations extends IndexOperationsBehaviorBase
         return 'databaseTable-'.$tableName;
     }
 
+    /**
+     * loadOrCreateBaseModel
+     */
     protected function loadOrCreateBaseModel($tableName, $options = [])
     {
         $model = new DatabaseTableModel();
 
         if (!$tableName) {
             $model->name = $this->getPluginCode()->toDatabasePrefix().'_';
-
             return $model;
         }
 
@@ -188,19 +235,24 @@ class IndexDatabaseTableOperations extends IndexOperationsBehaviorBase
         return $model;
     }
 
+    /**
+     * makeMigrationFormWidget
+     */
     protected function makeMigrationFormWidget($migration)
     {
         $widgetConfig = $this->makeConfig($this->migrationFormConfigFile);
-
         $widgetConfig->model = $migration;
         $widgetConfig->alias = 'form_migration_'.uniqid();
 
-        $form = $this->makeWidget('Backend\Widgets\Form', $widgetConfig);
-        $form->context = FormController::CONTEXT_CREATE;
+        $form = $this->makeWidget(\Backend\Widgets\Form::class, $widgetConfig);
+        $form->context = 'create';
 
         return $form;
     }
 
+    /**
+     * processColumnData
+     */
     protected function processColumnData($postData)
     {
         if (!array_key_exists('columns', $postData)) {

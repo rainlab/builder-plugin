@@ -21,7 +21,7 @@
             throw new Error('The Builder index controller should be set when creating an entity controller.')
         }
 
-        // The type name is used mostly for referring to 
+        // The type name is used mostly for referring to
         // DOM objects.
         this.typeName = typeName
 
@@ -34,7 +34,7 @@
     EntityBase.prototype.constructor = EntityBase
 
     EntityBase.prototype.registerHandlers = function() {
-        
+
     }
 
     EntityBase.prototype.invokeCommand = function(command, ev) {
@@ -61,7 +61,7 @@
 
     EntityBase.prototype.getMasterTabsActivePane = function() {
         return this.indexController.getMasterTabActivePane()
-    } 
+    }
 
     EntityBase.prototype.getMasterTabsObject = function() {
         return this.indexController.masterTabsObj
@@ -85,7 +85,7 @@
     }
 
     EntityBase.prototype.unhideFormDeleteButton = function($tabPane) {
-        $('[data-control=delete-button]', $tabPane).removeClass('hide')
+        $('[data-control=delete-button]', $tabPane).removeClass('hide oc-hide')
     }
 
     EntityBase.prototype.forceCloseTab = function($tabPane) {

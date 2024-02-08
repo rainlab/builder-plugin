@@ -1,14 +1,17 @@
 <?php namespace {{ pluginNamespace }}\Controllers;
 
-use Backend\Classes\Controller;
+use Backend;
 use BackendMenu;
+use Backend\Classes\Controller;
 
 class {{ controller }} extends Controller
 {
-    public $implement = [{% for behavior in behaviors %}
-        '{{ behavior }}'{% if not loop.last %},{% endif %}{% endfor %}
+    public $implement = [
+        {% for behavior in behaviors %}\{{ behavior }}::class{% if not loop.last %},
+        {% endif %}{% endfor %}
+
     ];
-    {{ templateParts|raw }}
+{{ templateParts|raw }}
     public function __construct()
     {
         parent::__construct();
@@ -20,4 +23,5 @@ class {{ controller }} extends Controller
 {% endif %}
 {% endif %}
     }
+{{ noListTemplate|raw }}
 }

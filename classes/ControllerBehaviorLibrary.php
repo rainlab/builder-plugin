@@ -17,6 +17,9 @@ class ControllerBehaviorLibrary
 
     protected $behaviors = null;
 
+    /**
+     * getBehaviorInfo
+     */
     public function getBehaviorInfo($behaviorClassName)
     {
         $behaviors = $this->listBehaviors();
@@ -63,6 +66,9 @@ class ControllerBehaviorLibrary
         ];
     }
 
+    /**
+     * listBehaviors
+     */
     public function listBehaviors()
     {
         if ($this->behaviors !== null) {

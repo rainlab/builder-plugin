@@ -2,8 +2,8 @@
 
 use Lang;
 use RainLab\Builder\Classes\BehaviorDesignTimeProviderBase;
-use RainLab\Builder\Classes\ModelListModel;
-use RainLab\Builder\Classes\ModelFormModel;
+use RainLab\Builder\Models\ModelListModel;
+use RainLab\Builder\Models\ModelFormModel;
 use SystemException;
 use ApplicationException;
 
@@ -16,13 +16,13 @@ use ApplicationException;
 class DefaultBehaviorDesignTimeProvider extends BehaviorDesignTimeProviderBase
 {
     protected $defaultBehaviorClasses = [
-        'Backend\Behaviors\FormController' => 'form-controller',
-        'Backend\Behaviors\ListController' => 'list-controller',
-        'Backend\Behaviors\ReorderController' => 'reorder-controller'
+        \Backend\Behaviors\FormController::class => 'form-controller',
+        \Backend\Behaviors\ListController::class => 'list-controller',
+        \Backend\Behaviors\ImportExportController::class => 'import-export-controller'
     ];
 
     /**
-     * Renders behaivor body.
+     * Renders behavior body.
      * @param string $class Specifies the behavior class to render.
      * @param array $properties Behavior property values.
      * @param  \RainLab\Builder\FormWidgets\ControllerBuilder $controllerBuilder ControllerBuilder widget instance.
@@ -56,15 +56,18 @@ class DefaultBehaviorDesignTimeProvider extends BehaviorDesignTimeProviderBase
         }
 
         switch ($class) {
-            case 'Backend\Behaviors\FormController':
+            case \Backend\Behaviors\FormController::class:
                 return $this->getFormControllerDefaultConfiguration($controllerModel, $controllerGenerator);
-            case 'Backend\Behaviors\ListController':
+            case \Backend\Behaviors\ListController::class:
                 return $this->getListControllerDefaultConfiguration($controllerModel, $controllerGenerator);
-            case 'Backend\Behaviors\ReorderController':
-                return $this->getReorderControllerDefaultConfiguration($controllerModel, $controllerGenerator);
+            case \Backend\Behaviors\ImportExportController::class:
+                return $this->getImportExportControllerDefaultConfiguration($controllerModel, $controllerGenerator);
         }
     }
 
+    /**
+     * renderUnknownControl
+     */
     protected function renderUnknownControl($class, $properties)
     {
         return $this->makePartial('behavior-unknown', [
@@ -73,6 +76,9 @@ class DefaultBehaviorDesignTimeProvider extends BehaviorDesignTimeProviderBase
         ]);
     }
 
+    /**
+     * getFormControllerDefaultConfiguration
+     */
     protected function getFormControllerDefaultConfiguration($controllerModel, $controllerGenerator)
     {
         if (!$controllerModel->baseModelClassName) {
@@ -88,10 +94,10 @@ class DefaultBehaviorDesignTimeProvider extends BehaviorDesignTimeProviderBase
             throw new ApplicationException(Lang::get('rainlab.builder::lang.controller.error_model_doesnt_have_forms'));
         }
 
-        $controllerUrl = $this->getControllerlUrl($pluginCodeObj, $controllerModel->controller);
+        $controllerUrl = $this->getControllerUrl($pluginCodeObj, $controllerModel->controller);
 
         $result = [
-            'name' => $controllerModel->controller,
+            'name' => $controllerModel->controllerName,
             'form' => $this->getModelFilePath($pluginCodeObj, $controllerModel->baseModelClassName, $forms[0]),
             'modelClass' => $this->getFullModelClass($pluginCodeObj, $controllerModel->baseModelClassName),
             'defaultRedirect' => $controllerUrl,
@@ -108,6 +114,9 @@ class DefaultBehaviorDesignTimeProvider extends BehaviorDesignTimeProviderBase
         return $result;
     }
 
+    /**
+     * getListControllerDefaultConfiguration
+     */
     protected function getListControllerDefaultConfiguration($controllerModel, $controllerGenerator)
     {
         if (!$controllerModel->baseModelClassName) {
@@ -139,9 +148,9 @@ class DefaultBehaviorDesignTimeProvider extends BehaviorDesignTimeProviderBase
             ]
         ];
 
-        if (in_array('Backend\Behaviors\FormController', $controllerModel->behaviors)) {
-            $updateUrl = $this->getControllerlUrl($pluginCodeObj, $controllerModel->controller).'/update/:id';
-            $createUrl = $this->getControllerlUrl($pluginCodeObj, $controllerModel->controller).'/create';
+        if (array_key_exists(\Backend\Behaviors\FormController::class, $controllerModel->behaviors)) {
+            $updateUrl = $this->getControllerUrl($pluginCodeObj, $controllerModel->controller).'/update/:id';
+            $createUrl = $this->getControllerUrl($pluginCodeObj, $controllerModel->controller).'/create';
 
             $result['recordUrl'] = $updateUrl;
 
@@ -149,48 +158,61 @@ class DefaultBehaviorDesignTimeProvider extends BehaviorDesignTimeProviderBase
             $controllerGenerator->setTemplateVariable('createUrl', $createUrl);
         }
 
-        if (in_array('Backend\Behaviors\ReorderController', $controllerModel->behaviors)) {
-            $reorderUrl = $this->getControllerlUrl($pluginCodeObj, $controllerModel->controller).'/reorder';
-            $controllerGenerator->setTemplateVariable('hasReorderBehavior', true);
-            $controllerGenerator->setTemplateVariable('reorderUrl', $reorderUrl);
+        if (in_array(\Backend\Behaviors\ImportExportController::class, $controllerModel->behaviors)) {
+            $importUrl = $this->getControllerUrl($pluginCodeObj, $controllerModel->controller).'/import';
+            $exportUrl = $this->getControllerUrl($pluginCodeObj, $controllerModel->controller).'/export';
+            $controllerGenerator->setTemplateVariable('hasImportExportBehavior', true);
+            $controllerGenerator->setTemplateVariable('importUrl', $importUrl);
+            $controllerGenerator->setTemplateVariable('exportUrl', $exportUrl);
         }
 
         return $result;
     }
 
-    protected function getReorderControllerDefaultConfiguration($controllerModel, $controllerGenerator)
+    /**
+     * getImportExportControllerDefaultConfiguration
+     */
+    protected function getImportExportControllerDefaultConfiguration($controllerModel, $controllerGenerator)
     {
         if (!$controllerModel->baseModelClassName) {
             throw new ApplicationException(Lang::get('rainlab.builder::lang.controller.error_behavior_requires_base_model', [
-                'behavior' => 'Reorder Controller'
+                'behavior' => 'Import Export Controller'
             ]));
         }
 
         $pluginCodeObj = $controllerModel->getPluginCodeObj();
 
         $result = [
-            'title' => $controllerModel->controller,
-            'modelClass' => $this->getFullModelClass($pluginCodeObj, $controllerModel->baseModelClassName),
-            'toolbar' => [
-                'buttons' => 'reorder_toolbar',
-            ]
+            'import.title' => $controllerModel->controller,
+            'import.modelClass' => $this->getFullModelClass($pluginCodeObj, $controllerModel->baseModelClassName),
+            'export.title' => $controllerModel->controller,
+            'export.modelClass' => $this->getFullModelClass($pluginCodeObj, $controllerModel->baseModelClassName),
         ];
 
         return $result;
     }
 
+    /**
+     * getFullModelClass
+     */
     protected function getFullModelClass($pluginCodeObj, $modelClassName)
     {
         return $pluginCodeObj->toPluginNamespace().'\\Models\\'.$modelClassName;
     }
 
+    /**
+     * getModelFilePath
+     */
     protected function getModelFilePath($pluginCodeObj, $modelClassName, $file)
     {
         return '$/' . $pluginCodeObj->toFilesystemPath() . '/models/' . strtolower($modelClassName) . '/' . $file;
     }
 
-    protected function getControllerlUrl($pluginCodeObj, $controller)
+    /**
+     * getControllerUrl
+     */
+    protected function getControllerUrl($pluginCodeObj, $controller)
     {
-         return $pluginCodeObj->toUrl().'/'.strtolower($controller);
+        return $pluginCodeObj->toUrl().'/'.strtolower($controller);
     }
 }

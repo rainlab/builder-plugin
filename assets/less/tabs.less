@@ -32,13 +32,31 @@
 
                 &.global  {
                     top: 5px;
-                    right: 15px;
+                    right: 0;
+                    padding-right: 10px;
+                    background: @body-bg;
+                    z-index: 110;
+                    border-radius: 3px;
+
+                    > div {
+                        width: 24px;
+                        height: 24px;
+                        border-radius: 3px;
+                        background: @toolbar-bg;
+                        padding-left: 10px;
+                        padding-top: 5px;
+
+                        &:active {
+                            background: @toolbar-focus-bg;
+                        }
+                    }
                 }
             }
         }
 
         > ul.tabs {
             margin: 0;
+            padding-right: 50px;
             list-style: none;
             font-size: 0;
             white-space: nowrap;
@@ -46,7 +64,7 @@
             position: relative;
 
             > li {
-                .user-select(none);
+                user-select: none;
                 display: inline-block;
                 font-size: 13px;
                 white-space: nowrap;
@@ -55,16 +73,16 @@
 
                 > div.tab-container {
                     position: relative;
-                    color: #bdc3c7!important;
+                    color: @tab-color !important;
 
                     > div {
-                        .transition(padding .1s);
+                        transition: padding .1s;
                         position: relative;
                     }
                 }
 
                 &:hover > div {
-                    color: #95a5a6!important;
+                    color: @tab-active-color !important;
                 }
 
                 .tab-control {
@@ -82,7 +100,7 @@
                         color: #95a5a6;
 
                         &:hover {
-                            color: @link-color!important;
+                            color: @link-color !important;
                         }
                     }
 
@@ -94,7 +112,7 @@
 
                 &.active {
                     > div.tab-container {
-                        color: #95a5a6!important;
+                        color: @tab-active-color !important;
                     }
 
                     .tab-control {
@@ -121,7 +139,7 @@
     &.primary {
         > .tabs {
             > ul.tabs {
-                padding: 0 20px 0 40px;
+                padding: 0 40px 0 40px;
                 height: 31px;
 
                 &:after {
@@ -132,12 +150,13 @@
                     left: 0;
                     bottom: 0;
                     width: 100%;
-                    background: #bdc3c7;
+                    // background: #bdc3c7;
+                    background: transparent linear-gradient(90deg, #bdc3c7 90%, transparent 100%);
                     z-index: 106;
                 }
 
                 > li {
-                    bottom: -2px; 
+                    bottom: -3px;
                     margin-left: -20px;
                     z-index: 105;
 
@@ -147,52 +166,45 @@
 
                         > div {
                             padding: 5px 5px 0 5px;
-                            border-top: 2px solid #e5e5e5; 
+                            background: white;
 
                             > span {
                                 position: relative;
-                                top: -2px;
-                                .transition(top .1s);
+                                top: -4px;
+                                transition: top .1s;
                             }
-                        }
-
-                        &:before, &:after {
-                            content: '';
-                            display: block;
-                            position: absolute;
-                            top: 0;
-                            height: 27px;
-                            width: 21px;
-                            background: transparent url(../images/tab.png) no-repeat;
-                        }
-
-                        &:before {
-                            left: 0;
-                            background-position: 0 -27px;
-                        }
-
-                        &:after {
-                            right: 0;
-                            background-position: -75px -27px;
                         }
                     }
 
                     &.active {
                         z-index: 107;
+                        color: var(--oc-tab-active-color);
 
                         > div.tab-container {
 
+                            &:before, &:after {
+                                content: '';
+                                display: block;
+                                position: absolute;
+                                top: 0;
+                                height: 27px;
+                                width: 21px;
+                                background: transparent url(../images/tab.png) no-repeat;
+                            }
+
                             &:before {
+                                left: 0;
                                 background-position: 0 0;
                             }
 
                             &:after {
+                                right: 0;
                                 background-position: -75px 0;
                             }
 
                             > div {
                                 padding-right: 30px;
-                                border-top: 2px solid #bdc3c7; 
+                                border-top: 2px solid #bdc3c7;
 
                                 > span {
                                     top: 0;
@@ -252,7 +264,7 @@
                         }
                     }
 
-                    .tab-control { 
+                    .tab-control {
                         right: 23px;
                         top: 7px;
 
@@ -284,7 +296,7 @@
 
                         > div.tab-container {
                             > div {
-                                color: #555555;
+                                color: var(--oc-builder-control-color);
                                 padding-right: 30px;
                             }
                         }
@@ -295,13 +307,25 @@
     }
 }
 
-html.gecko {
-    .builder-tabs.primary > .tabs > ul.tabs > li {
-        // Fixes a visual glitch in FireFox, noticed in v. 42 on Mac.
-        //
-        bottom: -3px; 
-        > div.tab-container > div {
-            padding-top: 5px;
-        }
+// html.gecko {
+//     .builder-tabs.primary > .tabs > ul.tabs > li {
+//         // Fixes a visual glitch in FireFox, noticed in v. 42 on Mac.
+//         bottom: -3px;
+//         > div.tab-container > div {
+//             padding-top: 5px;
+//         }
+//     }
+// }
+
+
+[data-bs-theme="dark"] {
+    .builder-tabs.primary > .tabs > ul.tabs > li.active:before,
+    .builder-tabs.primary > .tabs > ul.tabs > li > div.tab-container > div {
+        background: #202124;
+    }
+
+    .builder-tabs.primary > .tabs > ul.tabs > li.active > div.tab-container:before,
+    .builder-tabs.primary > .tabs > ul.tabs > li.active > div.tab-container:after {
+        background-image: url(../images/tab-dark.png);
     }
 }

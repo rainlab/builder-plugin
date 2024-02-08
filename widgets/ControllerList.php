@@ -3,10 +3,10 @@
 use Str;
 use Input;
 use Backend\Classes\WidgetBase;
-use RainLab\Builder\Classes\ControllerModel;
+use RainLab\Builder\Models\ControllerModel;
 
 /**
- * Plugin controller list widget.
+ * ControllerList widget.
  *
  * @package rainlab\builder
  * @author Alexey Bobkov, Samuel Georges
@@ -15,8 +15,14 @@ class ControllerList extends WidgetBase
 {
     use \Backend\Traits\SearchableWidget;
 
+    /**
+     * @var string noRecordsMessage
+     */
     public $noRecordsMessage = 'rainlab.builder::lang.controller.no_records';
 
+    /**
+     * __construct
+     */
     public function __construct($controller, $alias)
     {
         $this->alias = $alias;
@@ -26,7 +32,7 @@ class ControllerList extends WidgetBase
     }
 
     /**
-     * Renders the widget.
+     * render the widget.
      * @return string
      */
     public function render()
@@ -34,35 +40,46 @@ class ControllerList extends WidgetBase
         return $this->makePartial('body', $this->getRenderData());
     }
 
+    /**
+     * updateList
+     */
     public function updateList()
     {
-        return ['#'.$this->getId('plugin-controller-list') => $this->makePartial('items', $this->getRenderData())];
+        return [
+            '#'.$this->getId('plugin-controller-list') => $this->makePartial('items', $this->getRenderData())
+        ];
     }
 
+    /**
+     * refreshActivePlugin
+     */
     public function refreshActivePlugin()
     {
-        return ['#'.$this->getId('body') => $this->makePartial('widget-contents', $this->getRenderData())];
+        return [
+            '#'.$this->getId('body') => $this->makePartial('widget-contents', $this->getRenderData())
+        ];
     }
 
-    /*
-     * Event handlers
+    /**
+     * onUpdate
      */
-
     public function onUpdate()
     {
         return $this->updateList();
     }
 
+    /**
+     * onSearch
+     */
     public function onSearch()
     {
         $this->setSearchTerm(Input::get('search'));
         return $this->updateList();
     }
 
-    /*
-     * Methods for the internal use
+    /**
+     * getControllerList
      */
-
     protected function getControllerList($pluginCode)
     {
         $result = ControllerModel::listPluginControllers($pluginCode);
@@ -70,12 +87,15 @@ class ControllerList extends WidgetBase
         return $result;
     }
 
+    /**
+     * getRenderData
+     */
     protected function getRenderData()
     {
         $activePluginVector = $this->controller->getBuilderActivePluginVector();
         if (!$activePluginVector) {
             return [
-                'pluginVector'=>null,
+                'pluginVector' => null,
                 'items' => []
             ];
         }
@@ -97,8 +117,8 @@ class ControllerList extends WidgetBase
         }
 
         return [
-            'pluginVector'=>$activePluginVector,
-            'items'=>$items
+            'pluginVector' => $activePluginVector,
+            'items' => $items
         ];
     }
 }

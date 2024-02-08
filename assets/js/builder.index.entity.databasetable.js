@@ -129,7 +129,7 @@
 
         // Some migration-related rules are enforced here:
         //
-        // 1. Checking Autoincrement checkbox automatically checks the Unsigned checkbox (this corresponds to the 
+        // 1. Checking Autoincrement checkbox automatically checks the Unsigned checkbox (this corresponds to the
         //    logic internally implemented in Laravel schema builder) and PK
         // 2. Unchecking Unsigned unchecks Autoincrement
         // 3. Checking the PK column unchecks Nullable
@@ -186,20 +186,20 @@
     // ============================
 
     DatabaseTable.prototype.registerHandlers = function() {
-        this.indexController.$masterTabs.on('oc.tableCellChanged', this.proxy(this.onTableCellChanged))
+        this.indexController.$masterTabs.on('oc.tableCellChanged', this.proxy(this.onTableCellChanged));
     }
 
     DatabaseTable.prototype.validateTable = function($target) {
-        var tableObj = this.getTableControlObject($target)
+        var tableObj = this.getTableControlObject($target);
 
-        tableObj.unfocusTable()
-        return tableObj.validate()
+        tableObj.unfocusTable();
+        return tableObj.validate();
     }
 
     DatabaseTable.prototype.getTableData = function($target) {
-        var tableObj = this.getTableControlObject($target)
+        var tableObj = this.getTableControlObject($target);
 
-        return tableObj.dataSource.getAllData()
+        return tableObj.dataSource.getAllData();
     }
 
     DatabaseTable.prototype.getTableControlObject = function($target) {

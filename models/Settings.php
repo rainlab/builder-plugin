@@ -3,7 +3,7 @@
 use October\Rain\Database\Model;
 
 /**
- * Builder settings model
+ * Settings for builder
  *
  * @package rainlab\builder
  * @author Alexey Bobkov, Samuel Georges
@@ -13,14 +13,23 @@ class Settings extends Model
 {
     use \October\Rain\Database\Traits\Validation;
 
-    public $implement = ['System.Behaviors.SettingsModel'];
+    /**
+     * @var array implement behaviors
+     */
+    public $implement = [\System\Behaviors\SettingsModel::class];
 
+    /**
+     * @var string settingsCode is a unique code for this object.
+     */
     public $settingsCode = 'rainlab_builder_settings';
 
+    /**
+     * @var mixed settingsFields defitions
+     */
     public $settingsFields = 'fields.yaml';
 
     /**
-     * Validation rules
+     * @var array rules to be applied to the data.
      */
     public $rules = [
         'author_name' => 'required',

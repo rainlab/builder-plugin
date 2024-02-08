@@ -64,6 +64,14 @@ class MigrationFileParser
             return null;
         }
 
-        return $stream->getNextExpectedTerminated([T_STRING, T_NS_SEPARATOR], [T_WHITESPACE, ';']);
+        $expected = [T_STRING, T_NS_SEPARATOR];
+
+        // Namespace string on PHP 8.0 returns code 314 (T_NAME_QUALIFIED)
+        // @deprecated combine when min req > php 8
+        if (defined('T_NAME_QUALIFIED') && T_NAME_QUALIFIED > 0) {
+            $expected[] = T_NAME_QUALIFIED;
+        }
+
+        return $stream->getNextExpectedTerminated($expected, [T_WHITESPACE, ';']);
     }
 }

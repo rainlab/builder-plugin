@@ -1,11 +1,11 @@
 <?php
 
-use RainLab\Builder\Classes\ModelModel;
+use RainLab\Builder\Models\ModelModel;
 use RainLab\Builder\Classes\PluginCode;
 
 class ModelModelTest extends TestCase
 {
-    public function tearDown()
+    public function tearDown(): void
     {
         // Ensure cleanup for testGetModelFields
         @unlink(__DIR__.'/../../../models/MyMock.php');

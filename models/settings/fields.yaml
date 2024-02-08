@@ -1,13 +1,30 @@
-fields:
-    author_name:
-        span: left
-        label: rainlab.builder::lang.author_name.title
-        commentAbove: rainlab.builder::lang.author_name.description
+# ===================================
+#  Field Definitions
+# ===================================
 
-    author_namespace:
-        span: right
-        label: rainlab.builder::lang.author_namespace.title
-        commentAbove: rainlab.builder::lang.author_namespace.description
-        preset:
-            field: author_name
-            type: namespace
+tabs:
+    fields:
+        # Author Name
+        author_name:
+            tab: Author
+            span: auto
+            label: rainlab.builder::lang.author_name.title
+            commentAbove: rainlab.builder::lang.author_name.description
+
+        # Author Namespace
+        author_namespace:
+            tab: Author
+            span: auto
+            label: rainlab.builder::lang.author_namespace.title
+            commentAbove: rainlab.builder::lang.author_namespace.description
+            preset:
+                field: author_name
+                type: namespace
+
+        # Include Table Comments
+        use_table_comments:
+            tab: Config
+            span: auto
+            label: rainlab.builder::lang.config.use_table_comments_label
+            comment: rainlab.builder::lang.config.use_table_comments_comment
+            type: switch

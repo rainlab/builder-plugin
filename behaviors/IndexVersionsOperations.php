@@ -1,7 +1,7 @@
 <?php namespace RainLab\Builder\Behaviors;
 
 use RainLab\Builder\Classes\IndexOperationsBehaviorBase;
-use RainLab\Builder\Classes\MigrationModel;
+use RainLab\Builder\Models\MigrationModel;
 use RainLab\Builder\Classes\PluginCode;
 use ApplicationException;
 use Exception;
@@ -18,7 +18,7 @@ use Lang;
  */
 class IndexVersionsOperations extends IndexOperationsBehaviorBase
 {
-    protected $baseFormConfigFile = '~/plugins/rainlab/builder/classes/migrationmodel/management-fields.yaml';
+    protected $baseFormConfigFile = '~/plugins/rainlab/builder/models/migrationmodel/management-fields.yaml';
 
     public function onVersionCreateOrOpen()
     {
@@ -55,7 +55,7 @@ class IndexVersionsOperations extends IndexOperationsBehaviorBase
     public function onVersionSave()
     {
         $model = $this->loadOrCreateListFromPost();
-        $model->fill($_POST);
+        $model->fill(post());
         $model->save(false);
 
         Flash::success(Lang::get('rainlab.builder::lang.version.saved'));
@@ -85,7 +85,7 @@ class IndexVersionsOperations extends IndexOperationsBehaviorBase
         // Save the version before applying it
         //
         $model = $this->loadOrCreateListFromPost();
-        $model->fill($_POST);
+        $model->fill(post());
         $model->save(false);
 
         // Apply the version
@@ -109,7 +109,7 @@ class IndexVersionsOperations extends IndexOperationsBehaviorBase
         // Save the version before rolling it back
         //
         $model = $this->loadOrCreateListFromPost();
-        $model->fill($_POST);
+        $model->fill(post());
         $model->save(false);
 
         // Rollback the version
