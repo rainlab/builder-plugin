@@ -399,7 +399,7 @@
     'property_datatable_width_regex' => 'Width must be a number in pixels',
     'property_datatable_adding' => 'Allow Adding',
     'property_datatable_adding_description' => 'Allow records to be added.',
-    'property_datatable_deleting' => 'Allow Adding',
+    'property_datatable_deleting' => 'Allow Deleting',
     'property_datatable_deleting_description' => 'Allow records to be deleted.',
     'property_datatable_searching' => 'Searching',
     'property_datatable_searching_description' => 'Allow records to be searched.',
