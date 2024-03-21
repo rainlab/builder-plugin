@@ -46,3 +46,4 @@ v2.0.3: Fixes missing import in CMS components.
 v2.0.4: Fixes bad method name in controller model.
 v2.0.5: Fixes bug adding data table controls.
 v2.0.6: Fixes importing Tailor multisite globals.
+v2.0.7: Compatibility fixes for October v3.6
