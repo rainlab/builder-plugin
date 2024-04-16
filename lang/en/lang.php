@@ -738,7 +738,7 @@
   ],
   'common' => [
     'error_file_exists' => 'File already exists: \':path\'.',
-    'field_icon_description' => 'October CMS uses Font Awesome icons: http://octobercms.com/docs/ui/icon',
+    'field_icon_description' => 'October CMS uses Font Awesome icons: https://octobercms.com/docs/ui/icon',
     'destination_dir_not_exists' => 'The destination directory doesn\'t exist: \':path\'.',
     'error_make_dir' => 'Error creating directory: \':name\'.',
     'error_dir_exists' => 'Directory already exists: \':path\'.',

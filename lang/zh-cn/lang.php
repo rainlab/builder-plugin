@@ -650,7 +650,7 @@
   ],
   'common' => [
     'error_file_exists' => '文件已存在: \':path\'.',
-    'field_icon_description' => 'October 使用字体图标: http://octobercms.com/docs/ui/icon',
+    'field_icon_description' => 'October 使用字体图标: https://octobercms.com/docs/ui/icon',
     'destination_dir_not_exists' => '目标目录不存在: \':path\'.',
     'error_make_dir' => '创建目录错误: \':name\'.',
     'error_dir_exists' => '目录已存在: \':path\'.',

@@ -86,7 +86,7 @@ class TailorBlueprintLibrary
      * @param string $description Specifies the blueprint description.
      * @param array $properties Specifies the blueprint properties.
      * The property definitions should be compatible with Inspector properties, similarly
-     * to the Component properties: http://octobercms.com/docs/plugin/components#component-properties
+     * to the Component properties: https://octobercms.com/docs/plugin/components#component-properties
      * @param string $designTimeProviderClass Specifies the blueprint design-time provider class name.
      * The class should extend RainLab\Builder\Classes\BlueprintDesignTimeProviderBase. If the class is not provided,
      * the default control design and design settings will be used.

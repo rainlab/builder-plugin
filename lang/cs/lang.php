@@ -541,7 +541,7 @@
   ],
   'common' => [
     'error_file_exists' => 'Soubor již existuje: \':path\'.',
-    'field_icon_description' => 'October používá ikony Font Autumn: http://octobercms.com/docs/ui/icon',
+    'field_icon_description' => 'October používá ikony Font Autumn: https://octobercms.com/docs/ui/icon',
     'destination_dir_not_exists' => 'Cílový adresář neexistuje: \':path\'.',
     'error_make_dir' => 'Chyba vytváření adresáře: \':name\'.',
     'error_dir_exists' => 'Adresář již existuje: \':path\'.',

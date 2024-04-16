@@ -562,7 +562,7 @@
   ],
   'common' => [
     'error_file_exists' => 'El archivo ya existe: \':path\'.',
-    'field_icon_description' => 'October usa Font Autumn icons: http://octobercms.com/docs/ui/icon',
+    'field_icon_description' => 'October usa Font Autumn icons: https://octobercms.com/docs/ui/icon',
     'destination_dir_not_exists' => 'El directorio de destino no existe: \':path\'.',
     'error_make_dir' => 'Error al crear directorio: \':name\'.',
     'error_dir_exists' => 'El directorio ya existe!: \':path\'.',

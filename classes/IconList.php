@@ -2,7 +2,7 @@
 
 /**
  * Contains a list of icons that can be used by plugins.
- * @see http://octobercms.com/docs/ui/icon
+ * @see https://octobercms.com/docs/ui/icon
  *
  * @package rainlab\builder
  * @author Alexey Bobkov, Samuel Georges

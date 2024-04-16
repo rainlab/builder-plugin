@@ -603,7 +603,7 @@
   ],
   'common' => [
     'error_file_exists' => 'Plik już istnieje: \':path\'.',
-    'field_icon_description' => 'October używa ikon Font Autumn: http://octobercms.com/docs/ui/icon',
+    'field_icon_description' => 'October używa ikon Font Autumn: https://octobercms.com/docs/ui/icon',
     'destination_dir_not_exists' => 'Folder docelowy nie istnieje: \':path\'.',
     'error_make_dir' => 'Błąd podczas tworzenia folderu: \':name\'.',
     'error_dir_exists' => 'Folder już istnieje: \':path\'.',

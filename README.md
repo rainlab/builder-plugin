@@ -99,7 +99,7 @@ When a new plugin is created, it's automatically selected as the current plugin 
 
 Tables are managed on the Database tab of Builder. You can create tables, update their structure and delete tables with the visual interface.
 
-Click Add button to open the Create Table tab. Builder automatically generates prefixes for plugin tables. The prefixes are compliant with the [Developer Guidelines](http://octobercms.com/docs/help/developer-guide) for the Marketplace plugins.
+Click Add button to open the Create Table tab. Builder automatically generates prefixes for plugin tables. The prefixes are compliant with the [Developer Guidelines](https://octobercms.com/docs/help/developer-guide) for the Marketplace plugins.
 
 Every time when you save changes in a table, Builder shows a popup window with the automatically generated migration PHP code. You can't edit the code in the popup, but you can inspect it or copy to the clipboard. After reviewing the migration, click Save & Apply button. Builder executes the migration immediately and saves the migration file to the plugin's **updates** directory. Afterwards you can find all plugin migrations on the Versions tab of Builder.
 

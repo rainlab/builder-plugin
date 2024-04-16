@@ -85,10 +85,10 @@ class ControlLibrary
      * Control groups are used to create tabs in the Control Palette in Form Builder.
      * The group could one of the ControlLibrary::GROUP_ constants or a string.
      * @param string $icon Specifies the control icon for the Control Palette.
-     * @see http://octobercms.com/docs/ui/icon
+     * @see https://octobercms.com/docs/ui/icon
      * @param array $properties Specifies the control properties.
      * The property definitions should be compatible with Inspector properties, similarly
-     * to the Component properties: http://octobercms.com/docs/plugin/components#component-properties
+     * to the Component properties: https://octobercms.com/docs/plugin/components#component-properties
      * Use the getStandardProperties() of the ControlLibrary to get the standard control properties.
      * @param string $designTimeProviderClass Specifies the control design-time provider class name.
      * The class should extend RainLab\Builder\Classes\ControlDesignTimeProviderBase. If the class is not provided,
