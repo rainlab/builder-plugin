@@ -52,6 +52,11 @@ class ComponentHelper
                 foreach ($models as $model) {
                     $fullClassName = $pluginModelsNamespace.$model->className;
 
+                    // Exclude builder models
+                    if (str_starts_with($fullClassName, 'RainLab\Builder')) {
+                        continue;
+                    }
+
                     $result[$fullClassName] = $pluginCodeStr.' - '.$model->className;
                 }
             }
