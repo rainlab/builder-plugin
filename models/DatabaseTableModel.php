@@ -1,11 +1,13 @@
 <?php namespace RainLab\Builder\Models;
 
+use Doctrine\DBAL\DriverManager;
+use Doctrine\DBAL\Configuration;
+use Doctrine\DBAL\Types\Type;
 use RainLab\Builder\Classes\DatabaseTableSchemaCreator;
 use RainLab\Builder\Classes\EnumDbType;
 use RainLab\Builder\Classes\MigrationColumnType;
 use RainLab\Builder\Classes\PluginCode;
 use RainLab\Builder\Classes\TableMigrationCodeGenerator;
-use Doctrine\DBAL\Types\Type;
 use ApplicationException;
 use ValidationException;
 use SystemException;
@@ -406,19 +408,48 @@ class DatabaseTableModel extends BaseModel
      */
     protected static function getSchemaManager()
     {
-        if (!self::$schemaManager) {
-            self::$schemaManager = Schema::getConnection()->getDoctrineSchemaManager();
-
-            Type::addType('enumdbtype', \RainLab\Builder\Classes\EnumDbType::class);
-
-            // Fixes the problem with enum column type not supported
-            // by Doctrine (https://github.com/laravel/framework/issues/1346)
-            $platform = self::$schemaManager->getDatabasePlatform();
-            $platform->registerDoctrineTypeMapping('enum', 'enumdbtype');
-            $platform->registerDoctrineTypeMapping('json', 'text');
+        if (self::$schemaManager) {
+            return self::$schemaManager;
         }
 
+        $connection = static::getDoctrineConnection();
+        self::$schemaManager = $connection->createSchemaManager();
+
+        Type::addType('enumdbtype', \RainLab\Builder\Classes\EnumDbType::class);
+
+        // Fixes the problem with enum column type not supported
+        // by Doctrine (https://github.com/laravel/framework/issues/1346)
+        $platform = $connection->getDatabasePlatform();
+        $platform->registerDoctrineTypeMapping('enum', 'enumdbtype');
+        $platform->registerDoctrineTypeMapping('json', 'text');
+
         return self::$schemaManager;
+    }
+
+    /**
+     * getDoctrineConnection returns an instance of the doctrine connection
+     */
+    protected static function getDoctrineConnection()
+    {
+        $pdo = Db::connection()->getPdo();
+        $driver = Db::connection()->getDriverName();
+
+        // Map Laravel driver to Doctrine driver
+        $doctrineDriver = match ($driver) {
+            'mysql' => 'pdo_mysql',
+            'pgsql' => 'pdo_pgsql',
+            'sqlite' => 'pdo_sqlite',
+            'sqlsrv' => 'pdo_sqlsrv',
+            default => throw new \InvalidArgumentException("Unsupported driver: {$driver}"),
+        };
+
+        $config = new Configuration();
+        $connection = DriverManager::getConnection([
+            'pdo' => $pdo,
+            'driver' => $doctrineDriver,
+        ], $config);
+
+        return $connection;
     }
 
     /**
