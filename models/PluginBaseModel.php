@@ -88,7 +88,7 @@ class PluginBaseModel extends PluginYamlModel
         'author'   => ['required'],
         'namespace'   => ['required', 'regex:/^[a-z]+[a-z0-9]+$/i', 'reserved'],
         'author_namespace' => ['required', 'regex:/^[a-z]+[a-z0-9]+$/i', 'reserved'],
-        'homepage' => 'url'
+        'homepage' => ['url', 'nullable']
     ];
 
     /**
