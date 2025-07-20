@@ -17,7 +17,7 @@ class FilterElementContainer implements FilterElement
     /**
      * defineScope adds a scope to the list element
      */
-    public function defineScope(string $scopeName = null, string $label = null): ScopeDefinition
+    public function defineScope(?string $scopeName = null, ?string $label = null): ScopeDefinition
     {
         $scope = (new ScopeDefinition)->label($label)->displayAs('text');
 

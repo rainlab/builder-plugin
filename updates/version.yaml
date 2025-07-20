@@ -47,3 +47,4 @@ v2.0.4: Fixes bad method name in controller model.
 v2.0.5: Fixes bug adding data table controls.
 v2.0.6: Fixes importing Tailor multisite globals.
 v2.0.7: Compatibility fixes for October v3.6
+v3.0.0: Latest version for October v4.0
