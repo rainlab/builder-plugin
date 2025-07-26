@@ -431,25 +431,48 @@ class DatabaseTableModel extends BaseModel
      */
     protected static function getDoctrineConnection()
     {
-        $pdo = Db::connection()->getPdo();
-        $driver = Db::connection()->getDriverName();
+        // Get Laravel connection and driver name
+        $connection = Db::connection();
+        $driver = $connection->getDriverName();
 
-        // Map Laravel driver to Doctrine driver
+        // Map Laravel drivers to Doctrine drivers
         $doctrineDriver = match ($driver) {
-            'mysql' => 'pdo_mysql',
+            'mysql', 'mariadb' => 'pdo_mysql',
             'pgsql' => 'pdo_pgsql',
             'sqlite' => 'pdo_sqlite',
             'sqlsrv' => 'pdo_sqlsrv',
             default => throw new \InvalidArgumentException("Unsupported driver: {$driver}"),
         };
 
-        $config = new Configuration();
-        $connection = DriverManager::getConnection([
-            'pdo' => $pdo,
-            'driver' => $doctrineDriver,
-        ], $config);
+        // Get full config array for this connection
+        $configArray = config('database.connections.' . $connection->getName());
 
-        return $connection;
+        // Build Doctrine connection params
+        $params = [
+            'driver' => $doctrineDriver,
+            'host' => $configArray['host'] ?? null,
+            'port' => $configArray['port'] ?? null,
+            'user' => $configArray['username'] ?? null,
+            'password' => $configArray['password'] ?? null,
+            'dbname' => $configArray['database'] ?? null,
+            'charset' => $configArray['charset'] ?? null,
+        ];
+
+        // SQLite: file path is in 'database'
+        if ($doctrineDriver === 'pdo_sqlite') {
+            $params['path'] = $configArray['database'];
+            unset($params['host'], $params['port'], $params['dbname']);
+        }
+
+        // Remove null values (Doctrine expects only populated keys)
+        $params = array_filter($params, static fn($v) => !is_null($v));
+
+        // Support sslmode for pgsql
+        if (isset($configArray['sslmode'])) {
+            $params['sslmode'] = $configArray['sslmode'];
+        }
+
+        return DriverManager::getConnection($params, new Configuration);
     }
 
     /**
