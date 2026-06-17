@@ -24,6 +24,7 @@ tabs:
             tab: rainlab.builder::lang.database.tab_columns
             type: datatable
             useLegacy: true
+            legacyMode: true
             btnAddRowLabel: rainlab.builder::lang.database.btn_add_column
             btnDeleteRowLabel: rainlab.builder::lang.database.btn_delete_column
             height: 100

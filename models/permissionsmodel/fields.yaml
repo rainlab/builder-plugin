@@ -18,6 +18,7 @@ tabs:
             tab: rainlab.builder::lang.permission.form_tab_permissions
             type: datatable
             useLegacy: true
+            legacyMode: true
             btnAddRowLabel: rainlab.builder::lang.permission.btn_add_permission
             btnDeleteRowLabel: rainlab.builder::lang.permission.btn_delete_permission
             columns:
