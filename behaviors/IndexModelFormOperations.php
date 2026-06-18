@@ -253,6 +253,7 @@ class IndexModelFormOperations extends IndexOperationsBehaviorBase
 
         return [
             'toolbar' => false,
+            'legacyMode' => true,
             'columns' => [
                 'add' => [
                     'title' => 'rainlab.builder::lang.common.add',
