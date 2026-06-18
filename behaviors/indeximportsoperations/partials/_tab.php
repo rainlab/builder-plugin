@@ -1,5 +1,5 @@
 <?= Form::open([
-    'class' => 'layout',
+    'class' => 'position-relative h-100',
     'data-change-monitor' => 'true',
     'data-window-close-confirm' => e(trans('backend::lang.form.confirm_tab_close')),
     'data-entity' => 'imports',

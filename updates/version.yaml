@@ -52,3 +52,4 @@ v3.0.1: Fixes SQL authentication error for some instances
 v3.0.2: Block access to this plugin when safe mode is enabled
 v3.0.3: Compatibility fixes for October v4.2
 v3.0.4: Compatibility fixes for October v4.3
+v3.0.5: Fixes tab rendering in Firefox
