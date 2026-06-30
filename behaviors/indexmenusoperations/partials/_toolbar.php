@@ -4,6 +4,7 @@
         class="btn btn-primary oc-icon-check save"
         data-builder-command="menus:cmdSaveMenus"
         data-load-indicator="<?= e(trans('backend::lang.form.saving')) ?>"
+        data-load-indicator-size="small"
         data-hotkey="ctrl+s, cmd+s">
         <?= e(trans('backend::lang.form.save')) ?>
     </a>

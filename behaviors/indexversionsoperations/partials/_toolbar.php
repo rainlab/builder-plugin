@@ -4,6 +4,7 @@
         class="btn btn-primary oc-icon-check save"
         data-builder-command="version:cmdSaveVersion"
         data-load-indicator="<?= e(trans('backend::lang.form.saving')) ?>"
+        data-load-indicator-size="small"
         data-hotkey="ctrl+s, cmd+s">
         <?= e(trans('backend::lang.form.save')) ?>
     </a>
@@ -12,7 +13,8 @@
         href="javascript:;"
         class="btn btn-primary oc-icon-bolt <?php if ($model->isApplied()): ?>hide<?php endif ?>"
         data-builder-command="version:cmdApplyVersion"
-        data-load-indicator="<?= e(trans('rainlab.builder::lang.version.applying')) ?>">
+        data-load-indicator="<?= e(trans('rainlab.builder::lang.version.applying')) ?>"
+        data-load-indicator-size="small">
         <?= e(trans('rainlab.builder::lang.version.apply_version')) ?>
     </a>
 
@@ -20,7 +22,8 @@
         href="javascript:;"
         class="btn btn-primary oc-icon-undo <?php if (!$model->isApplied()): ?>hide<?php endif ?>"
         data-builder-command="version:cmdRollbackVersion"
-        data-load-indicator="<?= e(trans('rainlab.builder::lang.version.rolling_back')) ?>">
+        data-load-indicator="<?= e(trans('rainlab.builder::lang.version.rolling_back')) ?>"
+        data-load-indicator-size="small">
         <?= e(trans('rainlab.builder::lang.version.rollback_version')) ?>
     </a>
     
