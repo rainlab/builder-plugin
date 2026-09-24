@@ -106,6 +106,7 @@ trait HasFormUi
             'attributes',
             'oc.comment',
             'oc.commentPosition',
+            'commentHtml',
             'disabled'
         ];
 
@@ -136,6 +137,7 @@ trait HasFormUi
             'attributes',
             'oc.commentPosition',
             'oc.comment',
+            'commentHtml',
             'disabled'
         ];
 

@@ -133,6 +133,12 @@ class ControlLibrary
                 ],
                 'ignoreIfEmpty' => true,
             ],
+            'commentHtml' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_comment_html'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_comment_html_description'),
+                'type' => 'checkbox',
+                'ignoreIfEmpty' => true,
+            ],
             'span' => [
                 'title' => Lang::get('rainlab.builder::lang.form.property_span_title'),
                 'type' => 'dropdown',

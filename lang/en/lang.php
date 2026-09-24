@@ -171,6 +171,8 @@
     'property_comment_position' => 'Comment Position',
     'property_comment_position_above' => 'Above',
     'property_comment_position_below' => 'Below',
+    'property_comment_html' => 'HTML Comment',
+    'property_comment_html_description' => 'Allow HTML markup inside the field comment.',
     'property_hint_path' => 'Partial Path',
     'property_hint_path_description' => 'Path to a partial file that contains the hint text. Use the $ symbol to refer the plugins root directory, for example: $/acme/blog/partials/_hint.php',
     'property_hint_path_required' => 'Please enter the hint partial path',

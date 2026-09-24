@@ -40,34 +40,21 @@
     function preProcessSpecialProperties(properties) {
         delete properties['oc.fieldName']
 
-        if (String(properties['oc.comment']).length > 0 && properties['oc.commentPosition'] == 'above') {
-            properties['commentAbove'] = properties['oc.comment']
+        var comment = properties['oc.comment'] !== undefined ? String(properties['oc.comment']) : '',
+            commentPosition = properties['oc.commentPosition']
 
-            if (properties['comment'] !== undefined) {
-                delete properties['comment']
+        delete properties['comment']
+        delete properties['commentAbove']
+        delete properties['oc.comment']
+        delete properties['oc.commentPosition']
+
+        if (comment.length > 0) {
+            if (commentPosition == 'above') {
+                properties['commentAbove'] = comment
             }
-
-            delete properties['oc.comment']
-            delete properties['oc.commentPosition']
-        }
-
-        if (String(properties['oc.comment']).length > 0 && properties['oc.commentPosition'] == 'below') {
-            properties['comment'] = properties['oc.comment']
-
-            if (properties['comentAbove'] !== undefined) {
-                delete properties['comentAbove']
+            else {
+                properties['comment'] = comment
             }
-
-            delete properties['oc.comment']
-            delete properties['oc.commentPosition']
-        }
-
-        if (properties['oc.comment'] !== undefined) {
-            if (String(properties['oc.comment']).length > 0) {
-                properties['comment'] = properties['oc.comment']
-            }
-
-            delete properties['oc.comment']
         }
     }
 
