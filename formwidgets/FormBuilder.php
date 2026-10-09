@@ -333,6 +333,12 @@ class FormBuilder extends FormWidgetBase
     {
         $properties['oc.fieldName'] = $controlName;
 
+        // A form defined as a file reference (string) is shown as a regular property.
+        //
+        if (isset($properties['form']) && is_string($properties['form'])) {
+            $properties['oc.formFile'] = $properties['form'];
+        }
+
         // Remove the control container type property values.
         //
         if (isset($controlInfo['properties'])) {

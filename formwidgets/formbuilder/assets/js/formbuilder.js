@@ -730,6 +730,36 @@
         }
     }
 
+    // Switches a Nested Form between the "form defined in a file" notice and
+    // the inline control container, depending on the Form File property.
+    FormBuilder.prototype.syncNestedFormFileNotice = function(li, properties) {
+        var notice = null,
+            container = null
+
+        for (var i=0, len=li.children.length; i<len; i++) {
+            var child = li.children[i]
+
+            if (child.classList.contains('builder-nestedform-file')) {
+                notice = child
+            }
+            else if (child.hasAttribute('data-control-container') && child.getAttribute('data-container-name') === 'form') {
+                container = child
+            }
+        }
+
+        if (!notice || !container) {
+            return
+        }
+
+        var formFile = properties && properties['oc.formFile'] !== undefined
+            ? String(properties['oc.formFile']).trim()
+            : ''
+
+        notice.querySelector('[data-nestedform-file-path]').textContent = formFile
+        notice.style.display = formFile.length ? '' : 'none'
+        container.style.display = formFile.length ? 'none' : ''
+    }
+
     FormBuilder.prototype.onControlChange = function(ev) {
         // Control has changed (with Inspector) -
         // update the control markup with AJAX
@@ -738,6 +768,7 @@
             properties = this.getControlProperties(li)
 
         this.setControlSpanFromProperties(li, properties)
+        this.syncNestedFormFileNotice(li, properties)
         this.updateControlBody(this.getControlId(li))
 
         ev.stopPropagation()
@@ -751,6 +782,7 @@
             propertiesParsed = this.getControlProperties(li)
 
         this.setControlSpanFromProperties(li, propertiesParsed)
+        this.syncNestedFormFileNotice(li, propertiesParsed)
         this.startUpdateControlBody(this.getControlId(li))
 
         ev.stopPropagation()

@@ -698,6 +698,13 @@ trait HasFormWidgets
             'form' => [
                 'type' => 'control-container'
             ],
+            'oc.formFile' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_form_file'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_form_file_description'),
+                'type' => 'string',
+                'ignoreIfEmpty' => true,
+                'sortOrder' => 86,
+            ],
             'showPanel' => [
                 'title' => Lang::get('rainlab.builder::lang.form.property_nestedform_show_panel'),
                 'description' => Lang::get('rainlab.builder::lang.form.property_nestedform_show_panel_description'),
@@ -892,6 +899,13 @@ trait HasFormWidgets
             ],
             'form' => [
                 'type' => 'control-container'
+            ],
+            'oc.formFile' => [
+                'title' => Lang::get('rainlab.builder::lang.form.property_form_file'),
+                'description' => Lang::get('rainlab.builder::lang.form.property_form_file_description'),
+                'type' => 'string',
+                'ignoreIfEmpty' => true,
+                'sortOrder' => 86,
             ],
             'minItems' => $this->getFieldMaxItemsProperties()['minItems'],
             'maxItems' => $this->getFieldMaxItemsProperties()['maxItems'],
