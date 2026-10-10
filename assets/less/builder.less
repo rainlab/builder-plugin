@@ -13,6 +13,13 @@
     --oc-builder-control-color: #888;
 }
 
+// Shows an inspected element as a solid card above the popover backdrop
+.builder-highlight-card() {
+    background: var(--bs-body-bg, white);
+    border-radius: 2px;
+    box-shadow: 0 0 0 10px var(--bs-body-bg, white);
+}
+
 @import "buildingarea.less";
 @import "controlblueprint.less";
 @import "behaviors.less";

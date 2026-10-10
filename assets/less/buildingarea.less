@@ -181,6 +181,10 @@
             color: @builder-hover-color!important;
         }
 
+        > li.control.popover-highlight:not(.oc-placeholder) {
+            .builder-highlight-card();
+        }
+
         > li.control.drag-over:not(.oc-placeholder) {
             &:before {
                 position: absolute;
