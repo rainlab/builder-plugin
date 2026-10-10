@@ -1,6 +1,7 @@
 <li 
     class="item"
     data-inspectable
+    data-inspector-anchor="> .item-container"
     data-inspector-title="<?= e(trans('rainlab.builder::lang.menu.side_menu_item')) ?>"
 >
     <div class="item-container">
