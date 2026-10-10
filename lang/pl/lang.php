@@ -562,6 +562,7 @@
     'new_menu_item' => 'Element menu',
     'add_side_menu_item' => 'Dodaj element podrzędny',
     'side_menu_item' => 'Element menu bocznego',
+    'main_menu_item' => 'Element menu głównego',
     'property_label' => 'Etykieta',
     'property_label_required' => 'Podaj etykietę elementu menu.',
     'property_url_required' => 'Podaj adres URL elementu menu',

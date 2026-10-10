@@ -692,6 +692,7 @@
     'new_menu_item' => 'Menu Item',
     'add_side_menu_item' => 'Add sub-item',
     'side_menu_item' => 'Side menu item',
+    'main_menu_item' => 'Main menu item',
     'property_label' => 'Label',
     'property_label_required' => 'Please enter the menu item labels.',
     'property_url_required' => 'Please enter the menu item URL',

@@ -543,6 +543,7 @@
     'new_menu_item' => 'Item de menu',
     'add_side_menu_item' => 'Acrescentar sub-item',
     'side_menu_item' => 'Item de menu lateral',
+    'main_menu_item' => 'Item de menu principal',
     'property_label' => 'Rótulo',
     'property_label_required' => 'Por favor, digite os rótulos dos itens de menu.',
     'property_url_required' => 'Por favor, digite a URL do item de menu',

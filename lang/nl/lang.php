@@ -519,6 +519,7 @@
     'new_menu_item' => 'Menu item',
     'add_side_menu_item' => 'Sub-item toevoegen',
     'side_menu_item' => 'Linker menu item',
+    'main_menu_item' => 'Hoofdmenu item',
     'property_label' => 'Label',
     'property_label_required' => 'Voer label in van menu item.',
     'property_url_required' => 'Voer URL in van menu item.',

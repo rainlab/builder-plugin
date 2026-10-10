@@ -602,6 +602,7 @@
     'new_menu_item' => '菜单选项',
     'add_side_menu_item' => '添加子项',
     'side_menu_item' => '侧边栏菜单项',
+    'main_menu_item' => '主菜单项',
     'property_label' => '标签',
     'property_label_required' => '请输入菜单项标签.',
     'property_url_required' => '请输入菜单项URL',

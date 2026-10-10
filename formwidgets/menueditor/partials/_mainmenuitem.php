@@ -2,7 +2,7 @@
     class="item"
     data-inspectable
     data-inspector-anchor="> .item-container"
-    data-inspector-title="<?= e(trans('rainlab.builder::lang.menu.side_menu_item')) ?>"
+    data-inspector-title="<?= e(trans('rainlab.builder::lang.menu.main_menu_item')) ?>"
 >
     <div class="item-container">
         <i class="<?= e($this->getItemArrayProperty($item, 'icon')) ?>"></i>

@@ -501,6 +501,7 @@
     'new_menu_item' => 'Položka menu',
     'add_side_menu_item' => 'Přidat pod-položku',
     'side_menu_item' => 'Side menu item',
+    'main_menu_item' => 'Položka hlavního menu',
     'property_label' => 'Popisek',
     'property_label_required' => 'Zadejte prosím popisek položky menu.',
     'property_url_required' => 'Zadejte prosím URL položky menu.',

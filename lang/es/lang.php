@@ -522,6 +522,7 @@
     'new_menu_item' => 'Menu Item',
     'add_side_menu_item' => 'Agregar sub-item',
     'side_menu_item' => 'Item de menú lateral',
+    'main_menu_item' => 'Item de menú principal',
     'property_label' => 'Etiqueta',
     'property_label_required' => 'Por favor ingrese la etiqueta para el item del menú.',
     'property_url_required' => 'Por favor ingrese la URL para el item del menú',

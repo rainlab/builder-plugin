@@ -502,6 +502,7 @@
     'new_menu_item' => 'مورد منو',
     'add_side_menu_item' => 'افزودن زیر منو',
     'side_menu_item' => 'مورد منوی کناری',
+    'main_menu_item' => 'مورد منوی اصلی',
     'property_label' => 'عنوان',
     'property_label_required' => 'لطفا عنوان منو را وارد نمایید',
     'property_url_required' => 'لطفا آدرس منو را وارد نمایید',
