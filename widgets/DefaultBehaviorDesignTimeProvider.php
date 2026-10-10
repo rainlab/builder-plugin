@@ -171,7 +171,7 @@ class DefaultBehaviorDesignTimeProvider extends BehaviorDesignTimeProviderBase
             $controllerGenerator->setTemplateVariable('createUrl', $createUrl);
         }
 
-        if (in_array(\Backend\Behaviors\ImportExportController::class, $controllerModel->behaviors)) {
+        if (array_key_exists(\Backend\Behaviors\ImportExportController::class, $controllerModel->behaviors)) {
             $importUrl = $this->getControllerUrl($pluginCodeObj, $controllerModel->controller).'/import';
             $exportUrl = $this->getControllerUrl($pluginCodeObj, $controllerModel->controller).'/export';
             $controllerGenerator->setTemplateVariable('hasImportExportBehavior', true);

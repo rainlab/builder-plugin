@@ -49,6 +49,7 @@ class ControllerGeneratorTest extends PluginTestCase
         $toolbar = $this->getControllerFile('_list_toolbar.php');
         $this->assertStringContainsString("Backend::url('buildertest/designs/items/create')", $toolbar);
         $this->assertStringNotContainsString('onLoadPopupForm', $toolbar);
+        $this->assertStringNotContainsString('items/import', $toolbar);
 
         foreach (['create.php', 'update.php', 'preview.php'] as $view) {
             $this->assertStringContainsString('<?= $this->formRenderDesign() ?>', $this->getControllerFile($view));
@@ -82,6 +83,19 @@ class ControllerGeneratorTest extends PluginTestCase
         $this->assertEquals('buildertest/designs/items/update/:id', $listConfig['recordUrl']);
 
         $this->assertStringContainsString('<?= $this->formRenderDesign() ?>', $this->getControllerFile('update.php'));
+    }
+
+    public function testGenerateWithImportExportBehavior()
+    {
+        $this->generateController('basic', [
+            \Backend\Behaviors\FormController::class,
+            \Backend\Behaviors\ListController::class,
+            \Backend\Behaviors\ImportExportController::class,
+        ]);
+
+        $toolbar = $this->getControllerFile('_list_toolbar.php');
+        $this->assertStringContainsString("Backend::url('buildertest/designs/items/import')", $toolbar);
+        $this->assertStringContainsString("Backend::url('buildertest/designs/items/export')", $toolbar);
     }
 
     public function testDesignIsNotWrittenWithoutFormBehavior()
