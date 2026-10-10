@@ -2,13 +2,21 @@
 
 use RainLab\Builder\Models\ModelModel;
 use RainLab\Builder\Classes\PluginCode;
+use October\Rain\Database\Schema\Blueprint;
 
-class ModelModelTest extends TestCase
+/**
+ * ModelModelTest covers model class name validation and model field discovery.
+ */
+class ModelModelTest extends PluginTestCase
 {
+    /**
+     * tearDown removes the mock model copied into the plugin models directory.
+     */
     public function tearDown(): void
     {
-        // Ensure cleanup for testGetModelFields
-        @unlink(__DIR__.'/../../../models/MyMock.php');
+        File::delete($this->getMockModelPath());
+
+        parent::tearDown();
     }
 
     public function testValidateModelClassName()
@@ -38,31 +46,50 @@ class ModelModelTest extends TestCase
         $this->assertFalse(ModelModel::validateModelClassName($fullyQualifiedClassName));
     }
 
-    public function testGetModelFields()
+    public function testGetModelFieldsWithInvalidClassName()
     {
-    // Invalid Class Name
-        try {
-            ModelModel::getModelFields(null, 'myClassName');
-        } catch (SystemException $e) {
-            $this->assertEquals($e->getMessage(), 'Invalid model class name: myClassName');
-            return;
-        }
+        $this->expectException(SystemException::class);
+        $this->expectExceptionMessage('Invalid model class name: myClassName');
 
-        // Directory Not Found
+        ModelModel::getModelFields(null, 'myClassName');
+    }
+
+    public function testGetModelFieldsWithMissingPluginDirectory()
+    {
         $pluginCodeObj = PluginCode::createFromNamespace('MyNameSpace\MyPlugin\Models\MyClassName');
         $this->assertEquals([], ModelModel::getModelFields($pluginCodeObj, 'MyClassName'));
+    }
 
-        // Directory Found, but Class Not Found
+    public function testGetModelFieldsWithMissingModelFile()
+    {
         $pluginCodeObj = PluginCode::createFromNamespace('RainLab\Builder\Models\MyClassName');
         $this->assertEquals([], ModelModel::getModelFields($pluginCodeObj, 'MyClassName'));
+    }
 
-        // Model without Table Name
+    public function testGetModelFieldsWithoutTableName()
+    {
         $pluginCodeObj = PluginCode::createFromNamespace('RainLab\Builder\Models\Settings');
         $this->assertEquals([], ModelModel::getModelFields($pluginCodeObj, 'Settings'));
+    }
 
-        // Model with Table Name
-        copy(__DIR__."/../../fixtures/MyMock.php", __DIR__."/../../../models/MyMock.php");
+    public function testGetModelFieldsWithTableName()
+    {
+        Schema::create('my_mock_table', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('title');
+        });
+
+        File::copy(__DIR__.'/../../fixtures/MyMock.php', $this->getMockModelPath());
+
         $pluginCodeObj = PluginCode::createFromNamespace('RainLab\Builder\Models\MyMock');
-        $this->assertEquals([], ModelModel::getModelFields($pluginCodeObj, 'MyMock'));
+        $this->assertEquals(['id', 'title'], ModelModel::getModelFields($pluginCodeObj, 'MyMock'));
+    }
+
+    /**
+     * getMockModelPath returns where the mock model is copied for model file parsing.
+     */
+    protected function getMockModelPath()
+    {
+        return __DIR__.'/../../../models/MyMock.php';
     }
 }

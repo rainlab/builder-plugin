@@ -2,24 +2,35 @@
 
 use RainLab\Builder\Classes\FilesystemGenerator;
 
-class FilesystemGeneratorTest extends TestCase
+/**
+ * FilesystemGeneratorTest covers generating files and directories from templates.
+ */
+class FilesystemGeneratorTest extends PluginTestCase
 {
-    public function setUp() : void
+    /**
+     * setUp removes any output left over from a previous run.
+     */
+    public function setUp(): void
     {
         parent::setUp();
 
         $this->cleanUp();
     }
 
-    public function tearDown() : void
+    /**
+     * tearDown removes the generated output.
+     */
+    public function tearDown(): void
     {
         $this->cleanUp();
+
+        parent::tearDown();
     }
 
     public function testGenerate()
     {
         $generatedDir = $this->getFixturesDir('temporary/generated');
-        $this->assertFileNotExists($generatedDir);
+        $this->assertFileDoesNotExist($generatedDir);
 
         File::makeDirectory($generatedDir, 0777, true, true);
         $this->assertFileExists($generatedDir);
@@ -47,29 +58,24 @@ class FilesystemGeneratorTest extends TestCase
         $this->assertFileExists($generatedDir.'/author/plugin/classes');
 
         $content = file_get_contents($generatedDir.'/author/plugin/plugin.php');
-        $this->assertContains('Author\Plugin', $content);
-        $this->assertContains('TestClass', $content);
+        $this->assertStringContainsString('Author\Plugin', $content);
+        $this->assertStringContainsString('TestClass', $content);
     }
 
-    /**
-     * @expectedException        October\Rain\Exception\SystemException
-     * @expectedExceptionMessage exists
-     */
     public function testDestNotExistsException()
     {
+        $this->expectException(SystemException::class);
+        $this->expectExceptionMessage("doesn't exist");
+
         $dir = $this->getFixturesDir('temporary/null');
         $generator = new FilesystemGenerator($dir, []);
         $generator->generate();
     }
 
-    /**
-     * @expectedException        October\Rain\Exception\ApplicationException
-     * @expectedExceptionMessage exists
-     */
     public function testDirExistsException()
     {
         $generatedDir = $this->getFixturesDir('temporary/generated');
-        $this->assertFileNotExists($generatedDir);
+        $this->assertFileDoesNotExist($generatedDir);
 
         File::makeDirectory($generatedDir.'/plugin', 0777, true, true);
         $this->assertFileExists($generatedDir.'/plugin');
@@ -78,18 +84,17 @@ class FilesystemGeneratorTest extends TestCase
             'plugin'
         ];
 
+        $this->expectException(ApplicationException::class);
+        $this->expectExceptionMessage('exists');
+
         $generator = new FilesystemGenerator($generatedDir, $structure);
         $generator->generate();
     }
 
-    /**
-     * @expectedException        October\Rain\Exception\ApplicationException
-     * @expectedExceptionMessage exists
-     */
     public function testFileExistsException()
     {
         $generatedDir = $this->getFixturesDir('temporary/generated');
-        $this->assertFileNotExists($generatedDir);
+        $this->assertFileDoesNotExist($generatedDir);
 
         File::makeDirectory($generatedDir, 0777, true, true);
         $this->assertFileExists($generatedDir);
@@ -101,18 +106,17 @@ class FilesystemGeneratorTest extends TestCase
             'plugin.php' => 'plugin.php.tpl'
         ];
 
+        $this->expectException(ApplicationException::class);
+        $this->expectExceptionMessage('exists');
+
         $generator = new FilesystemGenerator($generatedDir, $structure);
         $generator->generate();
     }
 
-    /**
-     * @expectedException        October\Rain\Exception\SystemException
-     * @expectedExceptionMessage found
-     */
     public function testTemplateNotFound()
     {
         $generatedDir = $this->getFixturesDir('temporary/generated');
-        $this->assertFileNotExists($generatedDir);
+        $this->assertFileDoesNotExist($generatedDir);
 
         File::makeDirectory($generatedDir, 0777, true, true);
         $this->assertFileExists($generatedDir);
@@ -121,10 +125,16 @@ class FilesystemGeneratorTest extends TestCase
             'plugin.php' => 'null.tpl'
         ];
 
+        $this->expectException(SystemException::class);
+        $this->expectExceptionMessage('not found');
+
         $generator = new FilesystemGenerator($generatedDir, $structure);
         $generator->generate();
     }
 
+    /**
+     * getFixturesDir returns a path inside the filesystem generator fixtures.
+     */
     protected function getFixturesDir($subdir)
     {
         $result = __DIR__.'/../../fixtures/filesystemgenerator';
@@ -136,6 +146,9 @@ class FilesystemGeneratorTest extends TestCase
         return $result;
     }
 
+    /**
+     * cleanUp deletes the temporary generated directory.
+     */
     protected function cleanUp()
     {
         $generatedDir = $this->getFixturesDir('temporary/generated');
