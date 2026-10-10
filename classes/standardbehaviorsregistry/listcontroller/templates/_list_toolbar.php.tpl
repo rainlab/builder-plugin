@@ -1,10 +1,20 @@
 <div data-control="toolbar">
 {% if hasFormBehavior %}
+{% if formDesign == 'popup' %}
+    <button
+        type="button"
+        data-control="popup"
+        data-handler="onLoadPopupForm"
+        class="btn btn-primary oc-icon-plus">
+        <?= e(trans('backend::lang.form.create')) ?>
+    </button>
+{% else %}
     <a
         href="<?= Backend::url('{{ createUrl }}') ?>"
         class="btn btn-primary oc-icon-plus">
         <?= e(trans('backend::lang.form.create')) ?>
     </a>
+{% endif %}
 {% endif %}
 {% if hasImportExportBehavior %}
     <a href="<?= Backend::url('{{ exportUrl }}') ?>" class="btn btn-default oc-icon-download">

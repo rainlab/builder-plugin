@@ -100,15 +100,23 @@ class DefaultBehaviorDesignTimeProvider extends BehaviorDesignTimeProviderBase
             'name' => $controllerModel->controllerName,
             'form' => $this->getModelFilePath($pluginCodeObj, $controllerModel->baseModelClassName, $forms[0]),
             'modelClass' => $this->getFullModelClass($pluginCodeObj, $controllerModel->baseModelClassName),
-            'defaultRedirect' => $controllerUrl,
-            'create' => [
-                'redirect' => $controllerUrl.'/update/:id',
-                'redirectClose' => $controllerUrl
-            ],
-            'update' => [
-                'redirect' => $controllerUrl,
-                'redirectClose' => $controllerUrl
-            ]
+            'defaultRedirect' => $controllerUrl
+        ];
+
+        if ($controllerModel->formDesign) {
+            $result['design'] = [
+                'displayMode' => $controllerModel->formDesign
+            ];
+        }
+
+        $result['create'] = [
+            'redirect' => $controllerUrl.'/update/:id',
+            'redirectClose' => $controllerUrl
+        ];
+
+        $result['update'] = [
+            'redirect' => $controllerUrl,
+            'redirectClose' => $controllerUrl
         ];
 
         return $result;
@@ -152,7 +160,12 @@ class DefaultBehaviorDesignTimeProvider extends BehaviorDesignTimeProviderBase
             $updateUrl = $this->getControllerUrl($pluginCodeObj, $controllerModel->controller).'/update/:id';
             $createUrl = $this->getControllerUrl($pluginCodeObj, $controllerModel->controller).'/create';
 
-            $result['recordUrl'] = $updateUrl;
+            if ($controllerModel->formDesign === 'popup') {
+                $result['recordOnClick'] = 'popup';
+            }
+            else {
+                $result['recordUrl'] = $updateUrl;
+            }
 
             $controllerGenerator->setTemplateVariable('hasFormBehavior', true);
             $controllerGenerator->setTemplateVariable('createUrl', $createUrl);

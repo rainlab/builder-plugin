@@ -30,6 +30,12 @@ tabs:
             commentAbove: rainlab.builder::lang.controller.controller_behaviors_description
             tab: rainlab.builder::lang.controller.controller_behaviors
             type: checkboxlist
+        formDesign:
+            label: rainlab.builder::lang.controller.form_design
+            commentAbove: rainlab.builder::lang.controller.form_design_description
+            tab: rainlab.builder::lang.controller.controller_behaviors
+            type: dropdown
+            default: basic
         permissions:
             commentAbove: rainlab.builder::lang.controller.controller_permissions_description
             tab: rainlab.builder::lang.controller.controller_permissions

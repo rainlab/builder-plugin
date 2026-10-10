@@ -84,6 +84,67 @@ class StandardBehaviorsRegistry
                 'fillFrom' => 'controller-urls',
                 'ignoreIfEmpty' => true
             ],
+            'design' => [
+                'type' => 'object',
+                'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_form_design'),
+                'ignoreIfEmpty' => true,
+                'ignoreIfPropertyEmpty' => 'displayMode',
+                'properties' => [
+                    [
+                        'property' => 'displayMode',
+                        'type' => 'dropdown',
+                        'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_form_display_mode'),
+                        'description' => Lang::get('rainlab.builder::lang.controller.property_behavior_form_display_mode_description'),
+                        'placeholder' => Lang::get('rainlab.builder::lang.controller.property_behavior_form_display_mode_placeholder'),
+                        'options' => [
+                            'basic' => Lang::get('rainlab.builder::lang.controller.display_mode_basic'),
+                            'survey' => Lang::get('rainlab.builder::lang.controller.display_mode_survey'),
+                            'sidebar' => Lang::get('rainlab.builder::lang.controller.display_mode_sidebar'),
+                            'document' => Lang::get('rainlab.builder::lang.controller.display_mode_document'),
+                            'popup' => Lang::get('rainlab.builder::lang.controller.display_mode_popup'),
+                            'custom' => Lang::get('rainlab.builder::lang.controller.display_mode_custom'),
+                        ],
+                        'ignoreIfEmpty' => true
+                    ],
+                    [
+                        'property' => 'size',
+                        'type' => 'string',
+                        'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_form_design_size'),
+                        'description' => Lang::get('rainlab.builder::lang.controller.property_behavior_form_design_size_description'),
+                        'placeholder' => 'auto',
+                        'ignoreIfEmpty' => true
+                    ],
+                    [
+                        'property' => 'sidebarSize',
+                        'type' => 'string',
+                        'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_form_sidebar_size'),
+                        'description' => Lang::get('rainlab.builder::lang.controller.property_behavior_form_sidebar_size_description'),
+                        'placeholder' => '300',
+                        'ignoreIfEmpty' => true
+                    ],
+                    [
+                        'property' => 'horizontalMode',
+                        'type' => 'checkbox',
+                        'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_form_horizontal_mode'),
+                        'description' => Lang::get('rainlab.builder::lang.controller.property_behavior_form_horizontal_mode_description'),
+                        'ignoreIfEmpty' => true
+                    ],
+                    [
+                        'property' => 'surveyMode',
+                        'type' => 'checkbox',
+                        'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_form_survey_mode'),
+                        'description' => Lang::get('rainlab.builder::lang.controller.property_behavior_form_survey_mode_description'),
+                        'ignoreIfEmpty' => true
+                    ],
+                    [
+                        'property' => 'secondaryLabel',
+                        'type' => 'builderLocalization',
+                        'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_form_secondary_label'),
+                        'description' => Lang::get('rainlab.builder::lang.controller.property_behavior_form_secondary_label_description'),
+                        'ignoreIfEmpty' => true
+                    ]
+                ]
+            ],
             'create' => [
                 'type' => 'object',
                 'title' => Lang::get('rainlab.builder::lang.controller.property_behavior_form_create'),

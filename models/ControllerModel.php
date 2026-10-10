@@ -53,6 +53,11 @@ class ControllerModel extends BaseModel
     public $menuItem;
 
     /**
+     * @var string formDesign display mode for the form behavior of a new controller.
+     */
+    public $formDesign;
+
+    /**
      * @var array fillable
      */
     protected static $fillable = [
@@ -61,7 +66,8 @@ class ControllerModel extends BaseModel
         'behaviors',
         'baseModelClassName',
         'permissions',
-        'menuItem'
+        'menuItem',
+        'formDesign'
     ];
 
     /**
@@ -165,6 +171,20 @@ class ControllerModel extends BaseModel
         }
 
         return $result;
+    }
+
+    /**
+     * getFormDesignOptions returns the display modes a new controller can be generated with.
+     */
+    public function getFormDesignOptions()
+    {
+        return [
+            'basic' => Lang::get('rainlab.builder::lang.controller.display_mode_basic'),
+            'survey' => Lang::get('rainlab.builder::lang.controller.display_mode_survey'),
+            'sidebar' => Lang::get('rainlab.builder::lang.controller.display_mode_sidebar'),
+            'document' => Lang::get('rainlab.builder::lang.controller.display_mode_document'),
+            'popup' => Lang::get('rainlab.builder::lang.controller.display_mode_popup'),
+        ];
     }
 
     /**
