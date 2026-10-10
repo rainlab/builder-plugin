@@ -340,6 +340,8 @@
     'property_repeater_show_duplicate_description' => 'Displays an interface for cloning items.',
     'control_nestedform' => 'Nested Form',
     'control_nestedform_description' => 'Outputs a nested set of form controls',
+    'property_form_file' => 'Form File',
+    'property_form_file_description' => 'Reference to a form field definition file (e.g. $/author/plugin/models/model/subfields.yaml). When set, it replaces the inline fields.',
     'property_nestedform_show_panel' => 'Show Panel',
     'property_nestedform_show_panel_description' => 'Places the form inside a panel container.',
     'property_nestedform_default_create' => 'Default Create',

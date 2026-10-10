@@ -40,6 +40,14 @@
     function preProcessSpecialProperties(properties) {
         delete properties['oc.fieldName']
 
+        var formFile = properties['oc.formFile'] !== undefined ? String(properties['oc.formFile']).trim() : ''
+
+        delete properties['oc.formFile']
+
+        if (formFile.length > 0) {
+            properties['form'] = formFile
+        }
+
         var comment = properties['oc.comment'] !== undefined ? String(properties['oc.comment']) : '',
             commentPosition = properties['oc.commentPosition']
 
@@ -121,6 +129,12 @@
             // and assign parsed object to the current control property.
 
             var childControls = parseControlControlContainer(listItem);
+
+            // A form file reference takes precedence over inline controls.
+
+            if (typeof values.form === 'string') {
+                delete childControls.form;
+            }
 
             if (!$.isEmptyObject(childControls)) {
                 values = $.extend(values, childControls);
