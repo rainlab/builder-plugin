@@ -15,9 +15,7 @@ class ControllerGeneratorTest extends PluginTestCase
     {
         parent::setUp();
 
-        if (File::isDirectory($this->getAuthorPath())) {
-            $this->markTestSkipped('The temporary plugin author directory already exists: '.$this->getAuthorPath());
-        }
+        $this->cleanUp();
 
         $modelPath = $this->getPluginPath().'/models/item';
         File::makeDirectory($modelPath, 0777, true, true);
@@ -30,7 +28,7 @@ class ControllerGeneratorTest extends PluginTestCase
      */
     public function tearDown(): void
     {
-        File::deleteDirectory($this->getAuthorPath());
+        $this->cleanUp();
 
         parent::tearDown();
     }
@@ -43,11 +41,11 @@ class ControllerGeneratorTest extends PluginTestCase
         $this->assertEquals(['displayMode' => 'basic'], $formConfig['design']);
 
         $listConfig = $this->parseControllerYaml('config_list.yaml');
-        $this->assertEquals('buildertest/designs/items/update/:id', $listConfig['recordUrl']);
+        $this->assertEquals($this->getControllerUrl().'/update/:id', $listConfig['recordUrl']);
         $this->assertArrayNotHasKey('recordOnClick', $listConfig);
 
         $toolbar = $this->getControllerFile('_list_toolbar.php');
-        $this->assertStringContainsString("Backend::url('buildertest/designs/items/create')", $toolbar);
+        $this->assertStringContainsString("Backend::url('".$this->getControllerUrl()."/create')", $toolbar);
         $this->assertStringNotContainsString('onLoadPopupForm', $toolbar);
         $this->assertStringNotContainsString('items/import', $toolbar);
 
@@ -80,7 +78,7 @@ class ControllerGeneratorTest extends PluginTestCase
         $this->assertArrayNotHasKey('design', $formConfig);
 
         $listConfig = $this->parseControllerYaml('config_list.yaml');
-        $this->assertEquals('buildertest/designs/items/update/:id', $listConfig['recordUrl']);
+        $this->assertEquals($this->getControllerUrl().'/update/:id', $listConfig['recordUrl']);
 
         $this->assertStringContainsString('<?= $this->formRenderDesign() ?>', $this->getControllerFile('update.php'));
     }
@@ -94,8 +92,8 @@ class ControllerGeneratorTest extends PluginTestCase
         ]);
 
         $toolbar = $this->getControllerFile('_list_toolbar.php');
-        $this->assertStringContainsString("Backend::url('buildertest/designs/items/import')", $toolbar);
-        $this->assertStringContainsString("Backend::url('buildertest/designs/items/export')", $toolbar);
+        $this->assertStringContainsString("Backend::url('".$this->getControllerUrl()."/import')", $toolbar);
+        $this->assertStringContainsString("Backend::url('".$this->getControllerUrl()."/export')", $toolbar);
     }
 
     public function testDesignIsNotWrittenWithoutFormBehavior()
@@ -151,6 +149,14 @@ class ControllerGeneratorTest extends PluginTestCase
     }
 
     /**
+     * getControllerUrl returns the backend URL of the generated controller.
+     */
+    protected function getControllerUrl()
+    {
+        return 'buildertest/designs/items';
+    }
+
+    /**
      * getControllerPath returns the generated controller files directory.
      */
     protected function getControllerPath()
@@ -172,5 +178,13 @@ class ControllerGeneratorTest extends PluginTestCase
     protected function getAuthorPath()
     {
         return plugins_path('buildertest');
+    }
+
+    /**
+     * cleanUp deletes the temporary plugin directory.
+     */
+    protected function cleanUp()
+    {
+        File::deleteDirectory($this->getAuthorPath());
     }
 }
