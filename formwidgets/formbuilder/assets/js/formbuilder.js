@@ -730,16 +730,15 @@
         }
     }
 
-    // Switches a Nested Form between the "form defined in a file" notice and
-    // the inline control container, depending on the Form File property.
-    FormBuilder.prototype.syncNestedFormFileNotice = function(li, properties) {
+    // Switches between the form file notice and the inline control container, depending on the Form File property.
+    FormBuilder.prototype.syncFormFileNotice = function(li, properties) {
         var notice = null,
             container = null
 
         for (var i=0, len=li.children.length; i<len; i++) {
             var child = li.children[i]
 
-            if (child.classList.contains('builder-nestedform-file')) {
+            if (child.classList.contains('builder-form-file-notice')) {
                 notice = child
             }
             else if (child.hasAttribute('data-control-container') && child.getAttribute('data-container-name') === 'form') {
@@ -755,7 +754,7 @@
             ? String(properties['oc.formFile']).trim()
             : ''
 
-        notice.querySelector('[data-nestedform-file-path]').textContent = formFile
+        notice.querySelector('[data-form-file-path]').textContent = formFile
         notice.style.display = formFile.length ? '' : 'none'
         container.style.display = formFile.length ? 'none' : ''
     }
@@ -768,7 +767,7 @@
             properties = this.getControlProperties(li)
 
         this.setControlSpanFromProperties(li, properties)
-        this.syncNestedFormFileNotice(li, properties)
+        this.syncFormFileNotice(li, properties)
         this.updateControlBody(this.getControlId(li))
 
         ev.stopPropagation()
@@ -782,7 +781,7 @@
             propertiesParsed = this.getControlProperties(li)
 
         this.setControlSpanFromProperties(li, propertiesParsed)
-        this.syncNestedFormFileNotice(li, propertiesParsed)
+        this.syncFormFileNotice(li, propertiesParsed)
         this.startUpdateControlBody(this.getControlId(li))
 
         ev.stopPropagation()

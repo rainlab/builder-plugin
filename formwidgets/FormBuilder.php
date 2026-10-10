@@ -335,7 +335,7 @@ class FormBuilder extends FormWidgetBase
 
         // A form defined as a file reference (string) is shown as a regular property.
         //
-        if (isset($properties['form']) && is_string($properties['form'])) {
+        if (isset($controlInfo['properties']['oc.formFile'], $properties['form']) && is_string($properties['form'])) {
             $properties['oc.formFile'] = $properties['form'];
         }
 
