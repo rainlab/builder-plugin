@@ -56,3 +56,4 @@ v3.0.5: Fixes tab rendering in Firefox
 v3.0.6: Fixes adding form fields from database columns
 v3.0.7: Compatibility fixes for October v4.3
 v3.0.8: Adds support for commentHtml
+v3.1.0: Adds support for form controller designs
